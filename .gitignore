@@ -10,3 +10,5 @@
 /doc/
 
 /nbproject/private/private.xml
+/nbproject/private/
+/dist/
