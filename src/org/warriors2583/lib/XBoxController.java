@@ -272,10 +272,10 @@ public class XBoxController extends GenericHID implements IInputOutput {
     /**
      * Returns 
      * @param axis the axis of the 
-     * @return 
+     * @return The Button value related to the axis
      */
     public boolean getAxisButton(int axis){
-        return getAxisButton(axis, 0.5, 0.5);
+        return getAxisButton(axis, 0.5, -0.5);
     }
     
     public boolean getAxisButton(int axis, double topThreshold, double botThreshold){

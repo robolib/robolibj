@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
- *
+ * The main Class for the RoboLibJ Library.
+ * It extends and IterativeRobot, and takes care of all the methods.
+ * It also handles any compressor the robot may have, it handles Loading the
+ * robot and sending NetworkTable values about the current state.
  * @author Austin Reuland
  */
 public class FRCBot extends IterativeRobot {
