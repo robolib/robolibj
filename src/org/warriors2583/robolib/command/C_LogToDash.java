@@ -1,4 +1,4 @@
-package org.warriors2583.lib;
+package org.warriors2583.robolib.command;
 
 import edu.wpi.first.wpilibj.command.Command;
 

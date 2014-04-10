@@ -1,6 +1,7 @@
-package org.warriors2583.lib;
+package org.warriors2583.robolib;
 
 //import com.sun.squawk.util.MathUtils;
+import org.warriors2583.robolib.command.C_UpdateDashboard;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import org.warriors2583.frc2014.RMap;

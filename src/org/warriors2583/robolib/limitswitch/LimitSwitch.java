@@ -1,4 +1,4 @@
-package org.warriors2583.lib.limitswitch;
+package org.warriors2583.robolib.limitswitch;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;

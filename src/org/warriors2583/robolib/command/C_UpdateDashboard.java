@@ -1,6 +1,7 @@
-package org.warriors2583.lib;
+package org.warriors2583.robolib.command;
 
 import edu.wpi.first.wpilibj.command.Command;
+import org.warriors2583.robolib.SS_Dashboard;
 
 /**
  * Updates the Dashboard

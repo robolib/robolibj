@@ -1,4 +1,4 @@
-package org.warriors2583.lib.limitswitch;
+package org.warriors2583.robolib.limitswitch;
 
 /**
  * The Limit Switch System Interface
