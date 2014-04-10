@@ -1,4 +1,4 @@
-package org.warriors2583.lib;
+package org.warriors2583.robolib;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;

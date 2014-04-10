@@ -1,6 +1,6 @@
-package org.warriors2583.lib.limitswitch;
+package org.warriors2583.robolib.limitswitch;
 
-import org.warriors2583.lib.limitswitch.LimitSwitch.SwitchType;
+import org.warriors2583.robolib.limitswitch.LimitSwitch.SwitchType;
 
 /**
  * A Limit Switch System using only one Switch

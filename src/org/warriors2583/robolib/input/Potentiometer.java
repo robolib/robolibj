@@ -1,4 +1,4 @@
-package org.warriors2583.lib;
+package org.warriors2583.robolib.input;
 
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * Potentiometer Class for use with the WPILib Code
  * @author noriah Reuland
  */
-public class Potentiometer implements PIDSource, LiveWindowSendable {
+public class Potentiometer implements IRoboSensor, IRoboAnalogSensor, PIDSource, LiveWindowSendable {
     
     private AnalogChannel m_pot;
     
@@ -58,6 +58,10 @@ public class Potentiometer implements PIDSource, LiveWindowSendable {
         lastRaw = (lastRaw + getVoltage())/2;
         return lastRaw;
     }
+    
+    public int getChanel(){ return m_pot.getChannel(); }
+    
+    public int getModule(){ return m_pot.getModuleNumber(); }
     
     public int getAverageBits() { return m_pot.getAverageBits(); }
     
