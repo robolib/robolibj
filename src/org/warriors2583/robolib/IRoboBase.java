@@ -13,14 +13,14 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.input;
+package org.warriors2583.robolib;
 
 /**
  *
  * @author Austin Reuland
  */
-public interface IRoboAnalogSensor {
+public interface IRoboBase {
     
-    public int getValue();
+    public IRoboMap getRMap();
 
 }

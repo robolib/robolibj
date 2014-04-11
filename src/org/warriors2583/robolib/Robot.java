@@ -1,61 +1,77 @@
+/*
+ * Copyright (c) 2014 Westwood Robotics code.westwoodrobotics@gmail.com.
+ *  
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ */
+
 package org.warriors2583.robolib;
 
 import com.sun.squawk.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Watchdog;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.communication.FRCControl;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
+import org.warriors2583.robolib.robot.ModeSwitcher;
 
 /**
- * The main Class for the RoboLibJ Library.
- * It extends and IterativeRobot, and takes care of all the methods.
+ * A better version of the WPILib IterativeRobot class.
+ * It extends WPILib RobotBase, and takes care of all the methods.
  * It also handles any compressor the robot may have, it handles Loading the
  * robot and sending NetworkTable values about the current state.
+ * 
+ * This Class handles switching of Game Modes better than the default
+ * IterativeRobot. It has a more complex program flow, however it runs faster
+ * and uses less memory.
+ * 
+ * You must make your own class and have it extend this class to use it.
+ * The constructor must call the Super class with either no arguments, 
+ * or two strings representing the Name of the robot and the version of
+ * the code.
  * @author Austin Reuland
  */
-public class Robot extends RobotBase {
+public class Robot extends RobotBase implements IRoboBase{
     
-    public static final String NETTABLE_CURRENT_MODE = "mode";
-    public static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
-    
-    public static final int MODE_ERROR = -1;
-    public static final int MODE_NOMODE = 0;
-    public static final int MODE_DISABLED = 1;
-    public static final int MODE_TEST = 2;
-    public static final int MODE_AUTONOMOUS = 3;
-    public static final int MODE_TELEOP = 4;
-    private static int m_mode;
-
-    private static String m_name;
-    private static String m_version;
+    private String m_name;
+    private String m_version;
     private static ITable m_table;
     private static boolean m_debug = true;
     private static boolean m_run = true;
+    private static DriverStation m_rds;
+    private static ModeSwitcher m_modeSwitcher;
     
     //private static RMap m_map = null;
     private String m_map = null;
     
     private static Compressor m_compressor = null;
     
-    public Robot(){
+    protected Robot(){
         this("Default", "1.0");
     }
 
     /**
-     * FRCBot Class Method
+     * Robot Class Method
      * @param name Name of the Robot
      * @param version Version number of the robot
      */
-    public Robot(String name, String version){
+    protected Robot(String name, String version){
         m_name = name;
         m_version = version;
-        m_mode = 1;
+        m_rds = DriverStation.getInstance();
+        m_modeSwitcher = ModeSwitcher.getInstance();
+        m_table = NetworkTable.getTable("Robot");
     }
 
     /**
@@ -79,7 +95,7 @@ public class Robot extends RobotBase {
      * Enable or Disable Debug Messages
      * @param debug Enable or Disable
      */
-    public static void enableDebug(boolean debug){
+    public void enableDebug(boolean debug){
         m_debug = debug;
     }
 
@@ -93,115 +109,66 @@ public class Robot extends RobotBase {
         throw new RuntimeException(msg);
     }
     
-    private int getNewMode(){
-        int mode = 0;
-        mode += (isDisabled() ? MODE_DISABLED : 0);
-        mode += (isTest() ? MODE_TEST : 0);
-        mode += (isAutonomous() ? MODE_AUTONOMOUS : 0);
-        mode += (isOperatorControl() ? MODE_TELEOP : 0);
-        return mode;
-    }
-
-    public static int getMode(){
-        return m_mode;
-    }
-
-    private void initMode(int mode){
-        System.gc();
-        switch(mode){
-            case MODE_DISABLED:
-                LiveWindow.setEnabled(false);
-                stopCompressor();
-                m_table.putNumber(NETTABLE_CURRENT_MODE, MODE_DISABLED);
-                m_table.putString(NETTABLE_CURRENT_MODE_STRING, "disabled");
-                disabledInit();
-
-            case MODE_TEST:
-                LiveWindow.setEnabled(true);
-                startCompressor();
-                m_table.putNumber(NETTABLE_CURRENT_MODE, MODE_TEST);
-                m_table.putString(NETTABLE_CURRENT_MODE_STRING, "test");
-                testInit();
-            
-            case MODE_AUTONOMOUS:
-                LiveWindow.setEnabled(false);
-                startCompressor();
-                m_table.putNumber(NETTABLE_CURRENT_MODE, MODE_AUTONOMOUS);
-                m_table.putString(NETTABLE_CURRENT_MODE_STRING, "autonomous");
-                autonomousInit();
-
-            case MODE_TELEOP:
-                LiveWindow.setEnabled(false);
-                startCompressor();
-                m_table.putNumber(NETTABLE_CURRENT_MODE, MODE_TELEOP);
-                m_table.putString(NETTABLE_CURRENT_MODE_STRING, "teleop");
-                teleopInit();
-
-            default:
-                LiveWindow.setEnabled(false);
-                stopCompressor();
-                m_table.putNumber(NETTABLE_CURRENT_MODE, MODE_ERROR);
-                m_table.putString(NETTABLE_CURRENT_MODE_STRING, "ERROR");
-                error("Unknown Mode in FRCBot.initMode()");
-        }
+    public static ModeSwitcher.GameMode getGameMode(){
+        return m_modeSwitcher.getGameMode();
     }
     
-    private void runMode(int mode){
-        if(mode != m_mode){
-            initMode(mode);
-            m_mode = mode;
-        }
-        if(m_ds.isNewControlData()){
-            switch(mode){
-
-                case MODE_DISABLED:
-                    FRCControl.observeUserProgramDisabled();
-                    disabledPeriodic();
-
-                case MODE_TEST:
-                    FRCControl.observeUserProgramTest();
-                    testPeriodic();
-
-                case MODE_AUTONOMOUS:
-                    FRCControl.observeUserProgramAutonomous();
-                    autonomousPeriodic();
-
-                case MODE_TELEOP:
-                    FRCControl.observeUserProgramTeleop();
-                    teleopPeriodic();
-
-                default:
-                    error("Shit");
-
-            Scheduler.getInstance().run();
-            }
-        }
+    public static Alliance getAlliance(){
+        return m_rds.getAlliance();
     }
     
-    @Override
+    public static boolean onField(){
+        return m_rds.isFMSAttached();
+    }
+    
+    private int getDSMode(){
+        int n = 0;
+        n += (isOperatorControl() ? 4 : 0);
+        n += (isAutonomous() ? 3 : 0);
+        n += (isTest() ? 2 : 0);
+        n += (isDisabled() ? 1 : 0);
+        return n;
+    }
+
+    private boolean inNewMode(int mode){
+        return m_modeSwitcher.inNewMode(mode);
+    }
+    
     public void startCompetition() {
-        debug("FRCBot Library Version 3.11");
+        debug("Robot Library Version 3.11");
         debug("Starting " + m_name);
         UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
         //if(m_map == null){
-        //    error("you must call FRCBot.setRMap() in the Class Constructor");
+        //    error("you must call Robot.setRMap() in the Class Constructor");
         //}
-        debug("Initializing Robot Network Table");
-        m_table = NetworkTable.getTable("Robot");
+        debug("Initializing Robot Network Table and Data");
+        m_table.putString("name", m_name);
+        m_table.putString("version", m_version);
+        
+        
+        debug("Initializing Robot Modes");
+        m_modeSwitcher.init();
         
         //Run User initialization
-        robotInit();        
+        debug("Running User Initialization code");
+        robotInit();
         LiveWindow.setEnabled(false);
 
         msg(m_name + ", Verion " + m_version + " Initiated");
+        
+        debug("Starting Main Loop");
         while(m_run){
-            runMode(getNewMode());
-
+            int mode = getDSMode();
+            if(inNewMode(mode)){
+                m_modeSwitcher.switchMode(mode);
+            }
+            
+            if(m_ds.isNewControlData()){
+                getWatchdog().feed();
+                m_modeSwitcher.run();
+            }
             m_ds.waitForData();
         }
-
-        
-        
     }
     
     /**
@@ -214,13 +181,13 @@ public class Robot extends RobotBase {
         m_compressor = new Compressor(compressor_switch, compressor_relay);
     }
 
-    private static void startCompressor(){
+    public static void startCompressor(){
         if(m_compressor != null){
             m_compressor.start();
         }
     }
     
-    private static void stopCompressor(){
+    public static void stopCompressor(){
         if(m_compressor != null){
             m_compressor.stop();
         }
@@ -234,55 +201,21 @@ public class Robot extends RobotBase {
      * Enable or Disable the Watchdog 
      * @param enabled
      */
-    protected static void enableWatchdog(boolean enabled){
+    protected void enableWatchdog(boolean enabled){
         if(enabled){
             debug("Enabling Watchdog");
-            Watchdog.getInstance().setEnabled(true);
+            getWatchdog().setEnabled(true);
         }else{
             debug("Disabling Watchdog");
-            Watchdog.getInstance().setEnabled(false);
+            getWatchdog().setEnabled(false);
         }
     }
-    
+
     public void robotInit(){
-        debug("Default FRCBot.robotInit() method... Overload me!");
-    }
-
-    public void disabledInit(){
-        debug("Default FRCBot.disabledInit() method... Overload me!");
-    }
-
-    public void testInit(){
-        debug("Default FRCBot.testInit() method... Overload me!");   
+        debug("Default Robot.robotInit() method... Overload me!");
     }
     
-    public void autonomousInit(){
-        debug("Default FRCBot.autonomousInit() method... Overload me!");
+    public IRoboMap getRMap() {
+        return null;
     }
-
-    public void teleopInit(){
-        debug("Default FRCBot.teleopInit() method... Overload me!");
-    }
-
-    public void disabledPeriodic(){
-        debug("Default FRCBot.disabledPeriodic() method... Overload me!");
-        Timer.delay(0.001);
-    }
-
-    public void testPeriodic(){
-        debug("Default FRCBot.testPeriodic() method... Overload me!");
-        Timer.delay(0.001);
-    }
-
-    public void autonomousPeriodic(){
-        debug("Default FRCBot.autonomousPeriodic() method... Overload me!");
-        Timer.delay(0.001);
-    }
-
-    public void teleopPeriodic(){
-        debug("Default FRCBot.teleopPeriodic() method... Overload me!");
-        Timer.delay(0.001);
-    }
-
-
 }
