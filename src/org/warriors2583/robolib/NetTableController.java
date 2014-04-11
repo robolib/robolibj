@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2014 noriah vix@noriah.dev.
+ *  
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ */
+
 package org.warriors2583.robolib;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -48,32 +63,26 @@ public class NetTableController extends GenericHID implements IInputOutput {
             m_table.putBoolean("button-" + i + 1, false);
     }
     
-    @Override
     public double getX(Hand hand) {
         return m_table.getNumber("axis-" + ( 1 + hand.value * 3), 0.00);
     }
 
-    @Override
     public double getY(Hand hand) {
         return m_table.getNumber("axis-" + ( 2 + hand.value * 3), 0.00);
     }
 
-    @Override
     public double getZ(Hand hand) {
         return m_table.getNumber("axis-" + ( 3 + hand.value * 3), 0.00);
     }
 
-    @Override
     public double getTwist() {
         return m_table.getNumber("axis-4", 0.00);
     }
 
-    @Override
     public double getThrottle() {
         return m_table.getNumber("axis-5", 0.00);
     }
 
-    @Override
     public double getRawAxis(int which) {
         if(which > m_axes || which < 1){
             throw new IndexOutOfBoundsException("Index: " + which + ", Size: " + m_axes);
@@ -81,23 +90,19 @@ public class NetTableController extends GenericHID implements IInputOutput {
         return m_table.getNumber("axis-" + which, 0.00);
     }
 
-    @Override
     public boolean getTrigger(Hand hand) {
         return m_table.getBoolean("button-1", false);
     }
 
-    @Override
     public boolean getTop(Hand hand) {
         
         return m_table.getBoolean("button-2", false);
     }
 
-    @Override
     public boolean getBumper(Hand hand) {
         return m_table.getBoolean("button-3", false);
     }
 
-    @Override
     public boolean getRawButton(int button) {
         if(button > m_buttons || button < 1){
             throw new IndexOutOfBoundsException("Index: " + button + ", Size: " + m_buttons);

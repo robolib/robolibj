@@ -13,14 +13,36 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.input;
+package org.warriors2583.robolib.util;
+
+import com.sun.squawk.microedition.io.FileConnection;
+import java.io.DataInputStream;
 
 /**
  *
  * @author noriah Reuland
  */
-public interface IRoboAnalogSensor {
+public class ConstantRunner {
     
-    public int getValue();
+    private final String FILE_LOCATION;
+    
+    
+    //NOTE!!!!
+    //We need to write in 8192Byte Chunks
+    
+    
+    public ConstantRunner(String file){
+        FILE_LOCATION = file;
+        
+        
+    }
+    
+    
+    public static void readConstantsFromFile() {
+        DataInputStream dataStream;
+        FileConnection dataFile;
+        //byte[] buffer = new byte[];
+        String content = "";
+    }
 
 }

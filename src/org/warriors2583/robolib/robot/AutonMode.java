@@ -13,14 +13,31 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.input;
+package org.warriors2583.robolib.robot;
+
+import edu.wpi.first.wpilibj.communication.FRCControl;
 
 /**
  *
  * @author noriah Reuland
  */
-public interface IRoboAnalogSensor {
+public abstract class AutonMode extends RobotMode {
+
+    protected AutonMode() {
+        super(ModeSwitcher.GameMode.kAuton);
+    }
     
-    public int getValue();
+    public final void _init(){
+        init();
+    }
+    
+    public final void _run(){
+        FRCControl.observeUserProgramAutonomous();
+        run();
+    }
+    
+    public final void _end(){
+        end();
+    }
 
 }

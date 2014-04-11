@@ -13,14 +13,34 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.input;
+package org.warriors2583.robolib.robot;
+
+import edu.wpi.first.wpilibj.communication.FRCControl;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
  *
  * @author noriah Reuland
  */
-public interface IRoboAnalogSensor {
+public abstract class TestMode extends RobotMode {
     
-    public int getValue();
+    protected TestMode(){
+        super(ModeSwitcher.GameMode.kTest);
+    }
+    
+    public final void _init(){
+        LiveWindow.setEnabled(true);
+        init();
+    }
+    
+    public final void _run(){
+        FRCControl.observeUserProgramTest();
+        run();
+    }
+    
+    public final void _end(){
+        LiveWindow.setEnabled(false);
+        end();
+    }
 
 }

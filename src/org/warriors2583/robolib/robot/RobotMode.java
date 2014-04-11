@@ -13,23 +13,43 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib;
+package org.warriors2583.robolib.robot;
 
-import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.communication.FRCControl;
+import org.warriors2583.robolib.Robot;
+import org.warriors2583.robolib.robot.ModeSwitcher.GameMode;
 
 /**
  *
  * @author noriah Reuland
  */
-public interface IRoboLibRobot {
+public abstract class RobotMode {
     
-    public int getMode();
+    protected RobotMode(){
+    }
     
+    protected RobotMode(GameMode mode){
+        ModeSwitcher.getInstance().add(mode, this);
+    }
     
-    public Compressor getCompressor();
+    public void _init(){
+        Robot.stopCompressor();
+        init();
+    }
     
-    //public 
+    public abstract void init();
     
+    public void _run(){
+        FRCControl.observeUserProgramDisabled();
+        run();
+    }
     
-
+    public abstract void run();
+    
+    public void _end(){
+        end();
+    }
+    
+    public abstract void end();
+    
 }
