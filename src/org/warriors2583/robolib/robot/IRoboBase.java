@@ -15,8 +15,6 @@
 
 package org.warriors2583.robolib.robot;
 
-import org.warriors2583.robolib.IRoboMap;
-
 /**
  *
  * @author Austin Reuland

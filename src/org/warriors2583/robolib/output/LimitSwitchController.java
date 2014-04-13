@@ -18,7 +18,7 @@ package org.warriors2583.robolib.output;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.parsing.IDeviceController;
-import org.warriors2583.robolib.limitswitch.ILimitSwitchSystem;
+import org.warriors2583.robolib.input.limitswitch.ILimitSwitchSystem;
 
 /**
  * A SpeedController limited by Limit Switches

@@ -1,4 +1,4 @@
-package org.warriors2583.robolib;
+package org.warriors2583.robolib.util;
 
 /**
  * Common functions for use in the robot code

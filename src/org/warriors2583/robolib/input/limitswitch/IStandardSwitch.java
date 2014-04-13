@@ -13,24 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.limitswitch;
+package org.warriors2583.robolib.input.limitswitch;
+
+import org.warriors2583.robolib.input.limitswitch.LimitSwitch.SwitchType;
 
 /**
- * The Limit Switch System Interface
+ * Interface for a Limit Switch
  * @author Austin Reuland
  */
-public interface ILimitSwitchSystem {
+public interface IStandardSwitch {
     
-    /**
-     * 
-     * @return Can we go Up
-     */
-    public boolean canUp();
+    public boolean state();
     
-    /**
-     * 
-     * @return Can we go Down 
-     */ 
-    public boolean canDown();
+    public int getChannel();
     
+    public SwitchType getType();
 }
