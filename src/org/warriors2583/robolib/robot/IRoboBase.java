@@ -13,7 +13,9 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib;
+package org.warriors2583.robolib.robot;
+
+import org.warriors2583.robolib.IRoboMap;
 
 /**
  *

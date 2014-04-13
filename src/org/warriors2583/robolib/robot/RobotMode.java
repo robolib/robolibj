@@ -16,7 +16,6 @@
 package org.warriors2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.communication.FRCControl;
-import org.warriors2583.robolib.Robot;
 import org.warriors2583.robolib.robot.ModeSwitcher.GameMode;
 
 /**
