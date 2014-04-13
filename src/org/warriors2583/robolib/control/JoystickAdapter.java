@@ -34,18 +34,18 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
          * Get the Value of the Axis.
          * @return the value of the Axis.
          */
-        public abstract double get();
+        public double get();
         
         /**
          * Invert the Axis.
          */
-        public abstract void invert();
+        public void invert();
         
         /**
          * Set the Deadband of the Axis.
          * @param deadband the deadband value of the axis.
          */
-        public abstract void setDeadband(double deadband);
+        public void setDeadband(double deadband);
     }
     
     /**
@@ -57,12 +57,12 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
          * Get the Value of the Button.
          * @return the value of the Button.
          */
-        public abstract boolean get();
+        public boolean get();
         
         /**
          * Invert the Button.
          */
-        public abstract void invert();
+        public void invert();
     }
     
     private final int m_numAxes, m_numBtns;

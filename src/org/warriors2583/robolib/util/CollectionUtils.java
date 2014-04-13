@@ -13,14 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.robot;
+package org.warriors2583.robolib.util;
+
+import java.util.Collection;
+import org.warriors2583.robolib.util.Function.VoidFunction;
 
 /**
  *
  * @author noriah Reuland
  */
-public interface IRoboBase {
+public final class CollectionUtils {
     
-    public IRoboMap getRMap();
+    private CollectionUtils() throws IllegalAccessException {
+        throw new IllegalAccessException();
+    }
 
 }

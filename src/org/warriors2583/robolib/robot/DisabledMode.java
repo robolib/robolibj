@@ -16,6 +16,7 @@
 package org.warriors2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.communication.FRCControl;
+import org.warriors2583.robolib.util.Logger;
 
 /**
  *
@@ -27,19 +28,27 @@ public abstract class DisabledMode extends RobotMode {
         super(ModeSwitcher.GameMode.kDisabled);
     }
     
-    public final void _init(){
+    /**
+     * {@inheritDoc}
+     */
+    protected final void modeInit(){
         Robot.stopCompressor();
         init();
     }
     
-    public final void _run(){
+    /**
+     * {@inheritDoc}
+     */
+    protected final void modeRun(){
         FRCControl.observeUserProgramDisabled();
         run();
     }
     
-    public final void _end(){
+    /**
+     * {@inheritDoc}
+     */
+    protected final void modeEnd(){
         Robot.startCompressor();
         end();
     }
-
 }
