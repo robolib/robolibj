@@ -28,9 +28,6 @@ public class NetTableController extends JoystickAdapter {
     private Axis m_axes[];
     private Button m_btns[];
     
-    /**
-     * {@inheritDoc}
-     */
     public class NetTableAxis implements Axis {
 
         private int m_invert = 1;
@@ -65,9 +62,6 @@ public class NetTableController extends JoystickAdapter {
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
     public class NetTableButton implements Button {
         
         private boolean m_invert = false;

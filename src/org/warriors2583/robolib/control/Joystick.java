@@ -30,9 +30,6 @@ public class Joystick extends JoystickAdapter {
     private final Axis m_axes[];
     private final Button m_btns[];
 
-    /**
-     * {@inheritDoc}
-     */
     public class JoystickAxis implements Axis {
 
         private int m_invert = 1;
@@ -65,10 +62,7 @@ public class Joystick extends JoystickAdapter {
             m_deadBand = value;
         }
     }
-    
-    /**
-     * {@inheritDoc}
-     */
+
     public class JoystickButton implements Button {
         
         private boolean m_invert = false;
