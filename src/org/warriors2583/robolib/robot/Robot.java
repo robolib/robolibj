@@ -18,14 +18,12 @@ package org.warriors2583.robolib.robot;
 import com.sun.squawk.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.tables.ITableListener;
-import java.io.IOException;
+import org.warriors2583.robolib.util.Logger;
+import org.warriors2583.robolib.util.StringUtils;
 
 /**
  * A better version of the WPILib IterativeRobot class.
@@ -43,23 +41,43 @@ import java.io.IOException;
  * the code.
  * @author Austin Reuland
  */
-public class Robot extends RobotBase implements IRoboBase{
+public class Robot extends RobotBase {
+
+    private static final Logger m_log = Logger.get(Robot.class);
     
-    private String m_name;
-    private String m_version;
-    private static ITable m_table;
-    private static ITableListener m_tableListener;
-    private static boolean m_debug = true;
+    /**
+     * An exception for use with robot code.
+     * 
+     * throw this exception when something goes wrong with the robot that does
+     * not fall under any other exception type.
+     * 
+     * It extends a RuntimeException, but calls the fatal method on {@link Logger}
+     * which will kill the robot. If it does not, its a RuntimeExcption, so
+     * either way, its going to kill the robot.
+     * 
+     */
+    public static final class RobotException extends RuntimeException{
+
+        public RobotException(String msg){
+            super(msg);
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        public synchronized Throwable initCause(Throwable cause) {
+            m_log.fatal(getCause(), this);
+            return super.initCause(cause);
+        }
+    }
+        
+    private final String m_name;
+    private final String m_version;
     private static boolean m_run = true;
-    private static DriverStation m_rds;
-    private static ModeSwitcher m_modeSwitcher;
-    
-    private static final String NETTABLE_REBOOT_KEY = "Reboot";
-    
-    //private static RMap m_map = null;
-    private String m_map = null;
-    
+    private static boolean m_debug = true;
     private static Compressor m_compressor = null;
+    private static final ITable m_table = NetworkTable.getTable("Robot");
+    private static final ModeSwitcher m_modeSwitcher = ModeSwitcher.getInstance();
     
     protected Robot(){
         this("Default", "1.0");
@@ -73,35 +91,23 @@ public class Robot extends RobotBase implements IRoboBase{
     protected Robot(String name, String version){
         m_name = name;
         m_version = version;
-        m_rds = DriverStation.getInstance();
-        m_modeSwitcher = ModeSwitcher.getInstance();
-        m_table = NetworkTable.getTable("Robot");
-        m_tableListener = new ITableListener(){
-
-            public void valueChanged(ITable table, String key, Object value, boolean isNew) {
-                if(key.equalsIgnoreCase(NETTABLE_REBOOT_KEY)){
-                    rebootSystem();
-                }
-            }
-            
-        };
     }
 
     /**
      * Send a message to the Console, and to the Dashboard.
      * @param msg The message to be sent.
      */
-    public static void msg(String msg){
-        System.out.println(msg);
+    protected void msg(String msg){
+        m_log.info(msg);
     }
 
     /**
      * Send a message to the Console, and to the Dashboard.
      * @param msg The message to be sent.
      */
-    public static void debug(String msg){
+    protected void debug(String msg){
         if(m_debug)
-            System.out.println(msg);
+            m_log.debug(msg);
     }
 
     /**
@@ -117,32 +123,22 @@ public class Robot extends RobotBase implements IRoboBase{
      * Lets hope we don't get too many of these
      * @param msg The message to be sent with the RuntimeException
      */
-    public static void error(String msg){
+    protected void error(String msg){
+        error(msg, new RuntimeException());
+    }
+    
+    protected void error(String msg, Throwable e){
         m_run = false;
-        throw new RuntimeException(msg);
+        m_log.error(msg, e);
     }
     
-    private void runShutdown(){
-        
+    protected void fatal(String msg){
+        fatal(msg, new RuntimeException());
     }
     
-    private void rebootSystem(){
-        runShutdown();
-        try {
-            Runtime.getRuntime().exec("reboot");
-        } catch (IOException ex) {}
-    }
-    
-    public static ModeSwitcher.GameMode getGameMode(){
-        return m_modeSwitcher.getGameMode();
-    }
-    
-    public static Alliance getAlliance(){
-        return m_rds.getAlliance();
-    }
-    
-    public static boolean onField(){
-        return m_rds.isFMSAttached();
+    protected void fatal(String msg, Throwable e){
+        m_run = false;
+        m_log.fatal(msg, e);
     }
     
     private int getDSMode(){
@@ -159,12 +155,10 @@ public class Robot extends RobotBase implements IRoboBase{
     }
     
     public void startCompetition() {
-        debug("Robot Library Version 3.11");
+        msg("RoboLib Version 3.11");
         debug("Starting " + m_name);
         UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
-        //if(m_map == null){
-        //    error("you must call Robot.setRMap() in the Class Constructor");
-        //}
+        
         debug("Initializing Robot Network Table and Data");
         m_table.putString("name", m_name);
         m_table.putString("version", m_version);
@@ -178,7 +172,7 @@ public class Robot extends RobotBase implements IRoboBase{
         robotInit();
         LiveWindow.setEnabled(false);
 
-        msg(m_name + ", Verion " + m_version + " Initiated");
+        msg(StringUtils.buildString(new String[]{m_name, ", Version ", m_version, " Running"}));
         
         debug("Starting Main Loop");
         while(m_run){
@@ -193,6 +187,7 @@ public class Robot extends RobotBase implements IRoboBase{
             }
             m_ds.waitForData();
         }
+        m_log.fatal("Aw Nutz, Something went wrong.", new RuntimeException("Exited Main Loop"));
     }
     
     /**
@@ -200,12 +195,12 @@ public class Robot extends RobotBase implements IRoboBase{
      * @param compressor_switch
      * @param compressor_relay 
      */
-    protected static void compressor(int compressor_switch, int compressor_relay){
+    protected void compressor(int compressor_switch, int compressor_relay){
         debug("Adding Compressor on Relay Port " + compressor_relay + " DIO Port " + compressor_switch);
         m_compressor = new Compressor(compressor_switch, compressor_relay);
     }
 
-    protected static void compressor(Compressor compressor){
+    protected void compressor(Compressor compressor){
         debug("Adding Compressor");
         m_compressor = compressor;
     }
@@ -242,9 +237,5 @@ public class Robot extends RobotBase implements IRoboBase{
 
     public void robotInit(){
         debug("Default Robot.robotInit() method... Overload me!");
-    }
-    
-    public IRoboMap getRMap() {
-        return null;
     }
 }

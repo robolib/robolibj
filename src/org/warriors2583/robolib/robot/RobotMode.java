@@ -31,24 +31,42 @@ public abstract class RobotMode {
         ModeSwitcher.getInstance().add(mode, this);
     }
     
-    public void _init(){
+    /**
+     * 
+     */
+    protected void modeInit(){
         Robot.stopCompressor();
         init();
     }
     
+    /**
+     * 
+     */
     public abstract void init();
     
-    public void _run(){
+    /**
+     * 
+     */
+    protected void modeRun(){
         FRCControl.observeUserProgramDisabled();
         run();
     }
     
+    /**
+     * 
+     */
     public abstract void run();
     
-    public void _end(){
+    /**
+     * 
+     */
+    protected void modeEnd(){
         end();
     }
     
+    /**
+     * 
+     */
     public abstract void end();
     
 }

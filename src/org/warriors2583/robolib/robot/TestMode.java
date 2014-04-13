@@ -17,6 +17,7 @@ package org.warriors2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.communication.FRCControl;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import org.warriors2583.robolib.util.Logger;
 
 /**
  *
@@ -28,17 +29,26 @@ public abstract class TestMode extends RobotMode {
         super(ModeSwitcher.GameMode.kTest);
     }
     
-    public final void _init(){
+    /**
+     * {@inheritDoc}
+     */
+    protected final void modeInit(){
         LiveWindow.setEnabled(true);
         init();
     }
     
-    public final void _run(){
+    /**
+     * {@inheritDoc}
+     */
+    protected final void modeRun(){
         FRCControl.observeUserProgramTest();
         run();
     }
     
-    public final void _end(){
+    /**
+     * {@inheritDoc}
+     */
+    protected final void modeEnd(){
         LiveWindow.setEnabled(false);
         end();
     }

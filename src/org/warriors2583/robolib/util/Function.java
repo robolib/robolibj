@@ -13,23 +13,30 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.robot;
-
-import edu.wpi.first.wpilibj.Compressor;
+package org.warriors2583.robolib.util;
 
 /**
- *
+ * 
  * @author Austin Reuland
  */
-public interface IRoboLibRobot {
+public final class Function {
     
-    public int getMode();
+    private Function() throws IllegalAccessException {
+        
+    }
     
+    public static interface VoidFunction{
+        
+        public void Func();
+    }
     
-    public Compressor getCompressor();
+    public static interface DoubleFunction{
+        
+        public double Func();
+    }
     
-    //public 
-    
-    
-
+    public static interface BooleanFunction{
+        
+        public boolean Func();
+    }
 }

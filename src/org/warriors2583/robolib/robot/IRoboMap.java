@@ -52,7 +52,7 @@ public interface IRoboMap {
     /**
      * 
      * @param name
-     * @return 
+     * @return the requested {@code String} property or {@code ""} if not found
      */
     public String getString(String name);
     
@@ -60,14 +60,14 @@ public interface IRoboMap {
      * 
      * @param name
      * @param def
-     * @return 
+     * @return the requested {@code String} property or {@code def} if not found
      */
     public String getString(String name, String def);
     
     /**
      * 
      * @param name
-     * @return 
+     * @return the requested {@code boolean} property or {@code false} if not found
      */
     public boolean getBoolean(String name);
 
@@ -75,14 +75,14 @@ public interface IRoboMap {
      * 
      * @param name
      * @param def
-     * @return 
+     * @return the requested {@code boolean} property or {@code def} if not found
      */
     public boolean getBoolean(String name, boolean def);
     
     /**
      * 
      * @param name
-     * @return 
+     * @return the requested {@code double} property or {@code 0.00} if not found
      */
     public double getNumber(String name);
     
@@ -90,14 +90,14 @@ public interface IRoboMap {
      * 
      * @param name
      * @param def
-     * @return 
+     * @return the requested {@code double} property or {@code def} if not found
      */
     public double getNumber(String name, double def);
     
     /**
      * 
      * @param name
-     * @return 
+     * @return the requested {@code Object} property or {@code null} if not found
      */
     public Object getObject(String name);
     
@@ -105,7 +105,7 @@ public interface IRoboMap {
      * 
      * @param name
      * @param def
-     * @return 
+     * @return the requested {@code Object} property or {@code def} if not found
      */
     public Object getObject(String name, Object def);
 

@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import java.util.HashMap;
 import java.util.Map;
+import org.warriors2583.robolib.robot.Robot.RobotException;
+import org.warriors2583.robolib.util.Logger;
 
 /**
  * Handles the Switching of the Game mode and the Execution of the mode.
@@ -64,7 +66,7 @@ public class ModeSwitcher {
     private static final String NETTABLE_CURRENT_MODE = "mode";
     private static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
     
-    private GameMode m_currentMode;
+    private static GameMode m_currentMode;
     
     private boolean m_initialized;
     private final Map m_modes = new HashMap();
@@ -82,14 +84,22 @@ public class ModeSwitcher {
         m_scheduler = Scheduler.getInstance();
     }
     
+    private void debug(String msg){
+        Logger.get(this).info(msg);
+    }
+    
     /**
      * Add the a {@link RobotMode} to the ModeSwitcher this will overwrite any previous
      * mode that has the same {@link GameMode}.
-     * @param mType
-     * @param rMode 
+     * @param gMode the {@link GameMode} that this RobotMode will be run at
+     * @param rMode the {@link RobotMode} to add
+     * @see GameMode
+     * @see RobotMode
      */
-    protected void add(GameMode mType, RobotMode rMode){
-        m_modes.put(rMode, mType);
+    protected void add(GameMode gMode, RobotMode rMode){
+        if(!m_initialized){
+            m_modes.put(rMode, gMode);
+        }
     }
     
     /**
@@ -99,7 +109,6 @@ public class ModeSwitcher {
      * Checks each Mode to see if there is code to run, if not, a Default class
      * will be added.
      *
-     * @see RobotMode
      * @see DisabledMode
      * @see TestMode
      * @see AutonMode
@@ -107,8 +116,8 @@ public class ModeSwitcher {
      */
     protected void init(){
         if(!m_modes.containsKey(GameMode.kDisabled)){
-            Robot.debug("No Disabled Robot Mode Defined");
-            Robot.debug("Creating Default Disabled Mode");
+            debug("No Disabled Robot Mode Defined");
+            debug("Creating Default Disabled Mode");
             new DisabledMode(){
                 public void init(){}
                 public void run(){ Timer.delay(0.001); }
@@ -117,8 +126,8 @@ public class ModeSwitcher {
         }
         
         if(!m_modes.containsKey(GameMode.kTest)){
-            Robot.debug("No Test Robot Mode Defined");
-            Robot.debug("Creating Default Test Mode");
+            debug("No Test Robot Mode Defined");
+            debug("Creating Default Test Mode");
             new TestMode(){
                 public void init(){}
                 public void run(){ Timer.delay(0.001); }
@@ -127,8 +136,8 @@ public class ModeSwitcher {
         }
         
         if(!m_modes.containsKey(GameMode.kAuton)){
-            Robot.debug("No Autonomous Robot Mode Defined");
-            Robot.debug("Creating Default Autonomous Mode");
+            debug("No Autonomous Robot Mode Defined");
+            debug("Creating Default Autonomous Mode");
             new AutonMode(){
                 public void init(){}
                 public void run(){ Timer.delay(0.001); }
@@ -137,8 +146,8 @@ public class ModeSwitcher {
         }
         
         if(!m_modes.containsKey(GameMode.kTeleop)){
-            Robot.debug("No Teleop Robot Mode Defined");
-            Robot.debug("Creating Default Teleop Mode");
+            debug("No Teleop Robot Mode Defined");
+            debug("Creating Default Teleop Mode");
             new TeleopMode(){
                 public void init(){}
                 public void run(){ Timer.delay(0.001); }
@@ -151,9 +160,19 @@ public class ModeSwitcher {
     
     /**
      * Runs the Current RobotMode.
+     * 
+     * Catches any Throwable objects that may be thrown.
+     * Any caught Throwable Object is treated as fatal and will kill the Robot.
+     * They are treated as fatal because any uncaught Throwables can only be 
+     * RuntimeExceptions or Errors, which are Fatal
+     * 
      */
     protected void run(){
-        getRobotMode()._run();
+        try{
+            getRobotMode().modeRun();
+        }catch(Throwable e){
+            Logger.get(getRobotMode()).fatal("Fatal action in RobotMode run method", e);
+        }
         m_scheduler.run();
     }
     
@@ -162,8 +181,12 @@ public class ModeSwitcher {
      * 
      * @return the current {@link GameMode} 
      */
-    public GameMode getGameMode(){
+    public static GameMode getGameMode(){
         return m_currentMode;
+    }
+    
+    public static String getGameModeName(){
+        return getGameMode().getName();
     }
     
     /**
@@ -179,7 +202,7 @@ public class ModeSwitcher {
         if(m_modes.size() <= 0){
             return new RobotMode(){
                 public void init(){
-                    Robot.error("No Modes Defined. Somthing Messed Up");
+                    throw new RobotException("No Robot Mode");
                 }
                 public void run(){}
                 public void end(){}    
@@ -208,15 +231,28 @@ public class ModeSwitcher {
      * then set the current {@link GameMode}, call the System Garbace Collector,
      * and then call the new RobotMode init() method.
      * 
+     * Catches any Throwable objects that may be thrown.
+     * Any caught Throwable Object is treated as fatal and will kill the Robot.
+     * They are treated as fatal because any uncaught Throwables can only be 
+     * RuntimeExceptions or Errors, which are Fatal
+     * 
      * @param mode the {@link GameMode} to switch to.
      */
     public void switchMode(GameMode mode){
-        getRobotMode()._end();
+        try{
+            getRobotMode().modeEnd();
+        }catch(Throwable e){
+            Logger.get(getRobotMode()).fatal("Fatal action in RobotMode end method", e);
+        }
         m_currentMode = mode;
         Robot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, mode.getValue());
         Robot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, mode.getName());
         System.gc();
-        getRobotMode()._init();
+        try{
+            getRobotMode().modeInit();
+        }catch(Throwable e){
+            Logger.get(getRobotMode()).fatal("Fatal action in RobotMode init method", e);
+        }
     }
     
     /**

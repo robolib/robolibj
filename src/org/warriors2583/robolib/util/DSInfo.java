@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.control;
+package org.warriors2583.robolib.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationEnhancedIO;
@@ -91,32 +91,32 @@ public final class DSInfo {
         return m_ds.getMatchTime();
     }
     
-    public static void writeLCDLine1(String msg){
+    public static void printLCDLine1(String msg){
         m_dslcd.println(DriverStationLCD.Line.kUser1, 1, msg);
         m_dslcd.updateLCD();
     }
     
-    public static void writeLCDLine2(String msg){
+    public static void printLCDLine2(String msg){
         m_dslcd.println(DriverStationLCD.Line.kUser2, 1, msg);
         m_dslcd.updateLCD();
     }
     
-    public static void writeLCDLine3(String msg){
+    public static void printLCDLine3(String msg){
         m_dslcd.println(DriverStationLCD.Line.kUser3, 1, msg);
         m_dslcd.updateLCD();
     }
     
-    public static void writeLCDLine4(String msg){
+    public static void printLCDLine4(String msg){
         m_dslcd.println(DriverStationLCD.Line.kUser4, 1, msg);
         m_dslcd.updateLCD();
     }
     
-    public static void writeLCDLine5(String msg){
+    public static void printLCDLine5(String msg){
         m_dslcd.println(DriverStationLCD.Line.kUser5, 1, msg);
         m_dslcd.updateLCD();        
     }
     
-    public static void writeLCDLine6(String msg){
+    public static void printLCDLine6(String msg){
         m_dslcd.println(DriverStationLCD.Line.kUser6, 1, msg);
         m_dslcd.updateLCD();
     }

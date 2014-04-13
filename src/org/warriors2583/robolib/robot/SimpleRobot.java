@@ -16,10 +16,6 @@
 package org.warriors2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.Timer;
-import org.warriors2583.robolib.robot.AutonMode;
-import org.warriors2583.robolib.robot.DisabledMode;
-import org.warriors2583.robolib.robot.TeleopMode;
-import org.warriors2583.robolib.robot.TestMode;
 
 /**
  * The Simple Robot Class.

@@ -16,6 +16,7 @@
 package org.warriors2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.communication.FRCControl;
+import org.warriors2583.robolib.util.Logger;
 
 /**
  *
@@ -27,17 +28,11 @@ public abstract class TeleopMode extends RobotMode {
         super(ModeSwitcher.GameMode.kTeleop);
     }
     
-    public final void _init(){
-        init();
-    }
-    
-    public final void _run(){
+    /**
+     * {@inheritDoc}
+     */
+    protected final void modeRun(){
         FRCControl.observeUserProgramTeleop();
         run();
     }
-    
-    public final void _end(){
-        end();
-    }
-
 }
