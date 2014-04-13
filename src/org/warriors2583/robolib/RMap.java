@@ -15,6 +15,7 @@
 
 package org.warriors2583.robolib;
 
+import org.warriors2583.robolib.robot.Robot;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
 import java.util.HashMap;

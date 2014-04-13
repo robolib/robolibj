@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib;
+package org.warriors2583.robolib.robot;
 
 import com.sun.squawk.*;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -24,7 +24,9 @@ import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
-import org.warriors2583.robolib.robot.ModeSwitcher;
+import edu.wpi.first.wpilibj.tables.ITableListener;
+import java.io.IOException;
+import org.warriors2583.robolib.IRoboMap;
 
 /**
  * A better version of the WPILib IterativeRobot class.
@@ -47,10 +49,13 @@ public class Robot extends RobotBase implements IRoboBase{
     private String m_name;
     private String m_version;
     private static ITable m_table;
+    private static ITableListener m_tableListener;
     private static boolean m_debug = true;
     private static boolean m_run = true;
     private static DriverStation m_rds;
     private static ModeSwitcher m_modeSwitcher;
+    
+    private static final String NETTABLE_REBOOT_KEY = "Reboot";
     
     //private static RMap m_map = null;
     private String m_map = null;
@@ -72,6 +77,15 @@ public class Robot extends RobotBase implements IRoboBase{
         m_rds = DriverStation.getInstance();
         m_modeSwitcher = ModeSwitcher.getInstance();
         m_table = NetworkTable.getTable("Robot");
+        m_tableListener = new ITableListener(){
+
+            public void valueChanged(ITable table, String key, Object value, boolean isNew) {
+                if(key.equalsIgnoreCase(NETTABLE_REBOOT_KEY)){
+                    rebootSystem();
+                }
+            }
+            
+        };
     }
 
     /**
@@ -107,6 +121,17 @@ public class Robot extends RobotBase implements IRoboBase{
     public static void error(String msg){
         m_run = false;
         throw new RuntimeException(msg);
+    }
+    
+    private void runShutdown(){
+        
+    }
+    
+    private void rebootSystem(){
+        runShutdown();
+        try {
+            Runtime.getRuntime().exec("reboot");
+        } catch (IOException ex) {}
     }
     
     public static ModeSwitcher.GameMode getGameMode(){
@@ -179,6 +204,11 @@ public class Robot extends RobotBase implements IRoboBase{
     protected static void compressor(int compressor_switch, int compressor_relay){
         debug("Adding Compressor on Relay Port " + compressor_relay + " DIO Port " + compressor_switch);
         m_compressor = new Compressor(compressor_switch, compressor_relay);
+    }
+
+    protected static void compressor(Compressor compressor){
+        debug("Adding Compressor");
+        m_compressor = compressor;
     }
 
     public static void startCompressor(){

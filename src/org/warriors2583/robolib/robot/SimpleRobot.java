@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib;
+package org.warriors2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.Timer;
 import org.warriors2583.robolib.robot.AutonMode;

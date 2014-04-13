@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import java.util.HashMap;
 import java.util.Map;
-import org.warriors2583.robolib.Robot;
 
 /**
  * Handles the Switching of the Game mode and the Execution of the mode.
@@ -67,11 +66,11 @@ public class ModeSwitcher {
         m_scheduler = Scheduler.getInstance();
     }
     
-    public void add(GameMode mType, RobotMode rMode){
+    protected void add(GameMode mType, RobotMode rMode){
         m_modes.put(rMode, mType);
     }
     
-    public void init(){
+    protected void init(){
         if(!m_modes.containsKey(GameMode.kDisabled)){
             Robot.debug("No Disabled Robot Mode Defined");
             Robot.debug("Creating Default Disabled Mode");
@@ -113,7 +112,7 @@ public class ModeSwitcher {
         }        
     }
     
-    public void run(){
+    protected void run(){
         getRobotMode()._run();
         m_scheduler.run();
     }
