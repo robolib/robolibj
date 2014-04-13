@@ -13,9 +13,9 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.limitswitch;
+package org.warriors2583.robolib.input.limitswitch;
 
-import org.warriors2583.robolib.limitswitch.LimitSwitch.SwitchType;
+import org.warriors2583.robolib.input.limitswitch.LimitSwitch.SwitchType;
 
 /**
  * A Limit Switch System using only one Switch

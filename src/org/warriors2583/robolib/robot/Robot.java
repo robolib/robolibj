@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
 import java.io.IOException;
-import org.warriors2583.robolib.IRoboMap;
 
 /**
  * A better version of the WPILib IterativeRobot class.

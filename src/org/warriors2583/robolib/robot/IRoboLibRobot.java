@@ -13,19 +13,23 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.limitswitch;
+package org.warriors2583.robolib.robot;
 
-import org.warriors2583.robolib.limitswitch.LimitSwitch.SwitchType;
+import edu.wpi.first.wpilibj.Compressor;
 
 /**
- * Interface for a Limit Switch
+ *
  * @author noriah Reuland
  */
-public interface IStandardSwitch {
+public interface IRoboLibRobot {
     
-    public boolean state();
+    public int getMode();
     
-    public int getChannel();
     
-    public SwitchType getType();
+    public Compressor getCompressor();
+    
+    //public 
+    
+    
+
 }

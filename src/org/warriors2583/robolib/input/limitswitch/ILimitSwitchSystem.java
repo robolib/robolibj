@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.warriors2583.robolib.limitswitch;
+package org.warriors2583.robolib.input.limitswitch;
 
 /**
  * The Limit Switch System Interface
