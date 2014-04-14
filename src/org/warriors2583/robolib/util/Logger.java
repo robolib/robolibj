@@ -15,11 +15,8 @@
 
 package org.warriors2583.robolib.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.Hashtable;
+import java.util.Vector;
 import org.warriors2583.robolib.robot.ModeSwitcher;
 
 /**
@@ -84,8 +81,8 @@ public final class Logger {
         }
     };
     
-    private static final Map m_loggers = new HashMap();
-    private final List m_outs;
+    private static final Hashtable m_loggers = new Hashtable();
+    private final Vector m_outs;
     private final String m_origin;
     
     public static Logger get(Object o){
@@ -104,20 +101,19 @@ public final class Logger {
      * @param c the calling Class
      */
     private Logger(Class c){
-        m_outs = new ArrayList();
-        m_outs.add(LOG_OUT_TERM);
+        m_outs = new Vector();
+        addLogOutput(LOG_OUT_TERM);
         m_origin = StringUtils.buildString(new String[]{"@", c.getName(), ": "});
     }
     
     public void addLogOutput(LogOutput out){
         if(!m_outs.contains(out))
-            m_outs.add(out);
+            m_outs.addElement(out);
     }
     
     private void sendMsg(String msg){
-        Iterator i = m_outs.iterator();
-        while(i.hasNext())
-            ((LogOutput) i.next()).sendMsg(msg);
+        for(int i = 0; i < m_outs.size(); i++)
+            ((LogOutput) m_outs.elementAt(i)).sendMsg(msg);
     }
     
     private static String msgBuilder(Level l, String origin, String s){

@@ -50,24 +50,11 @@ public class Robot extends RobotBase {
      * 
      * throw this exception when something goes wrong with the robot that does
      * not fall under any other exception type.
-     * 
-     * It extends a RuntimeException, but calls the fatal method on {@link Logger}
-     * which will kill the robot. If it does not, its a RuntimeExcption, so
-     * either way, its going to kill the robot.
-     * 
      */
     public static final class RobotException extends RuntimeException{
 
         public RobotException(String msg){
             super(msg);
-        }
-        
-        /**
-         * {@inheritDoc}
-         */
-        public synchronized Throwable initCause(Throwable cause) {
-            m_log.fatal(getCause(), this);
-            return super.initCause(cause);
         }
     }
         
@@ -155,7 +142,7 @@ public class Robot extends RobotBase {
     }
     
     public void startCompetition() {
-        msg("RoboLib Version 3.11");
+        msg("RoboLibJ Version 1.02");
         debug("Starting " + m_name);
         UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
         
