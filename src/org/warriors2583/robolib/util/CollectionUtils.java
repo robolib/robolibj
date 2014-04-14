@@ -15,9 +15,6 @@
 
 package org.warriors2583.robolib.util;
 
-import java.util.Collection;
-import org.warriors2583.robolib.util.Function.VoidFunction;
-
 /**
  *
  * @author noriah Reuland

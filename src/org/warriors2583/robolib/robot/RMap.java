@@ -15,11 +15,9 @@
 
 package org.warriors2583.robolib.robot;
 
-import org.warriors2583.robolib.robot.Robot;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
 import org.warriors2583.robolib.util.ConstantRunner;
 
 /**
@@ -28,9 +26,9 @@ import org.warriors2583.robolib.util.ConstantRunner;
  */
 public class RMap {
     
-    private static final Map strVals = new HashMap();
-    private static final Map boolVals = new HashMap();
-    private static final Map intVals = new HashMap();
+    private static final Hashtable strVals = new Hashtable();
+    private static final Hashtable boolVals = new Hashtable();
+    private static final Hashtable intVals = new Hashtable();
     
     public static final String NETTABLE_MAP_NAME = "RMap";
     public static final String NETTABLE_MAP_STRINGS_NAME = "Strings";

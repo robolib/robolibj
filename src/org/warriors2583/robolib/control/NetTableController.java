@@ -15,6 +15,7 @@
 
 package org.warriors2583.robolib.control;
 
+import com.sun.squawk.util.MathUtils;
 import org.warriors2583.robolib.robot.Robot;
 import edu.wpi.first.wpilibj.tables.ITable;
 
@@ -144,6 +145,6 @@ public class NetTableController extends JoystickAdapter {
      * @return The direction of the vector in radians
      */
     public double getDirectionRadians() {
-        return Math.atan2(getX(), getY());
+        return MathUtils.atan2(getX(), getY());
     }
 }

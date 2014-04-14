@@ -15,6 +15,7 @@
 
 package org.warriors2583.robolib.control;
 
+import com.sun.squawk.util.MathUtils;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.parsing.IInputOutput;
 
@@ -214,7 +215,7 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
      * @return The magnitude of the direction vector
      */
     public double getMagnitude() {
-        return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
+        return Math.sqrt(MathUtils.pow(getX(), 2) + MathUtils.pow(getY(), 2));
     }
 
     /**
@@ -226,7 +227,7 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
      * @return The direction of the vector in radians
      */
     public double getDirectionRadians() {
-        return Math.atan2(getX(), -getY());
+        return MathUtils.atan2(getX(), -getY());
     }
 
     /**

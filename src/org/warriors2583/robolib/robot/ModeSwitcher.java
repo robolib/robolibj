@@ -17,8 +17,7 @@ package org.warriors2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
 import org.warriors2583.robolib.robot.Robot.RobotException;
 import org.warriors2583.robolib.util.Logger;
 
@@ -69,7 +68,7 @@ public class ModeSwitcher {
     private static GameMode m_currentMode;
     
     private boolean m_initialized;
-    private final Map m_modes = new HashMap();
+    private final Hashtable m_modes = new Hashtable();
     private final Scheduler m_scheduler;
     
     private static final ModeSwitcher m_instance = new ModeSwitcher();
