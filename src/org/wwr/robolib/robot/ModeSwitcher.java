@@ -16,7 +16,7 @@
 package org.wwr.robolib.robot;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.wwr.robolib.robot.Robot.RobotException;
+import org.wwr.robolib.robot.RoboLibBot.RobotException;
 import org.wwr.robolib.util.Logger;
 
 /**
@@ -138,17 +138,17 @@ public class ModeSwitcher {
         }
         m_currentMode = GameMode.kDisabled;
         m_initialized = true;
-        Robot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.getValue());
-        Robot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, m_currentMode.getName());
+        RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.getValue());
+        RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, m_currentMode.getName());
     }
     
     /**
      * Runs the Current RobotMode.
      * 
      * Catches any Throwable objects that may be thrown.
-     * Any caught Throwable Object is treated as fatal and will kill the Robot.
-     * They are treated as fatal because any uncaught Throwables can only be 
-     * RuntimeExceptions or Errors, which are Fatal
+ Any caught Throwable Object is treated as fatal and will kill the RoboLibBot.
+ They are treated as fatal because any uncaught Throwables can only be 
+ RuntimeExceptions or Errors, which are Fatal
      * 
      */
     protected void run(){
@@ -221,12 +221,12 @@ public class ModeSwitcher {
      * 
      * This will first call the end() Method of the current {@link RobotMode},
      * then set the current {@link GameMode}, call the System Garbace Collector,
-     * and then call the new RobotMode init() method.
-     * 
-     * Catches any Throwable objects that may be thrown.
-     * Any caught Throwable Object is treated as fatal and will kill the Robot.
-     * They are treated as fatal because any uncaught Throwables can only be 
-     * RuntimeExceptions or Errors, which are Fatal
+ and then call the new RobotMode init() method.
+ 
+ Catches any Throwable objects that may be thrown.
+ Any caught Throwable Object is treated as fatal and will kill the RoboLibBot.
+ They are treated as fatal because any uncaught Throwables can only be 
+ RuntimeExceptions or Errors, which are Fatal
      * 
      * @param mode the {@link GameMode} to switch to.
      */
@@ -239,8 +239,8 @@ public class ModeSwitcher {
             Logger.get(getRobotMode()).fatal("Fatal action in RobotMode end method", e);
         }
         m_currentMode = mode;
-        Robot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, mode.getValue());
-        Robot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, mode.getName());
+        RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, mode.getValue());
+        RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, mode.getName());
         System.gc();
         try{
             getRobotMode().modeInit();

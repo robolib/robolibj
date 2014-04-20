@@ -15,23 +15,29 @@
 
 package org.wwr.robolib.robot;
 
-import edu.wpi.first.wpilibj.Timer;
-
 /**
- * The Simple Robot Class.
- * This is a more simple version of the Robot class, it has pre-defined
+ * The Simple RoboLibBot Class.
+ * This is a more simple version of the RoboLibBot class, it has pre-defined
  * functions instead of classes, making it easier to understand.
  * 
  * @author Austin Reuland
  */
-public class SimpleRobot extends Robot {
+public class SimpleRobot extends RoboLibBot {
     
     public SimpleRobot(){
-        this("Default", "1.0");
+        this("Default", "1.0.0");
+    }
+
+    /**
+     * Create a Simple RoboLibBot
+     * @param name
+     */
+    public SimpleRobot(String name){
+        this(name, "1.0.0");
     }
     
     /**
-     * Create a Simple Robot
+     * Create a Simple RoboLibBot
      * @param name
      * @param version 
      */
@@ -90,7 +96,6 @@ public class SimpleRobot extends Robot {
             debug("Default SimpleRobot.disabledPeriodic() method... Overload me!");
             dpFirstRun = false;
         }
-        Timer.delay(0.001);
     }
 
     boolean tpmFirstRun = true;
@@ -99,7 +104,6 @@ public class SimpleRobot extends Robot {
             debug("Default SimpleRobot.testPeriodic() method... Overload me!");
             tpmFirstRun = false;
         }
-        Timer.delay(0.001);
     }
 
     boolean apFirstRun = true;
@@ -108,7 +112,6 @@ public class SimpleRobot extends Robot {
             debug("Default SimpleRobot.autonomousPeriodic() method... Overload me!");
             apFirstRun = false;
         }
-        Timer.delay(0.001);
     }
 
     boolean tpFirstRun = true;
@@ -117,7 +120,6 @@ public class SimpleRobot extends Robot {
             debug("Default SimpleRobot.teleopPeriodic() method... Overload me!");
             tpFirstRun = false;
         }
-        Timer.delay(0.001);
     }
     
     public void disabledEnd(){

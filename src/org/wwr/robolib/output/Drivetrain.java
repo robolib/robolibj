@@ -13,41 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.wwr.robolib.robot;
-
-import edu.wpi.first.wpilibj.communication.FRCControl;
+package org.wwr.robolib.output;
 
 /**
  *
  * @author Austin Reuland
  */
-public abstract class DisabledMode extends RobotMode {
-    
-    protected DisabledMode(){
-        super(ModeSwitcher.GameMode.kDisabled);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected final void modeInit(){
-        RoboLibBot.stopCompressor();
-        init();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected final void modeRun(){
-        FRCControl.observeUserProgramDisabled();
-        run();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected final void modeEnd(){
-        RoboLibBot.startCompressor();
-        end();
-    }
+public class Drivetrain {
+
 }

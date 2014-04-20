@@ -15,8 +15,8 @@
 
 package org.wwr.robolib.control;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
+import org.wwr.robolib.util.DSInfo;
 
 /**
  * The RoboLibJ main Joystick.
@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.communication.UsageReporting;
  */
 public class Joystick extends JoystickAdapter {
     
-    private final DriverStation m_ds;
     private final int m_port;
     private final Axis m_axes[];
     private final Button m_btns[];
@@ -44,7 +43,7 @@ public class Joystick extends JoystickAdapter {
          * {@inheritDoc}
          */
         public double get(){
-            double out = m_ds.getStickAxis(m_port, m_channel) * m_invert;
+            double out = DSInfo.getStickAxis(m_port, m_channel) * m_invert;
             return (Math.abs(out) <= m_deadBand ? 0 : out);
         }
 
@@ -76,7 +75,7 @@ public class Joystick extends JoystickAdapter {
          * {@inheritDoc}
          */
         public boolean get() {
-            return (((0x1 << m_channel) & m_ds.getStickButtons(m_port)) != 0);
+            return (((0x1 << m_channel) & DSInfo.getStickButtons(m_port)) != 0);
         }
     }
     
@@ -87,7 +86,6 @@ public class Joystick extends JoystickAdapter {
     public Joystick(final int port){
         super(6, 12);
         m_port = port;
-        m_ds = DriverStation.getInstance();
         
         m_axes = new JoystickAxis[]{
             new JoystickAxis(1),

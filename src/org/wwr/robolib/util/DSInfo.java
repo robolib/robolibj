@@ -58,6 +58,14 @@ public final class DSInfo {
     public static void setDigitalOut(int channel, boolean value){
         m_ds.setDigitalOut(channel, value);
     }
+
+    public static double getStickAxis(int port, int channel){
+        return m_ds.getStickAxis(port, channel);
+    }
+
+    public static int getStickButtons(int port){
+        return m_ds.getStickButtons(port);
+    }
     
     public static boolean enabled(){
         return m_ds.isEnabled();
