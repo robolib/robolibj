@@ -1,6 +1,6 @@
 RoboLibJ
 ==
-A Library of centralized functions to help ease the process of learning Robot Programming
+A Better WPILib
 
 Javadoc: http://djwolf.no-ip.org/projects/wwrobotics/RoboLibJ/code/javadoc/index.html
 
