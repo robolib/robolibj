@@ -17,10 +17,7 @@ package org.wwr.robolib.robot;
 
 import edu.wpi.first.wpilibj.communication.FRCControl;
 import org.wwr.robolib.robot.ModeSwitcher.GameMode;
-<<<<<<< HEAD:src/org/wwr/robolib/robot/RobotMode.java
 import org.wwr.robolib.util.Logger;
-=======
->>>>>>> 1019338f952265480c47f09568b67685eae39916:src/org/wwr/robolib/robot/RobotMode.java
 
 /**
  *
