@@ -63,9 +63,9 @@ public final class Logger {
         
         /**
          * Sends the message to the output.
-         * @param msg the message to be sent
+         * @param s the message to be sent
          */
-        public void sendMsg(String msg);
+        public void sendMsg(String s);
         
     }
     
@@ -85,10 +85,21 @@ public final class Logger {
     private final Vector m_outs;
     private final String m_origin;
     
+    
+    /**
+     * Get the logger instance for o
+     * @param o the object to get the logger for.
+     * @return a logger instance
+     */
     public static Logger get(Object o){
         return get(o.getClass());
     }
     
+    /**
+     * Get the logger instance for c
+     * @param c the class to get the logger for.
+     * @return a logger instance
+     */
     public static Logger get(Class c){
         if(!m_loggers.containsKey(c))
             m_loggers.put(c, new Logger(c));
@@ -106,61 +117,417 @@ public final class Logger {
         m_origin = StringUtils.buildString(new String[]{"@", c.getName(), ": "});
     }
     
+    /**
+     * Add an output to the logger for this object.
+     * 
+     * Adding a new output will add that output to the list so that it will output
+     * log data same as the console.
+     * @param out 
+     */
     public void addLogOutput(LogOutput out){
         if(!m_outs.contains(out))
             m_outs.addElement(out);
     }
     
-    private void sendMsg(String msg){
+    /**
+     * Log a message
+     * @param s the String to log
+     */
+    private void sendMsg(String s){
         for(int i = 0; i < m_outs.size(); i++)
-            ((LogOutput) m_outs.elementAt(i)).sendMsg(msg);
+            ((LogOutput) m_outs.elementAt(i)).sendMsg(s);
     }
     
+    /**
+     * 
+     * @param l the Logging level
+     * @param origin the logger m_origin
+     * @param s the Log Message
+     * @return the built string
+     */
     private static String msgBuilder(Level l, String origin, String s){
         return StringUtils.buildString(new String[]{
             l.m_name, "[", ModeSwitcher.getGameModeName(), "] ", origin, s
         });
     }
         
-    public void info(Object o){
-        info(o.toString());
+    /**
+     * Log an {@code Object} to the logger, with info status.
+     * @param obj the {@code Object} to log
+     */
+    public void info(Object obj){
+        info(String.valueOf(obj));
     }
     
-    public void info(String msg){
-        sendMsg(msgBuilder(Level.kInfo, m_origin, msg));
+    /**
+     * Log a {@code boolean} to the logger, with info status.
+     * @param b the {@code boolean} to log
+     */
+    public void info(boolean b){
+        info(String.valueOf(b));
     }
     
-    public void debug(Object o){
-        debug(o.toString());
+    /**
+     * Log an {@code char} to the logger, with info status.
+     * @param c the {@code char} to log
+     */
+    public void info(char c){
+        info(String.valueOf(c));
     }
     
-    public void debug(String msg){
-        sendMsg(msgBuilder(Level.kDebug, m_origin, msg));
+    /**
+     * Log an {@code char} to the logger, with info status.
+     * @param s the {@code char} array to log
+     */
+    public void info(char[] s){
+        info(String.valueOf(s));
     }
     
-    public void warn(Object o){
-        warn(o.toString());
+    /**
+     * Log an {@code double} to the logger, with info status.
+     * @param d the {@code double} to log
+     */
+    public void info(double d){
+        info(String.valueOf(d));
     }
     
-    public void warn(String msg){
-        sendMsg(msgBuilder(Level.kWarning, m_origin, msg));
+    /**
+     * Log an {@code float} to the logger, with info status.
+     * @param f the {@code float} to log
+     */
+    public void info(float f){
+        info(String.valueOf(f));
     }
     
-    public void error(Object o, Throwable e){
-        error(o.toString(), e);
+    /**
+     * Log an {@code int} to the logger, with info status.
+     * @param i the {@code int} to log
+     */
+    public void info(int i){
+        info(String.valueOf(i));
     }
     
-    public void error(String msg, Throwable e){
-        sendMsg(msgBuilder(Level.kError, m_origin, msg));
+    /**
+     * Log an {@code long} to the logger, with info status.
+     * @param l the {@code long} to log
+     */
+    public void info(long l){
+        info(String.valueOf(l));
+    }
+    
+    /**
+     * Log an {@code String} to the logger, with info status.
+     * @param s the {@code String} to log
+     */
+    public void info(String s){
+        sendMsg(msgBuilder(Level.kInfo, m_origin, s));
+    }
+    
+    /**
+     * Log an {@code Object} to the logger, with debug status.
+     * @param obj the {@code Object} to log
+     */
+    public void debug(Object obj){
+        debug(String.valueOf(obj));
+    }
+    
+    /**
+     * Log a {@code boolean} to the logger, with debug status.
+     * @param b the {@code boolean} to log
+     */
+    public void debug(boolean b){
+        debug(String.valueOf(b));
+    }
+    
+    /**
+     * Log an {@code char} to the logger, with debug status.
+     * @param c the {@code char} to log
+     */
+    public void debug(char c){
+        debug(String.valueOf(c));
+    }
+    
+    /**
+     * Log an {@code char} to the logger, with debug status.
+     * @param s the {@code char} array to log
+     */
+    public void debug(char[] s){
+        debug(String.valueOf(s));
+    }
+    
+    /**
+     * Log an {@code double} to the logger, with debug status.
+     * @param d the {@code double} to log
+     */
+    public void debug(double d){
+        debug(String.valueOf(d));
+    }
+    
+    /**
+     * Log an {@code float} to the logger, with debug status.
+     * @param f the {@code float} to log
+     */
+    public void debug(float f){
+        debug(String.valueOf(f));
+    }
+    
+    /**
+     * Log an {@code int} to the logger, with debug status.
+     * @param i the {@code int} to log
+     */
+    public void debug(int i){
+        debug(String.valueOf(i));
+    }
+    
+    /**
+     * Log an {@code long} to the logger, with debug status.
+     * @param l the {@code long} to log
+     */
+    public void debug(long l){
+        debug(String.valueOf(l));
+    }
+    
+    /**
+     * Log an {@code String} to the logger, with debug status.
+     * @param s the {@code String} to log
+     */
+    public void debug(String s){
+        sendMsg(msgBuilder(Level.kDebug, m_origin, s));
+    }
+    
+    /**
+     * Log an {@code Object} to the logger, with warn status.
+     * @param obj the {@code Object} to log
+     */
+    public void warn(Object obj){
+        warn(String.valueOf(obj));
+    }
+    
+    /**
+     * Log a {@code boolean} to the logger, with warn status.
+     * @param b the {@code boolean} to log
+     */
+    public void warn(boolean b){
+        warn(String.valueOf(b));
+    }
+    
+    /**
+     * Log an {@code char} to the logger, with warn status.
+     * @param c the {@code char} to log
+     */
+    public void warn(char c){
+        warn(String.valueOf(c));
+    }
+    
+    /**
+     * Log an {@code char} to the logger, with warn status.
+     * @param s the {@code char} array to log
+     */
+    public void warn(char[] s){
+        warn(String.valueOf(s));
+    }
+    
+    /**
+     * Log an {@code double} to the logger, with warn status.
+     * @param d the {@code double} to log
+     */
+    public void warn(double d){
+        warn(String.valueOf(d));
+    }
+    
+    /**
+     * Log an {@code float} to the logger, with warn status.
+     * @param f the {@code float} to log
+     */
+    public void warn(float f){
+        warn(String.valueOf(f));
+    }
+    
+    /**
+     * Log an {@code int} to the logger, with warn status.
+     * @param i the {@code int} to log
+     */
+    public void warn(int i){
+        warn(String.valueOf(i));
+    }
+    
+    /**
+     * Log an {@code long} to the logger, with warn status.
+     * @param l the {@code long} to log
+     */
+    public void warn(long l){
+        warn(String.valueOf(l));
+    }
+    
+    /**
+     * Log an {@code String} to the logger, with warning status.
+     * @param s the {@code String} to log
+     */
+    public void warn(String s){
+        sendMsg(msgBuilder(Level.kWarning, m_origin, s));
+    }
+    
+    /**
+     * Log an {@code Object} to the logger, with error status.
+     * @param obj the {@code Object} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(Object obj, Throwable e){
+        error(String.valueOf(obj), e);
+    }
+    
+    /**
+     * Log a {@code boolean} to the logger, with error status.
+     * @param b the {@code boolean} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(boolean b, Throwable e){
+        error(String.valueOf(b), e);
+    }
+    
+    /**
+     * Log an {@code char} to the logger, with error status.
+     * @param c the {@code char} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(char c, Throwable e){
+        error(String.valueOf(c), e);
+    }
+    
+    /**
+     * Log an {@code char} to the logger, with error status.
+     * @param s the {@code char} array to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(char[] s, Throwable e){
+        error(String.valueOf(s), e);
+    }
+    
+    /**
+     * Log an {@code double} to the logger, with error status.
+     * @param d the {@code double} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(double d, Throwable e){
+        error(String.valueOf(d), e);
+    }
+    
+    /**
+     * Log an {@code float} to the logger, with error status.
+     * @param f the {@code float} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(float f, Throwable e){
+        error(String.valueOf(f), e);
+    }
+    
+    /**
+     * Log an {@code int} to the logger, with error status.
+     * @param i the {@code int} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(int i, Throwable e){
+        error(String.valueOf(i), e);
+    }
+    
+    /**
+     * Log an {@code long} to the logger, with error status.
+     * @param l the {@code long} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(long l, Throwable e){
+        error(String.valueOf(l), e);
+    }
+    
+    /**
+     * Log an {@code String} to the logger, with error status.
+     * @param s the {@code String} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void error(String s, Throwable e){
+        sendMsg(msgBuilder(Level.kError, m_origin, s));
         sendMsg(msgBuilder(Level.kError, m_origin, e.getMessage()));
     }
     
-    public void fatal(Object o, Throwable e){
-        error(o.toString(), e);
+    /**
+     * Log an {@code Object} to the logger, with fatal status.
+     * @param obj the {@code Object} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(Object obj, Throwable e){
+        fatal(String.valueOf(obj), e);
     }
     
-    public void fatal(String msg, Throwable e){
-        sendMsg(msgBuilder(Level.kFatal, m_origin, msg));
+    /**
+     * Log a {@code boolean} to the logger, with fatal status.
+     * @param b the {@code boolean} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(boolean b, Throwable e){
+        fatal(String.valueOf(b), e);
+    }
+    
+    /**
+     * Log an {@code char} to the logger, with fatal status.
+     * @param c the {@code char} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(char c, Throwable e){
+        fatal(String.valueOf(c), e);
+    }
+    
+    /**
+     * Log an {@code char} to the logger, with fatal status.
+     * @param s the {@code char} array to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(char[] s, Throwable e){
+        fatal(String.valueOf(s), e);
+    }
+    
+    /**
+     * Log an {@code double} to the logger, with fatal status.
+     * @param d the {@code double} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(double d, Throwable e){
+        fatal(String.valueOf(d), e);
+    }
+    
+    /**
+     * Log an {@code float} to the logger, with fatal status.
+     * @param f the {@code float} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(float f, Throwable e){
+        fatal(String.valueOf(f), e);
+    }
+    
+    /**
+     * Log an {@code int} to the logger, with fatal status.
+     * @param i the {@code int} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(int i, Throwable e){
+        fatal(String.valueOf(i), e);
+    }
+    
+    /**
+     * Log an {@code long} to the logger, with fatal status.
+     * @param l the {@code long} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(long l, Throwable e){
+        fatal(String.valueOf(l), e);
+    }
+    
+    /**
+     * Log an {@code String} to the logger, with fatal status.
+     * @param s the {@code String} to log
+     * @param e the {@code Throwable} object to send with the message
+     */
+    public void fatal(String s, Throwable e){
+        sendMsg(msgBuilder(Level.kFatal, m_origin, s));
         sendMsg(msgBuilder(Level.kFatal, m_origin, e.getMessage()));
         System.exit(1);
     }
