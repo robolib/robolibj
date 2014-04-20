@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import org.wwr.robolib.util.Logger;
 import org.wwr.robolib.util.StringUtils;
+import javax.microedition.io.Connector;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
@@ -101,106 +102,6 @@ public class RoboLibBot extends MIDlet {
         m_ds = DriverStation.getInstance();
         m_table = NetworkTable.getTable("Robot");
         m_log = Logger.get(this);
-    }
-
-    /**
-     * Free the resources for a RoboLibBot class.
-     */
-    public void free() {
-    }
-
-
-    //WPI RobotBase Methods
-    //Put here for compatibility.
-    /**
-     * Check on the overall status of the system.
-     *
-     * @return Is the system active (i.e. PWM motor outputs, etc. enabled)?
-     */
-    public boolean isSystemActive() {
-        return m_watchdog.isSystemActive();
-    }
-
-    /**
-     * Return the instance of the Watchdog timer. Get the watchdog timer so the
-     * user program can either disable it or feed it when necessary.
-     *
-     * @return The Watchdog timer.
-     */
-    public Watchdog getWatchdog() {
-        return m_watchdog;
-    }
-
-    /**
-     * @return If the robot is running in simulation.
-     */
-    public static boolean isSimulation() {
-        return false;
-    }
-
-    /**
-     * @return If the robot is running in the real world.
-     */
-    public static boolean isReal() {
-        return true;
-    }
-
-    /**
-     * Determine if the Robot is currently disabled.
-     *
-     * @return True if the Robot is currently disabled by the field controls.
-     */
-    public boolean isDisabled() {
-        return m_ds.isDisabled();
-    }
-
-    /**
-     * Determine if the Robot is currently enabled.
-     *
-     * @return True if the Robot is currently enabled by the field controls.
-     */
-    public boolean isEnabled() {
-        return m_ds.isEnabled();
-    }
-
-    /**
-     * Determine if the robot is currently in Autonomous mode.
-     *
-     * @return True if the robot is currently operating Autonomously as
-     * determined by the field controls.
-     */
-    public boolean isAutonomous() {
-        return m_ds.isAutonomous();
-    }
-
-    /**
-     * Determine if the robot is currently in Test mode
-     *
-     * @return True if the robot is currently operating in Test mode as
-     * determined by the driver station.
-     */
-    public boolean isTest() {
-        return m_ds.isTest();
-    }
-
-    /**
-     * Determine if the robot is currently in Operator Control mode.
-     *
-     * @return True if the robot is currently operating in Tele-Op mode as
-     * determined by the field controls.
-     */
-    public boolean isOperatorControl() {
-        return m_ds.isOperatorControl();
-    }
-
-    /**
-     * Indicates if new data is available from the driver station.
-     *
-     * @return Has new data arrived over the network since the last time this
-     * function was called?
-     */
-    public boolean isNewDataAvailable() {
-        return m_ds.isNewControlData();
     }
 
     /**
@@ -461,6 +362,106 @@ public class RoboLibBot extends MIDlet {
      * terminating the midlet
      */
     protected final void destroyApp(boolean unconditional) throws MIDletStateChangeException {
+    }
+    
+    /**
+     * Free the resources for a RoboLibBot class.
+     */
+    public void free() {
+    }
+
+
+    //WPI RobotBase Methods
+    //Put here for compatibility.
+    /**
+     * Check on the overall status of the system.
+     *
+     * @return Is the system active (i.e. PWM motor outputs, etc. enabled)?
+     */
+    public boolean isSystemActive() {
+        return m_watchdog.isSystemActive();
+    }
+
+    /**
+     * Return the instance of the Watchdog timer. Get the watchdog timer so the
+     * user program can either disable it or feed it when necessary.
+     *
+     * @return The Watchdog timer.
+     */
+    public Watchdog getWatchdog() {
+        return m_watchdog;
+    }
+
+    /**
+     * @return If the robot is running in simulation.
+     */
+    public static boolean isSimulation() {
+        return false;
+    }
+
+    /**
+     * @return If the robot is running in the real world.
+     */
+    public static boolean isReal() {
+        return true;
+    }
+
+    /**
+     * Determine if the Robot is currently disabled.
+     *
+     * @return True if the Robot is currently disabled by the field controls.
+     */
+    public boolean isDisabled() {
+        return m_ds.isDisabled();
+    }
+
+    /**
+     * Determine if the Robot is currently enabled.
+     *
+     * @return True if the Robot is currently enabled by the field controls.
+     */
+    public boolean isEnabled() {
+        return m_ds.isEnabled();
+    }
+
+    /**
+     * Determine if the robot is currently in Autonomous mode.
+     *
+     * @return True if the robot is currently operating Autonomously as
+     * determined by the field controls.
+     */
+    public boolean isAutonomous() {
+        return m_ds.isAutonomous();
+    }
+
+    /**
+     * Determine if the robot is currently in Test mode
+     *
+     * @return True if the robot is currently operating in Test mode as
+     * determined by the driver station.
+     */
+    public boolean isTest() {
+        return m_ds.isTest();
+    }
+
+    /**
+     * Determine if the robot is currently in Operator Control mode.
+     *
+     * @return True if the robot is currently operating in Tele-Op mode as
+     * determined by the field controls.
+     */
+    public boolean isOperatorControl() {
+        return m_ds.isOperatorControl();
+    }
+
+    /**
+     * Indicates if new data is available from the driver station.
+     *
+     * @return Has new data arrived over the network since the last time this
+     * function was called?
+     */
+    public boolean isNewDataAvailable() {
+        return m_ds.isNewControlData();
     }
 
 }

@@ -15,6 +15,7 @@
 
 package org.wwr.robolib.control;
 
+import com.sun.squawk.util.Arrays;
 import com.sun.squawk.util.MathUtils;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.parsing.IInputOutput;
@@ -61,7 +62,9 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
         public boolean get();
     }
     
-    private final int m_numAxes, m_numBtns;
+    protected Axis m_axes[];
+    protected Button m_btns[];
+    protected int m_numAxes, m_numBtns;
 
     /**
      * Provides a middle-man in between the WPILib Library and the RoboLibJ Joysticks.
@@ -228,6 +231,20 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
      */
     public double getDirectionDegrees() {
         return Math.toDegrees(getDirectionRadians());
+    }
+    
+    protected void addButton(final Button btn){
+        m_btns = (Button[]) Arrays.copy(m_axes, 0, new Button[m_numBtns + 1], 0, m_numBtns);
+        m_btns[m_btns.length - 1] = btn;
+        m_numBtns = m_btns.length;
+    }
+    
+    protected void addAxisButton(final int channel, final double posThresh, final double negThresh){
+        addButton(new Button(){           
+            public boolean get() {
+                return getRawAxis(channel) >= posThresh | getRawAxis(channel) <= negThresh;
+            }
+        });
     }
     
     /**
