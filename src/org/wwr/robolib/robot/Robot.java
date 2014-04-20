@@ -87,7 +87,10 @@ public class Robot extends RobotBase {
     protected Robot(String name, String version){
         m_name = name;
         m_version = version;
+<<<<<<< HEAD:src/org/wwr/robolib/robot/Robot.java
         m_log = Logger.get(this);
+=======
+>>>>>>> 1019338f952265480c47f09568b67685eae39916:src/org/wwr/robolib/robot/Robot.java
         m_table = NetworkTable.getTable("Robot");
     }
 
@@ -181,7 +184,11 @@ public class Robot extends RobotBase {
      * We don't want an out of control robot.
      */
     public void startCompetition() {
+<<<<<<< HEAD:src/org/wwr/robolib/robot/Robot.java
         msg("RoboLibJ Version 1.0.2");
+=======
+        msg("RoboLibJ Version 1.02");
+>>>>>>> 1019338f952265480c47f09568b67685eae39916:src/org/wwr/robolib/robot/Robot.java
         msg("Starting " + m_name);
         UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
         
@@ -221,8 +228,14 @@ public class Robot extends RobotBase {
      * @param cs the pressure switch that the compressor is on.
      * @param cr the relay that controls the compressor
      */
+<<<<<<< HEAD:src/org/wwr/robolib/robot/Robot.java
     protected void compressor(int cs, int cr){
         compressor(1, cs, 1, cr);
+=======
+    protected void compressor(int compressor_switch, int compressor_relay){
+        msg("Adding Compressor on Relay Port " + compressor_relay + " DIO Port " + compressor_switch);
+        m_compressor = new Compressor(compressor_switch, compressor_relay);
+>>>>>>> 1019338f952265480c47f09568b67685eae39916:src/org/wwr/robolib/robot/Robot.java
     }
     
     /**
