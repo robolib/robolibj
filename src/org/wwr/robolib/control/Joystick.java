@@ -26,8 +26,6 @@ import org.wwr.robolib.util.DSInfo;
 public class Joystick extends JoystickAdapter {
     
     private final int m_port;
-    private final Axis m_axes[];
-    private final Button m_btns[];
 
     private class JoystickAxis implements Axis {
 
@@ -64,7 +62,6 @@ public class Joystick extends JoystickAdapter {
 
     private class JoystickButton implements Button {
         
-        private boolean m_invert = false;
         private final int m_channel;
         
         public JoystickButton(int channel){
