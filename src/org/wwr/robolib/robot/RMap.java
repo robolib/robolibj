@@ -41,9 +41,9 @@ public class RMap {
     private static final ITableListener m_strListener, m_boolListener, m_intListener;
     
     static{
-        m_strTable = Robot.getRobotTable().getSubTable(NETTABLE_MAP_NAME).getSubTable(NETTABLE_MAP_STRINGS_NAME);
-        m_boolTable = Robot.getRobotTable().getSubTable(NETTABLE_MAP_NAME).getSubTable(NETTABLE_MAP_BOOLEANS_NAME);
-        m_intTable = Robot.getRobotTable().getSubTable(NETTABLE_MAP_NAME).getSubTable(NETTABLE_MAP_INTEGERS_NAME);
+        m_strTable = RoboLibBot.getRobotTable().getSubTable(NETTABLE_MAP_NAME).getSubTable(NETTABLE_MAP_STRINGS_NAME);
+        m_boolTable = RoboLibBot.getRobotTable().getSubTable(NETTABLE_MAP_NAME).getSubTable(NETTABLE_MAP_BOOLEANS_NAME);
+        m_intTable = RoboLibBot.getRobotTable().getSubTable(NETTABLE_MAP_NAME).getSubTable(NETTABLE_MAP_INTEGERS_NAME);
         
         m_strListener = new ITableListener(){
             public void valueChanged(ITable table, String key, Object value, boolean isNew){

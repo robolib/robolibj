@@ -16,7 +16,7 @@
 package org.wwr.robolib.control;
 
 import com.sun.squawk.util.MathUtils;
-import org.wwr.robolib.robot.Robot;
+import org.wwr.robolib.robot.RoboLibBot;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
@@ -83,7 +83,7 @@ public class NetTableController extends JoystickAdapter {
     
     /**
      * Create a NetworkJoystick Instance
-     * @param name Name of the Joystick in the Robot/Joystick Table
+     * @param name Name of the Joystick in the RoboLibBot/Joystick Table
      */
     public NetTableController(String name){
         this(name, 6, 12);
@@ -91,7 +91,7 @@ public class NetTableController extends JoystickAdapter {
     
     /**
      * Create a NetworkJoystick Instance
-     * @param name Name of the Joystick in the Robot/Joystick Table
+     * @param name Name of the Joystick in the RoboLibBot/Joystick Table
      * @param numAxes Number of Axes to add to the Joystick
      * @param numBtns Number of Buttons to add to the Joystick
      */
@@ -101,7 +101,7 @@ public class NetTableController extends JoystickAdapter {
         m_axes = new NetTableAxis[numAxes];
         m_btns = new NetTableButton[numBtns];
         
-        m_table = Robot.getRobotTable().getSubTable("Joystick").getSubTable(name);
+        m_table = RoboLibBot.getRobotTable().getSubTable("Joystick").getSubTable(name);
         for(int i = 0; i < numAxes; i++)
             m_axes[i] = new NetTableAxis(i + 1);
         
