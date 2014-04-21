@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014 Westwood Robotics code.westwoodrobotics@gmail.com.
- *  
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -43,9 +43,14 @@ import javax.microedition.midlet.MIDletStateChangeException;
  * The constructor must call the Super class with either no arguments, 
  * or two strings representing the Name of the robot and the version of
  * the code.
+ * @since 0.1.0
  * @author Austin Reuland
  */
 public class RoboLibBot extends MIDlet {
+
+    public static final int MAJOR_VERSION = 0;
+    public static final int MINOR_VERSION = 1;
+    public static final int PATCH_VERSION = 8;
     
     /**
      * An exception for use with robot code.
@@ -59,7 +64,7 @@ public class RoboLibBot extends MIDlet {
             super(msg);
         }
     }
-        
+
     private final String m_name;
     private final String m_version;
     private final Logger m_log;
@@ -278,7 +283,7 @@ public class RoboLibBot extends MIDlet {
      */
     protected final void startApp() throws MIDletStateChangeException {
         
-        msg("RoboLibJ Version 1.0.2");
+        msg("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         msg("Starting " + m_name);
 
         getWatchdog().setExpiration(0.1);
@@ -301,10 +306,9 @@ public class RoboLibBot extends MIDlet {
             fatal("Could not set Robot Name and Version in the Network Table. Did Something Screw Up?", t);
         }
 
-
+        //Run User initialization
+        msg("Running User Initialization code");
         try{
-            //Run User initialization
-            msg("Running User Initialization code");
             robotInit();
         }catch(Throwable t){
             fatal("Error running User Init Code", t);
@@ -315,10 +319,10 @@ public class RoboLibBot extends MIDlet {
         msg("Initializing Robot Modes");
         m_modeSwitcher.init();
 
-        msg(StringUtils.buildString(new String[]{m_name, ", Version ", m_version, " Running"}));
+        msg(m_name + ", Version " + m_version + " Running");
         
+        msg("Starting Main Loop");
         try{
-            msg("Starting Main Loop");
             while(m_run){
                 ModeSwitcher.GameMode mode = getDSMode();
                 if(m_modeSwitcher.inNewMode(mode)){
