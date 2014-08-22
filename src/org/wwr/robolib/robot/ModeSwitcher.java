@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah vix@noriah.dev.
+ * Copyright (c) 2014 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,7 +24,7 @@ import org.wwr.robolib.util.Logger;
  * This controls what Mode the robot should run.
  * It handles feeding the Watchdog and running the Scheduler.
  * 
- * @author noriah Reuland
+ * @author noriah Reuland <vix@noriah.dev>
  */
 public class ModeSwitcher {
     
@@ -128,7 +128,7 @@ public class ModeSwitcher {
         if(m_modes[GameMode.kAuton.getValue()] == null){
             debug("No Autonomous Robot Mode Defined");
             debug("Creating Default Autonomous Mode");
-            new AutonMode(){}; 
+            new AutonMode(){};
         }
         
         if(m_modes[GameMode.kTeleop.getValue()] == null){
@@ -146,9 +146,9 @@ public class ModeSwitcher {
      * Runs the Current RobotMode.
      * 
      * Catches any Throwable objects that may be thrown.
- Any caught Throwable Object is treated as fatal and will kill the RoboLibBot.
- They are treated as fatal because any uncaught Throwables can only be 
- RuntimeExceptions or Errors, which are Fatal
+     * Any caught Throwable Object is treated as fatal and will kill the RoboLibBot.
+     * They are treated as fatal because any uncaught Throwables can only be 
+     * RuntimeExceptions or Errors, which are Fatal
      * 
      */
     protected void run(){
@@ -207,7 +207,7 @@ public class ModeSwitcher {
      * Switch the current {@link GameMode}.
      * 
      * This will first call the end() Method of the current {@link RobotMode},
-     * then set the current {@link GameMode}, call the System Garbace Collector,
+     * then set the current {@link GameMode}, call the System Garbae Collector,
      * and then call the new RobotMode init() method.
      * 
      * @param mode the {@link GameMode} number to switch to.
@@ -221,12 +221,12 @@ public class ModeSwitcher {
      * 
      * This will first call the end() Method of the current {@link RobotMode},
      * then set the current {@link GameMode}, call the System Garbace Collector,
- and then call the new RobotMode init() method.
- 
- Catches any Throwable objects that may be thrown.
- Any caught Throwable Object is treated as fatal and will kill the RoboLibBot.
- They are treated as fatal because any uncaught Throwables can only be 
- RuntimeExceptions or Errors, which are Fatal
+     * and then call the new RobotMode init() method.
+     * 
+     * Catches any Throwable objects that may be thrown.
+     * Any caught Throwable Object is treated as fatal and will kill the RoboLibBot.
+     * They are treated as fatal because any uncaught Throwables can only be 
+     * RuntimeExceptions or Errors, which are Fatal
      * 
      * @param mode the {@link GameMode} to switch to.
      */

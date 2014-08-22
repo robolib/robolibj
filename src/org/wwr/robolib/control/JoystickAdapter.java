@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah vix@noriah.dev.
+ * Copyright (c) 2014 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.parsing.IInputOutput;
 /**
  * A middle-man in between the WPILib Library and the RoboLibJ Joysticks.
  * @see Joystick
- * @author noriah Reuland
+ * @author noriah Reuland <vix@noriah.dev>
  */
 public abstract class JoystickAdapter extends GenericHID implements IInputOutput {
     
@@ -234,7 +234,7 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
     }
     
     protected void addButton(final Button btn){
-        m_btns = (Button[]) Arrays.copy(m_axes, 0, new Button[m_numBtns + 1], 0, m_numBtns);
+        m_btns = (Button[]) Arrays.copy(m_btns, 0, new Button[m_numBtns + 1], 0, m_numBtns);
         m_btns[m_btns.length - 1] = btn;
         m_numBtns = m_btns.length;
     }
@@ -242,7 +242,8 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
     protected void addAxisButton(final int channel, final double posThresh, final double negThresh){
         addButton(new Button(){           
             public boolean get() {
-                return getRawAxis(channel) >= posThresh | getRawAxis(channel) <= negThresh;
+                double axis = getRawAxis(channel);
+                return axis >= posThresh || axis <= negThresh;
             }
         });
     }
