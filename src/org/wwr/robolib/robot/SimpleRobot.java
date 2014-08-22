@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics code.westwoodrobotics@gmail.com.
+ * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -20,7 +20,7 @@ package org.wwr.robolib.robot;
  * This is a more simple version of the RoboLibBot class, it has pre-defined
  * functions instead of classes, making it easier to understand.
  * 
- * @author Austin Reuland
+ * @author Austin Reuland <amreuland@gmail.com>
  */
 public class SimpleRobot extends RoboLibBot {
     

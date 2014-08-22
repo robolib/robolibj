@@ -3,7 +3,7 @@ package org.wwr.robolib.util;
 /**
  * Common functions for use in the robot code
  * 
- * @author Austin Reuland
+ * @author Austin Reuland <amreuland@gmail.com>
  */
 public class CommonFunctions {
     

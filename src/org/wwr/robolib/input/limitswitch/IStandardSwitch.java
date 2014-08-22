@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics code.westwoodrobotics@gmail.com.
+ * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -19,7 +19,7 @@ import org.wwr.robolib.input.limitswitch.LimitSwitch.SwitchType;
 
 /**
  * Interface for a Limit Switch
- * @author Austin Reuland
+ * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface IStandardSwitch {
     

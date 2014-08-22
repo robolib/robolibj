@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics code.westwoodrobotics@gmail.com.
+ * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -21,7 +21,7 @@ import org.wwr.robolib.util.DSInfo;
 /**
  * The RoboLibJ main Joystick.
  *
- * @author Austin Reuland
+ * @author Austin Reuland <amreuland@gmail.com>
  */
 public class Joystick extends JoystickAdapter {
     
@@ -41,8 +41,9 @@ public class Joystick extends JoystickAdapter {
          * {@inheritDoc}
          */
         public double get(){
-            double out = DSInfo.getStickAxis(m_port, m_channel) * m_invert;
-            return (Math.abs(out) <= m_deadBand ? 0 : out);
+            //double out = DSInfo.getStickAxis(m_port, m_channel) * m_invert;
+            //return (Math.abs(out) <= m_deadBand ? 0 : out);
+            return DSInfo.getStickAxis(m_port, m_channel) * m_invert;
         }
 
         /**

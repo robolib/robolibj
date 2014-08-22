@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics code.westwoodrobotics@gmail.com.
+ * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -22,7 +22,7 @@ import org.wwr.robolib.input.limitswitch.ILimitSwitchSystem;
 
 /**
  * A SpeedController limited by Limit Switches
- * @author Austin Reuland
+ * @author Austin Reuland <amreuland@gmail.com>
  */
 public class LimitSwitchController implements SpeedController, IDeviceController, PIDOutput {
     
