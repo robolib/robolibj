@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+	<type>org.netbeans.modules.ant.freeform</type>
+	<configuration>
+		<general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
+			<name>RoboLibJ</name>
+			<properties>
+				<property-file>${user.home}/.sunspotfrc.properties</property-file>
+				<property-file>build.properties</property-file>
+			</properties>
+			<folders>
+				<source-folder>
+					<label>src</label>
+					<type>java</type>
+					<location>${src.dir}</location>
+				</source-folder>
+				<source-folder>
+					<label>tests</label>
+					<type>java</type>
+					<location>${test.src.dir}</location>
+				</source-folder>
+			</folders>
+			<ide-actions>
+				<action name="build">
+					<target>build-dev</target>
+				</action>
+				<action name="clean">
+					<target>clean-all</target>
+				</action>
+				<action name="run">
+					<target>build-release</target>
+				</action>
+				<action name="rebuild">
+					<target>clean-all</target>
+					<target>build-dev</target>
+				</action>
+				<action name="debug">
+					<target>deploy</target>
+					<target>debug-run</target>
+				</action>
+				<action name="release">
+					<target>release</target>
+				</action>
+				<action name="javadoc">
+					<target>javadoc</target>
+				</action>
+			</ide-actions>
+			<export>
+				<type>folder</type>
+				<location>${build.dir}</location>
+				<build-target>dist</build-target>
+			</export>
+			<view>
+				<items>
+					<source-folder style="packages">
+						<label>src</label>
+						<location>${src.dir}</location>
+					</source-folder>
+					<source-folder style="packages">
+						<label>tests</label>
+						<location>${test.src.dir}</location>
+					</source-folder>
+					<source-file>
+						<location>build.xml</location>
+					</source-file>
+				</items>
+				<context-menu>
+					<ide-action name="build"/>
+					<ide-action name="rebuild"/>
+					<ide-action name="clean"/>
+					<ide-action name="javadoc"/>
+					<ide-action name="run"/>
+					<ide-action name="debug"/>
+					<ide-action name="release"/>
+					<separator/>
+				</context-menu>
+			</view>
+			<subprojects/>
+			<project-license>robotics</project-license>
+		</general-data>
+		<java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/2">
+			<compilation-unit>
+				<package-root>src</package-root>
+				<package-root>tests</package-root>
+				<classpath mode="boot">${bootclasspath}</classpath>
+				<classpath mode="compile">${libraryclasspath}</classpath>
+				<built-to>build</built-to>
+				<source-level>1.3</source-level>
+			</compilation-unit>
+		</java-data>
+	</configuration>
+</project>

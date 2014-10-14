@@ -1,0 +1,25 @@
+<project name="jar">
+
+    <macrodef name="app-jar">
+        <attribute name="toJarFile" default="${dist.jar}"/>
+        <attribute name="preverifyDir" default="${preverify.dir}"/>
+        <attribute name="resourcesDir" default="${resources.dir}"/>
+        <attribute name="manifestfile" default="${manifest.file}"/>
+        
+        <sequential>
+            <echo>[${project.title}-Jar] @{preverifyDir}, @{resourcesDir} -> @{toJarFile}</echo>
+
+            <jar
+                destfile="@{toJarFile}"
+                manifest="@{manifestfile}">
+                
+                <fileset dir="@{preverifyDir}" >
+                    <exclude name="**/*.java"/>
+                </fileset>
+                <fileset dir="@{resourcesDir}" excludes="CVS/** .svn" />
+
+            </jar>
+        </sequential>
+    </macrodef>
+    
+</project>

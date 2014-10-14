@@ -1,0 +1,28 @@
+<project name="compile">
+
+    <macrodef name="app-compile">
+        <attribute name="srcDir" default="${src.dir}"/>
+        <attribute name="classesDir" default="${classes.dir}"/>
+        <attribute name="classpath" default="${libraryclasspath}"/>
+        <attribute name="bootclasspath" default="${bootclasspath}"/>
+        <attribute name="buildTarget" default="${build.target}"/>
+        <attribute name="buildSource" default="${build.source}"/>
+        
+        <sequential>
+            
+            <javac sourcepath="" srcdir="@{srcDir}"
+                   destdir="@{classesDir}"
+                   includeAntRuntime="no"
+                   includeJavaRuntime="no"
+                   bootclasspath="@{bootclasspath}"
+                   classpath="@{classpath}"
+                   target="@{buildTarget}"
+                   source="@{buildSource}"
+                   debug="true"
+                   fork="yes">
+                   <compilerarg value="-Xlint:deprecation"/>
+            </javac>
+        </sequential>
+    </macrodef>
+    
+</project>

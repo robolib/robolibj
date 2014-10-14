@@ -1,0 +1,36 @@
+<project name="release">
+
+    <macrodef name="app-release">
+        <attribute name="distDir" default="${dist.dir}"/>
+        <attribute name="distJarName" default="${dist.jar.name}"/>
+        <attribute name="releaseVersion" default="${rel.vers}"/>
+        <attribute name="releaseDir" default="${release.dir}"/>
+
+        <sequential>
+<!--             <tstamp>
+                <format property="release.file.date" pattern="yyyyMMdd" locale="en,US"/>
+            </tstamp> -->
+            <property name="release.file" value="@{releaseDir}/${project.title}-@{releaseVersion}.tar.gz"/>
+
+            <echo>[${project.title}-Release] @{distDir}/@{distDarName}, @{releaseDir}/README.txt, @{releaseDir}/RoboLibJ-License.txt -> ${release.file}</echo>
+
+            <tar destfile="${release.file}" compression="gzip">
+                <tarfileset dir="@{distDir}" includes="@{distJarName}"/>
+                <tarfileset dir="@{releaseDir}">
+                    <include name="README.txt"/>
+                    <include name="RoboLibJ-License.txt"/>
+                </tarfileset>
+            </tar>
+            <tar destfile="@{distDir}/${project.title}-@{releaseVersion}.project.tar.gz"
+                compression="gzip">
+                <tarfileset dir="${project.dir}">
+                    <exclude name="${dist.dir.name}/**"/>
+                    <exclude name="${build.dir.name}/**"/>
+                    <exclude name="${release.dir.name}/**"/>
+                    <exclude name="${resources.dir.name}/META-INF/**"/>
+                    <exclude name="*.sublime-*"/>
+                </tarfileset>
+            </tar>
+        </sequential>
+    </macrodef>
+</project>
