@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="RoboLibJ" default="build">
+
+    <property file="${user.properties.file}"/>
+    <property file="${user.home}/.sunspotfrc.properties"/>
+    <property file="build.properties"/>
+
+    <property name="project.dir" location="${project.dir.hold}"/>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="${sunspot.home}/ant/ant-contrib.jar"/>
+        </classpath>
+    </taskdef>
+
+    <property name="path.separator" value=":"/>
+
+    <!-- Import enviornment properties and set defaults -->
+    <property environment="env"/>
+    <condition property="BUILD_NUMBER" value="${env.BUILD_NUMBER}" else="LOCAL">
+        <isset property="env.BUILD_NUMBER"/>
+    </condition>
+    <tstamp>
+        <format property="BUILD_START" pattern="yyyy-MM-dd_hh-mm-ss" locale="en,US"/>
+    </tstamp>
+    <condition property="BUILD_ID" value="${env.BUILD_ID}" else="${BUILD_START}">
+        <isset property="env.BUILD_ID"/>
+    </condition>
+    <condition property="GIT_REVISION" value="${env.GIT_REVISION}" else="LOCAL">
+        <isset property="env.GIT_REVISION"/>
+    </condition>
+    <condition property="BUILD_TYPE" value="${env.BUILD_TYPE}" else="CUSTOM">
+        <isset property="env.BUILD_TYPE"/>
+    </condition>
+
+    <import file="ant/manifest.xml"/>
+    <import file="ant/compile.xml"/>
+    <import file="ant/preverify.xml"/>
+    <import file="ant/jar.xml"/>
+    <import file="ant/javadoc.xml"/>
+    <import file="ant/release.xml"/>
+    <import file="ant/run.xml"/>
+
+    <target name="-actual-compile-compile" depends="-clean-build">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <app-compile/>
+    </target>
+
+    <target name="-post-compile"/>
+
+    <target name="compile" depends="-actual-compile-compile,-post-compile"/>
+
+    <target name="preverify" depends="compile">
+        <mkdir dir="${preverify.dir}"/>
+        <mkdir dir="${preverified.util.jars.dir}"/>
+        <app-preverify/>
+    </target>
+
+    <target name="javadoc" depends="make-dist-dir">
+        <mkdir dir="${dist.javadoc.dir}"/>
+        <app-javadoc/>
+    </target>
+
+    <target name="dist">
+        <app-build buildType="RELEASE"/>
+        <echo>BUILD COMPLETE</echo>
+        <echo>Library Jar File: ${dist.jar}</echo>
+    </target>
+
+    <target name="-build-dev">
+        <app-build buildType="DEV-BUILD"/>
+    </target>
+
+    <target name="-build-release">
+        <loadfile property="version.file"
+            srcFile="${version.class}">
+            <filterchain>
+                <striplinebreaks/>
+            </filterchain>
+        </loadfile>
+
+        <propertyregex property="rel.vers.major"
+            input="${version.file}"
+            regexp="(MAJOR_VERSION \= )([0-9]*)"
+            select="\2"
+            casesensitive="false" />
+
+        <propertyregex property="rel.vers.minor"
+            input="${version.file}"
+            regexp="(MINOR_VERSION \= )([0-9]*)"
+            select="\2"
+            casesensitive="false" />
+
+        <propertyregex property="rel.vers.patch"
+            input="${version.file}"
+            regexp="(PATCH_VERSION \= )([0-9]*)"
+            select="\2"
+            casesensitive="false" />
+
+        <property name="rel.vers" value="${rel.vers.major}.${rel.vers.minor}.${rel.vers.patch}" />
+
+        <app-build buildType="RELEASE" buildVersion="${rel.vers}"/>
+    </target>
+
+    <target name="make-dist-dir">
+        <mkdir dir="${dist.dir.name}"/>
+    </target>
+
+    <target name="make-manifest">
+        <mkdir dir="${resources.dir}/META-INF"/>
+        <app-manifest/>
+    </target>
+
+    <target name="release" depends="-build-release">
+        <app-release/>
+    </target>
+
+    <target name="jar" depends="preverify">
+        <app-jar/>
+    </target>
+    
+    <target name="clean" depends="-clean-build,-clean-dist"/>
+
+    <target name="-clean-build">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="-clean-dist">
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="archive-source">
+        <tar destfile="${dist.dir}/${project.title}.src.tar.gz" basedir="${src.dir}" compression="gzip"/>
+    </target>
+
+    <target name="archive-project" depends="make-dist-dir">
+        <tar
+            destfile="${dist.dir}/${project.title}.project.tar.gz"
+            compression="gzip">
+            <tarfileset dir="${project.dir}">
+                <exclude name="${dist.dir.name}/**"/>
+                <exclude name="${build.dir.name}/**"/>
+                <exclude name="${release.dir.name}/**"/>
+                <exclude name="${resources.dir.name}/META-INF/**"/>
+                <exclude name="*.sublime-*"/>
+            </tarfileset>
+        </tar>
+    </target>
+    
+</project>

@@ -1,0 +1,66 @@
+<project name="run">
+
+    <macrodef name="app-build">
+        <attribute name="buildType" default="DEV-BUILD"/>
+        <attribute name="buildVersion" default="DEV"/>
+        <attribute name="buildNum" default="LOCAL"/>
+        <attribute name="jarFile" default="${dist.jar}"/>
+        <attribute name="srcDir" default="${src.dir}"/>
+        <attribute name="resourcesDir" default="${resources.dir}"/>
+        <attribute name="buildDir" default="${build.dir}"/>
+        <attribute name="distDir" default="${dist.dir}"/>
+        <attribute name="classesDir" default="${classes.dir}"/>
+        <attribute name="classpath" default="${classpath}"/>
+        <attribute name="bootclasspath" default="${bootclasspath}"/>
+        <attribute name="preverifyDir" default="${preverify.dir}"/>
+        <attribute name="preverifiedUtilJars" default="${preverified.util.jars}"/>
+        <attribute name="preverifiedUtilJarsDir" default="${preverified.util.jars.dir}"/>
+
+
+        <sequential>
+            
+            <echo>Building ${project.title}</echo>
+            <echo>Build Version: @{buildVersion}</echo>
+            <echo>Build Number: @{buildNum}</echo>
+            <echo>Build Time: ${BUILD_START}</echo>
+            <echo>Build Type: @{buildType}</echo>
+
+            <delete dir="@{buildDir}"/>
+            <delete dir="@{distDir}"/>
+
+            <mkdir dir="@{buildDir}"/>
+            <mkdir dir="@{classesDir}"/>
+
+            <app-compile
+                srcDir="@{srcDir}"
+                classesDir="@{classesDir}"
+                classpath="@{classpath}"
+                bootclasspath="@{bootclasspath}"/>
+
+            <mkdir dir="@{resourcesDir}/META-INF"/>
+            
+            <app-manifest
+                buildNum="@{buildNum}"
+                buildType="@{buildType}"
+                buildVersion="@{buildVersion}"/>
+            
+            <mkdir dir="@{preverifyDir}"/>
+            <mkdir dir="@{preverifiedUtilJarsDir}"/>
+
+            <app-preverify
+                preverifyDir="@{preverifyDir}"
+                classesDir="@{classesDir}"
+                preverifiedUtilJars="@{preverifiedUtilJars}"
+                preverifiedUtilJarsDir="@{preverifiedUtilJarsDir}"/>
+
+            <mkdir dir="@{distDir}"/>
+
+            <app-jar
+                toJarFile="@{jarFile}"
+                preverifyDir="@{preverifyDir}"
+                resourcesDir="@{resourcesDir}"/>
+
+        </sequential>
+    </macrodef>
+
+</project>

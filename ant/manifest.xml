@@ -1,0 +1,43 @@
+<project name="manifest">
+
+    <macrodef name="app-manifest">
+        <attribute name="srcDir" default="${src.dir}"/>
+        <attribute name="classpath" default="${classpath}"/>
+        <attribute name="bootclasspath" default="${bootclasspath}"/>
+        <attribute name="bootpoint" default="${midlet.bootpoint}"/>
+        <attribute name="bootpointpath" default="${midlet.bootpoint.path}"/>
+        <attribute name="classesDir" default="${classes.dir}"/>
+        <attribute name="file" default="${manifest.file}"/>
+        <attribute name="resourcesDir" default="${resources.dir}"/>
+        <attribute name="name" default="${project.title}"/>
+        <attribute name="version" default="1.0.0"/>
+        <attribute name="vendor" default="${project.vendor}"/>
+        <attribute name="buildNum" default="${BUILD_NUMBER}"/>
+        <attribute name="buildType" default="DEV-BUILD"/>
+        <attribute name="buildId" default="${BUILD_ID}"/>
+        <attribute name="buildVersion" default="DEV"/>
+        <attribute name="buildTarget" default="${build.target}"/>
+    
+        <sequential>
+
+            <echo>[${project.title}-Manifest] @{srcDir}, @{classpath}, @{bootclasspath} -> @{classesDir}</echo>
+    
+            <mkdir dir="@{resourcesDir}/META-INF"/>
+
+            <manifest file="@{file}">
+                <attribute name="Build-Number" value="@{buildNum}"/>
+                <attribute name="Built-On" value="@{buildId}"/>
+                <attribute name="Built-From" value="v@{buildVersion}"/>
+                <attribute name="Build-Type" value="@{buildType}"/>
+                <attribute name="Build-Target" value="JavaME jre@{buildTarget}"/>
+                
+                <attribute name="MIDlet-Name" value="@{name}"/>
+                <attribute name="MIDlet-Version" value="@{version}"/>
+                <attribute name="MIDlet-Vendor" value="@{vendor}"/>
+                <attribute name="MIDlet-1" value="@{bootpoint}, , @{bootpointpath}"/>
+                <attribute name="MicroEdition-Profile" value="IMP-1.0"/>
+                <attribute name="MicroEdition-Configuration" value="CLDC-1.1"/>
+            </manifest>
+        </sequential>
+    </macrodef>
+</project>

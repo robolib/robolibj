@@ -1,0 +1,26 @@
+<project name="preverify">
+    
+    <macrodef name="app-preverify">
+        <attribute name="preverifyDir" default="${preverify.dir}"/>
+        <attribute name="classesDir" default="${classes.dir}"/>
+        <attribute name="preverifiedUtilJars" default="${preverified.util.jars}"/>
+        <attribute name="preverifiedUtilJarsDir" default="${preverified.util.jars.dir}"/>
+        <attribute name="preverify.executable" default="${sunspot.home}/bin/preverify"/>
+        
+        <sequential>
+            <for list="@{preverifiedUtilJars}" param="in.jar.file" delimiter="${path.separator}">
+              <sequential>
+                <unjar src="@{in.jar.file}" dest="@{preverifiedUtilJarsDir}" />
+              </sequential>
+            </for>
+            <echo>[${project.title}-Preverify] @{classesDir}, @{preverifiedUtilJars} -> @{preverifyDir}</echo>
+            <exec executable="@{preverify.executable}" failonerror="true">
+                <arg value="-d"/>
+                <arg value="@{preverifyDir}"/>
+                <arg value="-classpath"/>
+                <arg value="@{classesDir}${path.separator}@{preverifiedUtilJarsDir}"/>
+                <arg value="@{classesDir}"/>
+            </exec>
+        </sequential>
+    </macrodef>
+</project>

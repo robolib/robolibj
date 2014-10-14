@@ -6,13 +6,11 @@
 *.ear
 
 *.sublime-*
-/ant/
 /build/
 /doc/
 /test/
 /resources/
 /release/
-/nbproject/
+/nbproject/private/
 /dist/
-build.xml
-build.properties
+
