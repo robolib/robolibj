@@ -15,8 +15,7 @@
 
 package org.team2583.robolib.control;
 
-import com.sun.squawk.util.Arrays;
-import com.sun.squawk.util.MathUtils;
+import java.util.Arrays;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.parsing.IInputOutput;
 
@@ -203,7 +202,7 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
      * @return The magnitude of the direction vector
      */
     public double getMagnitude() {
-        return Math.sqrt(MathUtils.pow(getX(), 2) + MathUtils.pow(getY(), 2));
+        return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
     }
 
     /**
@@ -215,7 +214,7 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
      * @return The direction of the vector in radians
      */
     public double getDirectionRadians() {
-        return MathUtils.atan2(getX(), -getY());
+        return Math.atan2(getX(), -getY());
     }
 
     /**
@@ -234,7 +233,7 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
     }
     
     protected void addButton(final Button btn){
-        m_btns = (Button[]) Arrays.copy(m_btns, 0, new Button[m_numBtns + 1], 0, m_numBtns);
+        m_btns = (Button[]) Arrays.copyOf(m_btns, m_numBtns + 1);
         m_btns[m_btns.length - 1] = btn;
         m_numBtns = m_btns.length;
     }
@@ -252,7 +251,12 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
      * 
      */
     private class InvalidAxisException extends RuntimeException {
-        public InvalidAxisException(int axis){
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1820453100088416409L;
+
+		public InvalidAxisException(int axis){
             super("Axis " + axis + " is Invalid, Min 1 Max " + m_numAxes);
         }
     }
@@ -273,7 +277,12 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
      * 
      */
     private class InvalidButtonException extends RuntimeException {
-        public InvalidButtonException(int btn){
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 6918067923823042407L;
+
+		public InvalidButtonException(int btn){
             super("Button " + btn + " is Invalid, Min 1 Max " + m_numBtns);
         }
     }
