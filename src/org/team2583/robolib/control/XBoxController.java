@@ -15,7 +15,6 @@
 
 package org.team2583.robolib.control;
 
-import com.sun.squawk.util.MathUtils;
 
 /**
  * A better Joystick implementation for the XBox Controller
@@ -249,7 +248,7 @@ public class XBoxController extends Joystick {
      * @return The magnitude of the direction vector of the left stick
      */
     public double getLeftMagnitude() {
-        return Math.sqrt(MathUtils.pow(getRightX(), 2) + MathUtils.pow(getLeftY(), 2));
+        return Math.sqrt(Math.pow(getRightX(), 2) + Math.pow(getLeftY(), 2));
     }
 
     /**
@@ -261,7 +260,7 @@ public class XBoxController extends Joystick {
      * @return The direction of the vector in radians of the left stick
      */
     public double getLeftDirectionRadians() {
-        return MathUtils.atan2(getLeftX(), getLeftY());
+        return Math.atan2(getLeftX(), getLeftY());
     }
 
     /**
@@ -288,7 +287,7 @@ public class XBoxController extends Joystick {
      * @return The magnitude of the direction vector of the right stick
      */
     public double getRightMagnitude() {
-        return Math.sqrt(MathUtils.pow(getRightX(), 2) + MathUtils.pow(getRightY(), 2));
+        return Math.sqrt(Math.pow(getRightX(), 2) + Math.pow(getRightY(), 2));
     }
 
     /**
@@ -300,7 +299,7 @@ public class XBoxController extends Joystick {
      * @return The direction of the vector in radians of the right stick
      */
     public double getRightDirectionRadians() {
-        return MathUtils.atan2(getRightX(), getRightY());
+        return Math.atan2(getRightX(), getRightY());
     }
 
     /**

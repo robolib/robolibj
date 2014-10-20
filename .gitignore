@@ -7,7 +7,7 @@
 
 *.sublime-*
 /ant/
-/build/
+/bin/
 /doc/
 /test/
 /resources/
@@ -16,3 +16,6 @@
 /dist/
 build.xml
 build.properties
+/.settings/
+.project
+.classpath

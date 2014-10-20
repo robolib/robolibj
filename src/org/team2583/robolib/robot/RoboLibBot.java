@@ -23,11 +23,11 @@ import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.communication.FRCControl;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import org.team2583.robolib.util.Logger;
-import org.team2583.robolib.util.StringUtils;
-import javax.microedition.io.Connector;
-import javax.microedition.midlet.MIDlet;
-import javax.microedition.midlet.MIDletStateChangeException;
+import org.team2583.robolib.util.log.ILogger;
+import org.team2583.robolib.util.log.Logger;
+//import javax.microedition.io.Connector;
+//import javax.microedition.midlet.MIDlet;
+//import javax.microedition.midlet.MIDletStateChangeException;
 
 /**
  * A better version of the WPILib IterativeRobot class.
@@ -46,11 +46,11 @@ import javax.microedition.midlet.MIDletStateChangeException;
  * @since 0.1.0
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class RoboLibBot extends MIDlet {
+public class RoboLibBot {//extends MIDlet {
 
-    public static final int MAJOR_VERSION = 0;
-    public static final int MINOR_VERSION = 1;
-    public static final int PATCH_VERSION = 8;
+    public static final int MAJOR_VERSION = 1;
+    public static final int MINOR_VERSION = 0;
+    public static final int PATCH_VERSION = 1;
     
     /**
      * An exception for use with robot code.
@@ -60,14 +60,19 @@ public class RoboLibBot extends MIDlet {
      */
     public static final class RobotException extends RuntimeException{
 
-        public RobotException(String msg){
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 3748667178724340857L;
+
+		public RobotException(String msg){
             super(msg);
         }
     }
 
     private final String m_name;
     private final String m_version;
-    private final Logger m_log;
+    private final ILogger m_log;
     private static boolean m_run = true;
     private static boolean m_debug = true;
     private static Compressor m_compressor = null;
@@ -281,7 +286,7 @@ public class RoboLibBot extends MIDlet {
      *
      * @throws javax.microedition.midlet.MIDletStateChangeException
      */
-    protected final void startApp() throws MIDletStateChangeException {
+    protected final void startApp() {//throws MIDletStateChangeException {
         
         msg("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         msg("Starting " + m_name);
@@ -365,7 +370,7 @@ public class RoboLibBot extends MIDlet {
      * @throws MIDletStateChangeException if there is an exception in
      * terminating the midlet
      */
-    protected final void destroyApp(boolean unconditional) throws MIDletStateChangeException {
+    protected final void destroyApp(boolean unconditional) {//throws MIDletStateChangeException {
     }
     
     /**

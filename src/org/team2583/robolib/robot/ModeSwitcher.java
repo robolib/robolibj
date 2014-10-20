@@ -17,7 +17,7 @@ package org.team2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.team2583.robolib.robot.RoboLibBot.RobotException;
-import org.team2583.robolib.util.Logger;
+import org.team2583.robolib.util.log.Logger;
 
 /**
  * Handles the Switching of the Game mode and the Execution of the mode.

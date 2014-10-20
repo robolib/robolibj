@@ -41,9 +41,9 @@ public class Joystick extends JoystickAdapter {
          * {@inheritDoc}
          */
         public double get(){
-            //double out = DSInfo.getStickAxis(m_port, m_channel) * m_invert;
-            //return (Math.abs(out) <= m_deadBand ? 0 : out);
-            return DSInfo.getStickAxis(m_port, m_channel) * m_invert;
+            double out = DSInfo.getStickAxis(m_port, m_channel) * m_invert;
+            return (Math.abs(out) >= m_deadBand ? out : 0D);
+            //return DSInfo.getStickAxis(m_port, m_channel) * m_invert;
         }
 
         /**
