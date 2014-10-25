@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.communication.FRCControl;
 public abstract class TeleopMode extends RobotMode {
     
     protected TeleopMode(){
-        super(ModeSwitcher.GameMode.kTeleop);
+        super(GameMode.TELEOP);
     }
     
     /**

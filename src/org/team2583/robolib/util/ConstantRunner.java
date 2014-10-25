@@ -15,7 +15,7 @@
 
 package org.team2583.robolib.util;
 
-import com.sun.squawk.microedition.io.FileConnection;
+
 import java.io.DataInputStream;
 
 /**

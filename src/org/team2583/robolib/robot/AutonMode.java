@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.communication.FRCControl;
 public abstract class AutonMode extends RobotMode {
 
     protected AutonMode() {
-        super(ModeSwitcher.GameMode.kAuton);
+        super(GameMode.AUTON);
     }
     
     /**

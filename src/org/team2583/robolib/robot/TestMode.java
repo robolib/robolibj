@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 public abstract class TestMode extends RobotMode {
     
     protected TestMode(){
-        super(ModeSwitcher.GameMode.kTest);
+        super(GameMode.TEST);
     }
     
     /**
