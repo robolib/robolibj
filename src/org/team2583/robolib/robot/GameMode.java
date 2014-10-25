@@ -3,13 +3,13 @@ package org.team2583.robolib.robot;
 public enum GameMode {
 	
 	
-	NONE("NoMode"),
+    NONE("NoMode"),
     DISABLED("Disabled"),
     TEST("Test"),
     AUTON("Autonomous"),
     TELEOP("Teleop");
 	
-	private final String m_name;
+    private final String m_name;
     
     private GameMode(String modeName){
     	m_name = modeName;
