@@ -31,7 +31,7 @@ import org.team2583.robolib.util.log.Logger;
 
 /**
  * A better version of the WPILib IterativeRobot class.
- * It replaces RobotBase and handles all of the robot.
+ * It replaces RobotBase and handles much of the robots functions.
  * It also handles any compressor the robot may have, Loading the
  * robot and sending NetworkTable values about the current state.
  * 
@@ -99,7 +99,7 @@ public class RoboLibBot {//extends MIDlet {
     /**
      * Robot Class Method
      * @param name Name of the Robot
-     * @param version Version number of the robot
+     * @param version Version number of the robot code
      */
     protected RoboLibBot(String name, String version){
         m_name = name;
@@ -263,15 +263,15 @@ public class RoboLibBot {//extends MIDlet {
      * Get the current driver station indicated mode.
      * @return the driver station mode as a {@link GameMode}
      */
-    public ModeSwitcher.GameMode getDSMode(){
+    public GameMode getDSMode(){
         if(isDisabled())
-            return ModeSwitcher.GameMode.kDisabled;
+            return GameMode.DISABLED;
         else if(isTest())
-            return ModeSwitcher.GameMode.kTest;
+            return GameMode.TEST;
         else if(isAutonomous())
-            return ModeSwitcher.GameMode.kAuton;
+            return GameMode.AUTON;
         else
-            return ModeSwitcher.GameMode.kTeleop;
+            return GameMode.TELEOP;
     }
 
     /**
@@ -329,7 +329,7 @@ public class RoboLibBot {//extends MIDlet {
         msg("Starting Main Loop");
         try{
             while(m_run){
-                ModeSwitcher.GameMode mode = getDSMode();
+                GameMode mode = getDSMode();
                 if(m_modeSwitcher.inNewMode(mode)){
                     m_modeSwitcher.switchMode(mode);
                 }

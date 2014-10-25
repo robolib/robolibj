@@ -16,7 +16,6 @@
 package org.team2583.robolib.robot;
 
 import edu.wpi.first.wpilibj.communication.FRCControl;
-import org.team2583.robolib.robot.ModeSwitcher.GameMode;
 import org.team2583.robolib.util.log.Logger;
 
 /**
@@ -26,7 +25,7 @@ import org.team2583.robolib.util.log.Logger;
 public abstract class RobotMode {
     
     protected RobotMode(){
-        this(GameMode.kNoMode);
+        this(GameMode.NONE);
     }
     
     protected RobotMode(GameMode mode){

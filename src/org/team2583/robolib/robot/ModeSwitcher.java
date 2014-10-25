@@ -15,7 +15,10 @@
 
 package org.team2583.robolib.robot;
 
+import java.util.EnumMap;
+
 import edu.wpi.first.wpilibj.command.Scheduler;
+
 import org.team2583.robolib.robot.RoboLibBot.RobotException;
 import org.team2583.robolib.util.log.Logger;
 
@@ -31,34 +34,34 @@ public class ModeSwitcher {
     /**
      * 
      */
-    public static class GameMode{
-        
-        private final int value;
-        private final String name;
-        private GameMode(int value, String name){
-            this.value = value;
-            this.name = name;
-        }
-        /**
-         * Get the value of the GameMode
-         * @return the GameMode Value
-         */
-        public int getValue(){ return value; }
-        /**
-         * Get then name of the GameMode
-         * @return the GameMode Name
-         */
-        public String getName(){ return name; }
-        
-        public static final GameMode kNoMode = new GameMode(0, "NoMode");
-        public static final GameMode kDisabled = new GameMode(1, "Disabled");
-        public static final GameMode kTest = new GameMode(2, "Test");
-        public static final GameMode kAuton = new GameMode(3, "Autonomous");
-        public static final GameMode kTeleop = new GameMode(4, "Teleop");
-        
-        public static final GameMode kModes[] = {kNoMode, kDisabled, kTest, kAuton, kTeleop};
-        
-    }
+//    public static class GameMode{
+//        
+//        private final int value;
+//        private final String name;
+//        private GameMode(int value, String name){
+//            this.value = value;
+//            this.name = name;
+//        }
+//        /**
+//         * Get the value of the GameMode
+//         * @return the GameMode Value
+//         */
+//        public int getValue(){ return value; }
+//        /**
+//         * Get then name of the GameMode
+//         * @return the GameMode Name
+//         */
+//        public String getName(){ return name; }
+//        
+//        public static final GameMode kNoMode = new GameMode(0, "NoMode");
+//        public static final GameMode kDisabled = new GameMode(1, "Disabled");
+//        public static final GameMode kTest = new GameMode(2, "Test");
+//        public static final GameMode kAuton = new GameMode(3, "Autonomous");
+//        public static final GameMode kTeleop = new GameMode(4, "Teleop");
+//        
+//        public static final GameMode kModes[] = {kNoMode, kDisabled, kTest, kAuton, kTeleop};
+//        
+//    }
     
     private static final String NETTABLE_CURRENT_MODE = "mode";
     private static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
@@ -66,7 +69,8 @@ public class ModeSwitcher {
     private static GameMode m_currentMode;
     
     private boolean m_initialized;
-    private final RobotMode m_modes[];
+    private final EnumMap<GameMode, RobotMode> m_modes;
+    //private final RobotMode m_modes[];
     private final Scheduler m_scheduler;
     
     private static final ModeSwitcher m_instance = new ModeSwitcher();
@@ -77,8 +81,8 @@ public class ModeSwitcher {
     
     private ModeSwitcher(){
         m_initialized = false;
-        m_currentMode = GameMode.kNoMode;
-        m_modes = new RobotMode[]{null, null, null, null, null};
+        m_currentMode = GameMode.NONE;
+        m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
         m_scheduler = Scheduler.getInstance();
     }
     
@@ -96,7 +100,7 @@ public class ModeSwitcher {
      */
     protected void add(GameMode gMode, RobotMode rMode){
         if(!m_initialized){
-            m_modes[gMode.getValue()] = rMode;
+            m_modes.put(gMode, rMode);
         }
     }
     
@@ -113,32 +117,32 @@ public class ModeSwitcher {
      * @see TeleopMode
      */
     protected void init(){
-        if(m_modes[GameMode.kDisabled.getValue()] == null){
+        if(!m_modes.containsKey(GameMode.DISABLED)){
             debug("No Disabled Robot Mode Defined");
-            debug("Creating Default Disabled Mode");
+            debug("Creating Empty Disabled Mode");
             new DisabledMode(){};
         }
         
-        if(m_modes[GameMode.kTest.getValue()] == null){
+        if(!m_modes.containsKey(GameMode.TEST)){
             debug("No Test Robot Mode Defined");
-            debug("Creating Default Test Mode");
+            debug("Creating Empty Test Mode");
             new TestMode(){};
         }
         
-        if(m_modes[GameMode.kAuton.getValue()] == null){
+        if(!m_modes.containsKey(GameMode.AUTON)){
             debug("No Autonomous Robot Mode Defined");
-            debug("Creating Default Autonomous Mode");
+            debug("Creating Empty Autonomous Mode");
             new AutonMode(){};
         }
         
-        if(m_modes[GameMode.kTeleop.getValue()] == null){
+        if(!m_modes.containsKey(GameMode.TELEOP)){
             debug("No Teleop Robot Mode Defined");
-            debug("Creating Default Teleop Mode");
+            debug("Creating Empty Teleop Mode");
             new TeleopMode(){};
         }
-        m_currentMode = GameMode.kDisabled;
+        m_currentMode = GameMode.DISABLED;
         m_initialized = true;
-        RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.getValue());
+        RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
         RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, m_currentMode.getName());
     }
     
@@ -187,7 +191,7 @@ public class ModeSwitcher {
      * @return the current {@link RobotMode}
      */
     public RobotMode getRobotMode(){
-        if(m_modes[m_currentMode.getValue()] == null){
+        if(!m_modes.containsKey(m_currentMode)){
             return new RobotMode(){
                 public void init(){
                     throw new RobotException("No Robot Mode");
@@ -197,10 +201,10 @@ public class ModeSwitcher {
                 }
                 public void end(){
                     throw new RobotException("No Robot Mode");
-                }    
+                }
             };
         }
-        return (RobotMode) m_modes[m_currentMode.getValue()];
+        return m_modes.get(m_currentMode);
     }
     
     /**
@@ -213,7 +217,7 @@ public class ModeSwitcher {
      * @param mode the {@link GameMode} number to switch to.
      */
     public void switchMode(int mode){
-        switchMode(GameMode.kModes[mode]);
+        switchMode(GameMode.values()[mode]);
     }
     
     /**
@@ -239,7 +243,7 @@ public class ModeSwitcher {
             Logger.get(getRobotMode()).fatal("Fatal action in RobotMode end method", e);
         }
         m_currentMode = mode;
-        RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, mode.getValue());
+        RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, mode.ordinal());
         RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, mode.getName());
         System.gc();
         try{
@@ -255,7 +259,7 @@ public class ModeSwitcher {
      * @return a boolean value, true if we are in a new mode or false if we are in the same mode
      */
     public boolean inNewMode(int mode){
-        return m_currentMode.getValue() != mode;
+        return m_currentMode.ordinal() != mode;
     }
     
     /**

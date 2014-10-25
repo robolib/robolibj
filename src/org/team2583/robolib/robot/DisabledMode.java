@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.communication.FRCControl;
 public abstract class DisabledMode extends RobotMode {
     
     protected DisabledMode(){
-        super(ModeSwitcher.GameMode.kDisabled);
+        super(GameMode.DISABLED);
     }
     
     /**
