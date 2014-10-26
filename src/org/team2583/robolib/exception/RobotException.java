@@ -13,32 +13,24 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.robot;
+package org.team2583.robolib.exception;
 
 /**
+ * An exception for use with robot code.
+ * 
+ * throw this exception when something goes wrong with the robot that does
+ * not fall under any other exception type.
  * @since 0.1.0
  * @author noriah Reuland <vix@noriah.dev>
  */
-public enum GameMode {
-	
-	
-    NONE("NoMode"),
-    DISABLED("Disabled"),
-    TEST("Test"),
-    AUTON("Autonomous"),
-    TELEOP("Teleop");
-	
-    private final String m_name;
-    
-    private GameMode(String modeName){
-    	m_name = modeName;
-    }
-    
+public final class RobotException extends RuntimeException {
+
     /**
-     * Get then name of the GameMode
-     * @return the GameMode Name
+     * 
      */
-    public String getName(){
-    	return m_name;
+    private static final long serialVersionUID = 3748667178724340857L;
+
+    public RobotException(String msg){
+        super(msg);
     }
 }

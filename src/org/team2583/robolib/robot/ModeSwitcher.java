@@ -19,7 +19,7 @@ import java.util.EnumMap;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
 
-import org.team2583.robolib.robot.RoboLibBot.RobotException;
+import org.team2583.robolib.exception.RobotException;
 import org.team2583.robolib.util.log.Logger;
 
 /**
@@ -30,38 +30,6 @@ import org.team2583.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class ModeSwitcher {
-    
-    /**
-     * 
-     */
-//    public static class GameMode{
-//        
-//        private final int value;
-//        private final String name;
-//        private GameMode(int value, String name){
-//            this.value = value;
-//            this.name = name;
-//        }
-//        /**
-//         * Get the value of the GameMode
-//         * @return the GameMode Value
-//         */
-//        public int getValue(){ return value; }
-//        /**
-//         * Get then name of the GameMode
-//         * @return the GameMode Name
-//         */
-//        public String getName(){ return name; }
-//        
-//        public static final GameMode kNoMode = new GameMode(0, "NoMode");
-//        public static final GameMode kDisabled = new GameMode(1, "Disabled");
-//        public static final GameMode kTest = new GameMode(2, "Test");
-//        public static final GameMode kAuton = new GameMode(3, "Autonomous");
-//        public static final GameMode kTeleop = new GameMode(4, "Teleop");
-//        
-//        public static final GameMode kModes[] = {kNoMode, kDisabled, kTest, kAuton, kTeleop};
-//        
-//    }
     
     private static final String NETTABLE_CURRENT_MODE = "mode";
     private static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
