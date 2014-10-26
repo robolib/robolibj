@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.communication.FRCControl;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+
+import org.team2583.robolib.exception.RobotException;
 import org.team2583.robolib.util.log.ILogger;
 import org.team2583.robolib.util.log.Logger;
 //import javax.microedition.io.Connector;
@@ -51,24 +53,6 @@ public class RoboLibBot {//extends MIDlet {
     public static final int MAJOR_VERSION = 1;
     public static final int MINOR_VERSION = 0;
     public static final int PATCH_VERSION = 1;
-    
-    /**
-     * An exception for use with robot code.
-     * 
-     * throw this exception when something goes wrong with the robot that does
-     * not fall under any other exception type.
-     */
-    public static final class RobotException extends RuntimeException{
-
-        /**
-		 * 
-		 */
-		private static final long serialVersionUID = 3748667178724340857L;
-
-		public RobotException(String msg){
-            super(msg);
-        }
-    }
 
     private final String m_name;
     private final String m_version;
