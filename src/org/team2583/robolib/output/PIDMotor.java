@@ -17,14 +17,13 @@ package org.team2583.robolib.output;
 
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.parsing.IDeviceController;
 import org.team2583.robolib.math.PIDController;
 
 /**
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PIDMotor implements SpeedController, IDeviceController, PIDOutput{
+public class PIDMotor implements SpeedController, PIDOutput{
     
     private final SpeedController motor;
     private final PIDController pidC;

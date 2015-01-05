@@ -34,9 +34,8 @@ public class ModeSwitcher {
     private static final String NETTABLE_CURRENT_MODE = "mode";
     private static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
     
-    private static GameMode m_currentMode;
+    private GameMode m_currentMode;
     
-    private boolean m_initialized;
     private final EnumMap<GameMode, RobotMode> m_modes;
     //private final RobotMode m_modes[];
     private final Scheduler m_scheduler;
@@ -48,7 +47,6 @@ public class ModeSwitcher {
     }
     
     private ModeSwitcher(){
-        m_initialized = false;
         m_currentMode = GameMode.NONE;
         m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
         m_scheduler = Scheduler.getInstance();
@@ -66,8 +64,8 @@ public class ModeSwitcher {
      * @see GameMode
      * @see RobotMode
      */
-    protected void add(GameMode gMode, RobotMode rMode){
-        if(!m_initialized){
+    protected void set(GameMode gMode, RobotMode rMode){
+        if(!getGameMode().equals(gMode)){
             m_modes.put(gMode, rMode);
         }
     }
@@ -109,7 +107,6 @@ public class ModeSwitcher {
             new TeleopMode(){};
         }
         m_currentMode = GameMode.DISABLED;
-        m_initialized = true;
         RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
         RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, m_currentMode.getName());
     }
@@ -137,17 +134,8 @@ public class ModeSwitcher {
      * 
      * @return the current {@link GameMode} 
      */
-    public static GameMode getGameMode(){
+    public GameMode getGameMode(){
         return m_currentMode;
-    }
-    
-    /**
-     * Get the name of the current {@link GameMode}.
-     * 
-     * @return the current {@link GameMode} name
-     */
-    public static String getGameModeName(){
-        return getGameMode().getName();
     }
     
     /**
@@ -164,15 +152,30 @@ public class ModeSwitcher {
                 public void init(){
                     throw new RobotException("No Robot Mode");
                 }
-                public void run(){
-                    throw new RobotException("No Robot Mode");
-                }
-                public void end(){
-                    throw new RobotException("No Robot Mode");
-                }
             };
         }
         return m_modes.get(m_currentMode);
+    }
+    
+    /**
+     * Get the {@link RobotMode} for the given {@link GameMode}
+     * 
+     * @return {@link RobotMode}
+     */
+    public RobotMode getRobotMode(GameMode mode){
+        if(!m_modes.containsKey(mode))
+            return new RobotMode(){};
+
+        return m_modes.get(mode);
+    }
+
+    /**
+     * Do we have a {@link RobotMode} for this {@link GameMode}
+     * 
+     * @return boolean - do we have it?
+     */
+    public boolean hasMode(GameMode mode){
+        return m_modes.containsKey(mode);
     }
     
     /**
@@ -203,16 +206,18 @@ public class ModeSwitcher {
      * @param mode the {@link GameMode} to switch to.
      */
     public void switchMode(GameMode mode){
-        Logger.get(this).debug("Switching to " + mode.getName());
-        getRobotMode();
+        debug("Switching to " + mode.getName());
+        
+        RobotMode rMode = getRobotMode();
         try{
-            getRobotMode().modeEnd();
+            rMode.modeEnd();
         }catch(Throwable e){
-            Logger.get(getRobotMode()).fatal("Fatal action in RobotMode end method", e);
+            Logger.get(rMode).fatal("Fatal action in RobotMode end method", e);
         }
         m_currentMode = mode;
+        rMode = getRobotMode();
         RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, mode.ordinal());
-        RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, mode.getName());
+        RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, rMode.getName());
         System.gc();
         try{
             getRobotMode().modeInit();

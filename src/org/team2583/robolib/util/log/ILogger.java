@@ -49,7 +49,7 @@ public abstract class ILogger {
      * Log an {@code Object} to the logger, with info status.
      * @param obj the {@code Object} to log
      */
-    public void info(Object obj){
+    public final void info(Object obj){
         info(String.valueOf(obj));
     }
     
@@ -57,7 +57,7 @@ public abstract class ILogger {
      * Log a {@code boolean} to the logger, with info status.
      * @param b the {@code boolean} to log
      */
-    public void info(boolean b){
+    public final void info(boolean b){
         info(String.valueOf(b));
     }
     
@@ -65,7 +65,7 @@ public abstract class ILogger {
      * Log an {@code char} to the logger, with info status.
      * @param c the {@code char} to log
      */
-    public void info(char c){
+    public final void info(char c){
         info(String.valueOf(c));
     }
     
@@ -73,15 +73,15 @@ public abstract class ILogger {
      * Log an {@code char} to the logger, with info status.
      * @param s the {@code char} array to log
      */
-    public void info(char[] s){
-        info(String.valueOf(s));
+    public final void info(char[] c){
+        info(String.valueOf(c));
     }
     
     /**
      * Log an {@code double} to the logger, with info status.
      * @param d the {@code double} to log
      */
-    public void info(double d){
+    public final void info(double d){
         info(String.valueOf(d));
     }
     
@@ -89,7 +89,7 @@ public abstract class ILogger {
      * Log an {@code float} to the logger, with info status.
      * @param f the {@code float} to log
      */
-    public void info(float f){
+    public final void info(float f){
         info(String.valueOf(f));
     }
     
@@ -97,7 +97,7 @@ public abstract class ILogger {
      * Log an {@code int} to the logger, with info status.
      * @param i the {@code int} to log
      */
-    public void info(int i){
+    public final void info(int i){
         info(String.valueOf(i));
     }
     
@@ -105,7 +105,7 @@ public abstract class ILogger {
      * Log an {@code long} to the logger, with info status.
      * @param l the {@code long} to log
      */
-    public void info(long l){
+    public final void info(long l){
         info(String.valueOf(l));
     }
     
@@ -119,7 +119,7 @@ public abstract class ILogger {
      * Log an {@code Object} to the logger, with debug status.
      * @param obj the {@code Object} to log
      */
-    public void debug(Object obj){
+    public final void debug(Object obj){
         debug(String.valueOf(obj));
     }
     
@@ -127,7 +127,7 @@ public abstract class ILogger {
      * Log a {@code boolean} to the logger, with debug status.
      * @param b the {@code boolean} to log
      */
-    public void debug(boolean b){
+    public final void debug(boolean b){
         debug(String.valueOf(b));
     }
     
@@ -135,7 +135,7 @@ public abstract class ILogger {
      * Log an {@code char} to the logger, with debug status.
      * @param c the {@code char} to log
      */
-    public void debug(char c){
+    public final void debug(char c){
         debug(String.valueOf(c));
     }
     
@@ -143,15 +143,15 @@ public abstract class ILogger {
      * Log an {@code char} to the logger, with debug status.
      * @param s the {@code char} array to log
      */
-    public void debug(char[] s){
-        debug(String.valueOf(s));
+    public final void debug(char[] c){
+        debug(String.valueOf(c));
     }
     
     /**
      * Log an {@code double} to the logger, with debug status.
      * @param d the {@code double} to log
      */
-    public void debug(double d){
+    public final void debug(double d){
         debug(String.valueOf(d));
     }
     
@@ -159,7 +159,7 @@ public abstract class ILogger {
      * Log an {@code float} to the logger, with debug status.
      * @param f the {@code float} to log
      */
-    public void debug(float f){
+    public final void debug(float f){
         debug(String.valueOf(f));
     }
     
@@ -167,7 +167,7 @@ public abstract class ILogger {
      * Log an {@code int} to the logger, with debug status.
      * @param i the {@code int} to log
      */
-    public void debug(int i){
+    public final void debug(int i){
         debug(String.valueOf(i));
     }
     
@@ -175,7 +175,7 @@ public abstract class ILogger {
      * Log an {@code long} to the logger, with debug status.
      * @param l the {@code long} to log
      */
-    public void debug(long l){
+    public final void debug(long l){
         debug(String.valueOf(l));
     }
     
@@ -189,7 +189,7 @@ public abstract class ILogger {
      * Log an {@code Object} to the logger, with warn status.
      * @param obj the {@code Object} to log
      */
-    public void warn(Object obj){
+    public final void warn(Object obj){
         warn(String.valueOf(obj));
     }
     
@@ -197,7 +197,7 @@ public abstract class ILogger {
      * Log a {@code boolean} to the logger, with warn status.
      * @param b the {@code boolean} to log
      */
-    public void warn(boolean b){
+    public final void warn(boolean b){
         warn(String.valueOf(b));
     }
     
@@ -205,7 +205,7 @@ public abstract class ILogger {
      * Log an {@code char} to the logger, with warn status.
      * @param c the {@code char} to log
      */
-    public void warn(char c){
+    public final void warn(char c){
         warn(String.valueOf(c));
     }
     
@@ -213,15 +213,15 @@ public abstract class ILogger {
      * Log an {@code char} to the logger, with warn status.
      * @param s the {@code char} array to log
      */
-    public void warn(char[] s){
-        warn(String.valueOf(s));
+    public final void warn(char[] c){
+        warn(String.valueOf(c));
     }
     
     /**
      * Log an {@code double} to the logger, with warn status.
      * @param d the {@code double} to log
      */
-    public void warn(double d){
+    public final void warn(double d){
         warn(String.valueOf(d));
     }
     
@@ -229,7 +229,7 @@ public abstract class ILogger {
      * Log an {@code float} to the logger, with warn status.
      * @param f the {@code float} to log
      */
-    public void warn(float f){
+    public final void warn(float f){
         warn(String.valueOf(f));
     }
     
@@ -237,7 +237,7 @@ public abstract class ILogger {
      * Log an {@code int} to the logger, with warn status.
      * @param i the {@code int} to log
      */
-    public void warn(int i){
+    public final void warn(int i){
         warn(String.valueOf(i));
     }
     
@@ -245,7 +245,7 @@ public abstract class ILogger {
      * Log an {@code long} to the logger, with warn status.
      * @param l the {@code long} to log
      */
-    public void warn(long l){
+    public final void warn(long l){
         warn(String.valueOf(l));
     }
     
@@ -260,7 +260,7 @@ public abstract class ILogger {
      * @param obj the {@code Object} to log
      * @param o the {@code Object} to send with the message
      */
-    public void error(Object obj, Object o){
+    public final void error(Object obj, Object o){
         error(String.valueOf(obj), o);
     }
     
@@ -269,7 +269,7 @@ public abstract class ILogger {
      * @param b the {@code boolean} to log
      * @param o the {@code Object} to send with the message
      */
-    public void error(boolean b, Object o){
+    public final void error(boolean b, Object o){
         error(String.valueOf(b), o);
     }
     
@@ -278,7 +278,7 @@ public abstract class ILogger {
      * @param c the {@code char} to log
      * @param o the {@code Object} to send with the message
      */
-    public void error(char c, Object o){
+    public final void error(char c, Object o){
         error(String.valueOf(c), o);
     }
     
@@ -287,8 +287,8 @@ public abstract class ILogger {
      * @param s the {@code char} array to log
      * @param o the {@code Object} to send with the message
      */
-    public void error(char[] s, Object o){
-        error(String.valueOf(s), o);
+    public final void error(char[] c, Object o){
+        error(String.valueOf(c), o);
     }
     
     /**
@@ -296,7 +296,7 @@ public abstract class ILogger {
      * @param d the {@code double} to log
      * @param o the {@code Object} to send with the message
      */
-    public void error(double d, Object o){
+    public final void error(double d, Object o){
         error(String.valueOf(d), o);
     }
     
@@ -305,7 +305,7 @@ public abstract class ILogger {
      * @param f the {@code float} to log
      * @param o the {@code Object} to send with the message
      */
-    public void error(float f, Object o){
+    public final void error(float f, Object o){
         error(String.valueOf(f), o);
     }
     
@@ -314,7 +314,7 @@ public abstract class ILogger {
      * @param i the {@code int} to log
      * @param o the {@code Object} to send with the message
      */
-    public void error(int i, Object o){
+    public final void error(int i, Object o){
         error(String.valueOf(i), o);
     }
     
@@ -323,7 +323,7 @@ public abstract class ILogger {
      * @param l the {@code long} to log
      * @param o the {@code Object} to send with the message
      */
-    public void error(long l, Object o){
+    public final void error(long l, Object o){
         error(String.valueOf(l), o);
     }
 
@@ -331,7 +331,7 @@ public abstract class ILogger {
      * Log an {@code String} to the logger, with error status.
      * @param s the {@code String} to log
      */
-    public void error(String s){
+    public final void error(String s){
         error(s, null);
     }
     
@@ -349,8 +349,8 @@ public abstract class ILogger {
      * @param obj the {@code Object} to log
      * @param o the {@code Object} to send with the message
      */
-    public void severe(Object obj, Object o){
-        severe(String.valueOf(obj), o);
+    public final void severe(Object obj, Object o){
+        severe_imp(String.valueOf(obj), o);
     }
     
     /**
@@ -360,8 +360,8 @@ public abstract class ILogger {
      * @param b the {@code boolean} to log
      * @param o the {@code Object} to send with the message
      */
-    public void severe(boolean b, Object o){
-        severe(String.valueOf(b), o);
+    public final void severe(boolean b, Object o){
+        severe_imp(String.valueOf(b), o);
     }
     
     /**
@@ -371,8 +371,8 @@ public abstract class ILogger {
      * @param c the {@code char} to log
      * @param o the {@code Object} to send with the message
      */
-    public void severe(char c, Object o){
-        severe(String.valueOf(c), o);
+    public final void severe(char c, Object o){
+        severe_imp(String.valueOf(c), o);
     }
     
     /**
@@ -382,8 +382,8 @@ public abstract class ILogger {
      * @param s the {@code char} array to log
      * @param o the {@code Object} to send with the message
      */
-    public void severe(char[] s, Object o){
-        severe(String.valueOf(s), o);
+    public final void severe(char[] c, Object o){
+        severe_imp(String.valueOf(c), o);
     }
     
     /**
@@ -393,8 +393,8 @@ public abstract class ILogger {
      * @param d the {@code double} to log
      * @param o the {@code Object} to send with the message
      */
-    public void severe(double d, Object o){
-        severe(String.valueOf(d), o);
+    public final void severe(double d, Object o){
+        severe_imp(String.valueOf(d), o);
     }
     
     /**
@@ -404,8 +404,8 @@ public abstract class ILogger {
      * @param f the {@code float} to log
      * @param o the {@code Object} to send with the message
      */
-    public void severe(float f, Object o){
-        severe(String.valueOf(f), o);
+    public final void severe(float f, Object o){
+        severe_imp(String.valueOf(f), o);
     }
     
     /**
@@ -415,8 +415,8 @@ public abstract class ILogger {
      * @param i the {@code int} to log
      * @param o the {@code Object} to send with the message
      */
-    public void severe(int i, Object o){
-        severe(String.valueOf(i), o);
+    public final void severe(int i, Object o){
+        severe_imp(String.valueOf(i), o);
     }
     
     /**
@@ -426,16 +426,22 @@ public abstract class ILogger {
      * @param l the {@code long} to log
      * @param o the {@code Object} to send with the message
      */
-    public void severe(long l, Object o){
-        severe(String.valueOf(l), o);
+    public final void severe(long l, Object o){
+        severe_imp(String.valueOf(l), o);
     }
 
     /**
      * Log an {@code String} to the logger, with severe status.
      * @param s the {@code String} to log
      */
-    public void severe(String s){
-        severe(s, null);
+    public final void severe(String s){
+        severe_imp(s, null);
+    }
+    
+    private final void severe_imp(String s, Object o){
+        severe(s, o);
+        if(o instanceof Error || o instanceof RuntimeException)
+            System.exit(1);
     }
     
     /**
@@ -449,11 +455,12 @@ public abstract class ILogger {
     
     /**
      * Log an {@code Object} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param obj the {@code Object} to log
      * @param o the {@code Object} to send with the message
      */
-    public void fatal(Object obj, Object o){
-        fatal(String.valueOf(obj), o);
+    public final void fatal(Object obj, Object o){
+        fatal_imp(String.valueOf(obj), o);
     }
     
     /**
@@ -461,74 +468,87 @@ public abstract class ILogger {
      * @param b the {@code boolean} to log
      * @param o the {@code Object} to send with the message
      */
-    public void fatal(boolean b, Object o){
-        fatal(String.valueOf(b), o);
+    public final void fatal(boolean b, Object o){
+        fatal_imp(String.valueOf(b), o);
     }
     
     /**
      * Log an {@code char} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param c the {@code char} to log
      * @param o the {@code Object} to send with the message
      */
-    public void fatal(char c, Object o){
-        fatal(String.valueOf(c), o);
+    public final void fatal(char c, Object o){
+        fatal_imp(String.valueOf(c), o);
     }
     
     /**
      * Log an {@code char} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param s the {@code char} array to log
      * @param o the {@code Object} to send with the message
      */
-    public void fatal(char[] s, Object o){
-        fatal(String.valueOf(s), o);
+    public final void fatal(char[] c, Object o){
+        fatal_imp(String.valueOf(c), o);
     }
     
     /**
      * Log an {@code double} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param d the {@code double} to log
      * @param o the {@code Object} to send with the message
      */
-    public void fatal(double d, Object o){
-        fatal(String.valueOf(d), o);
+    public final void fatal(double d, Object o){
+        fatal_imp(String.valueOf(d), o);
     }
     
     /**
      * Log an {@code float} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param f the {@code float} to log
      * @param o the {@code Object} to send with the message
      */
-    public void fatal(float f, Object o){
-        fatal(String.valueOf(f), o);
+    public final void fatal(float f, Object o){
+        fatal_imp(String.valueOf(f), o);
     }
     
     /**
      * Log an {@code int} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param i the {@code int} to log
      * @param o the {@code Object} to send with the message
      */
-    public void fatal(int i, Object o){
-        fatal(String.valueOf(i), o);
+    public final void fatal(int i, Object o){
+        fatal_imp(String.valueOf(i), o);
     }
     
     /**
      * Log an {@code long} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param l the {@code long} to log
      * @param o the {@code Object} to send with the message
      */
-    public void fatal(long l, Object o){
-        fatal(String.valueOf(l), o);
+    public final void fatal(long l, Object o){
+        fatal_imp(String.valueOf(l), o);
     }
 
     /**
      * Log an {@code String} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param s the {@code String} to log
      */
-    public void fatal(String s){
-        fatal(s, null);
+    public final void fatal(String s){
+        fatal_imp(s, null);
+    }
+    
+    private final void fatal_imp(String s, Object o){
+        fatal(s, o);
+        System.exit(1);
     }
     
     /**
      * Log an {@code String} to the logger, with fatal status.
+     * Program will exit with status 1
      * @param s the {@code String} to log
      * @param o the {@code Object} to send with the message
      */

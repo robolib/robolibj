@@ -15,7 +15,7 @@
 
 package org.team2583.robolib.robot;
 
-import edu.wpi.first.wpilibj.communication.FRCControl;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
@@ -40,7 +40,7 @@ public abstract class TestMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCControl.observeUserProgramTest();
+        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramTest();
         run();
     }
     

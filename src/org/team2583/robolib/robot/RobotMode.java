@@ -15,7 +15,8 @@
 
 package org.team2583.robolib.robot;
 
-import edu.wpi.first.wpilibj.communication.FRCControl;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
+
 import org.team2583.robolib.util.log.Logger;
 
 /**
@@ -24,12 +25,55 @@ import org.team2583.robolib.util.log.Logger;
  */
 public abstract class RobotMode {
     
+    private final GameMode m_mode;
+    private final String m_name;
+    
     protected RobotMode(){
         this(GameMode.NONE);
     }
     
     protected RobotMode(GameMode mode){
-        ModeSwitcher.getInstance().add(mode, this);
+        this(mode, mode.getName(), false);
+    }
+    
+    protected RobotMode(GameMode mode, String name){
+        this(mode, mode.getAbbreviation() + ":" + name, false);
+    }
+    
+    protected RobotMode(GameMode mode, String name, boolean active){
+        m_mode = mode;
+        m_name = name;
+        if(active || !ModeSwitcher.getInstance().hasMode(mode))
+            setActive();
+    }
+    
+    public final String getName(){
+        return m_name;
+    }
+    
+    /**
+     * Get the mode type for this robot mode
+     * 
+     * @return GameMode type
+     */
+    public GameMode getModeType(){
+        return m_mode;
+    }
+    
+    /**
+     * Get if this RobotMode is the active one for its {@link GameMode}
+     * 
+     * @return is this the active RobotMode for its {@link GameMode}
+     */
+    public final boolean getActive(){
+        return ModeSwitcher.getInstance().getRobotMode(m_mode).equals(this);
+    }
+    
+    /**
+     * Set this RobotMode as the active robot mode for its {@link GameMode}.
+     */
+    public final void setActive(){
+        ModeSwitcher.getInstance().set(m_mode, this);
     }
     
     /**
@@ -57,7 +101,7 @@ public abstract class RobotMode {
      * This calls the {@code run()} method once every period.
      */
     protected void modeRun(){
-        FRCControl.observeUserProgramDisabled();
+        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramDisabled();
         run();
     }
     

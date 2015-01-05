@@ -39,7 +39,7 @@ import java.util.Map;
  * 
  * @see ILogger
  * @see LogOutput
- * @see EnumLogLevel
+ * @see ELogLevel
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
@@ -49,12 +49,7 @@ public final class Logger extends ILogger {
     
     
 	private static final Map<Class, Logger> m_loggers = new HashMap<>();
-    private static final List<LogOutput> m_defOuts = new ArrayList<LogOutput>(){
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;};
+    private static final List<LogOutput> m_defOuts = new ArrayList<LogOutput>();
     private final List<LogOutput> m_outs;
     private final String m_label;
     
@@ -96,8 +91,6 @@ public final class Logger extends ILogger {
     public static Logger get(Class c, String s){
         if(!m_loggers.containsKey(c))
             m_loggers.put(c, new Logger(s));
-        
-        
         
         return m_loggers.get(c);
     }
@@ -153,8 +146,8 @@ public final class Logger extends ILogger {
      * @param l the Logging level
      * @param s the String to log
      */
-    private void sendMsg(EnumLogLevel l, String s){
-        String sout = " " + l.m_name + " <" + ModeSwitcher.getGameModeName() + "> " + m_label + ": " + s;
+    private void sendMsg(ELogLevel l, String s){
+        String sout = " " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_OUT.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
@@ -166,8 +159,8 @@ public final class Logger extends ILogger {
      * @param l the Logging level
      * @param s the String to log
      */
-    private void sendErrMsg(EnumLogLevel l, String s){
-        String sout = " " + l.m_name + " <" + ModeSwitcher.getGameModeName() + "> " + m_label + ": " + s;
+    private void sendErrMsg(ELogLevel l, String s){
+        String sout = " " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_ERR.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
@@ -177,37 +170,37 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void info(String s){
-        sendMsg(EnumLogLevel.INFO, s);
+        sendMsg(ELogLevel.INFO, s);
     }
 
     /**
      * {@inheritDoc}
      */
     public void debug(String s){
-        sendMsg(EnumLogLevel.DEBUG, s);
+        sendMsg(ELogLevel.DEBUG, s);
     }
 
     /**
      * {@inheritDoc}
      */
     public void warn(String s){
-        sendMsg(EnumLogLevel.WARN, s);
+        sendMsg(ELogLevel.WARN, s);
     }
 
     /**
      * {@inheritDoc}
      */
     public void error(String s, Object o){
-        sendErrMsg(EnumLogLevel.ERROR, s);
+        sendErrMsg(ELogLevel.ERROR, s);
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
-                sendErrMsg(EnumLogLevel.ERROR, errors.toString());
+                sendErrMsg(ELogLevel.ERROR, errors.toString());
             }else if(o instanceof String){
-                sendErrMsg(EnumLogLevel.ERROR, (String)o);
+                sendErrMsg(ELogLevel.ERROR, (String)o);
             }else{
-                sendErrMsg(EnumLogLevel.ERROR, o.toString());
+                sendErrMsg(ELogLevel.ERROR, o.toString());
             }
         }
     }
@@ -216,16 +209,16 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void severe(String s, Object o){
-        sendErrMsg(EnumLogLevel.SEVERE, s);
+        sendErrMsg(ELogLevel.SEVERE, s);
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
-                sendErrMsg(EnumLogLevel.SEVERE, errors.toString());
+                sendErrMsg(ELogLevel.SEVERE, errors.toString());
             }else if(o instanceof String){
-                sendErrMsg(EnumLogLevel.SEVERE, (String)o);
+                sendErrMsg(ELogLevel.SEVERE, (String)o);
             }else{
-                sendErrMsg(EnumLogLevel.SEVERE, o.toString());
+                sendErrMsg(ELogLevel.SEVERE, o.toString());
             }
         }
     }
@@ -234,18 +227,17 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void fatal(String s, Object o){
-        sendErrMsg(EnumLogLevel.FATAL, s);
+        sendErrMsg(ELogLevel.FATAL, s);
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
-                sendErrMsg(EnumLogLevel.FATAL, errors.toString());
+                sendErrMsg(ELogLevel.FATAL, errors.toString());
             }else if(o instanceof String){
-                sendErrMsg(EnumLogLevel.FATAL, (String)o);
+                sendErrMsg(ELogLevel.FATAL, (String)o);
             }else{
-                sendErrMsg(EnumLogLevel.FATAL, o.toString());
+                sendErrMsg(ELogLevel.FATAL, o.toString());
             }
         }
     }
-
 }

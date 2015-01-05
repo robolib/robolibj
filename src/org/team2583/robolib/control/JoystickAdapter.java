@@ -16,15 +16,15 @@
 package org.team2583.robolib.control;
 
 import java.util.Arrays;
+
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.parsing.IInputOutput;
 
 /**
  * A middle-man in between the WPILib Library and the RoboLibJ Joysticks.
  * @see Joystick
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class JoystickAdapter extends GenericHID implements IInputOutput {
+public abstract class JoystickAdapter extends GenericHID{
     
     /**
      * A class representation of a Joystick Axis
@@ -191,6 +191,13 @@ public abstract class JoystickAdapter extends GenericHID implements IInputOutput
      */
     public final boolean getRawButton(int button) {
         return getButton(button).get();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getPOV(int pov) {
+        return 0;
     }
     
     /**

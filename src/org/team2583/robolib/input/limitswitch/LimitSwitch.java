@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -17,48 +17,19 @@ package org.team2583.robolib.input.limitswitch;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
-import edu.wpi.first.wpilibj.parsing.IInputOutput;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * Limit Switch Class
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class LimitSwitch implements IStandardSwitch, IInputOutput, LiveWindowSendable {
-    
-    /**
-     * Limit Switch Type Class
-     */
-    public static class SwitchType{
-        private final int type;
-        private SwitchType(int type){
-            this.type = type;
-        }
-        public int getType(){
-            return type;
-        }
-        public boolean getValue(boolean value){
-            return ((type == 1 && value) || (type == 2 && !value));
-        }
-        /**
-         * Normally Open Switch
-         */
-        public static final SwitchType NO = new SwitchType(1);
-        /**
-         * Normally Closed Switch
-         */
-        public static final SwitchType NC = new SwitchType(2);
-    }
+public class LimitSwitch implements IStandardSwitch, LiveWindowSendable {
     
     private DigitalInput m_limitSwitch;
-    private SwitchType m_type;
+    private ESwitchType m_type;
     
-    public LimitSwitch(int channel, SwitchType type){
-        this(1, channel, type);
-    }
-    
-    public LimitSwitch(int module, int channel, SwitchType type){
-        m_limitSwitch = new DigitalInput(module, channel);
+    public LimitSwitch(int channel, ESwitchType type){
+        m_limitSwitch = new DigitalInput(channel);
         this.m_type = type;
     }
     
@@ -70,7 +41,7 @@ public class LimitSwitch implements IStandardSwitch, IInputOutput, LiveWindowSen
         return m_limitSwitch.getChannel();
     }
 
-    public SwitchType getType() {
+    public ESwitchType getType() {
         return m_type;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -13,14 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input;
+package org.team2583.robolib.pneumatics;
 
 /**
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
+ *
  */
-public interface IRoboSensor {
-    
-    public int getChanel();
-    
+public class Solenoid {
+
 }

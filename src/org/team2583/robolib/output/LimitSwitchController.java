@@ -17,14 +17,13 @@ package org.team2583.robolib.output;
 
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.parsing.IDeviceController;
 import org.team2583.robolib.input.limitswitch.ILimitSwitchSystem;
 
 /**
  * A SpeedController limited by Limit Switches
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class LimitSwitchController implements SpeedController, IDeviceController, PIDOutput {
+public class LimitSwitchController implements SpeedController, PIDOutput {
     
     private final SpeedController m_motor;
     private final ILimitSwitchSystem m_switchSystem;

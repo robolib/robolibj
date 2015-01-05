@@ -15,7 +15,7 @@
 
 package org.team2583.robolib.robot;
 
-import edu.wpi.first.wpilibj.communication.FRCControl;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 
 /**
  *
@@ -31,7 +31,7 @@ public abstract class AutonMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCControl.observeUserProgramAutonomous();
+        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramAutonomous();
         run();
     }
 }
