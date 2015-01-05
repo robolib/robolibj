@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -13,39 +13,31 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.robot;
-
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
+package org.team2583.robolib.input.limitswitch;
 
 /**
- *
+ * Limit Switch Type Enum
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public abstract class DisabledMode extends RobotMode {
-    
-    protected DisabledMode(){
-        super(GameMode.DISABLED);
-    }
+public enum ESwitchType {
     
     /**
-     * {@inheritDoc}
+     * Normally Open Switch
      */
-    protected final void modeInit(){
-        init();
+    NO(true),
+    /**
+     * Normally Closed Switch
+     */
+    NC(false);
+    
+    private final boolean open;
+    
+    ESwitchType(boolean open){
+        this.open = open;
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramDisabled();
-        run();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected final void modeEnd(){
-        end();
+    public boolean getValue(boolean value){
+        return this.open && value;
     }
 }

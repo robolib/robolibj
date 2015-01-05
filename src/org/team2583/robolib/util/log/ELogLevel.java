@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -35,7 +35,7 @@ package org.team2583.robolib.util.log;
  * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public enum EnumLogLevel {
+public enum ELogLevel {
    
     INFO("[INFO]"),
     DEBUG("[DEBUG]"),
@@ -46,7 +46,7 @@ public enum EnumLogLevel {
     
     public final String m_name;
         
-    private EnumLogLevel(String name){
+    private ELogLevel(String name){
         m_name = name;
     }
 

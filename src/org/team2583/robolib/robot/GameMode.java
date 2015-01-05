@@ -22,23 +22,33 @@ package org.team2583.robolib.robot;
 public enum GameMode {
 	
 	
-    NONE("NoMode"),
-    DISABLED("Disabled"),
-    TEST("Test"),
-    AUTON("Autonomous"),
-    TELEOP("Teleop");
+    NONE("NoMode", "N"),
+    DISABLED("Disabled", "D"),
+    TEST("Test", "T"),
+    AUTON("Autonomous", "A"),
+    TELEOP("Teleop", "U");
 	
     private final String m_name;
+    private final String m_abbr;
     
-    private GameMode(String modeName){
+    private GameMode(String modeName, String abbr){
     	m_name = modeName;
+    	m_abbr = abbr;
     }
     
     /**
-     * Get then name of the GameMode
+     * Get the name of the GameMode
      * @return the GameMode Name
      */
     public String getName(){
     	return m_name;
+    }
+    
+    /**
+     * Get the abbreviation of the GameMode
+     * @return the GameMode abbreviation
+     */
+    public String getAbbreviation(){
+        return m_abbr;
     }
 }

@@ -23,7 +23,4 @@ public interface IRoboSensor {
     
     public int getChanel();
     
-    public int getModule();
-    
-
 }

@@ -15,7 +15,7 @@
 
 package org.team2583.robolib.input;
 
-import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  */
 public class Potentiometer implements IRoboSensor, IRoboAnalogSensor, PIDSource, LiveWindowSendable {
     
-    private AnalogChannel m_pot;
+    private AnalogInput m_pot;
     
     /**
      * 
@@ -35,18 +35,7 @@ public class Potentiometer implements IRoboSensor, IRoboAnalogSensor, PIDSource,
      * @param ovrBits Number of Oversample Bits
      */
     public Potentiometer(int channel, int avgBits, int ovrBits){
-        this(1, channel, avgBits, ovrBits);
-    }
-    
-    /**
-     * 
-     * @param module Analog Module Number
-     * @param channel Analog Channel of the Potentiometer
-     * @param avgBits Number of Averaging Bits
-     * @param ovrBits Number of Oversample Bits
-     */ 
-    public Potentiometer(int module, int channel, int avgBits, int ovrBits){
-        m_pot = new AnalogChannel(module, channel);
+        m_pot = new AnalogInput(channel);
         m_pot.setAverageBits(avgBits);
         m_pot.setOversampleBits(ovrBits);
     }
@@ -75,8 +64,6 @@ public class Potentiometer implements IRoboSensor, IRoboAnalogSensor, PIDSource,
     }
     
     public int getChanel(){ return m_pot.getChannel(); }
-    
-    public int getModule(){ return m_pot.getModuleNumber(); }
     
     public int getAverageBits() { return m_pot.getAverageBits(); }
     

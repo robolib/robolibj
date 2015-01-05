@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -15,8 +15,6 @@
 
 package org.team2583.robolib.input.limitswitch;
 
-import org.team2583.robolib.input.limitswitch.LimitSwitch.SwitchType;
-
 /**
  * A Limit Switch System using two Switches
  * @author Austin Reuland <amreuland@gmail.com>
@@ -25,14 +23,10 @@ public class DualLimitSwitchSystem implements ILimitSwitchSystem{
     
     private LimitSwitch m_topSwitch, m_bottomSwitch;
 
-    public DualLimitSwitchSystem(int topChannel, SwitchType topType, int bottomChannel, SwitchType bottomType){
-        this(new LimitSwitch(topChannel, topType), new LimitSwitch(bottomChannel, bottomType));
-    }
-    
-    public DualLimitSwitchSystem(int topModule, int topChannel, SwitchType topType,
-            int bottomModule, int bottomChannel, SwitchType bottomType){
-        this(new LimitSwitch(topModule, topChannel, topType),
-                new LimitSwitch(bottomModule, bottomChannel, bottomType));
+    public DualLimitSwitchSystem(int topChannel, ESwitchType topType,
+            int bottomChannel, ESwitchType bottomType){
+        this(new LimitSwitch(topChannel, topType),
+                new LimitSwitch(bottomChannel, bottomType));
     }
     
     public DualLimitSwitchSystem(LimitSwitch top, LimitSwitch bottom){

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -15,21 +15,30 @@
 
 package org.team2583.robolib.robot;
 
-import edu.wpi.first.wpilibj.Compressor;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+
+//import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.internal.HardwareHLUsageReporting;
+import edu.wpi.first.wpilibj.internal.HardwareTimer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Watchdog;
-import edu.wpi.first.wpilibj.communication.FRCControl;
+import edu.wpi.first.wpilibj.HLUsageReporting;
+import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 import org.team2583.robolib.exception.RobotException;
 import org.team2583.robolib.util.log.ILogger;
 import org.team2583.robolib.util.log.Logger;
-//import javax.microedition.io.Connector;
-//import javax.microedition.midlet.MIDlet;
-//import javax.microedition.midlet.MIDletStateChangeException;
 
 /**
  * A better version of the WPILib IterativeRobot class.
@@ -48,28 +57,26 @@ import org.team2583.robolib.util.log.Logger;
  * @since 0.1.0
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class RoboLibBot {//extends MIDlet {
+public class RoboLibBot {
 
-    public static final int MAJOR_VERSION = 1;
+    public static final int MAJOR_VERSION = 2;
     public static final int MINOR_VERSION = 0;
-    public static final int PATCH_VERSION = 1;
+    public static final int PATCH_VERSION = 0;
 
     private final String m_name;
     private final String m_version;
     private final ILogger m_log;
     private static boolean m_run = true;
     private static boolean m_debug = true;
-    private static Compressor m_compressor = null;
     private static ITable m_table;
-    protected final DriverStation m_ds;
-    private final Watchdog m_watchdog = Watchdog.getInstance();
+    protected static final DriverStation m_ds = DriverStation.getInstance();
     private static final ModeSwitcher m_modeSwitcher = ModeSwitcher.getInstance();
 
     /**
      * Robot Class Method
      */
     protected RoboLibBot(){
-        this("Default", "1.0.0");
+        this("RoboLibBot", "1.0.0");
     }
 
     /**
@@ -91,9 +98,8 @@ public class RoboLibBot {//extends MIDlet {
 
         NetworkTable.setServerMode();
         NetworkTable.getTable("");
-        NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~");
+        NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
 
-        m_ds = DriverStation.getInstance();
         m_table = NetworkTable.getTable("Robot");
         m_log = Logger.get(this);
     }
@@ -162,55 +168,6 @@ public class RoboLibBot {//extends MIDlet {
         m_run = false;
         m_log.fatal(msg, e);
     }
-
-    /**
-     * Add a Compressor to the System
-     * @param cs the pressure switch that the compressor is on.
-     * @param cr the relay that controls the compressor
-     */
-    protected void compressor(int cs, int cr){
-        compressor(1, cs, 1, cr);
-    }
-    
-    /**
-     * Add a Compressor to the System
-     * @param csm the module that the dio input is on
-     * @param cs the pressure switch that the compressor is on.
-     * @param crm the module that the relay output is on
-     * @param cr the relay that controls the compressor
-     */
-    protected void compressor(int csm, int cs,
-            int crm, int cr){
-        msg("Adding Compressor on Relay Port " + cr + " DIO Port " + cs);
-        m_compressor = new Compressor(csm, cs, crm, cr);
-    }
-    
-    /**
-     * Add a Compressor to the System
-     * @param compressor the Compressor object
-     */
-    protected void compressor(Compressor compressor){
-        msg("Adding Compressor");
-        m_compressor = compressor;
-    }
-
-    /**
-     * Start the compressor.
-     */
-    public static void startCompressor(){
-        if(m_compressor != null){
-            m_compressor.start();
-        }
-    }
-    
-    /**
-     * Stop the compressor.
-     */
-    public static void stopCompressor(){
-        if(m_compressor != null){
-            m_compressor.stop();
-        }
-    }
     
     /**
      * Get the main NetworkTable table for the robot.
@@ -218,20 +175,6 @@ public class RoboLibBot {//extends MIDlet {
      */
     public static ITable getRobotTable(){
         return m_table;
-    }
-
-    /**
-     * Enable or Disable the Watchdog 
-     * @param enabled enable or disable the watchdog
-     */
-    protected void enableWatchdog(boolean enabled){
-        if(enabled){
-            msg("Enabling Watchdog");
-            getWatchdog().setEnabled(true);
-        }else{
-            msg("Disabling Watchdog");
-            getWatchdog().setEnabled(false);
-        }
     }
 
     /**
@@ -268,24 +211,19 @@ public class RoboLibBot {//extends MIDlet {
      * If it does exit, it will first throw several exceptions to kill the robot.
      * We don't want an out of control robot.
      *
-     * @throws javax.microedition.midlet.MIDletStateChangeException
      */
-    protected final void startApp() {//throws MIDletStateChangeException {
+    protected final void main(String args[]) {//throws MIDletStateChangeException {
         
         msg("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         msg("Starting " + m_name);
+        
+        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationReserve();
+        Timer.SetImplementation(new HardwareTimer());
+        HLUsageReporting.SetImplementation(new HardwareHLUsageReporting());
+        RobotState.SetImplementation(DriverStation.getInstance());
 
-        getWatchdog().setExpiration(0.1);
-        getWatchdog().setEnabled(false);
-        FRCControl.observeUserProgramStarting();
-        UsageReporting.report(UsageReporting.kResourceType_Language, UsageReporting.kLanguage_Java);
+        UsageReporting.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Java);
         
-        //This bit right here eats away at the cRIOs non-volatile memory.
-        //It always writes the same data, to the same point.
-        //It can create a dead spot on the disk.
-        //writeVersionString();
-        
-        UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
             
         msg("Initializing Robot Network Table and Data");
         try{
@@ -294,21 +232,26 @@ public class RoboLibBot {//extends MIDlet {
         }catch(Throwable t){
             fatal("Could not set Robot Name and Version in the Network Table. Did Something Screw Up?", t);
         }
+        
 
         //Run User initialization
         msg("Running User Initialization code");
         try{
             robotInit();
         }catch(Throwable t){
+            DriverStation.reportError("ERROR Unhandled exception instantiating robot " + m_name + " " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
             fatal("Error running User Init Code", t);
         }
-            
+
+        checkVersionFile(new File("/tmp/frc_versions/FRC_Lib_Version.ini"));
+        UsageReporting.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
         LiveWindow.setEnabled(false);
 
         msg("Initializing Robot Modes");
         m_modeSwitcher.init();
 
         msg(m_name + ", Version " + m_version + " Running");
+        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramStarting();
         
         msg("Starting Main Loop");
         try{
@@ -319,70 +262,65 @@ public class RoboLibBot {//extends MIDlet {
                 }
                 
                 if(isNewDataAvailable()){
-                    getWatchdog().feed();
                     m_modeSwitcher.run();
                 }
                 m_ds.waitForData();
             }
             
         }catch(Throwable t){
+            DriverStation.reportError("ERROR Unhandled exception: " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
             error("Error in Main Loop. Something should have caught this!!!", t);
         }finally{
             fatal("ROBOTS DON'T QUIT!!!", new RobotException("Exited Main Loop"));
         }
+        System.exit(1);
     }
-
-    /**
-     * Pauses the application
-     */
-    protected final void pauseApp() {
-        // This is not currently called by the Squawk VM
+    
+    @SuppressWarnings("null")
+    private static void checkVersionFile(File file){
+        
+        if(!file.exists()){
+            writeVersionFile(file);
+        }else{
+            byte[] data = null;
+            try{
+                FileInputStream input = new FileInputStream(file);
+                input.read(data);
+                input.close();
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }
+            if(!data.equals("2015 Java 1.0.0".getBytes())){
+                file.delete();
+                writeVersionFile(file);
+            }
+        }
+        
     }
+    
+    private static void writeVersionFile(File file){
+        FileOutputStream output = null;
+        try {
+            file.createNewFile();
+            output = new FileOutputStream(file);
+            output.write("2015 Java 1.0.0".getBytes());
 
-    /**
-     * Called if the MIDlet is terminated by the system. I.e. if startApp throws
-     * any exception other than MIDletStateChangeException, if the isolate
-     * running the MIDlet is killed with Isolate.exit(), or if VM.stopVM() is
-     * called.
-     *
-     * It is not called if MIDlet.notifyDestroyed() was called.
-     *
-     * @param unconditional If true when this method is called, the MIDlet must
-     * cleanup and release all resources. If false the MIDlet may throw
-     * MIDletStateChangeException to indicate it does not want to be destroyed
-     * at this time.
-     * @throws MIDletStateChangeException if there is an exception in
-     * terminating the midlet
-     */
-    protected final void destroyApp(boolean unconditional) {//throws MIDletStateChangeException {
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException ex) {
+                }
+            }
+        }
     }
     
     /**
      * Free the resources for a RoboLibBot class.
      */
     public void free() {
-    }
-
-
-    //WPI RobotBase Methods
-    //Put here for compatibility.
-    /**
-     * Check on the overall status of the system.
-     *
-     * @return Is the system active (i.e. PWM motor outputs, etc. enabled)?
-     */
-    public boolean isSystemActive() {
-        return m_watchdog.isSystemActive();
-    }
-
-    /**
-     * Return the instance of the Watchdog timer. Get the watchdog timer so the
-     * user program can either disable it or feed it when necessary.
-     *
-     * @return The Watchdog timer.
-     */
-    public Watchdog getWatchdog() {
-        return m_watchdog;
     }
 
     /**
@@ -404,8 +342,8 @@ public class RoboLibBot {//extends MIDlet {
      *
      * @return True if the Robot is currently disabled by the field controls.
      */
-    public boolean isDisabled() {
-        return m_ds.isDisabled();
+    public static boolean isDisabled() {
+        return !isEnabled();
     }
 
     /**
@@ -413,7 +351,7 @@ public class RoboLibBot {//extends MIDlet {
      *
      * @return True if the Robot is currently enabled by the field controls.
      */
-    public boolean isEnabled() {
+    public static boolean isEnabled() {
         return m_ds.isEnabled();
     }
 
@@ -423,7 +361,7 @@ public class RoboLibBot {//extends MIDlet {
      * @return True if the robot is currently operating Autonomously as
      * determined by the field controls.
      */
-    public boolean isAutonomous() {
+    public static boolean isAutonomous() {
         return m_ds.isAutonomous();
     }
 
@@ -433,7 +371,7 @@ public class RoboLibBot {//extends MIDlet {
      * @return True if the robot is currently operating in Test mode as
      * determined by the driver station.
      */
-    public boolean isTest() {
+    public static boolean isTest() {
         return m_ds.isTest();
     }
 
@@ -443,8 +381,26 @@ public class RoboLibBot {//extends MIDlet {
      * @return True if the robot is currently operating in Tele-Op mode as
      * determined by the field controls.
      */
-    public boolean isOperatorControl() {
+    public static boolean isOperatorControl() {
         return m_ds.isOperatorControl();
+    }
+    
+    /**
+     * Check on the overall status of the system.
+     *
+     * @return Is the system active (i.e. PWM motor outputs, etc. enabled)?
+     */
+    public static boolean isSysActive() {
+        return m_ds.isSysActive();
+    }
+    
+    /**
+     * Check if the system is browned out.
+     * 
+     * @return True if the system is browned out
+     */
+    public static boolean isBrownedOut() {
+        return m_ds.isBrownedOut();
     }
 
     /**
@@ -453,7 +409,7 @@ public class RoboLibBot {//extends MIDlet {
      * @return Has new data arrived over the network since the last time this
      * function was called?
      */
-    public boolean isNewDataAvailable() {
+    public static boolean isNewDataAvailable() {
         return m_ds.isNewControlData();
     }
 

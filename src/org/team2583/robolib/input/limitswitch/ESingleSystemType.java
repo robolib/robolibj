@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -13,25 +13,16 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.robot;
-
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
+package org.team2583.robolib.input.limitswitch;
 
 /**
- *
+ * Single System Type
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public abstract class AutonMode extends RobotMode {
-
-    protected AutonMode() {
-        super(GameMode.AUTON);
-    }
+public enum ESingleSystemType {
     
-    /**
-     * {@inheritDoc}
-     */
-    protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramAutonomous();
-        run();
-    }
+    TOP_LIMIT,
+    BOTTOM_LIMIT;
+
 }

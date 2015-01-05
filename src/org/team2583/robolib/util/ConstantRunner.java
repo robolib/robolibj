@@ -40,7 +40,6 @@ public class ConstantRunner {
     
     public static void readConstantsFromFile() {
         DataInputStream dataStream;
-        FileConnection dataFile;
         //byte[] buffer = new byte[];
         String content = "";
     }
