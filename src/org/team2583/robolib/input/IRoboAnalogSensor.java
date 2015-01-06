@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -16,11 +16,17 @@
 package org.team2583.robolib.input;
 
 /**
+ * The Interface IRoboAnalogSensor.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface IRoboAnalogSensor {
     
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
     public int getValue();
 
 }

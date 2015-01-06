@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -21,23 +21,40 @@ import java.util.Hashtable;
 import org.team2583.robolib.util.ConstantRunner;
 
 /**
+ * The Class RMap.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public class RMap {
     
+    /** The Constant strVals. */
     private static final Hashtable strVals = new Hashtable();
+    
+    /** The Constant boolVals. */
     private static final Hashtable boolVals = new Hashtable();
+    
+    /** The Constant intVals. */
     private static final Hashtable intVals = new Hashtable();
     
+    /** The Constant NETTABLE_MAP_NAME. */
     public static final String NETTABLE_MAP_NAME = "RMap";
+    
+    /** The Constant NETTABLE_MAP_STRINGS_NAME. */
     public static final String NETTABLE_MAP_STRINGS_NAME = "Strings";
+    
+    /** The Constant NETTABLE_MAP_BOOLEANS_NAME. */
     public static final String NETTABLE_MAP_BOOLEANS_NAME = "Booleans";
+    
+    /** The Constant NETTABLE_MAP_INTEGERS_NAME. */
     public static final String NETTABLE_MAP_INTEGERS_NAME = "Integers";
     
+    /** The Constant runner. */
     public static final ConstantRunner runner = new ConstantRunner("RMap.ini");
     
+    /** The Constant m_intTable. */
     private static final ITable m_strTable, m_boolTable, m_intTable;
+    
+    /** The Constant m_intListener. */
     private static final ITableListener m_strListener, m_boolListener, m_intListener;
     
     static{

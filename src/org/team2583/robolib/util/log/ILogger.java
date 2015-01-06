@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,11 +28,10 @@ package org.team2583.robolib.util.log;
  * argument. Calling the {@code error} method will only print the message and
  * error stack trace. However, calling the {@code fatal} method will print the
  * stack trace, and kill the program.</p>
- * 
+ *
+ * @author Austin Reuland <amreuland@gmail.com>
  * @see Logger
  * @see LogOutput
- * 
- * @author Austin Reuland <amreuland@gmail.com>
  */
 public abstract class ILogger {
 
@@ -71,7 +70,8 @@ public abstract class ILogger {
     
     /**
      * Log an {@code char} to the logger, with info status.
-     * @param s the {@code char} array to log
+     *
+     * @param c the c
      */
     public final void info(char[] c){
         info(String.valueOf(c));
@@ -141,7 +141,8 @@ public abstract class ILogger {
     
     /**
      * Log an {@code char} to the logger, with debug status.
-     * @param s the {@code char} array to log
+     *
+     * @param c the c
      */
     public final void debug(char[] c){
         debug(String.valueOf(c));
@@ -211,7 +212,8 @@ public abstract class ILogger {
     
     /**
      * Log an {@code char} to the logger, with warn status.
-     * @param s the {@code char} array to log
+     *
+     * @param c the c
      */
     public final void warn(char[] c){
         warn(String.valueOf(c));
@@ -284,7 +286,8 @@ public abstract class ILogger {
     
     /**
      * Log an {@code char} to the logger, with error status.
-     * @param s the {@code char} array to log
+     *
+     * @param c the c
      * @param o the {@code Object} to send with the message
      */
     public final void error(char[] c, Object o){
@@ -379,7 +382,8 @@ public abstract class ILogger {
      * Log an {@code char} to the logger, with severe status.
      * If the exception passed to this method is an Error or
      * Runtime Exception, the Program will Quit
-     * @param s the {@code char} array to log
+     *
+     * @param c the c
      * @param o the {@code Object} to send with the message
      */
     public final void severe(char[] c, Object o){
@@ -438,6 +442,12 @@ public abstract class ILogger {
         severe_imp(s, null);
     }
     
+    /**
+     * Severe_imp.
+     *
+     * @param s the s
+     * @param o the o
+     */
     private final void severe_imp(String s, Object o){
         severe(s, o);
         if(o instanceof Error || o instanceof RuntimeException)
@@ -485,7 +495,8 @@ public abstract class ILogger {
     /**
      * Log an {@code char} to the logger, with fatal status.
      * Program will exit with status 1
-     * @param s the {@code char} array to log
+     *
+     * @param c the c
      * @param o the {@code Object} to send with the message
      */
     public final void fatal(char[] c, Object o){
@@ -541,6 +552,12 @@ public abstract class ILogger {
         fatal_imp(s, null);
     }
     
+    /**
+     * Fatal_imp.
+     *
+     * @param s the s
+     * @param o the o
+     */
     private final void fatal_imp(String s, Object o){
         fatal(s, o);
         System.exit(1);

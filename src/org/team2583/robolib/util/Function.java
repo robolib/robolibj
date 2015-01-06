@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -16,27 +16,55 @@
 package org.team2583.robolib.util;
 
 /**
- * 
+ * The Class Function.
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public final class Function {
     
+    /**
+     * Instantiates a new function.
+     *
+     * @throws IllegalAccessException the illegal access exception
+     */
     private Function() throws IllegalAccessException {
         
     }
     
+    /**
+     * The Interface VoidFunction.
+     */
     public static interface VoidFunction{
         
+        /**
+         * Func.
+         */
         public void Func();
     }
     
+    /**
+     * The Interface DoubleFunction.
+     */
     public static interface DoubleFunction{
         
+        /**
+         * Func.
+         *
+         * @return the double
+         */
         public double Func();
     }
     
+    /**
+     * The Interface BooleanFunction.
+     */
     public static interface BooleanFunction{
         
+        /**
+         * Func.
+         *
+         * @return true, if successful
+         */
         public boolean Func();
     }
 }

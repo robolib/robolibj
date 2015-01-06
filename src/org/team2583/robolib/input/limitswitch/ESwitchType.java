@@ -16,27 +16,36 @@
 package org.team2583.robolib.input.limitswitch;
 
 /**
- * Limit Switch Type Enum
- * 
+ * Limit Switch Type Enum.
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public enum ESwitchType {
     
-    /**
-     * Normally Open Switch
-     */
+    /** Normally Open Switch. */
     NO(true),
-    /**
-     * Normally Closed Switch
-     */
+    
+    /** Normally Closed Switch. */
     NC(false);
     
+    /** The open. */
     private final boolean open;
     
+    /**
+     * Instantiates a new e switch type.
+     *
+     * @param open the open
+     */
     ESwitchType(boolean open){
         this.open = open;
     }
     
+    /**
+     * Gets the value.
+     *
+     * @param value the value
+     * @return the value
+     */
     public boolean getValue(boolean value){
         return this.open && value;
     }

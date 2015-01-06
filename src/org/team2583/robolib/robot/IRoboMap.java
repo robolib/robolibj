@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -16,95 +16,108 @@
 package org.team2583.robolib.robot;
 
 /**
+ * The Interface IRoboMap.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface IRoboMap {
     
     /**
-     * 
-     * @param name
-     * @param vlaue 
+     * Define string.
+     *
+     * @param name the name
+     * @param vlaue the vlaue
      */
     public void defineString(String name, String vlaue);
     
     /**
-     * 
-     * @param name
-     * @param value 
+     * Define boolean.
+     *
+     * @param name the name
+     * @param value the value
      */
     public void defineBoolean(String name, boolean value);
     
     /**
-     * 
-     * @param name
-     * @param value 
+     * Define number.
+     *
+     * @param name the name
+     * @param value the value
      */
     public void defineNumber(String name, double value);
     
     /**
-     * 
-     * @param name
-     * @param value 
+     * Define object.
+     *
+     * @param name the name
+     * @param value the value
      */
     public void defineObject(String name, Object value);
 
     /**
-     * 
-     * @param name
+     * Gets the string.
+     *
+     * @param name the name
      * @return the requested {@code String} property or {@code ""} if not found
      */
     public String getString(String name);
     
     /**
-     * 
-     * @param name
-     * @param def
+     * Gets the string.
+     *
+     * @param name the name
+     * @param def the def
      * @return the requested {@code String} property or {@code def} if not found
      */
     public String getString(String name, String def);
     
     /**
-     * 
-     * @param name
+     * Gets the boolean.
+     *
+     * @param name the name
      * @return the requested {@code boolean} property or {@code false} if not found
      */
     public boolean getBoolean(String name);
 
     /**
-     * 
-     * @param name
-     * @param def
+     * Gets the boolean.
+     *
+     * @param name the name
+     * @param def the def
      * @return the requested {@code boolean} property or {@code def} if not found
      */
     public boolean getBoolean(String name, boolean def);
     
     /**
-     * 
-     * @param name
+     * Gets the number.
+     *
+     * @param name the name
      * @return the requested {@code double} property or {@code 0.00} if not found
      */
     public double getNumber(String name);
     
     /**
-     * 
-     * @param name
-     * @param def
+     * Gets the number.
+     *
+     * @param name the name
+     * @param def the def
      * @return the requested {@code double} property or {@code def} if not found
      */
     public double getNumber(String name, double def);
     
     /**
-     * 
-     * @param name
+     * Gets the object.
+     *
+     * @param name the name
      * @return the requested {@code Object} property or {@code null} if not found
      */
     public Object getObject(String name);
     
     /**
-     * 
-     * @param name
-     * @param def
+     * Gets the object.
+     *
+     * @param name the name
+     * @param def the def
      * @return the requested {@code Object} property or {@code def} if not found
      */
     public Object getObject(String name, Object def);

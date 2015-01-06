@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -20,16 +20,20 @@ package org.team2583.robolib.exception;
  * 
  * throw this exception when something goes wrong with the robot that does
  * not fall under any other exception type.
- * @since 0.1.0
+ *
  * @author Austin Reuland <amreuland@gmail.com>
+ * @since 0.1.0
  */
 public final class RobotException extends RuntimeException {
 
-    /**
-     * 
-     */
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 3748667178724340857L;
 
+    /**
+     * Instantiates a new robot exception.
+     *
+     * @param msg the msg
+     */
     public RobotException(String msg){
         super(msg);
     }

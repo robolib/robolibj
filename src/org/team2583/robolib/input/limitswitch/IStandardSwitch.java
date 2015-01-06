@@ -16,14 +16,30 @@
 package org.team2583.robolib.input.limitswitch;
 
 /**
- * Interface for a Limit Switch
+ * Interface for a Limit Switch.
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface IStandardSwitch {
     
+    /**
+     * State.
+     *
+     * @return true, if successful
+     */
     public boolean state();
     
+    /**
+     * Gets the channel.
+     *
+     * @return the channel
+     */
     public int getChannel();
     
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     public ESwitchType getType();
 }

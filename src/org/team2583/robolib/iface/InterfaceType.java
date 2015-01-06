@@ -13,20 +13,29 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input;
+package org.team2583.robolib.iface;
+
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 
 /**
- * The Interface IRoboSensor.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public interface IRoboSensor {
+public enum InterfaceType {
     
-    /**
-     * Gets the chanel.
-     *
-     * @return the chanel
-     */
-    public int getChanel();
+    ANALOG(tResourceType.kResourceType_AnalogChannel),
+    CAN(tResourceType.kResourceType_PWM),
+    DIGITALIO(tResourceType.kResourceType_DigitalInput),
+    I2C(tResourceType.kResourceType_I2C),
+    PWM(tResourceType.kResourceType_PWM),
+    SERIAL(tResourceType.kResourceType_SerialPort),
+    SPI(tResourceType.kResourceType_SPI);
     
+    public final int m_resource;
+    
+    InterfaceType(int type){
+        m_resource = type;
+    }
+
 }

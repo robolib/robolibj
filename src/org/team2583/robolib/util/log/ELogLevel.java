@@ -28,24 +28,40 @@ package org.team2583.robolib.util.log;
  * argument. Calling the {@code error} method will only print the message and
  * error stack trace. However, calling the {@code fatal} method will print the
  * stack trace, and kill the program.</p>
- * 
+ *
+ * @author Austin Reuland <amreuland@gmail.com>
  * @see ILogger
  * @see Logger
  * @see LogOutput
- * 
- * @author Austin Reuland <amreuland@gmail.com>
  */
 public enum ELogLevel {
    
+    /** The info. */
     INFO("[INFO]"),
+    
+    /** The debug. */
     DEBUG("[DEBUG]"),
+    
+    /** The warn. */
     WARN("[WARNING]"),
+    
+    /** The error. */
     ERROR("[ERROR]"),
+    
+    /** The severe. */
     SEVERE("[SEVERE]"),
+    
+    /** The fatal. */
     FATAL("[FATALITY]");
     
+    /** The m_name. */
     public final String m_name;
         
+    /**
+     * Instantiates a new e log level.
+     *
+     * @param name the name
+     */
     private ELogLevel(String name){
         m_name = name;
     }

@@ -13,20 +13,21 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input;
+package org.team2583.robolib.iface;
 
 /**
- * The Interface IRoboSensor.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public interface IRoboSensor {
-    
+public class CAN extends Interface {
+
     /**
-     * Gets the chanel.
-     *
-     * @return the chanel
+     * @param iType
+     * @param address
      */
-    public int getChanel();
-    
+    protected CAN() {
+        super(InterfaceType.CAN, 0);
+    }
+
 }

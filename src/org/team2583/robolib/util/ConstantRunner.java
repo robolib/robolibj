@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -19,11 +19,13 @@ package org.team2583.robolib.util;
 import java.io.DataInputStream;
 
 /**
+ * The Class ConstantRunner.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public class ConstantRunner {
     
+    /** The file location. */
     private final String FILE_LOCATION;
     
     
@@ -31,6 +33,11 @@ public class ConstantRunner {
     //We need to write in 8192Byte Chunks
     
     
+    /**
+     * Instantiates a new constant runner.
+     *
+     * @param file the file
+     */
     public ConstantRunner(String file){
         FILE_LOCATION = file;
         
@@ -38,6 +45,9 @@ public class ConstantRunner {
     }
     
     
+    /**
+     * Read constants from file.
+     */
     public static void readConstantsFromFile() {
         DataInputStream dataStream;
         //byte[] buffer = new byte[];

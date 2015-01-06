@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -16,20 +16,23 @@
 package org.team2583.robolib.input.limitswitch;
 
 /**
- * The Limit Switch System Interface
+ * The Limit Switch System Interface.
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface ILimitSwitchSystem {
     
     /**
-     * 
+     * Can up.
+     *
      * @return Can we go Up
      */
     public boolean canUp();
     
     /**
-     * 
-     * @return Can we go Down 
+     * Can down.
+     *
+     * @return Can we go Down
      */ 
     public boolean canDown();
     

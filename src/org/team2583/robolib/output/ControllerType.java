@@ -13,20 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input;
+package org.team2583.robolib.output;
 
 /**
- * The Interface IRoboSensor.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public interface IRoboSensor {
-    
-    /**
-     * Gets the chanel.
-     *
-     * @return the chanel
-     */
-    public int getChanel();
-    
+public enum ControllerType {
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -16,28 +16,49 @@
 package org.team2583.robolib.robot;
 
 /**
- * @since 0.1.0
+ * The Enum GameMode.
+ *
  * @author Austin Reuland <amreuland@gmail.com>
+ * @since 0.1.0
  */
 public enum GameMode {
 	
 	
+    /** The none. */
     NONE("NoMode", "N"),
+    
+    /** The disabled. */
     DISABLED("Disabled", "D"),
+    
+    /** The test. */
     TEST("Test", "T"),
+    
+    /** The auton. */
     AUTON("Autonomous", "A"),
+    
+    /** The teleop. */
     TELEOP("Teleop", "U");
 	
+    /** The m_name. */
     private final String m_name;
+    
+    /** The m_abbr. */
     private final String m_abbr;
     
+    /**
+     * Instantiates a new game mode.
+     *
+     * @param modeName the mode name
+     * @param abbr the abbr
+     */
     private GameMode(String modeName, String abbr){
     	m_name = modeName;
     	m_abbr = abbr;
     }
     
     /**
-     * Get the name of the GameMode
+     * Get the name of the GameMode.
+     *
      * @return the GameMode Name
      */
     public String getName(){
@@ -45,7 +66,8 @@ public enum GameMode {
     }
     
     /**
-     * Get the abbreviation of the GameMode
+     * Get the abbreviation of the GameMode.
+     *
      * @return the GameMode abbreviation
      */
     public String getAbbreviation(){

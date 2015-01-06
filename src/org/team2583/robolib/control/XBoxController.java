@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -17,123 +17,81 @@ package org.team2583.robolib.control;
 
 
 /**
- * A better Joystick implementation for the XBox Controller
+ * A better Joystick implementation for the XBox Controller.
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public class XBoxController extends Joystick {
 
-    /**
-     * Left X Axis ID
-     */
+    /** Left X Axis ID. */
     public static final int AXIS_LEFT_X = 1;
     
-    /**
-     * Left Y Axis ID
-     */
+    /** Left Y Axis ID. */
     public static final int AXIS_LEFT_Y = 2;
     
-    /**
-     * Triggers Axis ID
-     */
+    /** Triggers Axis ID. */
     public static final int AXIS_TRIGGERS = 3;
     
-    /**
-     * Right X Axis ID
-     */
+    /** Right X Axis ID. */
     public static final int AXIS_RIGHT_X = 4;
     
-    /**
-     * Right Y Axis ID
-     */
+    /** Right Y Axis ID. */
     public static final int AXIS_RIGHT_Y = 5;
     
-    /**
-     * Hat X Axis ID
-     */
+    /** Hat X Axis ID. */
     public static final int AXIS_HAT_X = 6;
 
-    /**
-     * A Button ID
-     */
+    /** A Button ID. */
     public static final int BTN_A = 1;
     
-    /**
-     * B Button ID
-     */
+    /** B Button ID. */
     public static final int BTN_B = 2;
     
-    /**
-     * X Button ID
-     */
+    /** X Button ID. */
     public static final int BTN_X = 3;
     
-    /**
-     * Y Button ID
-     */
+    /** Y Button ID. */
     public static final int BTN_Y = 4;
     
-    /**
-     * Left Shoulder Button ID
-     */
+    /** Left Shoulder Button ID. */
     public static final int BTN_LEFT_SHOULDER = 5;
     
-    /**
-     * Right Shoulder Button ID
-     */
+    /** Right Shoulder Button ID. */
     public static final int BTN_RIGHT_SHOULDER = 6;
     
-    /**
-     * Start Button ID
-     */
+    /** Start Button ID. */
     public static final int BTN_START = 8;
     
-    /**
-     * Back Button ID
-     */
+    /** Back Button ID. */
     public static final int BTN_SELECT = 7;
     
-    /**
-     * Left Stick Button ID
-     */
+    /** Left Stick Button ID. */
     public static final int BTN_LEFT_STICK = 9;
     
-    /**
-     * Right Stick Button ID
-     */
+    /** Right Stick Button ID. */
     public static final int BTN_RIGHT_STICK = 10;
     
-    /**
-     * Left X Axis Button ID
-     */
+    /** Left X Axis Button ID. */
     public static final int BTN_AXIS_LEFT_X = AXIS_LEFT_X + 12;
     
-    /**
-     * Left Y Axis Button ID
-     */
+    /** Left Y Axis Button ID. */
     public static final int BTN_AXIS_LEFT_Y = AXIS_LEFT_Y + 12;
     
-    /**
-     * Triggers Axis Button ID
-     */
+    /** Triggers Axis Button ID. */
     public static final int BTN_AXIS_TRIGGERS = AXIS_TRIGGERS + 12;
     
-    /**
-     * Right X Axis Button ID
-     */
+    /** Right X Axis Button ID. */
     public static final int BTN_AXIS_RIGHT_X = AXIS_RIGHT_X + 12;
     
-    /**
-     * Right Y Axis Button ID
-     */
+    /** Right Y Axis Button ID. */
     public static final int BTN_AXIS_RIGHT_Y = AXIS_RIGHT_Y + 12;
     
-    /**
-     * Hat X Axis Button ID
-     */
+    /** Hat X Axis Button ID. */
     public static final int BTN_AXIS_HAT_X = AXIS_HAT_X + 12;
 
     /**
-     * A better Joystick implementation for the XBox Controller
+     * A better Joystick implementation for the XBox Controller.
+     *
      * @param port The Joystick Number this XBoxController is on.
      */
     public XBoxController(final int port){
@@ -144,97 +102,113 @@ public class XBoxController extends Joystick {
     }
     
     /**
-     * Get the Left X Axis
+     * Get the Left X Axis.
+     *
      * @return the left X axis value
      */
     public double getLeftX(){return getRawAxis(AXIS_LEFT_X);}
     
     /**
-     * Get the Left Y Axis
+     * Get the Left Y Axis.
+     *
      * @return the right Y axis value
      */
     public double getLeftY(){return getRawAxis(AXIS_LEFT_Y);}
     
     /**
-     * Get the Trigger Axis
+     * Get the Trigger Axis.
+     *
      * @return the trigger axis value
      */
     public double getTriggers(){return getRawAxis(AXIS_TRIGGERS);}
 
     /**
-     * Get the Right X Axis
+     * Get the Right X Axis.
+     *
      * @return the right x axis value
      */
     public double getRightX(){return getRawAxis(AXIS_RIGHT_X);}
     
     /**
-     * Get the Right Y Axis
+     * Get the Right Y Axis.
+     *
      * @return the right Y axis value
      */
     public double getRightY(){return getRawAxis(AXIS_RIGHT_Y);}
 
     /**
-     * Get the D-Pad/Hat X Axis
+     * Get the D-Pad/Hat X Axis.
+     *
      * @return the d-pad X axis value
      */
     public double getHatX(){return getRawAxis(AXIS_HAT_X);}
     
     /**
-     * Get the A Button
+     * Get the A Button.
+     *
      * @return the A button value
      */
     public boolean btnA(){return getRawButton(BTN_A);}
     
     /**
-     * Get the B Button
+     * Get the B Button.
+     *
      * @return the B button value
      */
     public boolean btnB(){return getRawButton(BTN_B);}
     
     /**
-     * Get the X Button
+     * Get the X Button.
+     *
      * @return the X button value
      */
     public boolean btnX(){return getRawButton(BTN_X);}
 
     /**
-     * Get the Y Button
+     * Get the Y Button.
+     *
      * @return the Y button value
      */
     public boolean btnY(){return getRawButton(BTN_Y);}
     
     /**
-     * Get the Left Shoulder Button
+     * Get the Left Shoulder Button.
+     *
      * @return the Left Shoulder button value
      */
     public boolean btnLeftShoulder(){return getRawButton(BTN_LEFT_SHOULDER);}
     
     /**
-     * Get the Right Shoulder Button
+     * Get the Right Shoulder Button.
+     *
      * @return the Right Shoulder button value
      */
     public boolean btnRightShoulder(){return getRawButton(BTN_RIGHT_SHOULDER);}
     
     /**
-     * Get the Start Button
+     * Get the Start Button.
+     *
      * @return the Start button value
      */
     public boolean btnStart(){return getRawButton(BTN_START);}
     
     /**
-     * Get the Select Button
+     * Get the Select Button.
+     *
      * @return the Select button value
      */
     public boolean btnSelect(){return getRawButton(BTN_SELECT);}
     
     /**
-     * Get the Left Stick Button
+     * Get the Left Stick Button.
+     *
      * @return the Left Stick button value
      */
     public boolean btnLeftStick(){return getRawButton(BTN_LEFT_STICK);}
     
     /**
-     * Get the Right Stick Button
+     * Get the Right Stick Button.
+     *
      * @return the Right Stick button value
      */
     public boolean btnRightStick(){return getRawButton(BTN_RIGHT_STICK);}

@@ -15,11 +15,13 @@
 
 package org.team2583.robolib.pneumatics;
 
+import edu.wpi.first.wpilibj.SensorBase;
+
 /**
- * 
- * @author Austin Reuland <amreuland@gmail.com>
+ * The Class Solenoid.
  *
+ * @author Austin Reuland <amreuland@gmail.com>
  */
-public class Solenoid {
+public class Solenoid extends SensorBase {
 
 }

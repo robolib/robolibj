@@ -16,9 +16,9 @@
 package org.team2583.robolib.pneumatics;
 
 /**
- * 
- * @author Austin Reuland <amreuland@gmail.com>
+ * The Class DoubleSolenoid.
  *
+ * @author Austin Reuland <amreuland@gmail.com>
  */
 public class DoubleSolenoid {
 

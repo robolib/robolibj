@@ -16,13 +16,16 @@
 package org.team2583.robolib.input.limitswitch;
 
 /**
- * Single System Type
- * @author Austin Reuland <amreuland@gmail.com>
+ * Single System Type.
  *
+ * @author Austin Reuland <amreuland@gmail.com>
  */
 public enum ESingleSystemType {
     
+    /** The top limit. */
     TOP_LIMIT,
+    
+    /** The bottom limit. */
     BOTTOM_LIMIT;
 
 }

@@ -27,14 +27,29 @@ import org.team2583.robolib.util.DSInfo;
  */
 public class Joystick extends JoystickAdapter {
     
+    /** The m_port. */
     private final int m_port;
 
+    /**
+     * The Class JoystickAxis.
+     */
     private class JoystickAxis implements Axis {
 
+        /** The m_invert. */
         private int m_invert = 1;
+        
+        /** The m_dead band. */
         private double m_deadBand = 0.00;
+        
+        /** The m_channel. */
         private final int m_channel;
         
+
+        /**
+         * Instantiates a new joystick axis.
+         *
+         * @param axis the axis
+         */
         public JoystickAxis(int axis){
             m_channel = axis;
         }
@@ -63,10 +78,19 @@ public class Joystick extends JoystickAdapter {
         }
     }
 
+    /**
+     * The Class JoystickButton.
+     */
     private class JoystickButton implements Button {
         
+        /** The m_channel. */
         private final int m_channel;
         
+        /**
+         * Instantiates a new joystick button.
+         *
+         * @param channel the channel
+         */
         public JoystickButton(int channel){
             m_channel = channel - 1;
         }

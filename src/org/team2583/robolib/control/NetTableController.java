@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -19,21 +19,40 @@ import org.team2583.robolib.robot.RoboLibBot;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
+ * The Class NetTableController.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public class NetTableController extends JoystickAdapter {
 
+    /** The m_table. */
     private final ITable m_table;
+    
+    /** The m_axes. */
     private Axis m_axes[];
+    
+    /** The m_btns. */
     private Button m_btns[];
     
+    /**
+     * The Class NetTableAxis.
+     */
     public class NetTableAxis implements Axis {
 
+        /** The m_invert. */
         private int m_invert = 1;
+        
+        /** The m_dead band. */
         private double m_deadBand = 0.00;
+        
+        /** The m_channel. */
         private final int m_channel;
         
+        /**
+         * Instantiates a new net table axis.
+         *
+         * @param channel the channel
+         */
         public NetTableAxis(int channel){
             m_channel = channel;
             m_table.putNumber("axis-" + channel, 0.00);
@@ -62,11 +81,22 @@ public class NetTableController extends JoystickAdapter {
         }
     }
     
+    /**
+     * The Class NetTableButton.
+     */
     public class NetTableButton implements Button {
         
+        /** The m_invert. */
         private boolean m_invert = false;
+        
+        /** The m_channel. */
         private final int m_channel;
         
+        /**
+         * Instantiates a new net table button.
+         *
+         * @param channel the channel
+         */
         public NetTableButton(int channel){
             m_channel = channel;
             m_table.putBoolean("button-" + channel, false);
@@ -81,7 +111,8 @@ public class NetTableController extends JoystickAdapter {
     }
     
     /**
-     * Create a NetworkJoystick Instance
+     * Create a NetworkJoystick Instance.
+     *
      * @param name Name of the Joystick in the RoboLibBot/Joystick Table
      */
     public NetTableController(String name){
@@ -89,7 +120,8 @@ public class NetTableController extends JoystickAdapter {
     }
     
     /**
-     * Create a NetworkJoystick Instance
+     * Create a NetworkJoystick Instance.
+     *
      * @param name Name of the Joystick in the RoboLibBot/Joystick Table
      * @param numAxes Number of Axes to add to the Joystick
      * @param numBtns Number of Buttons to add to the Joystick

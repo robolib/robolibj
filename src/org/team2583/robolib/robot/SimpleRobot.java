@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,22 +24,27 @@ package org.team2583.robolib.robot;
  */
 public class SimpleRobot extends RoboLibBot {
     
+    /**
+     * Instantiates a new simple robot.
+     */
     public SimpleRobot(){
         this("Default", "1.0.0");
     }
 
     /**
-     * Create a Simple RoboLibBot
-     * @param name
+     * Create a Simple RoboLibBot.
+     *
+     * @param name the name
      */
     public SimpleRobot(String name){
         this(name, "1.0.0");
     }
     
     /**
-     * Create a Simple RoboLibBot
-     * @param name
-     * @param version 
+     * Create a Simple RoboLibBot.
+     *
+     * @param name the name
+     * @param version the version
      */
     public SimpleRobot(String name, String version){
         super(name, version);
@@ -69,28 +74,48 @@ public class SimpleRobot extends RoboLibBot {
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void robotInit(){
         debug("Default SimpleRobot.robotInit() method... Overload me!");
     }
 
+    /**
+     * Disabled init.
+     */
     public void disabledInit(){
         debug("Default SimpleRobot.disabledInit() method... Overload me!");
     }
 
+    /**
+     * Test init.
+     */
     public void testInit(){
         debug("Default SimpleRobot.testInit() method... Overload me!");
     }
     
+    /**
+     * Autonomous init.
+     */
     public void autonomousInit(){
         debug("Default SimpleRobot.autonomousInit() method... Overload me!");
     }
 
+    /**
+     * Teleop init.
+     */
     public void teleopInit(){
         debug("Default SimpleRobot.teleopInit() method... Overload me!");
     }
 
     
+    /** The dp first run. */
     boolean dpFirstRun = true;
+    
+    /**
+     * Disabled periodic.
+     */
     public void disabledPeriodic(){
         if(dpFirstRun){
             debug("Default SimpleRobot.disabledPeriodic() method... Overload me!");
@@ -98,7 +123,12 @@ public class SimpleRobot extends RoboLibBot {
         }
     }
 
+    /** The tpm first run. */
     boolean tpmFirstRun = true;
+    
+    /**
+     * Test periodic.
+     */
     public void testPeriodic(){
         if(tpmFirstRun){
             debug("Default SimpleRobot.testPeriodic() method... Overload me!");
@@ -106,7 +136,12 @@ public class SimpleRobot extends RoboLibBot {
         }
     }
 
+    /** The ap first run. */
     boolean apFirstRun = true;
+    
+    /**
+     * Autonomous periodic.
+     */
     public void autonomousPeriodic(){
         if(apFirstRun){
             debug("Default SimpleRobot.autonomousPeriodic() method... Overload me!");
@@ -114,7 +149,12 @@ public class SimpleRobot extends RoboLibBot {
         }
     }
 
+    /** The tp first run. */
     boolean tpFirstRun = true;
+    
+    /**
+     * Teleop periodic.
+     */
     public void teleopPeriodic(){
         if(tpFirstRun){
             debug("Default SimpleRobot.teleopPeriodic() method... Overload me!");
@@ -122,18 +162,30 @@ public class SimpleRobot extends RoboLibBot {
         }
     }
     
+    /**
+     * Disabled end.
+     */
     public void disabledEnd(){
         debug("Default SimpleRobot.disableEnd() method... Overload me!");
     }
     
+    /**
+     * Test end.
+     */
     public void testEnd(){
         debug("Default SimpleRobot.testEnd() method... Overload me!");
     }
     
+    /**
+     * Autonomous end.
+     */
     public void autonomousEnd(){
         debug("Default SimpleRobot.autonomousEnd() method... Overload me!");
     }
     
+    /**
+     * Teleop end.
+     */
     public void teleopEnd(){
         debug("Default SimpleRobot.teleopEnd() method... Overload me!");
     }

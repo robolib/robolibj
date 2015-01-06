@@ -13,20 +13,31 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input;
+package org.team2583.robolib.iface;
 
 /**
- * The Interface IRoboSensor.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public interface IRoboSensor {
-    
+public class Serial extends Interface {
+
+    public enum Port {
+        kOnboard,
+        kMXP,
+        kUSB;
+    };
+
     /**
-     * Gets the chanel.
-     *
-     * @return the chanel
+     * @param iType
+     * @param address
      */
-    public int getChanel();
-    
+    protected Serial(Port port, byte address) {
+        super(InterfaceType.SERIAL, 0);
+        if(port.equals(Port.kMXP)){
+            checkMXPPin(InterfaceType.SERIAL, 14);
+            checkMXPPin(InterfaceType.SERIAL, 10);
+        }
+    }
+
 }

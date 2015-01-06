@@ -13,20 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input;
+package org.team2583.robolib.output;
+
+import org.team2583.robolib.iface.InterfaceType;
 
 /**
- * The Interface IRoboSensor.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public interface IRoboSensor {
+public class MotorController {
     
-    /**
-     * Gets the chanel.
-     *
-     * @return the chanel
-     */
-    public int getChanel();
-    
+    public MotorController(ControllerType ctype, InterfaceType itype, int address){
+        
+    }
+
 }

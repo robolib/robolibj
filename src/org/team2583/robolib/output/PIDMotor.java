@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -20,43 +20,81 @@ import edu.wpi.first.wpilibj.SpeedController;
 import org.team2583.robolib.math.PIDController;
 
 /**
+ * The Class PIDMotor.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public class PIDMotor implements SpeedController, PIDOutput{
     
+    /** The motor. */
     private final SpeedController motor;
+    
+    /** The pid c. */
     private final PIDController pidC;
     
+    /**
+     * Instantiates a new PID motor.
+     *
+     * @param motor the motor
+     */
     public PIDMotor(SpeedController motor){
         this(motor, 0.0, 0.0, 0.0);
     }
     
+    /**
+     * Instantiates a new PID motor.
+     *
+     * @param motor the motor
+     * @param p the p
+     * @param i the i
+     * @param d the d
+     */
     public PIDMotor(SpeedController motor, double p, double i, double d){
         this(motor, new PIDController());
     }
     
+    /**
+     * Instantiates a new PID motor.
+     *
+     * @param motor the motor
+     * @param pidC the pid c
+     */
     public PIDMotor(SpeedController motor, PIDController pidC){
         this.motor = motor;
         this.pidC = pidC;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public double get() {
         return 0.0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void set(double d, byte b) {
         
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void set(double d) {
         
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void disable() {
         
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void pidWrite(double d) {
         
     }

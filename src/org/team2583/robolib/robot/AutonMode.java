@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -18,13 +18,36 @@ package org.team2583.robolib.robot;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 
 /**
+ * The Class AutonMode.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public abstract class AutonMode extends RobotMode {
 
+    /**
+     * Constructor for a Autonomous Robot mode.
+     */
     protected AutonMode() {
         super(GameMode.AUTON);
+    }
+    
+    /**
+     * Constructor for a Autonomous Robot mode.
+     *
+     * @param name The name for this Auton mode
+     */
+    protected AutonMode(String name){
+        super(GameMode.AUTON, name);
+    }
+    
+    /**
+     * Constructor for a Autonomous Robot mode.
+     *
+     * @param name The name for this Auton mode
+     * @param active Set this mode as the active mode by default
+     */
+    protected AutonMode(String name, boolean active){
+        super(GameMode.AUTON, name, active);
     }
     
     /**

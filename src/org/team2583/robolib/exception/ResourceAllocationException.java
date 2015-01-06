@@ -13,20 +13,25 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input;
+package org.team2583.robolib.exception;
 
 /**
- * The Interface IRoboSensor.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public interface IRoboSensor {
+public class ResourceAllocationException extends RuntimeException {
+
+
+    private static final long serialVersionUID = -6451386153566418315L;
     
     /**
-     * Gets the chanel.
+     * Instantiates a new robot exception.
      *
-     * @return the chanel
+     * @param msg the msg
      */
-    public int getChanel();
-    
+    public ResourceAllocationException(String msg){
+        super(msg);
+    }
+
 }

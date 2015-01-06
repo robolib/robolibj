@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+ * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -18,13 +18,36 @@ package org.team2583.robolib.robot;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 
 /**
+ * The Class TeleopMode.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public abstract class TeleopMode extends RobotMode {
     
+    /**
+     * Constructor for a Tele-Operative Robot mode.
+     */
     protected TeleopMode(){
         super(GameMode.TELEOP);
+    }
+    
+    /**
+     * Constructor for a Tele-Operative Robot mode.
+     *
+     * @param name The name for this Teleop mode
+     */
+    protected TeleopMode(String name){
+        super(GameMode.TELEOP, name);
+    }
+    
+    /**
+     * Constructor for a Tele-Operative Robot mode.
+     *
+     * @param name The name for this Teleop mode
+     * @param active Set this mode as the active mode by default
+     */
+    protected TeleopMode(String name, boolean active){
+        super(GameMode.TELEOP, name, active);
     }
     
     /**
