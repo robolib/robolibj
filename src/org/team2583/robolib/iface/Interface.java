@@ -21,6 +21,7 @@ import java.util.Map;
 import org.team2583.robolib.exception.ResourceAllocationException;
 
 import edu.wpi.first.wpilibj.communication.UsageReporting;
+import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 
 /**
  * 
@@ -75,7 +76,7 @@ public abstract class Interface {
         UsageReporting.report(iType.m_resource, channel);
     }
     
-    protected void checkMXPPin(InterfaceType type, int pin){
+    protected static final void checkMXPPin(InterfaceType type, int pin){
         if(pin > 0){
             if(m_mxpMap.containsKey(pin) || !m_mxpMap.get(pin).equals(type)){
                 throw new ResourceAllocationException("Port already allocated as '" + m_mxpMap.get(pin).name() + "'.");
@@ -83,6 +84,10 @@ public abstract class Interface {
                 m_mxpMap.put(pin, type);
             }
         }
+    }
+    
+    public final InterfaceType getInterfaceType(){
+        return m_ifaceType;
     }
     
 }
