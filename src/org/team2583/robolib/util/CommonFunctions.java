@@ -3,6 +3,10 @@
  */
 package org.team2583.robolib.util;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+
 /**
  * Common functions for use in the robot code.
  *
@@ -28,6 +32,12 @@ public class CommonFunctions {
         }else{
             return ((from < -90 ? -1 : 1) * (to > 90 ? -1 : 1));
         }
+    }
+    
+    public static IntBuffer getLE4IntBuffer(){
+        ByteBuffer status = ByteBuffer.allocateDirect(4);
+        status.order(ByteOrder.LITTLE_ENDIAN);
+        return status.asIntBuffer();
     }
 
 }
