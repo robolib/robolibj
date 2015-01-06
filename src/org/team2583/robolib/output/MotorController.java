@@ -13,33 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input.limitswitch;
+package org.team2583.robolib.output;
+
+import org.team2583.robolib.iface.InterfaceType;
 
 /**
- * Interface for a Limit Switch.
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
+ *
  */
-public interface IStandardSwitch {
+public class MotorController {
     
-    /**
-     * State.
-     *
-     * @return true, if successful
-     */
-    public boolean state();
-    
-    /**
-     * Gets the channel.
-     *
-     * @return the channel
-     */
-    public int getChannel();
-    
-    /**
-     * Gets the type.
-     *
-     * @return the type
-     */
-    public ESwitchType getType();
+    public MotorController(ControllerType ctype, InterfaceType itype, int address){
+        
+    }
+
 }

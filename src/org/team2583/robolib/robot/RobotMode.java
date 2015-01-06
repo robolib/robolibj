@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -20,26 +20,51 @@ import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 import org.team2583.robolib.util.log.Logger;
 
 /**
+ * The Class RobotMode.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public abstract class RobotMode {
     
+    /** The m_mode. */
     private final GameMode m_mode;
+    
+    /** The m_name. */
     private final String m_name;
     
+    /**
+     * Instantiates a new robot mode.
+     */
     protected RobotMode(){
         this(GameMode.NONE);
     }
     
+    /**
+     * Instantiates a new robot mode.
+     *
+     * @param mode the mode
+     */
     protected RobotMode(GameMode mode){
         this(mode, mode.getName(), false);
     }
     
+    /**
+     * Instantiates a new robot mode.
+     *
+     * @param mode the mode
+     * @param name the name
+     */
     protected RobotMode(GameMode mode, String name){
         this(mode, mode.getAbbreviation() + ":" + name, false);
     }
     
+    /**
+     * Instantiates a new robot mode.
+     *
+     * @param mode the mode
+     * @param name the name
+     * @param active the active
+     */
     protected RobotMode(GameMode mode, String name, boolean active){
         m_mode = mode;
         m_name = name;
@@ -47,13 +72,18 @@ public abstract class RobotMode {
             setActive();
     }
     
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     public final String getName(){
         return m_name;
     }
     
     /**
-     * Get the mode type for this robot mode
-     * 
+     * Get the mode type for this robot mode.
+     *
      * @return GameMode type
      */
     public GameMode getModeType(){
@@ -61,8 +91,8 @@ public abstract class RobotMode {
     }
     
     /**
-     * Get if this RobotMode is the active one for its {@link GameMode}
-     * 
+     * Get if this RobotMode is the active one for its {@link GameMode}.
+     *
      * @return is this the active RobotMode for its {@link GameMode}
      */
     public final boolean getActive(){

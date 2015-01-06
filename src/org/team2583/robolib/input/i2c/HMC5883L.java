@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the

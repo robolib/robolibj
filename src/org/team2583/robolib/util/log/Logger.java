@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -36,26 +36,33 @@ import java.util.Map;
  * argument. Calling the {@code error} method will only print the message and
  * error stack trace. However, calling the {@code fatal} method will print the
  * stack trace, and kill the robot.</p>
- * 
+ *
+ * @author noriah Reuland <vix@noriah.dev>
  * @see ILogger
  * @see LogOutput
  * @see ELogLevel
- * 
- * @author noriah Reuland <vix@noriah.dev>
  */
 
 @SuppressWarnings("rawtypes")
 public final class Logger extends ILogger {
     
     
+	/** The Constant m_loggers. */
 	private static final Map<Class, Logger> m_loggers = new HashMap<>();
+    
+    /** The Constant m_defOuts. */
     private static final List<LogOutput> m_defOuts = new ArrayList<LogOutput>();
+    
+    /** The m_outs. */
     private final List<LogOutput> m_outs;
+    
+    /** The m_label. */
     private final String m_label;
     
     
     /**
-     * Get an ILogger instance for o
+     * Get an ILogger instance for o.
+     *
      * @param o the object to get the logger for.
      * @return an ILogger instance
      */
@@ -64,7 +71,8 @@ public final class Logger extends ILogger {
     }
 
     /**
-     * Get an ILogger instance for o
+     * Get an ILogger instance for o.
+     *
      * @param o the object to get the logger for.
      * @param s the string to be prefixed to log messages.
      * @return an ILogger instance
@@ -74,7 +82,8 @@ public final class Logger extends ILogger {
     }
 
     /**
-     * Get an ILogger instance for c
+     * Get an ILogger instance for c.
+     *
      * @param c the class to get the logger for.
      * @return an ILogger instance
      */
@@ -83,7 +92,8 @@ public final class Logger extends ILogger {
     }
 
     /**
-     * Get an ILogger instance for c
+     * Get an ILogger instance for c.
+     *
      * @param c the class to get the logger for.
      * @param s the string to be prefixed to log messages.
      * @return an ILogger instance
@@ -95,6 +105,11 @@ public final class Logger extends ILogger {
         return m_loggers.get(c);
     }
 
+    /**
+     * Instantiates a new logger.
+     *
+     * @param label the label
+     */
     private Logger(String label){
         m_outs = new ArrayList<>();
         m_outs.addAll(m_defOuts);
@@ -114,8 +129,9 @@ public final class Logger extends ILogger {
     }
 
     /**
+     * Register default file output.
      *
-     *
+     * @param s the s
      */
     public static void registerDefaultFileOutput(String s){
         registerDefaultOutput(LogOutput.fileOutput(s));
@@ -141,7 +157,7 @@ public final class Logger extends ILogger {
     }
     
     /**
-     * Log a message
+     * Log a message.
      *
      * @param l the Logging level
      * @param s the String to log
@@ -154,7 +170,7 @@ public final class Logger extends ILogger {
     }
 
     /**
-     * Log an error message
+     * Log an error message.
      *
      * @param l the Logging level
      * @param s the String to log

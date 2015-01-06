@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -21,13 +21,14 @@ import edu.wpi.first.wpilibj.GenericHID;
 
 /**
  * A middle-man in between the WPILib Library and the RoboLibJ Joysticks.
- * @see Joystick
+ *
  * @author noriah Reuland <vix@noriah.dev>
+ * @see Joystick
  */
 public abstract class JoystickAdapter extends GenericHID{
     
     /**
-     * A class representation of a Joystick Axis
+     * A class representation of a Joystick Axis.
      */
     public interface Axis {
         
@@ -50,7 +51,7 @@ public abstract class JoystickAdapter extends GenericHID{
     }
     
     /**
-     * A class representation of a Joystick Button
+     * A class representation of a Joystick Button.
      */
     public interface Button {
         
@@ -61,8 +62,13 @@ public abstract class JoystickAdapter extends GenericHID{
         public boolean get();
     }
     
+    /** The m_axes. */
     protected Axis m_axes[];
+    
+    /** The m_btns. */
     protected Button m_btns[];
+    
+    /** The m_num btns. */
     protected int m_numAxes, m_numBtns;
 
     /**
@@ -104,8 +110,9 @@ public abstract class JoystickAdapter extends GenericHID{
     
     /**
      * Set a Joystick {@link Axis} Deadband.
-     * @param axis
-     * @param deadband
+     *
+     * @param axis the axis
+     * @param deadband the deadband
      * @see Axis
      */
     public void setAxisDeadband(int axis, double deadband){
@@ -239,12 +246,24 @@ public abstract class JoystickAdapter extends GenericHID{
         return Math.toDegrees(getDirectionRadians());
     }
     
+    /**
+     * Adds the button.
+     *
+     * @param btn the btn
+     */
     protected void addButton(final Button btn){
         m_btns = (Button[]) Arrays.copyOf(m_btns, m_numBtns + 1);
         m_btns[m_btns.length - 1] = btn;
         m_numBtns = m_btns.length;
     }
     
+    /**
+     * Adds the axis button.
+     *
+     * @param channel the channel
+     * @param posThresh the pos thresh
+     * @param negThresh the neg thresh
+     */
     protected void addAxisButton(final int channel, final double posThresh, final double negThresh){
         addButton(new Button(){           
             public boolean get() {
@@ -253,16 +272,20 @@ public abstract class JoystickAdapter extends GenericHID{
             }
         });
     }
-    
+
     /**
-     * 
+     * The Class InvalidAxisException.
      */
     private class InvalidAxisException extends RuntimeException {
-        /**
-		 * 
-		 */
+        
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1820453100088416409L;
-
+		
+		/**
+		 * Instantiates a new invalid axis exception.
+		 *
+		 * @param axis the axis
+		 */
 		public InvalidAxisException(int axis){
             super("Axis " + axis + " is Invalid, Min 1 Max " + m_numAxes);
         }
@@ -270,7 +293,7 @@ public abstract class JoystickAdapter extends GenericHID{
     
     /**
      * Check if the axis requested exists.
-     * @throws InvalidAxisException
+     *
      * @param axis the axis being checked
      * @see Axis
      */
@@ -279,16 +302,20 @@ public abstract class JoystickAdapter extends GenericHID{
             throw new InvalidAxisException(axis);
         }
     }
-    
+
     /**
-     * 
+     * The Class InvalidButtonException.
      */
     private class InvalidButtonException extends RuntimeException {
-        /**
-		 * 
-		 */
-		private static final long serialVersionUID = 6918067923823042407L;
 
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 6918067923823042407L;
+		
+		/**
+		 * Instantiates a new invalid button exception.
+		 *
+		 * @param btn the btn
+		 */
 		public InvalidButtonException(int btn){
             super("Button " + btn + " is Invalid, Min 1 Max " + m_numBtns);
         }
@@ -296,7 +323,7 @@ public abstract class JoystickAdapter extends GenericHID{
     
     /**
      * Check if the button requested exists.
-     * @throws InvalidButtonException
+     *
      * @param btn the button being checked.
      * @see Button
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -19,13 +19,36 @@ import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
+ * The Class TestMode.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public abstract class TestMode extends RobotMode {
     
+    /**
+     * Constructor for a Test Robot mode.
+     */
     protected TestMode(){
         super(GameMode.TEST);
+    }
+    
+    /**
+     * Constructor for a Test Robot mode.
+     *
+     * @param name The name for this Test mode
+     */
+    protected TestMode(String name){
+        super(GameMode.TEST, name);
+    }
+    
+    /**
+     * Constructor for a Test Robot mode.
+     *
+     * @param name The name for this Test mode
+     * @param active Set this mode as the active mode by default
+     */
+    protected TestMode(String name, boolean active){
+        super(GameMode.TEST, name, active);
     }
     
     /**

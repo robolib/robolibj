@@ -1,15 +1,19 @@
+/*
+ * 
+ */
 package org.team2583.robolib.util;
 
 /**
- * Common functions for use in the robot code
- * 
+ * Common functions for use in the robot code.
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class CommonFunctions {
     
     
     /**
-     * Get an integer representation of the direction towards an angle
+     * Get an integer representation of the direction towards an angle.
+     *
      * @param to angle to go to
      * @param from angle to come from
      * @return integer representation (-1/0/1) of left/none/right

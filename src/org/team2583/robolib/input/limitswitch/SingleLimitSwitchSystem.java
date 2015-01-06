@@ -16,17 +16,22 @@
 package org.team2583.robolib.input.limitswitch;
 
 /**
- * A Limit Switch System using only one Switch
+ * A Limit Switch System using only one Switch.
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
     
    
+    /** The m_limit switch. */
     private LimitSwitch m_limitSwitch;
+    
+    /** The m_type. */
     private ESingleSystemType m_type;
     
     /**
-     * Construct a new Single Limit Switch System for use with a LimitSwitchController
+     * Construct a new Single Limit Switch System for use with a LimitSwitchController.
+     *
      * @param channel Limit Switch Channel
      * @param switchType Limit Switch Type (SwitchType)
      * @param systemType Single Switch System Type (SingleSystemType)
@@ -36,7 +41,8 @@ public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
     }
     
     /**
-     * Construct a new Single Limit Switch System for use with a LimitSwitchController
+     * Construct a new Single Limit Switch System for use with a LimitSwitchController.
+     *
      * @param limitSwitch Limit Switch
      * @param type Single Switch System Type (SingleSystemType)
      */
@@ -47,7 +53,8 @@ public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
     
     
     /**
-     * Returns if the top limit switch has been triggered or not
+     * Returns if the top limit switch has been triggered or not.
+     *
      * @return LimitSwitch value
      */
     public boolean canUp() {
@@ -56,7 +63,8 @@ public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
     }
     
     /**
-     * Returns if the bottom limit switch has been triggered or not
+     * Returns if the bottom limit switch has been triggered or not.
+     *
      * @return LimitSwitch value
      */
     public boolean canDown() {

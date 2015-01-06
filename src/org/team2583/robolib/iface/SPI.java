@@ -13,33 +13,37 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input.limitswitch;
+package org.team2583.robolib.iface;
 
 /**
- * Interface for a Limit Switch.
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
+ *
  */
-public interface IStandardSwitch {
+public class SPI extends Interface {
+
     
-    /**
-     * State.
-     *
-     * @return true, if successful
-     */
-    public boolean state();
+    public static enum Port {
+        kOnboardCS0,
+        kOnboardCS1,
+        kOnboardCS2,
+        kOnboardCS3,
+        kMXP;
+    };
     
+    private static int devices = 0;
     /**
-     * Gets the channel.
-     *
-     * @return the channel
+     * @param iType
+     * @param address
      */
-    public int getChannel();
-    
-    /**
-     * Gets the type.
-     *
-     * @return the type
-     */
-    public ESwitchType getType();
+    protected SPI(Port port, InterfaceType iType, byte address) {
+        super(InterfaceType.SPI, ++devices);
+        if(port.equals(Port.kMXP)){
+            checkMXPPin(InterfaceType.SPI, 19);
+            checkMXPPin(InterfaceType.SPI, 21);
+            checkMXPPin(InterfaceType.SPI, 23);
+            checkMXPPin(InterfaceType.SPI, 25);
+        }
+    }
+
 }

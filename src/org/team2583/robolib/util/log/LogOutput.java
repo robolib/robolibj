@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -32,11 +32,10 @@ import java.io.UnsupportedEncodingException;
  * argument. Calling the {@code error} method will only print the message and
  * error stack trace. However, calling the {@code fatal} method will print the
  * stack trace, and kill the program.</p>
- * 
+ *
+ * @author noriah Reuland <vix@noriah.dev>
  * @see Logger
  * @see ILogger
- * 
- * @author noriah Reuland <vix@noriah.dev>
  */
 public abstract class LogOutput{
         
@@ -47,18 +46,26 @@ public abstract class LogOutput{
     public abstract void sendMsg(String s);
         
     
+    /** The Constant TERM_OUT. */
     public static final LogOutput TERM_OUT = new LogOutput(){
         public void sendMsg(String msg){
             System.out.println(msg);
         }
     };
 
+    /** The Constant TERM_ERR. */
     public static final LogOutput TERM_ERR = new LogOutput(){
         public void sendMsg(String msg){
             System.err.println(msg);
         }
     };
 
+    /**
+     * File output.
+     *
+     * @param s the s
+     * @return the log output
+     */
     @SuppressWarnings("resource")
 	public static LogOutput fileOutput(final String s){
         

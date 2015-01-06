@@ -16,28 +16,50 @@
 package org.team2583.robolib.input.limitswitch;
 
 /**
- * A Limit Switch System using two Switches
+ * A Limit Switch System using two Switches.
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class DualLimitSwitchSystem implements ILimitSwitchSystem{
     
+    /** The m_bottom switch. */
     private LimitSwitch m_topSwitch, m_bottomSwitch;
 
+    /**
+     * Instantiates a new dual limit switch system.
+     *
+     * @param topChannel the top channel
+     * @param topType the top type
+     * @param bottomChannel the bottom channel
+     * @param bottomType the bottom type
+     */
     public DualLimitSwitchSystem(int topChannel, ESwitchType topType,
             int bottomChannel, ESwitchType bottomType){
         this(new LimitSwitch(topChannel, topType),
                 new LimitSwitch(bottomChannel, bottomType));
     }
     
+    /**
+     * Instantiates a new dual limit switch system.
+     *
+     * @param top the top
+     * @param bottom the bottom
+     */
     public DualLimitSwitchSystem(LimitSwitch top, LimitSwitch bottom){
         m_topSwitch = top;
         m_bottomSwitch = bottom;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public boolean canUp() {
         return !m_topSwitch.state();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean canDown() {
         return !m_bottomSwitch.state();
     }

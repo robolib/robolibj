@@ -13,33 +13,29 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.input.limitswitch;
+package org.team2583.robolib.iface;
+
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 
 /**
- * Interface for a Limit Switch.
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
+ *
  */
-public interface IStandardSwitch {
+public enum InterfaceType {
     
-    /**
-     * State.
-     *
-     * @return true, if successful
-     */
-    public boolean state();
+    ANALOG(tResourceType.kResourceType_AnalogChannel),
+    CAN(tResourceType.kResourceType_PWM),
+    DIGITALIO(tResourceType.kResourceType_DigitalInput),
+    I2C(tResourceType.kResourceType_I2C),
+    PWM(tResourceType.kResourceType_PWM),
+    SERIAL(tResourceType.kResourceType_SerialPort),
+    SPI(tResourceType.kResourceType_SPI);
     
-    /**
-     * Gets the channel.
-     *
-     * @return the channel
-     */
-    public int getChannel();
+    public final int m_resource;
     
-    /**
-     * Gets the type.
-     *
-     * @return the type
-     */
-    public ESwitchType getType();
+    InterfaceType(int type){
+        m_resource = type;
+    }
+
 }

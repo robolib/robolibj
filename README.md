@@ -2,7 +2,7 @@ RoboLibJ
 ==
 A Better WPILib
 
-Javadoc: http://djwolf.no-ip.org/projects/wwrobotics/RoboLibJ/code/javadoc/index.html
+The goal of this project is to completely replace WPILib, in the hopes of making the programming experience for new teams easier.
 
 File Prefixes
 --

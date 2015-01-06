@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -16,19 +16,51 @@
 package org.team2583.robolib.math;
 
 /**
+ * The Interface IPIDController.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public interface IPIDController {
+    
+    /**
+     * Sets the p.
+     *
+     * @param p the new p
+     */
     public void setP(double p);
     
+    /**
+     * Sets the i.
+     *
+     * @param i the new i
+     */
     public void setI(double i);
     
+    /**
+     * Sets the d.
+     *
+     * @param d the new d
+     */
     public void setD(double d);
     
+    /**
+     * Sets the target.
+     *
+     * @param t the new target
+     */
     public void setTarget(double t);
     
+    /**
+     * Gets the error.
+     *
+     * @return the error
+     */
     public double getError();
     
+    /**
+     * Gets the out.
+     *
+     * @return the out
+     */
     public double getOut();
 }

@@ -21,7 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-//import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.internal.HardwareHLUsageReporting;
 import edu.wpi.first.wpilibj.internal.HardwareTimer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -54,33 +53,55 @@ import org.team2583.robolib.util.log.Logger;
  * The constructor must call the Super class with either no arguments, 
  * or two strings representing the Name of the robot and the version of
  * the code.
- * @since 0.1.0
+ *
  * @author noriah Reuland <vix@noriah.dev>
+ * @since 0.1.0
  */
 public class RoboLibBot {
 
+    /** The Constant MAJOR_VERSION. */
     public static final int MAJOR_VERSION = 2;
+    
+    /** The Constant MINOR_VERSION. */
     public static final int MINOR_VERSION = 0;
-    public static final int PATCH_VERSION = 0;
+    
+    /** The Constant PATCH_VERSION. */
+    public static final int PATCH_VERSION = 1;
 
+    /** The m_name. */
     private final String m_name;
+    
+    /** The m_version. */
     private final String m_version;
+    
+    /** The m_log. */
     private final ILogger m_log;
+    
+    /** The m_run. */
     private static boolean m_run = true;
+    
+    /** The m_debug. */
     private static boolean m_debug = true;
+    
+    /** The m_table. */
     private static ITable m_table;
+    
+    /** The Constant m_ds. */
     protected static final DriverStation m_ds = DriverStation.getInstance();
+    
+    /** The Constant m_modeSwitcher. */
     private static final ModeSwitcher m_modeSwitcher = ModeSwitcher.getInstance();
 
     /**
-     * Robot Class Method
+     * Robot Class Method.
      */
     protected RoboLibBot(){
         this("RoboLibBot", "1.0.0");
     }
 
     /**
-     * Robot Class Method
+     * Robot Class Method.
+     *
      * @param name Name of the Robot
      */
     protected RoboLibBot(String name){
@@ -88,7 +109,8 @@ public class RoboLibBot {
     }
     
     /**
-     * Robot Class Method
+     * Robot Class Method.
+     *
      * @param name Name of the Robot
      * @param version Version number of the robot code
      */
@@ -122,7 +144,8 @@ public class RoboLibBot {
     }
 
     /**
-     * Enable or Disable Debug Messages
+     * Enable or Disable Debug Messages.
+     *
      * @param debug Enable or Disable
      */
     public void enableDebug(boolean debug){
@@ -203,16 +226,17 @@ public class RoboLibBot {
 
     /**
      * The Main method for the robot.
-     *
+     * 
      * Starting point for the applications. Starts the OtaServer and then runs
      * the robot.
-     *
+     * 
      * This is called to start the robot. It should never exit.
      * If it does exit, it will first throw several exceptions to kill the robot.
      * We don't want an out of control robot.
      *
+     * @param args the arguments
      */
-    protected final void main(String args[]) {//throws MIDletStateChangeException {
+    public final void main(String args[]) {//throws MIDletStateChangeException {
         
         msg("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         msg("Starting " + m_name);
@@ -276,6 +300,11 @@ public class RoboLibBot {
         System.exit(1);
     }
     
+    /**
+     * Check version file.
+     *
+     * @param file the file
+     */
     @SuppressWarnings("null")
     private static void checkVersionFile(File file){
         
@@ -298,6 +327,11 @@ public class RoboLibBot {
         
     }
     
+    /**
+     * Write version file.
+     *
+     * @param file the file
+     */
     private static void writeVersionFile(File file){
         FileOutputStream output = null;
         try {
@@ -324,6 +358,8 @@ public class RoboLibBot {
     }
 
     /**
+     * Checks if is simulation.
+     *
      * @return If the robot is running in simulation.
      */
     public static boolean isSimulation() {
@@ -331,6 +367,8 @@ public class RoboLibBot {
     }
 
     /**
+     * Checks if is real.
+     *
      * @return If the robot is running in the real world.
      */
     public static boolean isReal() {
@@ -366,7 +404,7 @@ public class RoboLibBot {
     }
 
     /**
-     * Determine if the robot is currently in Test mode
+     * Determine if the robot is currently in Test mode.
      *
      * @return True if the robot is currently operating in Test mode as
      * determined by the driver station.
@@ -382,7 +420,7 @@ public class RoboLibBot {
      * determined by the field controls.
      */
     public static boolean isOperatorControl() {
-        return m_ds.isOperatorControl();
+        return isEnabled() && !(isAutonomous() || isTest());
     }
     
     /**

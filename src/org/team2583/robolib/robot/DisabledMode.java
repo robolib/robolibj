@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -18,20 +18,40 @@ package org.team2583.robolib.robot;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 
 /**
+ * The Class DisabledMode.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public abstract class DisabledMode extends RobotMode {
     
+    /**
+     * Constructor for a Disable Robot mode.
+     */
     protected DisabledMode(){
         super(GameMode.DISABLED);
     }
     
     /**
-     * {@inheritDoc}
+     * Constructor for a Disable Robot mode
+     * Although, why would you be naming this,
+     * You should really only have one.
+     * @param name The name for this Disable mode
      */
-    protected final void modeInit(){
-        init();
+    protected DisabledMode(String name){
+        super(GameMode.DISABLED, name);
+    }
+    
+    /**
+     * Constructor for a Disable Robot mode
+     * Although, why would you be naming this?
+     * And why are you setting this as active?
+     * Do you really have more than one disabled mode?.
+     *
+     * @param name The name for this Disable mode
+     * @param active Set this mode as the active mode by default
+     */
+    protected DisabledMode(String name, boolean active){
+        super(GameMode.DISABLED, name, active);
     }
     
     /**
@@ -40,12 +60,5 @@ public abstract class DisabledMode extends RobotMode {
     protected final void modeRun(){
         FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramDisabled();
         run();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected final void modeEnd(){
-        end();
     }
 }

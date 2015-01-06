@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 noriah <vix@noriah.dev>.
+ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -31,27 +31,46 @@ import org.team2583.robolib.util.log.Logger;
  */
 public class ModeSwitcher {
     
+    /** The Constant NETTABLE_CURRENT_MODE. */
     private static final String NETTABLE_CURRENT_MODE = "mode";
+    
+    /** The Constant NETTABLE_CURRENT_MODE_STRING. */
     private static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
     
+    /** The m_current mode. */
     private GameMode m_currentMode;
     
+    /** The m_modes. */
     private final EnumMap<GameMode, RobotMode> m_modes;
     //private final RobotMode m_modes[];
+    /** The m_scheduler. */
     private final Scheduler m_scheduler;
     
+    /** The Constant m_instance. */
     private static final ModeSwitcher m_instance = new ModeSwitcher();
     
+    /**
+     * Returns the ModeSwitcher, creating it if one does not exists.
+     * @return the ModeSwitcher
+     */
     public static ModeSwitcher getInstance(){
         return m_instance;
     }
     
+    /**
+     * Instantiates a new mode switcher.
+     */
     private ModeSwitcher(){
         m_currentMode = GameMode.NONE;
         m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
         m_scheduler = Scheduler.getInstance();
     }
     
+    /**
+     * Debug.
+     *
+     * @param msg the msg
+     */
     private void debug(String msg){
         Logger.get(this).debug(msg);
     }
@@ -108,7 +127,7 @@ public class ModeSwitcher {
         }
         m_currentMode = GameMode.DISABLED;
         RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
-        RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, m_currentMode.getName());
+        RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, getRobotMode().getName());
     }
     
     /**
@@ -158,8 +177,9 @@ public class ModeSwitcher {
     }
     
     /**
-     * Get the {@link RobotMode} for the given {@link GameMode}
-     * 
+     * Get the {@link RobotMode} for the given {@link GameMode}.
+     *
+     * @param mode the mode
      * @return {@link RobotMode}
      */
     public RobotMode getRobotMode(GameMode mode){
@@ -170,8 +190,9 @@ public class ModeSwitcher {
     }
 
     /**
-     * Do we have a {@link RobotMode} for this {@link GameMode}
-     * 
+     * Do we have a {@link RobotMode} for this {@link GameMode}.
+     *
+     * @param mode the mode
      * @return boolean - do we have it?
      */
     public boolean hasMode(GameMode mode){
@@ -220,14 +241,15 @@ public class ModeSwitcher {
         RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, rMode.getName());
         System.gc();
         try{
-            getRobotMode().modeInit();
+            rMode.modeInit();
         }catch(Throwable e){
             Logger.get(getRobotMode()).fatal("Fatal action in RobotMode init method", e);
         }
     }
     
     /**
-     * Gets whether the mode given is different to the current running mode
+     * Gets whether the mode given is different to the current running mode.
+     *
      * @param mode the mode number of the comparing {@link GameMode}
      * @return a boolean value, true if we are in a new mode or false if we are in the same mode
      */
@@ -236,7 +258,8 @@ public class ModeSwitcher {
     }
     
     /**
-     * Gets whether the mode given is different to the current running mode
+     * Gets whether the mode given is different to the current running mode.
+     *
      * @param mode the {@link GameMode} we are comparing
      * @return a boolean value, true if we are in a new mode or false if we are in the same mode
      */
