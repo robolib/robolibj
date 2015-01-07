@@ -23,7 +23,6 @@ import org.team2583.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Interface.
  *

@@ -18,43 +18,65 @@ package org.team2583.robolib.iface;
 import org.team2583.robolib.exception.ResourceAllocationException;
 
 /**
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ * The Class Analog.
  *
+ * @author noriah Reuland <vix@noriah.dev>
  */
 public class Analog extends Interface {
 
+    /**
+     * The Enum Channel.
+     */
     public static enum Channel{
-        /** Analog Channel 0 */
+        
+        /**  Analog Channel 0. */
         Channel0,
-        /** Analog Channel 1 */
+        
+        /**  Analog Channel 1. */
         Channel1,
-        /** Analog Channel 2 */
+        
+        /**  Analog Channel 2. */
         Channel2,
-        /** Analog Channel 3 */
+        
+        /**  Analog Channel 3. */
         Channel3,
-        /** Analog Channel 4, Channel 1 on MXP */
+        
+        /**  Analog Channel 4, Channel 1 on MXP. */
         Channel4,
-        /** Analog Channel 5, Channel 2 on MXP */
+        
+        /**  Analog Channel 5, Channel 2 on MXP. */
         Channel5,
-        /** Analog Channel 6, Channel 3 on MXP */
+        
+        /**  Analog Channel 6, Channel 3 on MXP. */
         Channel6,
-        /** Analog Channel 7, Channel 4 on MXP */
+        
+        /**  Analog Channel 7, Channel 4 on MXP. */
         Channel7;
     }
     
+    /**
+     * The Enum Direction.
+     */
     public static enum Direction{
-        IN, OUT;
+        
+        /** The in. */
+        IN,
+        
+        /** The out. */
+        OUT;
     }
     
     /** Keep track of already used channels. */
     private static boolean m_usedInChannels[] = new boolean[kMaxAnalogInputChannels];
+    
+    /** The m_used out channels. */
     private static boolean m_usedOutChannels[] = new boolean[kMaxAnalogOutputChannels];
      
     /**
-     * 
-     * @param channel
-     * @param dir
+     * Instantiates a new analog.
+     *
+     * @param channel the channel
+     * @param dir the dir
      */
     protected Analog(Channel channel, Direction dir) {
         super(InterfaceType.ANALOG, channel.ordinal());

@@ -19,3 +19,6 @@ build.properties
 /.settings/
 .project
 .classpath
+
+/src/edu/
+/lib/linux-arm/libwpilibJavaJNI.so

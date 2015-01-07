@@ -22,11 +22,11 @@ import java.nio.IntBuffer;
 
 import org.team2583.robolib.exception.ResourceAllocationException;
 import org.team2583.robolib.util.MathUtils;
+import org.team2583.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.hal.DIOJNI;
 import edu.wpi.first.wpilibj.hal.HALUtil;
 import edu.wpi.first.wpilibj.hal.PWMJNI;
-
 
 /**
  * The PWM Interface class.
@@ -147,17 +147,16 @@ public class PWM extends Interface {
         }
     }
     
-    
-    /** The Constant kDefaultPWMPeriod. */
+    /** The default PWM Period. */
     protected static final double kDefaultPWMPeriod = 5.05;
     
-    /** The Constant kDefaultPWMCenter. */
+    /** The default PWM center pulse width in ms. */
     protected static final double kDefaultPWMCenter = 1.5;
     
-    /** The Constant kDefaultPWMStepsDown. */
+    /** The default steps down for a PWM? */
     protected static final int kDefaultPWMStepsDown = 1000;
     
-    /** The Constant kPWMDisabled. */
+    /** The default disable value for a PWM. */
     public static final int kPWMDisabled = 0;
     
     /** Should we be destroying the deadband? Only used by setBounds() */
@@ -209,17 +208,10 @@ public class PWM extends Interface {
      */
     public PWM(Channel channel) {
         super(InterfaceType.PWM, channel.ordinal());
+        
+        allocateChannel(channel);
+        
         m_channel = channel;
-        
-        if(getChannelNumber() > 9){
-            allocateMXPPin(InterfaceType.PWM, channel.m_mxpPin);
-        }
-        
-        if(m_usedChannels[getChannelNumber()] == true){
-            throw new ResourceAllocationException("PWM channel '" + getChannelName() + "' already in use.");
-        }else{
-            m_usedChannels[getChannelNumber()] = true;
-        }
 
         IntBuffer status = getLE4IntBuffer();
         
@@ -244,9 +236,9 @@ public class PWM extends Interface {
      * Free the resource associated with the PWM channel and set the value to 0.
      */
     public void free() {
-        if(getChannelNumber() > 9){
-            freeMXPPin(getInterfaceType(), m_channel.m_mxpPin);
-        }
+        
+        freeChannel(getChannel());
+        
         IntBuffer status = getLE4IntBuffer();
 
         PWMJNI.setPWM(m_port, (short) 0, status);
@@ -257,6 +249,38 @@ public class PWM extends Interface {
 
         PWMJNI.freeDIO(m_port, status);
         HALUtil.checkStatus(status);
+    }
+    
+    /**
+     * Allocate a PWM channel.
+     * 
+     * @param channel the PWM channel to allocate
+     */
+    private static void allocateChannel(Channel channel){
+        if(channel.ordinal() > 9){
+            allocateMXPPin(InterfaceType.PWM, channel.m_mxpPin);
+        }
+        
+        if(m_usedChannels[channel.ordinal()] == true){
+            throw new ResourceAllocationException("PWM channel '" + channel.name() + "' already in use.");
+        }else{
+            m_usedChannels[channel.ordinal()] = true;
+        }
+    }
+    
+    /**
+     * Free a PWM channel.
+     * 
+     * @param channel the PWM channel to free
+     */
+    private static void freeChannel(Channel channel){
+        if(channel.ordinal() > 9){
+            freeMXPPin(InterfaceType.PWM, channel.m_mxpPin);
+        }
+        
+        if(m_usedChannels[channel.ordinal()] != true){
+            Logger.get(PWM.class).error("PWM Channel '" + channel.name() + "' was not allocated. How did you get here?");
+        }
     }
     
     /**
