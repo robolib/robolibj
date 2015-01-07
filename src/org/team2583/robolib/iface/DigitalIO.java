@@ -95,14 +95,14 @@ public class DigitalIO extends Interface {
     private Channel m_channel;
     
     /**
-     * @param iType
-     * @param address
+     * 
+     * @param channel
      */
     protected DigitalIO(Channel channel) {
         super(InterfaceType.DIGITALIO, channel.ordinal());
         
         if(channel.ordinal() > 9)
-            checkMXPPin(InterfaceType.DIGITALIO, channel.m_mxpPin);
+            allocateMXPPin(InterfaceType.DIGITALIO, channel.m_mxpPin);
         
         if(m_usedChannels[channel.ordinal()] == true){
             throw new ResourceAllocationException("DIO channel '" + channel.name() + "' already in use.");

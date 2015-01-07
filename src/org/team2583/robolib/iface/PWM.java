@@ -27,101 +27,179 @@ import edu.wpi.first.wpilibj.hal.DIOJNI;
 import edu.wpi.first.wpilibj.hal.HALUtil;
 import edu.wpi.first.wpilibj.hal.PWMJNI;
 
+
 /**
- * The Class PWM.
+ * The PWM Interface class.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class PWM extends Interface {
 
     /**
-     * The Enum Channel.
+     * The PWM Channel enum.
      */
     public static enum Channel{
         
-        /** PWM Channel 0 On-board */
+        /**  PWM Channel 0 On-board. */
         Channel0,
-        /** PWM Channel 1 On-board */
+        
+        /**  PWM Channel 1 On-board. */
         Channel1,
-        /** PWM Channel 2 On-board */
+        
+        /**  PWM Channel 2 On-board. */
         Channel2,
-        /** PWM Channel 3 On-board */
+        
+        /**  PWM Channel 3 On-board. */
         Channel3,
-        /** PWM Channel 4 On-board */
+        
+        /**  PWM Channel 4 On-board. */
         Channel4,
-        /** PWM Channel 5 On-board */
+        
+        /**  PWM Channel 5 On-board. */
         Channel5,
-        /** PWM Channel 6 On-board */
+        
+        /**  PWM Channel 6 On-board. */
         Channel6,
-        /** PWM Channel 7 On-board */
+        
+        /**  PWM Channel 7 On-board. */
         Channel7,
-        /** PWM Channel 8 On-board */
+        
+        /**  PWM Channel 8 On-board. */
         Channel8,
-        /** PWM Channel 9 On-board */
+        
+        /**  PWM Channel 9 On-board. */
         Channel9,
-        /** PWM Channel 10, Channel 0 on MXP */
+        
+        /**  PWM Channel 10, Channel 0 on MXP. */
         Channel10(11),
-        /** PWM Channel 11, Channel 1 on MXP */
+        
+        /**  PWM Channel 11, Channel 1 on MXP. */
         Channel11(13),
-        /** PWM Channel 12, Channel 2 on MXP */
+        
+        /**  PWM Channel 12, Channel 2 on MXP. */
         Channel12(15),
-        /** PWM Channel 13, Channel 3 on MXP */
+        
+        /**  PWM Channel 13, Channel 3 on MXP. */
         Channel13(17),
-        /** PWM Channel 14, Channel 4 on MXP */
+        
+        /**  PWM Channel 14, Channel 4 on MXP. */
         Channel14(27),
-        /** PWM Channel 15, Channel 5 on MXP */
+        
+        /**  PWM Channel 15, Channel 5 on MXP. */
         Channel15(29),
-        /** PWM Channel 16, Channel 6 on MXP */
+        
+        /**  PWM Channel 16, Channel 6 on MXP. */
         Channel16(31),
-        /** PWM Channel 17, Channel 7 on MXP */
+        
+        /**  PWM Channel 17, Channel 7 on MXP. */
         Channel17(18),
-        /** PWM Channel 18, Channel 8 on MXP */
+        
+        /**  PWM Channel 18, Channel 8 on MXP. */
         Channel18(22),
-        /** PWM Channel 19, Channel 9 on MXP */
+        
+        /**  PWM Channel 19, Channel 9 on MXP. */
         Channel19(26);
 
+        /** The Pin on the MXP port that this channel is on. */
         public final int m_mxpPin;
-        private Channel(){ m_mxpPin = 0; }
-        private Channel(int mxpPin){ m_mxpPin = mxpPin; }
+        
+        /**
+         * Instantiates a new channel.
+         */
+        private Channel(){
+            m_mxpPin = 0;
+        }
+        
+        /**
+         * Instantiates a new channel.
+         *
+         * @param mxpPin the mxp pin
+         */
+        private Channel(int mxpPin){
+            m_mxpPin = mxpPin;
+        }
     }
     
+    /**
+     * The PeriodMultiplier enumeration
+     */
     public static enum PeriodMultiplier {
         
-        /** Dont skip pulses */
+        /**  Dont skip pulses. */
         k1X(0),
-        /** Skip every other pulse */
+        
+        /**  Skip every other pulse. */
         k2X(1),
-        /** Skip three of four pulses */
+        
+        /**  Skip three of four pulses. */
         k4X(3);
         
+        /** The value. */
         public final int value;
-        private PeriodMultiplier(final int var){ value = var; }
+        
+        /**
+         * Instantiates a new period multiplier.
+         *
+         * @param var the var
+         */
+        private PeriodMultiplier(final int var){
+            value = var;
+        }
     }
     
+    
+    /** The Constant kDefaultPWMPeriod. */
     protected static final double kDefaultPWMPeriod = 5.05;
     
+    /** The Constant kDefaultPWMCenter. */
     protected static final double kDefaultPWMCenter = 1.5;
     
+    /** The Constant kDefaultPWMStepsDown. */
     protected static final int kDefaultPWMStepsDown = 1000;
     
+    /** The Constant kPWMDisabled. */
     public static final int kPWMDisabled = 0;
     
-    private boolean m_destroyDeadband;
-    private double m_maxW;
-    private int m_maxB;
-    private double m_deadMaxW;
-    private int m_deadMaxB;
-    private double m_centerW;
-    private int m_centerB;
-    private double m_deadMinW;
-    private int m_deadMinB;
-    private double m_minW;
-    private int m_minB;
+    /** Should we be destroying the deadband? Only used by setBounds() */
+    private boolean m_destroyDeadband = false;
+    
+    /** The positive bounds scaling factor */
+    private int m_scaleFactorPositive;
+    
+    /** The high end of the positive bounds. */
+    private int m_boundsPositiveMax;
+    
+    /** The positive low end value used to eliminate deadband. */
+    private int m_boundsPositiveMinDeadband;
+    
+    /** The low end of the positive bounds. */
+    private int m_boundsPositiveMin;
+    
+    /** The center of the bounds between positive and negative. */
+    private int m_boundsCenter;
+    
+    /** The high end of the negative bounds. */
+    private int m_boundsNegativeMax;
+    
+    /** The negative high end value used to eliminate deadband. */
+    private int m_boundsNegativeMaxDeadband;
+    
+    /** The low end of the negative bounds. */
+    private int m_boundsNegativeMin;
+    
+    /** The negative bounds scaling factor. */
+    private int m_scaleFactorNegative;
+    
+    /** The full range bounds scaling factor. */
+    private int m_scaleFactorFull;
     
     /** Keep track of already used channels. */
     private static boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
     
+    /** The The RoboRIO port identifier. */
     private ByteBuffer m_port;
+    
+    /** The PWM Channel this PWM is operating on. */
     private Channel m_channel;
     
     /**
@@ -131,26 +209,25 @@ public class PWM extends Interface {
      */
     public PWM(Channel channel) {
         super(InterfaceType.PWM, channel.ordinal());
-        
-        if(channel.ordinal() > 9){
-            checkMXPPin(InterfaceType.PWM, channel.m_mxpPin);
-        }
-        
-        if(m_usedChannels[channel.ordinal()] == true){
-            throw new ResourceAllocationException("PWM channel '" + channel.name() + "' already in use.");
-        }else{
-            m_usedChannels[channel.ordinal()] = true;
-        }
-        
         m_channel = channel;
         
+        if(getChannelNumber() > 9){
+            allocateMXPPin(InterfaceType.PWM, channel.m_mxpPin);
+        }
+        
+        if(m_usedChannels[getChannelNumber()] == true){
+            throw new ResourceAllocationException("PWM channel '" + getChannelName() + "' already in use.");
+        }else{
+            m_usedChannels[getChannelNumber()] = true;
+        }
+
         IntBuffer status = getLE4IntBuffer();
         
-        m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte) m_channel.ordinal()), status);
+        m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte) getChannelNumber()), status);
         HALUtil.checkStatus(status);
         
         if(!PWMJNI.allocatePWMChannel(m_port,  status)){
-            throw new ResourceAllocationException("PWM channel '" + m_channel.name() + "' already in use.");
+            throw new ResourceAllocationException("PWM channel '" + getChannelName() + "' already in use.");
         }
         HALUtil.checkStatus(status);
         
@@ -162,7 +239,29 @@ public class PWM extends Interface {
     }
     
     /**
-     * Set the bounds on pulse widths for this PWM
+     * Free the PWM channel.
+     *
+     * Free the resource associated with the PWM channel and set the value to 0.
+     */
+    public void free() {
+        if(getChannelNumber() > 9){
+            freeMXPPin(getInterfaceType(), m_channel.m_mxpPin);
+        }
+        IntBuffer status = getLE4IntBuffer();
+
+        PWMJNI.setPWM(m_port, (short) 0, status);
+        HALUtil.checkStatus(status);
+
+        PWMJNI.freePWMChannel(m_port, status);
+        HALUtil.checkStatus(status);
+
+        PWMJNI.freeDIO(m_port, status);
+        HALUtil.checkStatus(status);
+    }
+    
+    /**
+     * Set the bounds on pulse widths for this PWM.
+     *
      * @param max The maximum PWM pulse in ms
      * @param deadMax The maximum of the pulse deadband in ms
      * @param center The center/zero/off pulse width in ms
@@ -171,28 +270,38 @@ public class PWM extends Interface {
      */
     public void setBounds(double max, double deadMax, double center, double deadMin, double min){
         double loopTime = (DIOJNI.getLoopTiming(getLE4IntBuffer())/40000);
-        m_maxW = max;
-        m_maxB = ((int) ((max - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        m_deadMaxW = deadMax;
-        m_deadMaxB = ((int) ((deadMax - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        m_centerW = center;
-        m_centerB = ((int) ((center - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        m_deadMinW = deadMin;
-        m_deadMinB = ((int) ((deadMin - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        m_minW = min;
-        m_minB = ((int) ((min - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
+        m_boundsPositiveMax = ((int) ((max - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
+        m_boundsNegativeMin = ((int) ((min - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
+        m_boundsCenter = ((int) ((center - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
+        m_boundsPositiveMinDeadband = ((int) ((deadMax - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
+        m_boundsNegativeMaxDeadband = ((int) ((deadMin - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
+        
+        enableDeadbandDestruction(m_destroyDeadband);
     }
     
     /**
-     * Enable Deadband Elimination
+     * Enable Deadband Elimination.
+     *
      * @param eliminateDeadband Yes or No
      */
     public void enableDeadbandDestruction(boolean eliminateDeadband){
         m_destroyDeadband = eliminateDeadband;
+        if(eliminateDeadband){
+            m_boundsPositiveMin = m_boundsPositiveMinDeadband;
+            m_boundsNegativeMax = m_boundsNegativeMaxDeadband;
+        }else{
+            m_boundsPositiveMin = m_boundsCenter + 1;
+            m_boundsNegativeMax = m_boundsCenter - 1;
+        }
+        
+        m_scaleFactorPositive = m_boundsPositiveMax - m_boundsPositiveMin;
+        m_scaleFactorNegative = m_boundsNegativeMax - m_boundsNegativeMin;
+        m_scaleFactorFull = m_boundsPositiveMax - m_boundsNegativeMin;
     }
     
     /**
-     * The channel this PWM is operating on
+     * The channel this PWM is operating on.
+     *
      * @return {@link Channel} representation of the PWM channel
      */
     public Channel getChannel(){
@@ -200,72 +309,86 @@ public class PWM extends Interface {
     }
     
     /**
-     * The channel this PWM is operating on, in integer form
+     * The channel this PWM is operating on, in integer form.
+     *
      * @return integer representation of the PWM channel
      */
-    public int getChannelNum(){
+    public int getChannelNumber(){
         return m_channel.ordinal();
     }
     
     /**
-     * Set the position of the servo
+     * The channel this PWM is operating on, in string form.
+     * 
+     * @return string representation of the PWM channel
+     */
+    public String getChannelName(){
+        return m_channel.name();
+    }
+    
+    /**
+     * Set the position of the servo.
+     *
      * @param angle the servo position
      */
     public void setPosition(double angle){
         angle = MathUtils.clamp(angle, 0.0, 1.0);
         int raw;
-        raw = (int) ((angle * (double)getFullPWMScaleFactor()) + getMinNegPWM());
+        raw = (int) ((angle * (double)m_scaleFactorFull) + m_boundsNegativeMin);
         setRaw(raw);
     }
     
     /**
-     * 
-     * @return
+     * Gets the position.
+     *
+     * @return the position
      */
     public double getPosition(){
         int val = getRaw();
-        if(val < getMinNegPWM()){
+        if(val < m_boundsNegativeMin){
             return 0.0;
-        }else if(val > getMaxPosPWM()){
+        }else if(val > m_boundsPositiveMax){
             return 1.0;
         }else{
-            return (double)(val - getMinNegPWM()) / (double)getFullPWMScaleFactor();
+            return (double)(val - m_boundsNegativeMin) / (double)m_scaleFactorFull;
         }
     }
     
     /**
-     * 
-     * @param speed
+     * Sets the speed.
+     *
+     * @param speed the new speed
      */
-    public final void setSpeed(double speed){
+    public void setSpeed(double speed){
         speed = MathUtils.clamp(speed, -1.0, 1.0);
         
         int raw;
         if(speed == 0.0){
-            raw = getCenterPWM();
+            raw = m_boundsCenter;
         }else if(speed > 0.0){
-            raw = (int) (speed * ((double)(getPosPWMScaleFactor() + getMinPosPWM())) + 0.5);
+            raw = (int) (speed * ((double)(m_scaleFactorPositive + m_boundsPositiveMin)) + 0.5);
         }else{
-            raw = (int) (speed * ((double)(getNegPWMScaleFactor() + getMaxNegPWM())) + 0.5);
+            raw = (int) (speed * ((double)(m_scaleFactorNegative + m_boundsNegativeMax)) + 0.5);
         }
         
         setRaw(raw);
     }
     
     /**
-     * 
-     * @return
+     * Gets the speed.
+     *
+     * @return the speed
      */
-    public final double getSpeed(){
+    public double getSpeed(){
         int raw = getRaw();
-        if(raw >= getMaxPosPWM()){
+        if(raw >= m_boundsPositiveMax){
             return 1.0;
-        }else if(raw <= getMinNegPWM()){
+        }else if(raw <= m_boundsNegativeMin){
             return -1.0;
-        }else if(raw >= getMinPosPWM()){
-            return (double) (raw - getMinPosPWM()) / (double) getPosPWMScaleFactor();
-        }else if(raw <= getMaxNegPWM()){
-            return (double) (raw - getMaxNegPWM()) / (double) getNegPWMScaleFactor();
+        }else if(raw >= m_boundsPositiveMin){
+            return (double) (raw - m_boundsPositiveMin) / (double) m_scaleFactorPositive;
+        }else if(raw <= m_boundsNegativeMax){
+            return (double) (raw - m_boundsNegativeMax) / (double) m_scaleFactorNegative;
         }else{
             return 0.0;
         }
@@ -299,7 +422,8 @@ public class PWM extends Interface {
     }
     
     /**
-     * Set the period multiplier for older/newer devices
+     * Set the period multiplier for older/newer devices.
+     *
      * @param multi The PeriodMultiplier enum
      */
     public void setPeriodMultiplier(PeriodMultiplier multi){
@@ -309,116 +433,11 @@ public class PWM extends Interface {
     }
     
     /**
-     * 
+     * Sets the zero latch.
      */
     protected void setZeroLatch(){
         IntBuffer status = getLE4IntBuffer();
         PWMJNI.latchPWMZero(m_port, status);
         HALUtil.checkStatus(status);
-    }
-    
-
-    /**
-     * Get the maximum positive pulse width in ms
-     * @return The maximum positive pulse width in ms
-     */
-    public double getMaxPosWidth(){
-        return m_maxW;
-    }
-
-    /**
-     * Get the maximum positive pulse width inside the range of 0 - 255
-     * @return The maximum positive pulse width
-     */
-    public int getMaxPosPWM(){
-        return m_maxB;
-    }
-    
-    /**
-     * Get the minimum positive pulse width in ms
-     * @return The minimum positive pulse width in ms
-     */
-    public double getMinPosWidth(){
-        return m_destroyDeadband ? m_deadMaxW : m_centerW + 0.01;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public int getMinPosPWM(){
-        return m_destroyDeadband ? m_deadMaxB : m_centerB + 1;
-    }
-    
-    /**
-     * Get the center/stop pulse width in ms
-     * @return The center pulse width in ms
-     */
-    public double getCenterWidth(){
-        return m_centerW;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public int getCenterPWM(){
-        return m_centerB;
-    }
-    
-    /**
-     * Get the maximum negative pulse width in ms
-     * @return The maximum negative pulse width in ms
-     */
-    public double getMaxNegWidth(){
-        return m_destroyDeadband ? m_deadMinW : m_centerW - 0.01;
-    }
-    
-    /**
-     * 
-     * @return
-     */
-    public int getMaxNegPWM(){
-        return m_destroyDeadband ? m_deadMinB : m_centerB - 1;
-    }
-    
-    /**
-     * Get the minimum negative pulse width in ms
-     * @return The minimum negative pulse width in ms
-     */
-    public double getMinNegWidth(){
-        return m_minW;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public int getMinNegPWM(){
-        return m_minB;
-    }
-    
-    /**
-     * 
-     * @return
-     */
-    public int getPosPWMScaleFactor(){
-        return getMaxPosPWM() - getMinPosPWM();
-    }
-    
-    /**
-     * 
-     * @return
-     */
-    public int getNegPWMScaleFactor(){
-        return getMaxNegPWM() - getMinNegPWM();
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public int getFullPWMScaleFactor(){
-        return getMaxPosPWM() - getMinNegPWM();
     }
 }

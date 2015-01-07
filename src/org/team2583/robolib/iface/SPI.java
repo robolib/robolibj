@@ -39,10 +39,10 @@ public class SPI extends Interface {
     protected SPI(Port port, InterfaceType iType, byte address) {
         super(InterfaceType.SPI, ++devices);
         if(port.equals(Port.kMXP)){
-            checkMXPPin(InterfaceType.SPI, 19);
-            checkMXPPin(InterfaceType.SPI, 21);
-            checkMXPPin(InterfaceType.SPI, 23);
-            checkMXPPin(InterfaceType.SPI, 25);
+            allocateMXPPin(InterfaceType.SPI, 19);
+            allocateMXPPin(InterfaceType.SPI, 21);
+            allocateMXPPin(InterfaceType.SPI, 23);
+            allocateMXPPin(InterfaceType.SPI, 25);
         }
     }
 

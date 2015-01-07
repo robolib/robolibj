@@ -35,8 +35,8 @@ public class Serial extends Interface {
     protected Serial(Port port, byte address) {
         super(InterfaceType.SERIAL, 0);
         if(port.equals(Port.kMXP)){
-            checkMXPPin(InterfaceType.SERIAL, 14);
-            checkMXPPin(InterfaceType.SERIAL, 10);
+            allocateMXPPin(InterfaceType.SERIAL, 14);
+            allocateMXPPin(InterfaceType.SERIAL, 10);
         }
     }
 

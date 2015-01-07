@@ -34,8 +34,8 @@ public class I2C extends Interface {
     protected I2C(Port port, int address) {
         super(InterfaceType.I2C, address);
         if(port.equals(Port.kMXP)){
-            checkMXPPin(InterfaceType.I2C, 32);
-            checkMXPPin(InterfaceType.I2C, 34);
+            allocateMXPPin(InterfaceType.I2C, 32);
+            allocateMXPPin(InterfaceType.I2C, 34);
         }
     }
 
