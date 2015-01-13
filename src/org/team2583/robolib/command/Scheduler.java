@@ -13,15 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.pneumatics;
-
-import edu.wpi.first.wpilibj.SensorBase;
+package org.team2583.robolib.command;
 
 /**
- * The Class Solenoid.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public class Solenoid extends SensorBase {
+public class Scheduler {
 
 }

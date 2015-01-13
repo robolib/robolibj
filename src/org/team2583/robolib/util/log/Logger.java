@@ -40,7 +40,7 @@ import java.util.Map;
  * @author Austin Reuland <amreuland@gmail.com>
  * @see ILogger
  * @see LogOutput
- * @see ELogLevel
+ * @see LogLevel
  */
 
 @SuppressWarnings("rawtypes")
@@ -162,7 +162,7 @@ public final class Logger extends ILogger {
      * @param l the Logging level
      * @param s the String to log
      */
-    private void sendMsg(ELogLevel l, String s){
+    private void sendMsg(LogLevel l, String s){
         String sout = " " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_OUT.sendMsg(sout);
         for(LogOutput out : m_outs)
@@ -175,7 +175,7 @@ public final class Logger extends ILogger {
      * @param l the Logging level
      * @param s the String to log
      */
-    private void sendErrMsg(ELogLevel l, String s){
+    private void sendErrMsg(LogLevel l, String s){
         String sout = " " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_ERR.sendMsg(sout);
         for(LogOutput out : m_outs)
@@ -186,37 +186,37 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void info(String s){
-        sendMsg(ELogLevel.INFO, s);
+        sendMsg(LogLevel.INFO, s);
     }
 
     /**
      * {@inheritDoc}
      */
     public void debug(String s){
-        sendMsg(ELogLevel.DEBUG, s);
+        sendMsg(LogLevel.DEBUG, s);
     }
 
     /**
      * {@inheritDoc}
      */
     public void warn(String s){
-        sendMsg(ELogLevel.WARN, s);
+        sendMsg(LogLevel.WARN, s);
     }
 
     /**
      * {@inheritDoc}
      */
     public void error(String s, Object o){
-        sendErrMsg(ELogLevel.ERROR, s);
+        sendErrMsg(LogLevel.ERROR, s);
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
-                sendErrMsg(ELogLevel.ERROR, errors.toString());
+                sendErrMsg(LogLevel.ERROR, errors.toString());
             }else if(o instanceof String){
-                sendErrMsg(ELogLevel.ERROR, (String)o);
+                sendErrMsg(LogLevel.ERROR, (String)o);
             }else{
-                sendErrMsg(ELogLevel.ERROR, o.toString());
+                sendErrMsg(LogLevel.ERROR, o.toString());
             }
         }
     }
@@ -225,16 +225,16 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void severe(String s, Object o){
-        sendErrMsg(ELogLevel.SEVERE, s);
+        sendErrMsg(LogLevel.SEVERE, s);
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
-                sendErrMsg(ELogLevel.SEVERE, errors.toString());
+                sendErrMsg(LogLevel.SEVERE, errors.toString());
             }else if(o instanceof String){
-                sendErrMsg(ELogLevel.SEVERE, (String)o);
+                sendErrMsg(LogLevel.SEVERE, (String)o);
             }else{
-                sendErrMsg(ELogLevel.SEVERE, o.toString());
+                sendErrMsg(LogLevel.SEVERE, o.toString());
             }
         }
     }
@@ -243,16 +243,16 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void fatal(String s, Object o){
-        sendErrMsg(ELogLevel.FATAL, s);
+        sendErrMsg(LogLevel.FATAL, s);
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
-                sendErrMsg(ELogLevel.FATAL, errors.toString());
+                sendErrMsg(LogLevel.FATAL, errors.toString());
             }else if(o instanceof String){
-                sendErrMsg(ELogLevel.FATAL, (String)o);
+                sendErrMsg(LogLevel.FATAL, (String)o);
             }else{
-                sendErrMsg(ELogLevel.FATAL, o.toString());
+                sendErrMsg(LogLevel.FATAL, o.toString());
             }
         }
     }

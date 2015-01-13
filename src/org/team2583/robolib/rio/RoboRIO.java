@@ -20,8 +20,8 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 //import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
-import edu.wpi.first.wpilibj.hal.HALUtil;
-import edu.wpi.first.wpilibj.hal.PowerJNI;
+import org.team2583.robolib.hal.HALUtil;
+import org.team2583.robolib.hal.PowerJNI;
 
 /**
  * The Class RoboRIO.

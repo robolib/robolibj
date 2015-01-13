@@ -13,13 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.pneumatics;
+package org.team2583.robolib.util.log;
 
 /**
- * The Class DoubleSolenoid.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public class DoubleSolenoid {
+public interface Loggable {
 
 }

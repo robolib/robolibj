@@ -17,7 +17,7 @@ package org.team2583.robolib.rio;
 
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
-import edu.wpi.first.wpilibj.hal.AccelerometerJNI;
+import org.team2583.robolib.hal.AccelerometerJNI;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;

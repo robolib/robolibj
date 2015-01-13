@@ -33,5 +33,4 @@ public class ResourceAllocationException extends RuntimeException {
     public ResourceAllocationException(String msg){
         super(msg);
     }
-
 }

@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.pneumatics;
+package org.team2583.robolib.pneumatic;
 
 /**
  * The Class DoubleSingleSolenoid.

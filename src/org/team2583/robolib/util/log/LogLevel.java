@@ -34,7 +34,7 @@ package org.team2583.robolib.util.log;
  * @see Logger
  * @see LogOutput
  */
-public enum ELogLevel {
+public enum LogLevel {
    
     /** The info. */
     INFO("[INFO]"),
@@ -62,7 +62,7 @@ public enum ELogLevel {
      *
      * @param name the name
      */
-    private ELogLevel(String name){
+    private LogLevel(String name){
         m_name = name;
     }
 
