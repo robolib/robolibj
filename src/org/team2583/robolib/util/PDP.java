@@ -15,14 +15,12 @@
 
 package org.team2583.robolib.util;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
+import static org.team2583.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import org.team2583.robolib.robot.RoboLibBot;
 
 import edu.wpi.first.wpilibj.SensorBase;
-import edu.wpi.first.wpilibj.hal.PDPJNI;
+import org.team2583.robolib.hal.PDPJNI;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
@@ -31,13 +29,14 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PDP extends SensorBase implements LiveWindowSendable{
+public class PDP implements LiveWindowSendable{
+    
+    public static enum PowerChannel{
+        
+    }
     
     /** The m_table. */
     private ITable m_table;
-    
-    /** The status. */
-    private static IntBuffer m_status;
     
     /** The Constant m_instance. */
     public static final PDP m_instance = new PDP();
@@ -56,9 +55,6 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      */
     private PDP(){
         initTable(RoboLibBot.getRobotTable().getSubTable("PDP"));
-        ByteBuffer b = ByteBuffer.allocateDirect(4);
-        b.order(ByteOrder.LITTLE_ENDIAN);
-        m_status = b.asIntBuffer();
     }
     
     /** The m_chan names. */
@@ -75,7 +71,7 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      * @return the channel name
      */
     public static String getChannelName(int channel){
-        checkPDPChannel(channel);
+//        checkPDPChannel(channel);
         return m_chanNames[channel];
     }
     
@@ -86,7 +82,7 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      * @param name the name
      */
     public static void setChannelName(int channel, String name){
-        checkPDPChannel(channel);
+//        checkPDPChannel(channel);
         m_chanNames[channel] = name;
     }
 
@@ -97,7 +93,7 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      * @return the voltage
      */
     public static double getVoltage(){
-        return PDPJNI.getPDPVoltage(m_status);
+        return PDPJNI.getPDPVoltage(getLE4IntBuffer());
     }
     
     /**
@@ -106,7 +102,7 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      * @return the temperature
      */
     public static double getTemperature(){
-        return PDPJNI.getPDPTemperature(m_status);
+        return PDPJNI.getPDPTemperature(getLE4IntBuffer());
     }
     
     /**
@@ -116,8 +112,8 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      * @return the current
      */
     public static double getCurrent(int channel){
-        checkPDPChannel(channel);
-        return PDPJNI.getPDPChannelCurrent((byte)channel, m_status);
+//        checkPDPChannel(channel);
+        return PDPJNI.getPDPChannelCurrent((byte)channel, getLE4IntBuffer());
     }
     
     /**
@@ -126,7 +122,7 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      * @return the total current
      */
     public static double getTotalCurrent(){
-        return PDPJNI.getPDPTotalCurrent(m_status);
+        return PDPJNI.getPDPTotalCurrent(getLE4IntBuffer());
     }
     
     
@@ -136,7 +132,7 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      * @return the total power
      */
     public static double getTotalPower(){
-        return PDPJNI.getPDPTotalPower(m_status);
+        return PDPJNI.getPDPTotalPower(getLE4IntBuffer());
     }
     
     /**
@@ -145,21 +141,21 @@ public class PDP extends SensorBase implements LiveWindowSendable{
      * @return the total energy
      */
     public static double getTotalEnergy(){
-        return PDPJNI.getPDPTotalEnergy(m_status);
+        return PDPJNI.getPDPTotalEnergy(getLE4IntBuffer());
     }
     
     /**
      * Reset total energy.
      */
     public static void resetTotalEnergy(){
-        PDPJNI.resetPDPTotalEnergy(m_status);   
+        PDPJNI.resetPDPTotalEnergy(getLE4IntBuffer());   
     }
     
     /**
      * Reset faults.
      */
     public static void resetFaults(){
-        PDPJNI.clearPDPStickyFaults(m_status);
+        PDPJNI.clearPDPStickyFaults(getLE4IntBuffer());
     }
     
     /**

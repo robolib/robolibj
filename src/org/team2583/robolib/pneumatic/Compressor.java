@@ -13,22 +13,17 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.pneumatics;
+package org.team2583.robolib.pneumatic;
+
+import static org.team2583.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.team2583.robolib.hal.CompressorJNI;
+import org.team2583.robolib.hal.HALUtil;
 import org.team2583.robolib.robot.RoboLibBot;
 
-import edu.wpi.first.wpilibj.Resource;
-import edu.wpi.first.wpilibj.SensorBase;
-import edu.wpi.first.wpilibj.hal.CompressorJNI;
-import edu.wpi.first.wpilibj.hal.HALUtil;
-import edu.wpi.first.wpilibj.hal.SolenoidJNI;
-import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
@@ -36,7 +31,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PCM extends SensorBase implements LiveWindowSendable{
+public final class Compressor {
     
     /** The m_table. */
     private ITable m_table;
@@ -44,63 +39,27 @@ public class PCM extends SensorBase implements LiveWindowSendable{
     /** The m_pcm_compressor. */
     private static ByteBuffer m_pcm_compressor;
     
-    /** The m_map_module_ports. */
-    private static Map<Integer, ByteBuffer[]> m_map_module_ports = new HashMap<Integer, ByteBuffer[]>();
-    
-    /** The m_status. */
-    private static IntBuffer m_status;
-    
-    /** The m_allocated. */
-    protected Resource m_allocated = new Resource(63* SensorBase.kSolenoidChannels);
-    
     /** The Constant m_instance. */
-    private static final PCM m_instance = new PCM();
+    private static final Compressor m_instance = new Compressor();
     
     /**
      * Gets the single instance of PCM.
      *
      * @return single instance of PCM
      */
-    public static PCM getInstance(){
+    public static Compressor getInstance(){
         return m_instance;
     }
     
     /**
      * Instantiates a new pcm.
      */
-    private PCM(){
+    private Compressor(){
         initTable(RoboLibBot.getRobotTable().getSubTable("PCM"));
-        ByteBuffer b = ByteBuffer.allocateDirect(4);
-        b.order(ByteOrder.LITTLE_ENDIAN);
-        m_status = b.asIntBuffer();
-        m_pcm_compressor = CompressorJNI.initializeCompressor((byte)getDefaultSolenoidModule());
-        initModule(getDefaultSolenoidModule());
+        m_pcm_compressor = CompressorJNI.initializeCompressor((byte) 0);
     }
     
-    /**
-     * Inits the module.
-     *
-     * @param module the module
-     */
-    private void initModule(int module){
-        ByteBuffer ports[] = new ByteBuffer[SensorBase.kSolenoidChannels];
-        for(int i = 0; i < SensorBase.kSolenoidChannels; i++){
-            ByteBuffer port = SolenoidJNI.getPortWithModule((byte)module, (byte) i);
-            IntBuffer status = IntBuffer.allocate(1);
-            ports[i] = SolenoidJNI.initializeSolenoidPort(port, status);
-            HALUtil.checkStatus(status);
-        }
-        m_map_module_ports.put(module, ports);
-    }
-    
-    /**
-     * Set the value of a solenoid.
-     *
-     * @param module The PCM module the solenoid is on.
-     * @param value The value you want to set on the module.
-     * @param mask The channels you want to be affected.
-     */
-    public synchronized void set(int module, int value, int mask){
+    public void free(){
         
     }
     
@@ -110,8 +69,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the compressor current
      */
     public static double getCompressorCurrent(){
-        float current = CompressorJNI.getCompressorCurrent(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);   
+        IntBuffer status = getLE4IntBuffer();
+        float current = CompressorJNI.getCompressorCurrent(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);   
         return (double)current;
     }
     
@@ -121,8 +81,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @param on the on
      */
     public static void enableCompressor(boolean on){
-        CompressorJNI.setClosedLoopControl(m_pcm_compressor, on, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        CompressorJNI.setClosedLoopControl(m_pcm_compressor, on, status);
+        HALUtil.checkStatus(status);
     }
     
     /**
@@ -131,8 +92,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the compressor enabled
      */
     public static boolean getCompressorEnabled(){
-        boolean on = CompressorJNI.getClosedLoopControl(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean on = CompressorJNI.getClosedLoopControl(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
         return on;
     }
     
@@ -142,8 +104,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the pressure switch
      */
     public static boolean getPressureSwitch(){
-        boolean on = CompressorJNI.getPressureSwitch(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean on = CompressorJNI.getPressureSwitch(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
         return on;
     }
     
@@ -153,8 +116,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the current fault
      */
     public static boolean getCurrentFault(){
-        boolean retval = CompressorJNI.getCompressorCurrentTooHighFault(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retval = CompressorJNI.getCompressorCurrentTooHighFault(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
         return retval;
     }
     
@@ -164,8 +128,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the current sticky fault
      */
     public static boolean getCurrentStickyFault(){
-        boolean retval = CompressorJNI.getCompressorCurrentTooHighStickyFault(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retval = CompressorJNI.getCompressorCurrentTooHighStickyFault(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
         return retval;
     }
     
@@ -175,8 +140,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the short fault
      */
     public static boolean getShortFault(){
-        boolean retval = CompressorJNI.getCompressorShortedFault(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retval = CompressorJNI.getCompressorShortedFault(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
         return retval;
     }
     
@@ -186,8 +152,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the short sticky fault
      */
     public static boolean getShortStickyFault(){
-        boolean retval = CompressorJNI.getCompressorShortedStickyFault(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retval = CompressorJNI.getCompressorShortedStickyFault(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
         return retval;
     }
     
@@ -197,8 +164,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the no connection fault
      */
     public static boolean getNoConnectionFault(){
-        boolean retval = CompressorJNI.getCompressorNotConnectedFault(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retval = CompressorJNI.getCompressorNotConnectedFault(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
         return retval;
     }
     
@@ -208,8 +176,9 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * @return the no connection sticky fault
      */
     public static boolean getNoConnectionStickyFault(){
-        boolean retval = CompressorJNI.getCompressorNotConnectedStickyFault(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retval = CompressorJNI.getCompressorNotConnectedStickyFault(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
         return retval;
     }
     
@@ -217,12 +186,14 @@ public class PCM extends SensorBase implements LiveWindowSendable{
      * Clear compressor sticky faults.
      */
     public static void clearCompressorStickyFaults(){
-        CompressorJNI.clearAllPCMStickyFaults(m_pcm_compressor, m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        CompressorJNI.clearAllPCMStickyFaults(m_pcm_compressor, status);
+        HALUtil.checkStatus(status);
     }
     
     /**
      * {@inheritDoc}
+     * @param subtable 
      */
     public void initTable(ITable subtable) {
         m_table = subtable;
@@ -232,6 +203,7 @@ public class PCM extends SensorBase implements LiveWindowSendable{
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     public ITable getTable() {
         return m_table;
@@ -239,9 +211,10 @@ public class PCM extends SensorBase implements LiveWindowSendable{
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     public String getSmartDashboardType() {
-        return "Pneumatics";
+        return "Compressor";
     }
 
     /**

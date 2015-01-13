@@ -15,20 +15,22 @@
 
 package org.team2583.robolib.control;
 
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
-import edu.wpi.first.wpilibj.communication.UsageReporting;
-
-import org.team2583.robolib.util.DSInfo;
+import org.team2583.robolib.communication.UsageReporting;
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 
 /**
  * The RoboLibJ main Joystick.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Joystick extends JoystickAdapter {
+public class Joystick extends JoystickBase {
+    
+    
     
     /** The m_port. */
     private final int m_port;
+    
+    
 
     /**
      * The Class JoystickAxis.
@@ -58,7 +60,7 @@ public class Joystick extends JoystickAdapter {
          * {@inheritDoc}
          */
         public double get(){
-            double out = DSInfo.getStickAxis(m_port, m_channel) * m_invert;
+            double out = getStickAxis(m_port, m_channel) * m_invert;
             return (Math.abs(out) >= m_deadBand ? out : 0D);
             //return DSInfo.getStickAxis(m_port, m_channel) * m_invert;
         }
@@ -99,7 +101,7 @@ public class Joystick extends JoystickAdapter {
          * {@inheritDoc}
          */
         public boolean get() {
-            return (((0x1 << m_channel) & DSInfo.getStickButtons(m_port)) != 0);
+            return getStickButton(m_port, m_channel);
         }
     }
     
@@ -132,7 +134,7 @@ public class Joystick extends JoystickAdapter {
             new JoystickButton(9),
             new JoystickButton(10),
             new JoystickButton(11),
-            new JoystickButton(12)  
+            new JoystickButton(12)
         };
         
         UsageReporting.report(tResourceType.kResourceType_Joystick, port);

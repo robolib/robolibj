@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015 noriah <vix@noriah.dev>.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -22,94 +22,95 @@ import java.nio.IntBuffer;
 
 import org.team2583.robolib.exception.ResourceAllocationException;
 import org.team2583.robolib.util.MathUtils;
+import org.team2583.robolib.util.log.Loggable;
 import org.team2583.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.hal.DIOJNI;
-import edu.wpi.first.wpilibj.hal.HALUtil;
-import edu.wpi.first.wpilibj.hal.PWMJNI;
+import org.team2583.robolib.hal.DIOJNI;
+import org.team2583.robolib.hal.HALUtil;
+import org.team2583.robolib.hal.PWMJNI;
 
 /**
  * The PWM Interface class.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWM extends Interface {
+public class PWM extends Interface implements Loggable {
 
     /**
      * The PWM Channel enum.
      */
     public static enum Channel{
-        
+
         /**  PWM Channel 0 On-board. */
         Channel0,
-        
+
         /**  PWM Channel 1 On-board. */
         Channel1,
-        
+
         /**  PWM Channel 2 On-board. */
         Channel2,
-        
+
         /**  PWM Channel 3 On-board. */
         Channel3,
-        
+
         /**  PWM Channel 4 On-board. */
         Channel4,
-        
+
         /**  PWM Channel 5 On-board. */
         Channel5,
-        
+
         /**  PWM Channel 6 On-board. */
         Channel6,
-        
+
         /**  PWM Channel 7 On-board. */
         Channel7,
-        
+
         /**  PWM Channel 8 On-board. */
         Channel8,
-        
+
         /**  PWM Channel 9 On-board. */
         Channel9,
-        
+
         /**  PWM Channel 10, Channel 0 on MXP. */
         Channel10(11),
-        
+
         /**  PWM Channel 11, Channel 1 on MXP. */
         Channel11(13),
-        
+
         /**  PWM Channel 12, Channel 2 on MXP. */
         Channel12(15),
-        
+
         /**  PWM Channel 13, Channel 3 on MXP. */
         Channel13(17),
-        
+
         /**  PWM Channel 14, Channel 4 on MXP. */
         Channel14(27),
-        
+
         /**  PWM Channel 15, Channel 5 on MXP. */
         Channel15(29),
-        
+
         /**  PWM Channel 16, Channel 6 on MXP. */
         Channel16(31),
-        
+
         /**  PWM Channel 17, Channel 7 on MXP. */
         Channel17(18),
-        
+
         /**  PWM Channel 18, Channel 8 on MXP. */
         Channel18(22),
-        
+
         /**  PWM Channel 19, Channel 9 on MXP. */
         Channel19(26);
 
         /** The Pin on the MXP port that this channel is on. */
         public final int m_mxpPin;
-        
+
         /**
          * Instantiates a new channel.
          */
         private Channel(){
             m_mxpPin = 0;
         }
-        
+
         /**
          * Instantiates a new channel.
          *
@@ -119,24 +120,24 @@ public class PWM extends Interface {
             m_mxpPin = mxpPin;
         }
     }
-    
+
     /**
      * The PeriodMultiplier enumeration
      */
     public static enum PeriodMultiplier {
-        
+
         /**  Dont skip pulses. */
         k1X(0),
-        
+
         /**  Skip every other pulse. */
         k2X(1),
-        
+
         /**  Skip three of four pulses. */
         k4X(3);
-        
+
         /** The value. */
         public final int value;
-        
+
         /**
          * Instantiates a new period multiplier.
          *
@@ -146,61 +147,61 @@ public class PWM extends Interface {
             value = var;
         }
     }
-    
+
     /** The default PWM Period. */
     protected static final double kDefaultPWMPeriod = 5.05;
-    
+
     /** The default PWM center pulse width in ms. */
     protected static final double kDefaultPWMCenter = 1.5;
-    
+
     /** The default steps down for a PWM? */
     protected static final int kDefaultPWMStepsDown = 1000;
-    
+
     /** The default disable value for a PWM. */
     public static final int kPWMDisabled = 0;
-    
+
     /** Should we be destroying the deadband? Only used by setBounds() */
     private boolean m_destroyDeadband = false;
-    
+
     /** The positive bounds scaling factor */
     private int m_scaleFactorPositive;
-    
+
     /** The high end of the positive bounds. */
     private int m_boundsPositiveMax;
-    
+
     /** The positive low end value used to eliminate deadband. */
     private int m_boundsPositiveMinDeadband;
-    
+
     /** The low end of the positive bounds. */
     private int m_boundsPositiveMin;
-    
+
     /** The center of the bounds between positive and negative. */
     private int m_boundsCenter;
-    
+
     /** The high end of the negative bounds. */
     private int m_boundsNegativeMax;
-    
+
     /** The negative high end value used to eliminate deadband. */
     private int m_boundsNegativeMaxDeadband;
-    
+
     /** The low end of the negative bounds. */
     private int m_boundsNegativeMin;
-    
+
     /** The negative bounds scaling factor. */
     private int m_scaleFactorNegative;
-    
+
     /** The full range bounds scaling factor. */
     private int m_scaleFactorFull;
-    
+
     /** Keep track of already used channels. */
     private static boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
-    
+
     /** The The RoboRIO port identifier. */
     private ByteBuffer m_port;
-    
+
     /** The PWM Channel this PWM is operating on. */
     private Channel m_channel;
-    
+
     /**
      * Instantiates a new pwm.
      *
@@ -208,37 +209,37 @@ public class PWM extends Interface {
      */
     public PWM(Channel channel) {
         super(InterfaceType.PWM, channel.ordinal());
-        
+
         allocateChannel(channel);
-        
+
         m_channel = channel;
 
         IntBuffer status = getLE4IntBuffer();
-        
+
         m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte) getChannelNumber()), status);
         HALUtil.checkStatus(status);
-        
+
         if(!PWMJNI.allocatePWMChannel(m_port,  status)){
             throw new ResourceAllocationException("PWM channel '" + getChannelName() + "' already in use.");
         }
         HALUtil.checkStatus(status);
-        
+
         PWMJNI.setPWM(m_port, (short) 0, status);
         HALUtil.checkStatus(status);
-        
+
         m_destroyDeadband = false;
 
     }
-    
+
     /**
      * Free the PWM channel.
      *
      * Free the resource associated with the PWM channel and set the value to 0.
      */
     public void free() {
-        
+
         freeChannel(getChannel());
-        
+
         IntBuffer status = getLE4IntBuffer();
 
         PWMJNI.setPWM(m_port, (short) 0, status);
@@ -249,40 +250,71 @@ public class PWM extends Interface {
 
         PWMJNI.freeDIO(m_port, status);
         HALUtil.checkStatus(status);
+
+        m_channel = null;
     }
-    
+
     /**
      * Allocate a PWM channel.
-     * 
+     *
      * @param channel the PWM channel to allocate
      */
     private static void allocateChannel(Channel channel){
         if(channel.ordinal() > 9){
             allocateMXPPin(InterfaceType.PWM, channel.m_mxpPin);
         }
-        
-        if(m_usedChannels[channel.ordinal()] == true){
-            throw new ResourceAllocationException("PWM channel '" + channel.name() + "' already in use.");
-        }else{
+
+        if(m_usedChannels[channel.ordinal()] == false){
             m_usedChannels[channel.ordinal()] = true;
+        }else{
+            throw new ResourceAllocationException("PWM channel '" + channel.name() + "' already in use.");
         }
     }
-    
+
     /**
      * Free a PWM channel.
-     * 
+     *
      * @param channel the PWM channel to free
      */
     private static void freeChannel(Channel channel){
         if(channel.ordinal() > 9){
             freeMXPPin(InterfaceType.PWM, channel.m_mxpPin);
         }
-        
-        if(m_usedChannels[channel.ordinal()] != true){
-            Logger.get(PWM.class).error("PWM Channel '" + channel.name() + "' was not allocated. How did you get here?");
+
+        if(m_usedChannels[channel.ordinal()] == true){
+            m_usedChannels[channel.ordinal()] = false;
+        }else{
+            Logger.get(PWM.class, "PWM").error("PWM Channel '" + channel.name() + "' was not allocated. How did you get here?");
         }
     }
-    
+
+    /**
+     * The channel this PWM is operating on.
+     *
+     * @return {@link Channel} representation of the PWM channel
+     */
+    public Channel getChannel(){
+        return m_channel;
+    }
+
+    /**
+     * The channel this PWM is operating on, in integer form.
+     *
+     * @return integer representation of the PWM channel
+     */
+    public int getChannelNumber(){
+        return m_channel.ordinal();
+    }
+
+    /**
+     * The channel this PWM is operating on, in string form.
+     *
+     * @return string representation of the PWM channel
+     */
+    public String getChannelName(){
+        return m_channel.name();
+    }
+
     /**
      * Set the bounds on pulse widths for this PWM.
      *
@@ -299,10 +331,10 @@ public class PWM extends Interface {
         m_boundsCenter = ((int) ((center - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
         m_boundsPositiveMinDeadband = ((int) ((deadMax - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
         m_boundsNegativeMaxDeadband = ((int) ((deadMin - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        
+
         enableDeadbandDestruction(m_destroyDeadband);
     }
-    
+
     /**
      * Enable Deadband Elimination.
      *
@@ -317,39 +349,12 @@ public class PWM extends Interface {
             m_boundsPositiveMin = m_boundsCenter + 1;
             m_boundsNegativeMax = m_boundsCenter - 1;
         }
-        
+
         m_scaleFactorPositive = m_boundsPositiveMax - m_boundsPositiveMin;
         m_scaleFactorNegative = m_boundsNegativeMax - m_boundsNegativeMin;
         m_scaleFactorFull = m_boundsPositiveMax - m_boundsNegativeMin;
     }
-    
-    /**
-     * The channel this PWM is operating on.
-     *
-     * @return {@link Channel} representation of the PWM channel
-     */
-    public Channel getChannel(){
-        return m_channel;
-    }
-    
-    /**
-     * The channel this PWM is operating on, in integer form.
-     *
-     * @return integer representation of the PWM channel
-     */
-    public int getChannelNumber(){
-        return m_channel.ordinal();
-    }
-    
-    /**
-     * The channel this PWM is operating on, in string form.
-     * 
-     * @return string representation of the PWM channel
-     */
-    public String getChannelName(){
-        return m_channel.name();
-    }
-    
+
     /**
      * Set the position of the servo.
      *
@@ -361,7 +366,7 @@ public class PWM extends Interface {
         raw = (int) ((angle * (double)m_scaleFactorFull) + m_boundsNegativeMin);
         setRaw(raw);
     }
-    
+
     /**
      * Gets the position.
      *
@@ -377,7 +382,7 @@ public class PWM extends Interface {
             return (double)(val - m_boundsNegativeMin) / (double)m_scaleFactorFull;
         }
     }
-    
+
     /**
      * Sets the speed.
      *
@@ -385,7 +390,7 @@ public class PWM extends Interface {
      */
     public void setSpeed(double speed){
         speed = MathUtils.clamp(speed, -1.0, 1.0);
-        
+
         int raw;
         if(speed == 0.0){
             raw = m_boundsCenter;
@@ -394,10 +399,10 @@ public class PWM extends Interface {
         }else{
             raw = (int) (speed * ((double)(m_scaleFactorNegative + m_boundsNegativeMax)) + 0.5);
         }
-        
+
         setRaw(raw);
     }
-    
+
     /**
      * Gets the speed.
      *
@@ -417,7 +422,7 @@ public class PWM extends Interface {
             return 0.0;
         }
     }
-    
+
     /**
      * Set the PWM value directly to the hardware.
      *
@@ -444,7 +449,7 @@ public class PWM extends Interface {
         HALUtil.checkStatus(status);
         return value;
     }
-    
+
     /**
      * Set the period multiplier for older/newer devices.
      *
@@ -455,7 +460,7 @@ public class PWM extends Interface {
         PWMJNI.setPWMPeriodScale(m_port, multi.value, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Sets the zero latch.
      */

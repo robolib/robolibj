@@ -2,10 +2,12 @@ RoboLibJ
 ==
 A Better WPILib
 
-The goal of this project is to completely replace WPILib, in the hopes of making the programming experience for new teams easier.
+The point of this project is to completely replace WPILib, with a more complete library.
 
-File Prefixes
---
-* SS: Subsystem (Drive, Compressor, etc.)
-* C: Command
-* CG: Command Group
+Goals:
+ * Verbose
+ * Efficient
+ * Built-in, Extensive logging functions
+  * Save log files for each match - USB drive will be used.
+  * Complete power monitoring
+ * Versatile

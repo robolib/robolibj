@@ -17,6 +17,9 @@ package org.team2583.robolib.control;
 
 import java.util.Arrays;
 
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
+import org.team2583.robolib.util.log.Logger;
+
 import edu.wpi.first.wpilibj.GenericHID;
 
 /**
@@ -25,7 +28,7 @@ import edu.wpi.first.wpilibj.GenericHID;
  * @author noriah Reuland <vix@noriah.dev>
  * @see Joystick
  */
-public abstract class JoystickAdapter extends GenericHID{
+public abstract class JoystickBase extends GenericHID{
     
     /**
      * A class representation of a Joystick Axis.
@@ -62,6 +65,60 @@ public abstract class JoystickAdapter extends GenericHID{
         public boolean get();
     }
     
+
+    public static final int kNumJoysticks = 6;
+    
+    private static short m_joystickAxes[][] = new short[kNumJoysticks][FRCNetworkCommunicationsLibrary.kMaxJoystickAxes];
+    private static short m_joystickPOVs[][] = new short[kNumJoysticks][FRCNetworkCommunicationsLibrary.kMaxJoystickPOVs];
+    private static int m_joystickButtons[] = new int[kNumJoysticks];
+    private static byte m_joystickButtonsCount[] = new byte[kNumJoysticks];
+    
+    protected static final void setJoystickData(int stick, short[] axes, short[] povs, int buttons, byte numBtns){
+        synchronized(m_joystickAxes){
+            m_joystickAxes[stick] = axes;
+        }
+        synchronized(m_joystickPOVs){
+            m_joystickPOVs[stick] = povs;
+        }
+        synchronized(m_joystickButtons){
+            m_joystickButtons[stick] = buttons;
+        }
+        synchronized(m_joystickButtonsCount){
+            m_joystickButtonsCount[stick] = numBtns;
+        }
+    }
+    
+    protected synchronized static double getStickAxis(int stick, int axis){
+        if(m_joystickAxes[stick].length <= axis){
+            Logger.get(JoystickBase.class, "Joystick").error("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            return 0.0;
+        }
+        
+        double value = m_joystickAxes[stick][axis];
+        if(value < 0){
+            return value / 128.0;
+        }else{
+            return value / 127.0;
+        }
+    }
+    
+    protected synchronized static boolean getStickButton(int stick, int button){
+        if(m_joystickButtonsCount[stick] <= button){
+            Logger.get(JoystickBase.class, "Joystick").error("Joystick Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            return false;
+        }
+        
+        return ((0x1 << button) & m_joystickButtons[stick]) != 0;
+    }
+    
+    protected static void checkStick(int stick){
+        if(stick < 0 || stick > kNumJoysticks){
+            throw new RuntimeException("Invalid Joystick '" + stick + "'.");
+        }
+    }
+    
+    
+    
     /** The m_axes. */
     protected Axis m_axes[];
     
@@ -74,7 +131,7 @@ public abstract class JoystickAdapter extends GenericHID{
     /**
      * Provides a middle-man in between the WPILib Library and the RoboLibJ Joysticks.
      */
-    protected JoystickAdapter(){
+    protected JoystickBase(){
         this(6, 12);
     }
     
@@ -83,7 +140,7 @@ public abstract class JoystickAdapter extends GenericHID{
      * @param numAxes the Number of Axes this Joystick will have
      * @param numBtns the Number of Buttons this Joystick will have
      */
-    protected JoystickAdapter(int numAxes, int numBtns){
+    protected JoystickBase(int numAxes, int numBtns){
         m_numAxes = numAxes;
         m_numBtns = numBtns;
     }

@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class NetTableController extends JoystickAdapter {
+public class NetTableController extends JoystickBase {
 
     /** The m_table. */
     private final ITable m_table;

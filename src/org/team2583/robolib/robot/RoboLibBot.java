@@ -21,23 +21,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-import edu.wpi.first.wpilibj.internal.HardwareHLUsageReporting;
-import edu.wpi.first.wpilibj.internal.HardwareTimer;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.HLUsageReporting;
-import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
-import edu.wpi.first.wpilibj.communication.UsageReporting;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tInstances;
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.communication.UsageReporting;
+import org.team2583.robolib.control.DriverStation;
 import org.team2583.robolib.exception.RobotException;
 import org.team2583.robolib.util.log.ILogger;
 import org.team2583.robolib.util.log.Logger;
+
+import edu.wpi.first.wpilibj.HLUsageReporting;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.internal.HardwareHLUsageReporting;
+import edu.wpi.first.wpilibj.internal.HardwareTimer;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * A better version of the WPILib IterativeRobot class.
@@ -244,7 +243,7 @@ public class RoboLibBot {
         FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationReserve();
         Timer.SetImplementation(new HardwareTimer());
         HLUsageReporting.SetImplementation(new HardwareHLUsageReporting());
-        RobotState.SetImplementation(DriverStation.getInstance());
+//        RobotState.SetImplementation(DriverStation.getInstance());
 
         UsageReporting.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Java);
         
@@ -381,7 +380,7 @@ public class RoboLibBot {
      * @return True if the Robot is currently disabled by the field controls.
      */
     public static boolean isDisabled() {
-        return !isEnabled();
+        return DriverStation.isDisabled();
     }
 
     /**
@@ -390,7 +389,7 @@ public class RoboLibBot {
      * @return True if the Robot is currently enabled by the field controls.
      */
     public static boolean isEnabled() {
-        return m_ds.isEnabled();
+        return DriverStation.isEnabled();
     }
 
     /**
@@ -400,7 +399,7 @@ public class RoboLibBot {
      * determined by the field controls.
      */
     public static boolean isAutonomous() {
-        return m_ds.isAutonomous();
+        return DriverStation.isAutonomous();
     }
 
     /**
@@ -410,7 +409,16 @@ public class RoboLibBot {
      * determined by the driver station.
      */
     public static boolean isTest() {
-        return m_ds.isTest();
+        return DriverStation.isTest();
+    }
+    
+    /**
+     * Determine if the robot is currently Emergency stopped.
+     * 
+     * @return True if the robot is currently emergency stopped.
+     */
+    public static boolean isEStopped(){
+        return DriverStation.isEStopped();
     }
 
     /**
@@ -420,7 +428,7 @@ public class RoboLibBot {
      * determined by the field controls.
      */
     public static boolean isOperatorControl() {
-        return isEnabled() && !(isAutonomous() || isTest());
+        return DriverStation.isOperatorControl();
     }
     
     /**
@@ -429,7 +437,7 @@ public class RoboLibBot {
      * @return Is the system active (i.e. PWM motor outputs, etc. enabled)?
      */
     public static boolean isSysActive() {
-        return m_ds.isSysActive();
+        return DriverStation.isSysActive();
     }
     
     /**
@@ -438,7 +446,7 @@ public class RoboLibBot {
      * @return True if the system is browned out
      */
     public static boolean isBrownedOut() {
-        return m_ds.isBrownedOut();
+        return DriverStation.isBrownedOut();
     }
 
     /**
@@ -448,7 +456,7 @@ public class RoboLibBot {
      * function was called?
      */
     public static boolean isNewDataAvailable() {
-        return m_ds.isNewControlData();
+        return DriverStation.isNewControlData();
     }
 
 }
