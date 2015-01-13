@@ -16,7 +16,6 @@
 package org.team2583.robolib.output;
 
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.SpeedController;
 import org.team2583.robolib.input.limitswitch.ILimitSwitchSystem;
 
 // TODO: Auto-generated Javadoc
@@ -82,13 +81,6 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     public boolean atLimit(){
         if(speed >= 0 && !m_switchSystem.canUp()) return true;
         return speed < 0 && !m_switchSystem.canDown();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void disable() {
-        m_motor.disable();
     }
 
     /**
