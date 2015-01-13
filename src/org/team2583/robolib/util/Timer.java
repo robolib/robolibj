@@ -15,43 +15,11 @@
 
 package org.team2583.robolib.util;
 
-
-//import java.io.DataInputStream;
-
 /**
- * The Class ConstantRunner.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
+ *
  */
-public class ConstantRunner {
-    
-    /** The file location. */
-    //private final String FILE_LOCATION;
-    
-    
-    //NOTE!!!!
-    //We need to write in 8192Byte Chunks
-    
-    
-    /**
-     * Instantiates a new constant runner.
-     *
-     * @param file the file
-     */
-    public ConstantRunner(String file){
-        //FILE_LOCATION = file;
-        
-        
-    }
-    
-    
-    /**
-     * Read constants from file.
-     */
-    public static void readConstantsFromFile() {
-        //DataInputStream dataStream;
-        //byte[] buffer = new byte[];
-        //String content = "";
-    }
+public class Timer {
 
 }

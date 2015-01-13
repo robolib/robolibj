@@ -19,7 +19,6 @@ import static org.team2583.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import org.team2583.robolib.robot.RoboLibBot;
 
-import edu.wpi.first.wpilibj.SensorBase;
 import org.team2583.robolib.hal.PDPJNI;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -32,7 +31,22 @@ import edu.wpi.first.wpilibj.tables.ITable;
 public class PDP implements LiveWindowSendable{
     
     public static enum PowerChannel{
-        
+        Channel0,
+        Channel1,
+        Channel2,
+        Channel3,
+        Channel4,
+        Channel5,
+        Channel6,
+        Channel7,
+        Channel8,
+        Channel9,
+        Channel10,
+        Channel11,
+        Channel12,
+        Channel13,
+        Channel14,
+        Channel15;
     }
     
     /** The m_table. */
@@ -70,9 +84,9 @@ public class PDP implements LiveWindowSendable{
      * @param channel the channel
      * @return the channel name
      */
-    public static String getChannelName(int channel){
+    public static String getChannelName(PowerChannel channel){
 //        checkPDPChannel(channel);
-        return m_chanNames[channel];
+        return m_chanNames[channel.ordinal()];
     }
     
     /**
@@ -81,9 +95,9 @@ public class PDP implements LiveWindowSendable{
      * @param channel the channel
      * @param name the name
      */
-    public static void setChannelName(int channel, String name){
+    public static void setChannelName(PowerChannel channel, String name){
 //        checkPDPChannel(channel);
-        m_chanNames[channel] = name;
+        m_chanNames[channel.ordinal()] = name;
     }
 
     
@@ -111,8 +125,12 @@ public class PDP implements LiveWindowSendable{
      * @param channel the channel
      * @return the current
      */
-    public static double getCurrent(int channel){
+    public static double getCurrent(PowerChannel channel){
 //        checkPDPChannel(channel);
+        return getCurrent(channel.ordinal());
+    }
+    
+    public static double getCurrent(int channel){
         return PDPJNI.getPDPChannelCurrent((byte)channel, getLE4IntBuffer());
     }
     

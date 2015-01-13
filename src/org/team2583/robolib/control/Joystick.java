@@ -28,12 +28,27 @@ import org.team2583.robolib.util.log.Logger;
 public class Joystick extends ControllerBase {   
 
     
+    /**
+     * The Enum Stick.
+     */
     public static enum Stick{
+        
+        /** The Stick0. */
         Stick0,
+        
+        /** The Stick1. */
         Stick1,
+        
+        /** The Stick2. */
         Stick2,
+        
+        /** The Stick3. */
         Stick3,
+        
+        /** The Stick4. */
         Stick4,
+        
+        /** The Stick5. */
         Stick5;
     }
     
@@ -111,13 +126,30 @@ public class Joystick extends ControllerBase {
         }
     }
     
+    /** The Constant kNumJoysticks. */
     public static final int kNumJoysticks = 6;
     
+    /** The m_joystick axes. */
     private static short m_joystickAxes[][] = new short[kNumJoysticks][FRCNetworkCommunicationsLibrary.kMaxJoystickAxes];
+    
+    /** The m_joystick po vs. */
     private static short m_joystickPOVs[][] = new short[kNumJoysticks][FRCNetworkCommunicationsLibrary.kMaxJoystickPOVs];
+    
+    /** The m_joystick buttons. */
     private static int m_joystickButtons[] = new int[kNumJoysticks];
+    
+    /** The m_joystick buttons count. */
     private static byte m_joystickButtonsCount[] = new byte[kNumJoysticks];
     
+    /**
+     * Sets the joystick data.
+     *
+     * @param stick the stick
+     * @param axes the axes
+     * @param povs the povs
+     * @param buttons the buttons
+     * @param numBtns the num btns
+     */
     protected static final void setJoystickData(int stick, short[] axes, short[] povs, int buttons, byte numBtns){
         synchronized(m_joystickAxes){
             m_joystickAxes[stick] = axes;
@@ -133,6 +165,13 @@ public class Joystick extends ControllerBase {
         }
     }
     
+    /**
+     * Gets the stick axis.
+     *
+     * @param stick the stick
+     * @param axis the axis
+     * @return the stick axis
+     */
     protected synchronized static double getStickAxis(Stick stick, int axis){
         if(m_joystickAxes[stick.ordinal()].length <= axis){
             Logger.get(ControllerBase.class, "Joystick").error("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
@@ -147,6 +186,13 @@ public class Joystick extends ControllerBase {
         }
     }
     
+    /**
+     * Gets the stick button.
+     *
+     * @param stick the stick
+     * @param button the button
+     * @return the stick button
+     */
     protected synchronized static boolean getStickButton(Stick stick, int button){
         if(m_joystickButtonsCount[stick.ordinal()] <= button){
             Logger.get(ControllerBase.class, "Joystick").error("Joystick Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
@@ -156,12 +202,18 @@ public class Joystick extends ControllerBase {
         return ((0x1 << button) & m_joystickButtons[stick.ordinal()]) != 0;
     }
     
+    /**
+     * Check stick.
+     *
+     * @param stick the stick
+     */
     protected static void checkStick(int stick){
         if(stick < 0 || stick > kNumJoysticks){
             throw new RuntimeException("Invalid Joystick '" + stick + "'.");
         }
     }
     
+    /** The m_port. */
     protected Stick m_port;    
     
     /**
@@ -173,6 +225,13 @@ public class Joystick extends ControllerBase {
         UsageReporting.report(tResourceType.kResourceType_Joystick, port.ordinal());
     }
     
+    /**
+     * Instantiates a new joystick.
+     *
+     * @param port the port
+     * @param numAxes the num axes
+     * @param numBtns the num btns
+     */
     public Joystick(final Stick port, int numAxes, int numBtns){
         super(numAxes, numBtns);
 
