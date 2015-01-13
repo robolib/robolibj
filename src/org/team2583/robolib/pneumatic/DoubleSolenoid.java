@@ -26,15 +26,15 @@ import org.team2583.robolib.util.log.Logger;
  */
 public class DoubleSolenoid extends SolenoidBase {
     
-    private Channel m_forwardChannel;
-    private Channel m_reverseChannel;
+    private SolenoidChannel m_forwardChannel;
+    private SolenoidChannel m_reverseChannel;
     
     private ByteBuffer m_forwardPort;
     private ByteBuffer m_reversePort;
     
 //    public 
     
-    public DoubleSolenoid(Channel forwardChannel, Channel reverseChannel){
+    public DoubleSolenoid(SolenoidChannel forwardChannel, SolenoidChannel reverseChannel){
         m_forwardChannel = forwardChannel;
         m_reverseChannel = reverseChannel;
         
@@ -42,11 +42,11 @@ public class DoubleSolenoid extends SolenoidBase {
         m_reversePort = initChannel(reverseChannel);
     }
     
-    public Channel getForwardChannel(){
+    public SolenoidChannel getForwardChannel(){
         return m_forwardChannel;
     }
     
-    public Channel getReverseChannel(){
+    public SolenoidChannel getReverseChannel(){
         return m_reverseChannel;
     }
 
@@ -88,8 +88,11 @@ public class DoubleSolenoid extends SolenoidBase {
         }else{
             return Value.OFF;
         }
-                
     }
+    
+//    public boolean isForwardSolenoidBlacklisted(){
+//        int 
+//    }
     
     
     
