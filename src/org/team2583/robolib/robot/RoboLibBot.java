@@ -235,7 +235,7 @@ public class RoboLibBot {
      *
      * @param args the arguments
      */
-    public final void main(String args[]) {//throws MIDletStateChangeException {
+    public final void main(String args[]) {
         
         msg("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         msg("Starting " + m_name);

@@ -37,7 +37,7 @@ public final class Compressor {
     private ITable m_table;
     
     /** The m_pcm_compressor. */
-    private static ByteBuffer m_pcm_compressor;
+    private static ByteBuffer m_compressor;
     
     /** The Constant m_instance. */
     private static final Compressor m_instance = new Compressor();
@@ -56,7 +56,7 @@ public final class Compressor {
      */
     private Compressor(){
         initTable(RoboLibBot.getRobotTable().getSubTable("PCM"));
-        m_pcm_compressor = CompressorJNI.initializeCompressor((byte) 0);
+        m_compressor = CompressorJNI.initializeCompressor((byte) 0);
     }
     
     public void free(){
@@ -70,7 +70,7 @@ public final class Compressor {
      */
     public static double getCompressorCurrent(){
         IntBuffer status = getLE4IntBuffer();
-        float current = CompressorJNI.getCompressorCurrent(m_pcm_compressor, status);
+        float current = CompressorJNI.getCompressorCurrent(m_compressor, status);
         HALUtil.checkStatus(status);   
         return (double)current;
     }
@@ -82,7 +82,7 @@ public final class Compressor {
      */
     public static void enableCompressor(boolean on){
         IntBuffer status = getLE4IntBuffer();
-        CompressorJNI.setClosedLoopControl(m_pcm_compressor, on, status);
+        CompressorJNI.setClosedLoopControl(m_compressor, on, status);
         HALUtil.checkStatus(status);
     }
     
@@ -93,7 +93,7 @@ public final class Compressor {
      */
     public static boolean getCompressorEnabled(){
         IntBuffer status = getLE4IntBuffer();
-        boolean on = CompressorJNI.getClosedLoopControl(m_pcm_compressor, status);
+        boolean on = CompressorJNI.getClosedLoopControl(m_compressor, status);
         HALUtil.checkStatus(status);
         return on;
     }
@@ -105,7 +105,7 @@ public final class Compressor {
      */
     public static boolean getPressureSwitch(){
         IntBuffer status = getLE4IntBuffer();
-        boolean on = CompressorJNI.getPressureSwitch(m_pcm_compressor, status);
+        boolean on = CompressorJNI.getPressureSwitch(m_compressor, status);
         HALUtil.checkStatus(status);
         return on;
     }
@@ -117,7 +117,7 @@ public final class Compressor {
      */
     public static boolean getCurrentFault(){
         IntBuffer status = getLE4IntBuffer();
-        boolean retval = CompressorJNI.getCompressorCurrentTooHighFault(m_pcm_compressor, status);
+        boolean retval = CompressorJNI.getCompressorCurrentTooHighFault(m_compressor, status);
         HALUtil.checkStatus(status);
         return retval;
     }
@@ -129,7 +129,7 @@ public final class Compressor {
      */
     public static boolean getCurrentStickyFault(){
         IntBuffer status = getLE4IntBuffer();
-        boolean retval = CompressorJNI.getCompressorCurrentTooHighStickyFault(m_pcm_compressor, status);
+        boolean retval = CompressorJNI.getCompressorCurrentTooHighStickyFault(m_compressor, status);
         HALUtil.checkStatus(status);
         return retval;
     }
@@ -141,7 +141,7 @@ public final class Compressor {
      */
     public static boolean getShortFault(){
         IntBuffer status = getLE4IntBuffer();
-        boolean retval = CompressorJNI.getCompressorShortedFault(m_pcm_compressor, status);
+        boolean retval = CompressorJNI.getCompressorShortedFault(m_compressor, status);
         HALUtil.checkStatus(status);
         return retval;
     }
@@ -153,7 +153,7 @@ public final class Compressor {
      */
     public static boolean getShortStickyFault(){
         IntBuffer status = getLE4IntBuffer();
-        boolean retval = CompressorJNI.getCompressorShortedStickyFault(m_pcm_compressor, status);
+        boolean retval = CompressorJNI.getCompressorShortedStickyFault(m_compressor, status);
         HALUtil.checkStatus(status);
         return retval;
     }
@@ -165,7 +165,7 @@ public final class Compressor {
      */
     public static boolean getNoConnectionFault(){
         IntBuffer status = getLE4IntBuffer();
-        boolean retval = CompressorJNI.getCompressorNotConnectedFault(m_pcm_compressor, status);
+        boolean retval = CompressorJNI.getCompressorNotConnectedFault(m_compressor, status);
         HALUtil.checkStatus(status);
         return retval;
     }
@@ -177,7 +177,7 @@ public final class Compressor {
      */
     public static boolean getNoConnectionStickyFault(){
         IntBuffer status = getLE4IntBuffer();
-        boolean retval = CompressorJNI.getCompressorNotConnectedStickyFault(m_pcm_compressor, status);
+        boolean retval = CompressorJNI.getCompressorNotConnectedStickyFault(m_compressor, status);
         HALUtil.checkStatus(status);
         return retval;
     }
@@ -187,7 +187,7 @@ public final class Compressor {
      */
     public static void clearCompressorStickyFaults(){
         IntBuffer status = getLE4IntBuffer();
-        CompressorJNI.clearAllPCMStickyFaults(m_pcm_compressor, status);
+        CompressorJNI.clearAllPCMStickyFaults(m_compressor, status);
         HALUtil.checkStatus(status);
     }
     

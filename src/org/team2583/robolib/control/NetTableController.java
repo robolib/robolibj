@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class NetTableController extends JoystickBase {
+public class NetTableController extends ControllerBase {
 
     /** The m_table. */
     private final ITable m_table;
@@ -128,7 +128,7 @@ public class NetTableController extends JoystickBase {
      */
     public NetTableController(String name, int numAxes, int numBtns){
         
-        super(numAxes, numBtns);        
+        super(numAxes, numBtns);
         m_axes = new NetTableAxis[numAxes];
         m_btns = new NetTableButton[numBtns];
         

@@ -27,7 +27,7 @@ public class Analog extends Interface {
     /**
      * The Enum Channel.
      */
-    public static enum Channel{
+    public static enum AnalogChannel{
         
         /**  Analog Channel 0. */
         Channel0,
@@ -78,7 +78,7 @@ public class Analog extends Interface {
      * @param channel the channel
      * @param dir the dir
      */
-    protected Analog(Channel channel, Direction dir) {
+    protected Analog(AnalogChannel channel, Direction dir) {
         super(InterfaceType.ANALOG, channel.ordinal());
         
         switch(dir){

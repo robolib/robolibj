@@ -15,23 +15,29 @@
 
 package org.team2583.robolib.control;
 
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
 import org.team2583.robolib.communication.UsageReporting;
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.util.log.Logger;
 
 /**
  * The RoboLibJ main Joystick.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Joystick extends JoystickBase {
-    
-    
-    
-    /** The m_port. */
-    private final int m_port;
-    
-    
+public class Joystick extends ControllerBase {   
 
+    
+    public static enum Stick{
+        Stick0,
+        Stick1,
+        Stick2,
+        Stick3,
+        Stick4,
+        Stick5;
+    }
+    
+    
     /**
      * The Class JoystickAxis.
      */
@@ -94,7 +100,7 @@ public class Joystick extends JoystickBase {
          * @param channel the channel
          */
         public JoystickButton(int channel){
-            m_channel = channel - 1;
+            m_channel = channel;
         }
         
         /**
@@ -105,39 +111,81 @@ public class Joystick extends JoystickBase {
         }
     }
     
+    public static final int kNumJoysticks = 6;
+    
+    private static short m_joystickAxes[][] = new short[kNumJoysticks][FRCNetworkCommunicationsLibrary.kMaxJoystickAxes];
+    private static short m_joystickPOVs[][] = new short[kNumJoysticks][FRCNetworkCommunicationsLibrary.kMaxJoystickPOVs];
+    private static int m_joystickButtons[] = new int[kNumJoysticks];
+    private static byte m_joystickButtonsCount[] = new byte[kNumJoysticks];
+    
+    protected static final void setJoystickData(int stick, short[] axes, short[] povs, int buttons, byte numBtns){
+        synchronized(m_joystickAxes){
+            m_joystickAxes[stick] = axes;
+        }
+        synchronized(m_joystickPOVs){
+            m_joystickPOVs[stick] = povs;
+        }
+        synchronized(m_joystickButtons){
+            m_joystickButtons[stick] = buttons;
+        }
+        synchronized(m_joystickButtonsCount){
+            m_joystickButtonsCount[stick] = numBtns;
+        }
+    }
+    
+    protected synchronized static double getStickAxis(Stick stick, int axis){
+        if(m_joystickAxes[stick.ordinal()].length <= axis){
+            Logger.get(ControllerBase.class, "Joystick").error("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            return 0.0;
+        }
+        
+        double value = m_joystickAxes[stick.ordinal()][axis];
+        if(value < 0){
+            return value / 128.0;
+        }else{
+            return value / 127.0;
+        }
+    }
+    
+    protected synchronized static boolean getStickButton(Stick stick, int button){
+        if(m_joystickButtonsCount[stick.ordinal()] <= button){
+            Logger.get(ControllerBase.class, "Joystick").error("Joystick Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            return false;
+        }
+        
+        return ((0x1 << button) & m_joystickButtons[stick.ordinal()]) != 0;
+    }
+    
+    protected static void checkStick(int stick){
+        if(stick < 0 || stick > kNumJoysticks){
+            throw new RuntimeException("Invalid Joystick '" + stick + "'.");
+        }
+    }
+    
+    protected Stick m_port;    
+    
     /**
      * The RoboLibJ main Joystick.
      * @param port The Joystick Number
      */
-    public Joystick(final int port){
-        super(6, 12);
+    public Joystick(final Stick port){
+        this(port, 6, 12);
+        UsageReporting.report(tResourceType.kResourceType_Joystick, port.ordinal());
+    }
+    
+    public Joystick(final Stick port, int numAxes, int numBtns){
+        super(numAxes, numBtns);
+
         m_port = port;
+        m_axes = new JoystickAxis[numAxes];
+        for(int i = 0; i < numAxes; i++){
+            m_axes[i] = new JoystickAxis(i);
+        }
         
-        m_axes = new JoystickAxis[]{
-            new JoystickAxis(1),
-            new JoystickAxis(2),
-            new JoystickAxis(3),
-            new JoystickAxis(4),
-            new JoystickAxis(5),
-            new JoystickAxis(6)
-        };
-        
-        m_btns = new JoystickButton[]{
-            new JoystickButton(1),
-            new JoystickButton(2),
-            new JoystickButton(3),
-            new JoystickButton(4),
-            new JoystickButton(5),
-            new JoystickButton(6),
-            new JoystickButton(7),
-            new JoystickButton(8),
-            new JoystickButton(9),
-            new JoystickButton(10),
-            new JoystickButton(11),
-            new JoystickButton(12)
-        };
-        
-        UsageReporting.report(tResourceType.kResourceType_Joystick, port);
+        m_btns = new JoystickButton[numBtns];
+        for(int i = 0; i < numBtns; i++){
+            m_btns[i] = new JoystickButton(i);
+        }
     }
 
     /**
@@ -147,7 +195,7 @@ public class Joystick extends JoystickBase {
      */
     public Axis getAxis(int axis) {
         checkAxis(axis);
-        return m_axes[axis - 1];
+        return m_axes[axis];
     }
     
     /**
@@ -157,7 +205,7 @@ public class Joystick extends JoystickBase {
      */
     public Button getButton(int btn) {
         checkButton(btn);
-        return m_btns[btn - 1];
+        return m_btns[btn];
     }
 
 }

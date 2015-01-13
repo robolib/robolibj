@@ -24,52 +24,55 @@ package org.team2583.robolib.control;
 public class XBoxController extends Joystick {
 
     /** Left X Axis ID. */
-    public static final int AXIS_LEFT_X = 1;
+    public static final int AXIS_LEFT_X = 0;
     
     /** Left Y Axis ID. */
-    public static final int AXIS_LEFT_Y = 2;
+    public static final int AXIS_LEFT_Y = 1;
     
     /** Triggers Axis ID. */
-    public static final int AXIS_TRIGGERS = 3;
+    public static final int AXIS_TRIGGERS = 2;
     
     /** Right X Axis ID. */
-    public static final int AXIS_RIGHT_X = 4;
+    public static final int AXIS_RIGHT_X = 3;
     
     /** Right Y Axis ID. */
-    public static final int AXIS_RIGHT_Y = 5;
+    public static final int AXIS_RIGHT_Y = 4;
     
     /** Hat X Axis ID. */
-    public static final int AXIS_HAT_X = 6;
+    public static final int AXIS_HAT_X = 5;
+    
+    /** Hat Y Axis ID. */
+    public static final int AXIS_HAT_Y = 6;
 
     /** A Button ID. */
-    public static final int BTN_A = 1;
+    public static final int BTN_A = 0;
     
     /** B Button ID. */
-    public static final int BTN_B = 2;
+    public static final int BTN_B = 1;
     
     /** X Button ID. */
-    public static final int BTN_X = 3;
+    public static final int BTN_X = 2;
     
     /** Y Button ID. */
-    public static final int BTN_Y = 4;
+    public static final int BTN_Y = 3;
     
     /** Left Shoulder Button ID. */
-    public static final int BTN_LEFT_SHOULDER = 5;
+    public static final int BTN_LEFT_SHOULDER = 4;
     
     /** Right Shoulder Button ID. */
-    public static final int BTN_RIGHT_SHOULDER = 6;
+    public static final int BTN_RIGHT_SHOULDER = 5;
     
     /** Start Button ID. */
-    public static final int BTN_START = 8;
+    public static final int BTN_START = 7;
     
     /** Back Button ID. */
-    public static final int BTN_SELECT = 7;
+    public static final int BTN_SELECT = 6;
     
     /** Left Stick Button ID. */
-    public static final int BTN_LEFT_STICK = 9;
+    public static final int BTN_LEFT_STICK = 8;
     
     /** Right Stick Button ID. */
-    public static final int BTN_RIGHT_STICK = 10;
+    public static final int BTN_RIGHT_STICK = 9;
     
     /** Left X Axis Button ID. */
     public static final int BTN_AXIS_LEFT_X = AXIS_LEFT_X + 12;
@@ -94,8 +97,8 @@ public class XBoxController extends Joystick {
      *
      * @param port The Joystick Number this XBoxController is on.
      */
-    public XBoxController(final int port){
-        super(port);
+    public XBoxController(final Stick port){
+        super(port, 7, 10);
         //invertAxis(AXIS_LEFT_Y);
         //invertAxis(AXIS_RIGHT_Y);
         //invertAxis(AXIS_TRIGGERS);
@@ -142,6 +145,13 @@ public class XBoxController extends Joystick {
      * @return the d-pad X axis value
      */
     public double getHatX(){return getRawAxis(AXIS_HAT_X);}
+    
+    /**
+     * Get the D-Pad/Hat Y Axis.
+     * 
+     * @return the d-pad Y axis value
+     */
+    public double getHatY(){return getRawAxis(AXIS_HAT_Y);}
     
     /**
      * Get the A Button.

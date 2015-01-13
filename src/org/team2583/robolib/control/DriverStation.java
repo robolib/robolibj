@@ -73,7 +73,7 @@ public class DriverStation implements Runnable {
                     short axes[] = FRCNetworkCommunicationsLibrary.HALGetJoystickAxes(stick);
                     short povs[] = FRCNetworkCommunicationsLibrary.HALGetJoystickPOVs(stick);
                     int btns = FRCNetworkCommunicationsLibrary.HALGetJoystickButtons(stick, countBuffer);
-                    JoystickBase.setJoystickData(stick, axes, povs, btns, countBuffer.get());                    
+                    Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());                    
                 }
             }
             
@@ -197,6 +197,7 @@ public class DriverStation implements Runnable {
      * @return True if we have a driver station
      */
     public static boolean isDSAttached(){
+        //2 ^ 5
         return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 32) != 0;
     }
 

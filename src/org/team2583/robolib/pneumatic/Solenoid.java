@@ -19,24 +19,26 @@ import java.nio.ByteBuffer;
 
 import org.team2583.robolib.util.log.Logger;
 
+import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
+import edu.wpi.first.wpilibj.tables.ITable;
+
 /**
  * The Class Solenoid.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Solenoid extends SolenoidBase {
-    
+public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     
     private ByteBuffer m_port;
-    private Channel m_channel;
+    private SolenoidChannel m_channel;
     
-    public Solenoid(Channel channel){
+    public Solenoid(SolenoidChannel channel){
         m_channel = channel;
         m_port = initChannel(channel);
         
     }
     
-    public Channel getChannel(){
+    public SolenoidChannel getChannel(){
         return m_channel;
     }
     
@@ -65,6 +67,54 @@ public class Solenoid extends SolenoidBase {
      */
     public Value get(){
         return get(m_port) ? Value.ON : Value.OFF;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initTable(ITable subtable) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getSmartDashboardType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateTable() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void startLiveWindowMode() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void stopLiveWindowMode() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

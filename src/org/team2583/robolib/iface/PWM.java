@@ -39,7 +39,7 @@ public class PWM extends Interface implements Loggable {
     /**
      * The PWM Channel enum.
      */
-    public static enum Channel{
+    public static enum PWMChannel{
 
         /**  PWM Channel 0 On-board. */
         Channel0,
@@ -107,7 +107,7 @@ public class PWM extends Interface implements Loggable {
         /**
          * Instantiates a new channel.
          */
-        private Channel(){
+        private PWMChannel(){
             m_mxpPin = 0;
         }
 
@@ -116,7 +116,7 @@ public class PWM extends Interface implements Loggable {
          *
          * @param mxpPin the mxp pin
          */
-        private Channel(int mxpPin){
+        private PWMChannel(int mxpPin){
             m_mxpPin = mxpPin;
         }
     }
@@ -200,14 +200,14 @@ public class PWM extends Interface implements Loggable {
     private ByteBuffer m_port;
 
     /** The PWM Channel this PWM is operating on. */
-    private Channel m_channel;
+    private PWMChannel m_channel;
 
     /**
      * Instantiates a new pwm.
      *
      * @param channel the channel for this pwm
      */
-    public PWM(Channel channel) {
+    public PWM(PWMChannel channel) {
         super(InterfaceType.PWM, channel.ordinal());
 
         allocateChannel(channel);
@@ -259,7 +259,7 @@ public class PWM extends Interface implements Loggable {
      *
      * @param channel the PWM channel to allocate
      */
-    private static void allocateChannel(Channel channel){
+    private static void allocateChannel(PWMChannel channel){
         if(channel.ordinal() > 9){
             allocateMXPPin(InterfaceType.PWM, channel.m_mxpPin);
         }
@@ -276,7 +276,7 @@ public class PWM extends Interface implements Loggable {
      *
      * @param channel the PWM channel to free
      */
-    private static void freeChannel(Channel channel){
+    private static void freeChannel(PWMChannel channel){
         if(channel.ordinal() > 9){
             freeMXPPin(InterfaceType.PWM, channel.m_mxpPin);
         }
@@ -291,9 +291,9 @@ public class PWM extends Interface implements Loggable {
     /**
      * The channel this PWM is operating on.
      *
-     * @return {@link Channel} representation of the PWM channel
+     * @return {@link PWMChannel} representation of the PWM channel
      */
-    public Channel getChannel(){
+    public PWMChannel getChannel(){
         return m_channel;
     }
 

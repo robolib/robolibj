@@ -37,7 +37,7 @@ public abstract class SolenoidBase implements Loggable {
     /**
      * The Enum Channel.
      */
-    public static enum Channel{
+    public static enum SolenoidChannel{
         
         /**   Solenoid channel 0 on first module. */
         Channel0,
@@ -107,7 +107,7 @@ public abstract class SolenoidBase implements Loggable {
     }
 
     /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[Channel.values().length];
+    private static boolean m_usedChannels[] = new boolean[SolenoidChannel.values().length];
     
     /** The Constant kSolenoidOff. */
     protected static final byte kSolenoidOff = (byte)0x00;
@@ -122,7 +122,7 @@ public abstract class SolenoidBase implements Loggable {
      * @param channel the channel
      * @return the byte buffer
      */
-    protected synchronized static ByteBuffer initChannel(Channel channel){
+    protected synchronized static ByteBuffer initChannel(SolenoidChannel channel){
         allocateChannel(channel);
         IntBuffer status = getLE4IntBuffer();
         ByteBuffer port = SolenoidJNI.getPortWithModule((byte) (channel.ordinal() / 8), (byte) channel.ordinal());
@@ -136,7 +136,7 @@ public abstract class SolenoidBase implements Loggable {
      *
      * @param channel the channel
      */
-    protected synchronized static void freeChannel(Channel channel){
+    protected synchronized static void freeChannel(SolenoidChannel channel){
         unallocateChannel(channel);
     }
     
@@ -145,7 +145,7 @@ public abstract class SolenoidBase implements Loggable {
      *
      * @param channel the Solenoid channel to allocate
      */
-    private synchronized static void allocateChannel(Channel channel){
+    private synchronized static void allocateChannel(SolenoidChannel channel){
 
         if(m_usedChannels[channel.ordinal()] == false){
             m_usedChannels[channel.ordinal()] = true;
@@ -159,7 +159,7 @@ public abstract class SolenoidBase implements Loggable {
      *
      * @param channel the Solenoid channel to free
      */
-    private synchronized static void unallocateChannel(Channel channel){
+    private synchronized static void unallocateChannel(SolenoidChannel channel){
 
         if(m_usedChannels[channel.ordinal()] == true){
             m_usedChannels[channel.ordinal()] = false;
@@ -204,5 +204,10 @@ public abstract class SolenoidBase implements Loggable {
      * @return
      */
     public abstract Value get();
+    
+//    public byte getPCMSolenoidBlacklist(){
+//        IntBuffer status = getLE4IntBuffer();
+//        byte retVal = SolenoidJNI.getPCMSolenoidBlackList(pcm_pointer, status)
+//    }
     
 }

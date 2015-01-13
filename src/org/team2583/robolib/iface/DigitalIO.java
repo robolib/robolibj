@@ -36,7 +36,7 @@ public class DigitalIO extends Interface {
     /**
      * The Enum Channel.
      */
-    public static enum Channel{
+    public static enum DigitalChannel{
 
         /**  DIO Channel 0 On-board. */
         Channel0,
@@ -122,7 +122,7 @@ public class DigitalIO extends Interface {
         /**
          * Instantiates a new channel.
          */
-        private Channel(){
+        private DigitalChannel(){
             m_mxpPin = 0;
         }
 
@@ -131,7 +131,7 @@ public class DigitalIO extends Interface {
          *
          * @param mxpPin the mxp pin
          */
-        private Channel(int mxpPin){
+        private DigitalChannel(int mxpPin){
             m_mxpPin = mxpPin;
         }
     }
@@ -156,14 +156,14 @@ public class DigitalIO extends Interface {
     private ByteBuffer m_port;
 
     /** The DigitalIO Channel this DigitalIO is operating on. */
-    private Channel m_channel;
+    private DigitalChannel m_channel;
 
     /**
      * Instantiates a new DigitalIO.
      *
      * @param channel the channel for this DigitalIO
      */
-    protected DigitalIO(Channel channel) {
+    protected DigitalIO(DigitalChannel channel) {
         super(InterfaceType.DIGITALIO, channel.ordinal());
 
         allocateChannel(channel);
@@ -192,7 +192,7 @@ public class DigitalIO extends Interface {
      *
      * @param channel the DigitalIO channel to allocate
      */
-    private static void allocateChannel(Channel channel){
+    private static void allocateChannel(DigitalChannel channel){
         if(channel.ordinal() > 9){
             allocateMXPPin(InterfaceType.DIGITALIO, channel.m_mxpPin);
         }
@@ -209,7 +209,7 @@ public class DigitalIO extends Interface {
      *
      * @param channel the DigitalIO channel to free
      */
-    private static void freeChannel(Channel channel){
+    private static void freeChannel(DigitalChannel channel){
         if(channel.ordinal() > 9){
             freeMXPPin(InterfaceType.DIGITALIO, channel.m_mxpPin);
         }
@@ -224,9 +224,9 @@ public class DigitalIO extends Interface {
     /**
      * The channel this DigitalIO is operating on.
      *
-     * @return {@link Channel} representation of the DigitalIO channel
+     * @return {@link DigitalChannel} representation of the DigitalIO channel
      */
-    public Channel getChannel(){
+    public DigitalChannel getChannel(){
         return m_channel;
     }
 
