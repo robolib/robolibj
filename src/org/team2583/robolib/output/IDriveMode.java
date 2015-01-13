@@ -21,5 +21,7 @@ package org.team2583.robolib.output;
  *
  */
 public interface IDriveMode {
+    
+    void drive();
 
 }
