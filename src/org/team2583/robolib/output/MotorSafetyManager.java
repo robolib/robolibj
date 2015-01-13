@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.safety;
+package org.team2583.robolib.output;
 
 import java.util.ArrayList;
 import java.util.List;

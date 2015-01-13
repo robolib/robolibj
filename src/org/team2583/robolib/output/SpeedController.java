@@ -54,10 +54,4 @@ public interface SpeedController extends PIDOutput {
      * @param speed The speed to set.  Value should be between -1.0 and 1.0.
      */
     void set(double speed);
-
-    /**
-     * Disable the speed controller.
-     */
-    void disable();
-
 }

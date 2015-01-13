@@ -13,12 +13,11 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.safety;
+package org.team2583.robolib.output;
 
 import org.team2583.robolib.robot.RobotState;
+import org.team2583.robolib.util.RoboRIO;
 import org.team2583.robolib.util.log.Logger;
-
-import edu.wpi.first.wpilibj.Timer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,7 +46,7 @@ public class MotorSafetyHelper {
      */
     public MotorSafetyHelper(MotorSafety object){
         m_safetyObject = object;
-        m_stopTime = Timer.getFPGATimestamp();
+        m_stopTime = RoboRIO.getFPGATimestamp();
         m_expiration = MotorSafety.SAFETY_TIMEOUT_DEFAULT;
         m_enabled = false;
     }
@@ -56,7 +55,7 @@ public class MotorSafetyHelper {
      * Feed.
      */
     public void feed(){
-        m_stopTime = Timer.getFPGATimestamp() + m_expiration;
+        m_stopTime = RoboRIO.getFPGATimestamp() + m_expiration;
     }
     
     /**
@@ -101,7 +100,7 @@ public class MotorSafetyHelper {
      * @return true, if is alive
      */
     public boolean isAlive(){
-        return !m_enabled || m_stopTime > Timer.getFPGATimestamp();
+        return !m_enabled || m_stopTime > RoboRIO.getFPGATimestamp();
     }
     
     /**
@@ -110,7 +109,7 @@ public class MotorSafetyHelper {
     public void check(){
         if(!m_enabled || RobotState.isDisabled() || RobotState.isTest())
             return;
-        if(m_stopTime < Timer.getFPGATimestamp()){
+        if(m_stopTime < RoboRIO.getFPGATimestamp()){
             Logger.get(MotorSafetyManager.class).warn(m_safetyObject.getDescription() + "... Output not updated often enough.");
             
             m_safetyObject.stopMotor();

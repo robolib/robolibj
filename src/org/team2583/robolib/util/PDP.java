@@ -18,8 +18,9 @@ package org.team2583.robolib.util;
 import static org.team2583.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import org.team2583.robolib.robot.RoboLibBot;
-
+import org.team2583.robolib.exception.ResourceAllocationException;
 import org.team2583.robolib.hal.PDPJNI;
+
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
@@ -64,6 +65,9 @@ public class PDP implements LiveWindowSendable{
         return m_instance;
     }
     
+    /** Keep track of already used channels. */
+    private static boolean m_usedChannels[] = new boolean[16];
+    
     /**
      * Instantiates a new pdp.
      */
@@ -95,11 +99,15 @@ public class PDP implements LiveWindowSendable{
      * @param channel the channel
      * @param name the name
      */
-    public static void setChannelName(PowerChannel channel, String name){
-//        checkPDPChannel(channel);
+    public static void claimChannel(PowerChannel channel, String name){
+
+        if(m_usedChannels[channel.ordinal()] == false){
+            m_usedChannels[channel.ordinal()] = true;
+        }else{
+            throw new ResourceAllocationException("PDP channel '" + channel.name() + "' already claimed by '" + m_chanNames[channel.ordinal()] + "'.");
+        }
         m_chanNames[channel.ordinal()] = name;
     }
-
     
     /**
      * Gets the voltage.
