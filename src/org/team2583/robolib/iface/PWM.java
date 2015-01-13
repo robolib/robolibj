@@ -24,17 +24,20 @@ import org.team2583.robolib.exception.ResourceAllocationException;
 import org.team2583.robolib.util.MathUtils;
 import org.team2583.robolib.util.log.Loggable;
 import org.team2583.robolib.util.log.Logger;
-
 import org.team2583.robolib.hal.DIOJNI;
 import org.team2583.robolib.hal.HALUtil;
 import org.team2583.robolib.hal.PWMJNI;
+
+import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
+import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.tables.ITableListener;
 
 /**
  * The PWM Interface class.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWM extends Interface implements Loggable {
+public class PWM extends Interface implements LiveWindowSendable, Loggable {
 
     /**
      * The PWM Channel enum.
@@ -192,6 +195,8 @@ public class PWM extends Interface implements Loggable {
 
     /** The full range bounds scaling factor. */
     private int m_scaleFactorFull;
+    
+    protected final String m_description;
 
     /** Keep track of already used channels. */
     private static boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
@@ -201,14 +206,20 @@ public class PWM extends Interface implements Loggable {
 
     /** The PWM Channel this PWM is operating on. */
     private PWMChannel m_channel;
+    
+    public PWM(PWMChannel channel){
+        this(channel, "PWM Output Ch" + channel.ordinal());
+    }
 
     /**
      * Instantiates a new pwm.
      *
      * @param channel the channel for this pwm
+     * @param desc 
      */
-    public PWM(PWMChannel channel) {
+    public PWM(PWMChannel channel, String desc) {
         super(InterfaceType.PWM, channel.ordinal());
+        m_description = desc;
 
         allocateChannel(channel);
 
@@ -237,9 +248,7 @@ public class PWM extends Interface implements Loggable {
      * Free the resource associated with the PWM channel and set the value to 0.
      */
     public void free() {
-
         freeChannel(getChannel());
-
         IntBuffer status = getLE4IntBuffer();
 
         PWMJNI.setPWM(m_port, (short) 0, status);
@@ -449,6 +458,15 @@ public class PWM extends Interface implements Loggable {
         HALUtil.checkStatus(status);
         return value;
     }
+    
+    /**
+     * Get the center PWM value.
+     * 
+     * @return the center pwm value
+     */
+    public int getCenterPWM(){
+        return m_boundsCenter;
+    }
 
     /**
      * Set the period multiplier for older/newer devices.
@@ -468,5 +486,60 @@ public class PWM extends Interface implements Loggable {
         IntBuffer status = getLE4IntBuffer();
         PWMJNI.latchPWMZero(m_port, status);
         HALUtil.checkStatus(status);
+    }
+
+    protected ITable m_table;
+    protected ITableListener m_table_listener;
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initTable(ITable subtable) {
+        m_table = subtable;
+        updateTable();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        return m_table;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getSmartDashboardType() {
+        return m_description;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateTable() {
+        if(m_table != null){
+            m_table.putNumber("Value",  getSpeed());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void startLiveWindowMode() {
+        setSpeed(0);
+        m_table_listener = new ITableListener(){
+            public void valueChanged(ITable itable, String key, Object value, boolean bln){
+                setSpeed(((Double) value).doubleValue());
+            }
+        };
+        m_table.addTableListener("Value", m_table_listener, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void stopLiveWindowMode() {
+        setSpeed(0);
+        m_table.removeTableListener(m_table_listener);
     }
 }

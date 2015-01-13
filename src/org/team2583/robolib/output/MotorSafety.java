@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.safety;
+package org.team2583.robolib.output;
 
 // TODO: Auto-generated Javadoc
 /**
