@@ -19,16 +19,18 @@ import org.team2583.robolib.iface.InterfaceType;
 
 import edu.wpi.first.wpilibj.PIDOutput;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ * The Interface SpeedController.
  *
+ * @author noriah Reuland <vix@noriah.dev>
  */
 public interface SpeedController extends PIDOutput {
     
     /**
-     * 
-     * @return
+     * Gets the interface type.
+     *
+     * @return the interface type
      */
     InterfaceType getInterfaceType();
     /**
@@ -54,7 +56,7 @@ public interface SpeedController extends PIDOutput {
     void set(double speed);
 
     /**
-     * Disable the speed controller
+     * Disable the speed controller.
      */
     void disable();
 

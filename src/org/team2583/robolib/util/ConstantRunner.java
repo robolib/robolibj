@@ -16,7 +16,7 @@
 package org.team2583.robolib.util;
 
 
-import java.io.DataInputStream;
+//import java.io.DataInputStream;
 
 /**
  * The Class ConstantRunner.
@@ -26,7 +26,7 @@ import java.io.DataInputStream;
 public class ConstantRunner {
     
     /** The file location. */
-    private final String FILE_LOCATION;
+    //private final String FILE_LOCATION;
     
     
     //NOTE!!!!
@@ -39,7 +39,7 @@ public class ConstantRunner {
      * @param file the file
      */
     public ConstantRunner(String file){
-        FILE_LOCATION = file;
+        //FILE_LOCATION = file;
         
         
     }
@@ -49,9 +49,9 @@ public class ConstantRunner {
      * Read constants from file.
      */
     public static void readConstantsFromFile() {
-        DataInputStream dataStream;
+        //DataInputStream dataStream;
         //byte[] buffer = new byte[];
-        String content = "";
+        //String content = "";
     }
 
 }

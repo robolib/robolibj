@@ -13,27 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.output;
+package org.team2583.robolib.util;
 
-import org.team2583.robolib.iface.InterfaceType;
-
-// TODO: Auto-generated Javadoc
 /**
- * The Class MotorController.
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
+ *
  */
-public class MotorController {
-    
-    /**
-     * Instantiates a new motor controller.
-     *
-     * @param ctype the ctype
-     * @param itype the itype
-     * @param address the address
-     */
-    public MotorController(ControllerType ctype, InterfaceType itype, int address){
-        
-    }
+public class Timer {
 
 }

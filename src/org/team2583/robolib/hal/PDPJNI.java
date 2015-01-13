@@ -1,6 +1,5 @@
 package org.team2583.robolib.hal;
 
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 public class PDPJNI extends JNIWrapper {

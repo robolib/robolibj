@@ -13,54 +13,41 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.math;
+package org.team2583.robolib.safety;
 
+import java.util.ArrayList;
+import java.util.List;
+
+// TODO: Auto-generated Javadoc
 /**
- * The Interface IPIDController.
+ * The Class MotorSafetyManager.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface IPIDController {
+public final class MotorSafetyManager {
+    
+    /** The m_safety objects. */
+    private static List<MotorSafetyHelper> m_safetyObjects = new ArrayList<MotorSafetyHelper>();
     
     /**
-     * Sets the p.
+     * Adds the motor.
      *
-     * @param p the new p
+     * @param object the object
+     * @return the motor safety helper
      */
-    public void setP(double p);
+    public static MotorSafetyHelper addMotor(MotorSafety object){
+        MotorSafetyHelper msh = new MotorSafetyHelper(object);
+        m_safetyObjects.add(msh);
+        return msh;
+    }
     
     /**
-     * Sets the i.
-     *
-     * @param i the new i
+     * Check.
      */
-    public void setI(double i);
-    
-    /**
-     * Sets the d.
-     *
-     * @param d the new d
-     */
-    public void setD(double d);
-    
-    /**
-     * Sets the target.
-     *
-     * @param t the new target
-     */
-    public void setTarget(double t);
-    
-    /**
-     * Gets the error.
-     *
-     * @return the error
-     */
-    public double getError();
-    
-    /**
-     * Gets the out.
-     *
-     * @return the out
-     */
-    public double getOut();
+    public static void check(){
+        for(MotorSafetyHelper msh : m_safetyObjects){
+            msh.check();
+        }
+    }
+
 }

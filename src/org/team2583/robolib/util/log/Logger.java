@@ -15,14 +15,15 @@
 
 package org.team2583.robolib.util.log;
 
-import org.team2583.robolib.robot.ModeSwitcher;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.team2583.robolib.robot.ModeSwitcher;
+import org.team2583.robolib.util.RoboRIO;
 
 /**
  * A Logging class for the robot.
@@ -163,7 +164,7 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendMsg(LogLevel l, String s){
-        String sout = " " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_OUT.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
@@ -176,10 +177,25 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendErrMsg(LogLevel l, String s){
-        String sout = " " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_ERR.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void log(LogLevel lvl, String s){
+        if(lvl.ordinal() < LogLevel.ERROR.ordinal()){
+            sendMsg(lvl, s);
+        }else if(lvl.equals(LogLevel.ERROR)){
+            error(s, null);
+        }else if(lvl.equals(LogLevel.SEVERE)){
+            severe(s);
+        }else{
+            fatal(s);
+        }
     }
 
     /**
@@ -238,7 +254,7 @@ public final class Logger extends ILogger {
             }
         }
     }
-        
+
     /**
      * {@inheritDoc}
      */

@@ -45,6 +45,86 @@ public abstract class ILogger {
     public abstract void registerOutput(LogOutput out);
 
     /**
+     * Log an {@code Object} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     * @param obj the {@code Object} to log
+     */
+    public final void log(LogLevel lvl, Object obj){
+        log(lvl, String.valueOf(obj));
+    }
+
+    /**
+     * Log a {@code boolean} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     * @param b the {@code boolean} to log
+     */
+    public final void log(LogLevel lvl, boolean b){
+        log(lvl, String.valueOf(b));
+    }
+
+    /**
+     * Log an {@code char} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     * @param c the {@code char} to log
+     */
+    public final void log(LogLevel lvl, char c){
+        log(lvl, String.valueOf(c));
+    }
+
+    /**
+     * Log an {@code char} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     *
+     * @param c the c
+     */
+    public final void log(LogLevel lvl, char[] c){
+        log(lvl, String.valueOf(c));
+    }
+
+    /**
+     * Log an {@code double} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     * @param d the {@code double} to log
+     */
+    public final void log(LogLevel lvl, double d){
+        log(lvl, String.valueOf(d));
+    }
+
+    /**
+     * Log an {@code float} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     * @param f the {@code float} to log
+     */
+    public final void log(LogLevel lvl, float f){
+        log(lvl, String.valueOf(f));
+    }
+
+    /**
+     * Log an {@code int} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     * @param i the {@code int} to log
+     */
+    public final void log(LogLevel lvl, int i){
+        log(lvl, String.valueOf(i));
+    }
+
+    /**
+     * Log an {@code long} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     * @param l the {@code long} to log
+     */
+    public final void log(LogLevel lvl, long l){
+        log(lvl, String.valueOf(l));
+    }
+
+    /**
+     * Log an {@code String} to the logger, with log status.
+     * @param lvl the {@code LogLevel} to send with this message
+     * @param s the {@code String} to log
+     */
+    public abstract void log(LogLevel lvl, String s);
+    
+    /**
      * Log an {@code Object} to the logger, with info status.
      * @param obj the {@code Object} to log
      */

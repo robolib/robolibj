@@ -22,6 +22,7 @@ import java.nio.IntBuffer;
 
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
 import org.team2583.robolib.hal.HALUtil;
+import org.team2583.robolib.safety.MotorSafetyManager;
 
 /**
  * 
@@ -82,7 +83,7 @@ public class DriverStation implements Runnable {
             }
             
             if(++safetyCounter >= 4){
-                //do moter check here
+                MotorSafetyManager.check();
                 safetyCounter = 0;
             }
         }   

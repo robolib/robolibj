@@ -13,13 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.rio;
+package org.team2583.robolib.util;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import static org.team2583.robolib.util.CommonFunctions.getLE4IntBuffer;
+
 import java.nio.IntBuffer;
 
-//import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 import org.team2583.robolib.hal.HALUtil;
 import org.team2583.robolib.hal.PowerJNI;
 
@@ -28,21 +27,37 @@ import org.team2583.robolib.hal.PowerJNI;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class RoboRIO {
-    
-    /** The m_status. */
-    private static IntBuffer m_status;
-    
-    static {
-        ByteBuffer b = ByteBuffer.allocateDirect(4);
-        b.order(ByteOrder.LITTLE_ENDIAN);
-        m_status = b.asIntBuffer();
-    }
+public final class RoboRIO {
     
     /**
      * Instantiates a new robo rio.
      */
     private RoboRIO(){}
+    
+    public static int getFPGAVersion(){
+        IntBuffer status = getLE4IntBuffer();
+        int value = HALUtil.getFPGAVersion(status);
+        HALUtil.checkStatus(status);
+        return value;
+    }
+    
+    public static long getFPGARevision(){
+        IntBuffer status = getLE4IntBuffer();
+        int value = HALUtil.getFPGARevision(status);
+        HALUtil.checkStatus(status);
+        return (long) value;
+    }
+    
+    public static long getFPGATime(){
+        IntBuffer status = getLE4IntBuffer();
+        long value = HALUtil.getFPGATime(status);
+        HALUtil.checkStatus(status);
+        return value;
+    }
+    
+    public static double getFPGATimestamp(){
+        return getFPGATime() / 1000000.0;
+    }
 
     /**
      * Return the status of the user button on the RoboRIO.
@@ -50,8 +65,9 @@ public class RoboRIO {
      * @return The User Button status
      */
     public static boolean getUserButton(){
-        boolean value = HALUtil.getFPGAButton(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean value = HALUtil.getFPGAButton(status);
+        HALUtil.checkStatus(status);
         return value;
     }
     
@@ -61,8 +77,9 @@ public class RoboRIO {
      * @return The Vin Voltage
      */
     public static double getVoltage(){
-        double retVal = PowerJNI.getVinVoltage(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        double retVal = PowerJNI.getVinVoltage(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -72,8 +89,9 @@ public class RoboRIO {
      * @return The Vin Current
      */
     public static double getCurrent(){
-        double retVal = PowerJNI.getVinCurrent(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        double retVal = PowerJNI.getVinCurrent(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -83,8 +101,9 @@ public class RoboRIO {
      * @return The 3.3 rail voltage
      */
     public static double getCommsVoltage(){
-        double retVal = PowerJNI.getUserCurrent3V3(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        double retVal = PowerJNI.getUserCurrent3V3(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -94,8 +113,9 @@ public class RoboRIO {
      * @return The 3.3 rail current
      */
     public static double getCommsCurrent(){
-        double retVal = PowerJNI.getUserCurrent3V3(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        double retVal = PowerJNI.getUserCurrent3V3(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -105,8 +125,9 @@ public class RoboRIO {
      * @return the comms power enabled
      */
     public static boolean getCommsPowerEnabled(){
-        boolean retVal = PowerJNI.getUserActive3V3(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retVal = PowerJNI.getUserActive3V3(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -116,8 +137,9 @@ public class RoboRIO {
      * @return the comms fault count
      */
     public static int getCommsFaultCount(){
-        int retVal = PowerJNI.getUserCurrentFaults3V3(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        int retVal = PowerJNI.getUserCurrentFaults3V3(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -127,8 +149,9 @@ public class RoboRIO {
      * @return the IO voltage
      */
     public static double getIOVoltage(){
-        double retVal = PowerJNI.getUserVoltage5V(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        double retVal = PowerJNI.getUserVoltage5V(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -138,8 +161,9 @@ public class RoboRIO {
      * @return the IO current
      */
     public static double getIOCurrent(){
-        double retVal = PowerJNI.getUserCurrent5V(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        double retVal = PowerJNI.getUserCurrent5V(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -149,8 +173,9 @@ public class RoboRIO {
      * @return the IO power enabled
      */
     public static boolean getIOPowerEnabled(){
-        boolean retVal = PowerJNI.getUserActive5V(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retVal = PowerJNI.getUserActive5V(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -160,8 +185,9 @@ public class RoboRIO {
      * @return the IO fault count
      */
     public static int getIOFaultCount(){
-        int retVal = PowerJNI.getUserCurrentFaults5V(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        int retVal = PowerJNI.getUserCurrentFaults5V(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -171,8 +197,9 @@ public class RoboRIO {
      * @return the servo voltage
      */
     public static double getServoVoltage(){
-        double retVal = PowerJNI.getUserVoltage6V(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        double retVal = PowerJNI.getUserVoltage6V(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -182,8 +209,9 @@ public class RoboRIO {
      * @return the servo current
      */
     public static double getServoCurrent(){
-        double retVal = PowerJNI.getUserCurrent6V(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        double retVal = PowerJNI.getUserCurrent6V(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -193,8 +221,9 @@ public class RoboRIO {
      * @return the servo power enabled
      */
     public static boolean getServoPowerEnabled(){
-        boolean retVal = PowerJNI.getUserActive6V(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        boolean retVal = PowerJNI.getUserActive6V(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     
@@ -204,8 +233,9 @@ public class RoboRIO {
      * @return the servo fault count
      */
     public static int getServoFaultCount(){
-        int retVal = PowerJNI.getUserCurrentFaults6V(m_status);
-        HALUtil.checkStatus(m_status);
+        IntBuffer status = getLE4IntBuffer();
+        int retVal = PowerJNI.getUserCurrentFaults6V(status);
+        HALUtil.checkStatus(status);
         return retVal;
     }
     

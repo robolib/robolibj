@@ -15,10 +15,13 @@
 
 package org.team2583.robolib.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.team2583.robolib.util.ConstantRunner;
+
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
-import java.util.Hashtable;
-import org.team2583.robolib.util.ConstantRunner;
 
 /**
  * The Class RMap.
@@ -28,13 +31,13 @@ import org.team2583.robolib.util.ConstantRunner;
 public class RMap {
     
     /** The Constant strVals. */
-    private static final Hashtable strVals = new Hashtable();
+    private static final Map<String, Object> strVals = new HashMap<>();
     
     /** The Constant boolVals. */
-    private static final Hashtable boolVals = new Hashtable();
+    private static final Map<String, Object> boolVals = new HashMap<>();
     
     /** The Constant intVals. */
-    private static final Hashtable intVals = new Hashtable();
+    private static final Map<String, Object> intVals = new HashMap<>();
     
     /** The Constant NETTABLE_MAP_NAME. */
     public static final String NETTABLE_MAP_NAME = "RMap";

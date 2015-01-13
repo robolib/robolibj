@@ -260,151 +260,94 @@ public class FRCNetworkCommunicationsLibrary extends JNIWrapper {
 	public static final int USER_STATUS_DATA_SIZE = (984 - 32 - 44);
 	/**
 	 * Original signature : <code>uint32_t FRC_NetworkCommunication_nAICalibration_getLSBWeight(const uint32_t, const uint32_t, int32_t*)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\AICalibration.h:7</i><br>
-	 * @deprecated use the safer methods {@link #FRC_NetworkCommunication_nAICalibration_getLSBWeight(int, int, java.nio.IntBuffer)} and {@link #FRC_NetworkCommunication_nAICalibration_getLSBWeight(int, int, com.sun.jna.ptr.IntByReference)} instead
-	 */
-	//@Deprecated
-	//public static native int FRC_NetworkCommunication_nAICalibration_getLSBWeight(int aiSystemIndex, int channel, Integer status);
-	/**
-	 * Original signature : <code>uint32_t FRC_NetworkCommunication_nAICalibration_getLSBWeight(const uint32_t, const uint32_t, int32_t*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\AICalibration.h:7</i>
+	 * @param aiSystemIndex 
+	 * @param channel 
+	 * @param status 
+	 * @return 
 	 */
 	public static native int FRCNetworkCommunicationAICalibrationGetLSBWeight(int aiSystemIndex, int channel, Integer status);
 	/**
 	 * Original signature : <code>int32_t FRC_NetworkCommunication_nAICalibration_getOffset(const uint32_t, const uint32_t, int32_t*)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\AICalibration.h:8</i><br>
-	 * @deprecated use the safer methods {@link #FRC_NetworkCommunication_nAICalibration_getOffset(int, int, java.nio.IntBuffer)} and {@link #FRC_NetworkCommunication_nAICalibration_getOffset(int, int, com.sun.jna.ptr.IntByReference)} instead
-	 */
-	//@Deprecated
-	//public static native int FRC_NetworkCommunication_nAICalibration_getOffset(int aiSystemIndex, int channel, Integer status);
-	/**
-	 * Original signature : <code>int32_t FRC_NetworkCommunication_nAICalibration_getOffset(const uint32_t, const uint32_t, int32_t*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\AICalibration.h:8</i>
+	 * @param aiSystemIndex 
+	 * @param channel 
+	 * @param status 
+	 * @return 
 	 */
 	public static native int FRCNetworkCommunicationAICalibrationGetOffset(int aiSystemIndex, int channel, Integer status);
 	/**
 	 * Original signature : <code>tTargetClass getTargetClass()</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\LoadOut.h:25</i>
+	 * @return 
 	 */
 	public static native int getTargetClass();
 	/**
 	 * Original signature : <code>uint32_t FRC_NetworkCommunication_nLoadOut_getModulePresence(uint32_t, uint8_t)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\LoadOut.h:32</i>
+	 * @param moduleType 
+	 * @param moduleNumber 
+	 * @return 
 	 */
 	public static native int FRCNetworkCommunicationLoadOutGetModulePresence(int moduleType, byte moduleNumber);
 	/**
 	 * Original signature : <code>uint32_t FRC_NetworkCommunication_nLoadOut_getTargetClass()</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\LoadOut.h:33</i>
+	 * @return 
 	 */
 	public static native int FRCNetworkCommunicationLoadOutGetTargetClass();
 	/**
-	 * Original signature : <code>STATUS moduleNameFindBySymbolName(const char*, char*)</code><br>
-	 * @param symbol symbol name to look for<br>
-	 * @param module where to return module name<br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\symModuleLink.h:6</i><br>
-	 * @deprecated use the safer methods {@link #moduleNameFindBySymbolName(java.lang.String, java.nio.ByteBuffer)} and {@link #moduleNameFindBySymbolName(com.sun.jna.Pointer, com.sun.jna.Pointer)} instead
-	 */
-	//@Deprecated
-	//public static native FRC_NetworkCommunicationsLibrary.STATUS moduleNameFindBySymbolName(Pointer symbol, Pointer module);
-	/**
-	 * Original signature : <code>STATUS moduleNameFindBySymbolName(const char*, char*)</code><br>
-	 * @param symbol symbol name to look for<br>
-	 * @param module where to return module name<br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\symModuleLink.h:6</i>
-	 */
-	//public static native FRC_NetworkCommunicationsLibrary.STATUS moduleNameFindBySymbolName(String symbol, ByteBuffer module);
-	/**
 	 * Report the usage of a resource of interest.
-<br>
 	 *
-<br>
 	 * @param resource one of the values in the tResourceType above (max value 51).
-<br>
 	 * @param instanceNumber an index that identifies the resource instance.
-<br>
 	 * @param context an optional additional context number for some cases (such as module number).  Set to 0 to omit.
-<br>
-	 * @param feature a string to be included describing features in use on a specific resource.  Setting the same resource more than once allows you to change the feature string.<br>
-	 * Original signature : <code>uint32_t report(tResourceType, uint8_t, uint8_t, const char*)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\UsageReporting.h:113</i><br>
-	 * @deprecated use the safer methods {@link #report(int, byte, byte, java.lang.String)} and {@link #report(int, byte, byte, com.sun.jna.Pointer)} instead
-	 */
-	//@Deprecated
-	//public static native int report(int resource, byte instanceNumber, byte context, Pointer feature);
-	/**
-	 * Report the usage of a resource of interest.
-<br>
-	 *
-<br>
-	 * @param resource one of the values in the tResourceType above (max value 51).
-<br>
-	 * @param instanceNumber an index that identifies the resource instance.
-<br>
-	 * @param context an optional additional context number for some cases (such as module number).  Set to 0 to omit.
-<br>
 	 * @param feature a string to be included describing features in use on a specific resource.  Setting the same resource more than once allows you to change the feature string.<br>
 	 * Original signature : <code>uint32_t report(tResourceType, uint8_t, uint8_t, const char*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\UsageReporting.h:113</i>
+	 * @return int
 	 */
 	public static native int report(int resource, byte instanceNumber, byte context, String feature);
 	/**
 	 * Original signature : <code>uint32_t FRC_NetworkCommunication_nUsageReporting_report(uint8_t, uint8_t, uint8_t, const char*)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\UsageReporting.h:120</i><br>
-	 * @deprecated use the safer methods {@link #FRC_NetworkCommunication_nUsageReporting_report(byte, byte, byte, java.lang.String)} and {@link #FRC_NetworkCommunication_nUsageReporting_report(byte, byte, byte, com.sun.jna.Pointer)} instead
-	 */
-	//@Deprecated
-	//public static native int FRC_NetworkCommunication_nUsageReporting_report(byte resource, byte instanceNumber, byte context, Pointer feature);
-	/**
-	 * Original signature : <code>uint32_t FRC_NetworkCommunication_nUsageReporting_report(uint8_t, uint8_t, uint8_t, const char*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\UsageReporting.h:120</i>
+	 * @param resource 
+	 * @param instanceNumber 
+	 * @param context 
+	 * @param feature 
+	 * @return int
 	 */
 	public static native int FRCNetworkCommunicationUsageReportingReport(byte resource, byte instanceNumber, byte context, String feature);
 	/**
 	 * Original signature : <code>void getFPGAHardwareVersion(uint16_t*, uint32_t*)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:124</i><br>
-	 * @deprecated use the safer methods {@link #getFPGAHardwareVersion(java.nio.ShortBuffer, java.nio.IntBuffer)} and {@link #getFPGAHardwareVersion(com.sun.jna.ptr.ShortByReference, com.sun.jna.ptr.IntByReference)} instead
-	 */
-	//@Deprecated
-	//public static native void getFPGAHardwareVersion(ShortByReference fpgaVersion, IntByReference fpgaRevision);
-	/**
-	 * Original signature : <code>void getFPGAHardwareVersion(uint16_t*, uint32_t*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:124</i>
+	 * @param fpgaVersion 
+	 * @param fpgaRevision 
 	 */
 	public static native void getFPGAHardwareVersion(ShortBuffer fpgaVersion, IntBuffer fpgaRevision);
 	/**
 	 * Original signature : <code>int setErrorData(const char*, int, int)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:136</i><br>
-	 * @deprecated use the safer methods {@link #setErrorData(java.lang.String, int, int)} and {@link #setErrorData(com.sun.jna.Pointer, int, int)} instead
-	 */
-	//@Deprecated
-	//public static native int setErrorData(Pointer errors, int errorsLength, int wait_ms);
-	/**
-	 * Original signature : <code>int setErrorData(const char*, int, int)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:136</i>
+	 * @param errors 
+	 * @param errorsLength 
+	 * @param wait_ms 
+	 * @return int
 	 */
 	public static native int setErrorData(String errors, int errorsLength, int wait_ms);
 	/**
 	 * Original signature : <code>int overrideIOConfig(const char*, int)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:138</i><br>
-	 * @deprecated use the safer methods {@link #overrideIOConfig(java.lang.String, int)} and {@link #overrideIOConfig(com.sun.jna.Pointer, int)} instead
-	 */
-	//@Deprecated
-	//public static native int overrideIOConfig(String ioConfig, int wait_ms);
-	/**
-	 * Original signature : <code>int overrideIOConfig(const char*, int)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:138</i>
+	 * @param ioConfig 
+	 * @param wait_ms 
+	 * @return 
 	 */
 	public static native int overrideIOConfig(String ioConfig, int wait_ms);
 	/**
 	 * Original signature : <code>void setNewDataSem(pthread_mutex_t*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:147</i>
+	 * @param mutexId 
 	 */
 	public static native void setNewDataSem(ByteBuffer mutexId);
-	/**
-	 * Original signature : <code>void setResyncSem(pthread_mutex_t*)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:148</i>
-	 */
-	//public static native void setResyncSem(FRC_NetworkCommunicationsLibrary.pthread_mutex_t pthread_mutex_tPtr1);
 	/**
 	 * Original signature : <code>void signalResyncActionDone()</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:150</i>
@@ -414,23 +357,19 @@ public class FRCNetworkCommunicationsLibrary extends JNIWrapper {
 	 * this uint32_t is really a LVRefNum<br>
 	 * Original signature : <code>void setNewDataOccurRef(uint32_t)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:154</i>
+	 * @param refnum 
 	 */
 	public static native void setNewDataOccurRef(int refnum);
 	/**
 	 * Original signature : <code>void setResyncOccurRef(uint32_t)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:156</i>
+	 * @param refnum 
 	 */
 	public static native void setResyncOccurRef(int refnum);
 	/**
 	 * Original signature : <code>void FRC_NetworkCommunication_getVersionString(char*)</code><br>
-	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:159</i><br>
-	 * @deprecated use the safer methods {@link #FRC_NetworkCommunication_getVersionString(java.nio.ByteBuffer)} and {@link #FRC_NetworkCommunication_getVersionString(com.sun.jna.Pointer)} instead
-	 */
-	//@Deprecated
-	//public static native void FRC_NetworkCommunication_getVersionString(Pointer version);
-	/**
-	 * Original signature : <code>void FRC_NetworkCommunication_getVersionString(char*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:159</i>
+	 * @param version 
 	 */
 	public static native void FRCNetworkCommunicationGetVersionString(ByteBuffer version);
 	public static native void FRCNetworkCommunicationObserveUserProgramStarting();
