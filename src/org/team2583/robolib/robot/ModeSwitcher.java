@@ -140,11 +140,11 @@ public class ModeSwitcher {
      * 
      */
     protected void run(){
-        try{
+        //try{
             getRobotMode().modeRun();
-        }catch(Throwable e){
-            Logger.get(getRobotMode()).fatal("Fatal action in RobotMode run method", e);
-        }
+        //}catch(Throwable e){
+            //Logger.get(getRobotMode()).fatal("Fatal action in RobotMode run method", e);
+        //}
         m_scheduler.run();
     }
     

@@ -15,6 +15,9 @@
 
 package org.team2583.robolib.iface;
 
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.communication.UsageReporting;
+
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
@@ -29,15 +32,15 @@ public class Serial extends Interface {
     };
 
     /**
-     * @param iType
-     * @param address
+     * @param port 
      */
-    protected Serial(Port port, byte address) {
-        super(InterfaceType.SERIAL, 0);
+    public Serial(Port port) {
+        super(InterfaceType.SERIAL);
         if(port.equals(Port.kMXP)){
-            allocateMXPPin(InterfaceType.SERIAL, 14);
-            allocateMXPPin(InterfaceType.SERIAL, 10);
+            allocateMXPPin(14);
+            allocateMXPPin(10);
         }
+        UsageReporting.report(tResourceType.kResourceType_SerialPort, port.ordinal());
     }
 
 }

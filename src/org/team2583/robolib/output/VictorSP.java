@@ -60,8 +60,7 @@ public class VictorSP extends PWMController {
      * @param pwChannel The PDP(Power Distribution Panel) Channel
      */
     public VictorSP(PWMChannel channel, String desc, PowerChannel pwChannel){
-        super(channel, desc, pwChannel);
-        setBounds(2.004, 1.52, 1.50, 1.48, 0.997);
+        super(channel, desc, pwChannel, 2.004, 1.52, 1.50, 1.48, 0.997, PeriodMultiplier.k1X);
         LiveWindow.addActuator("VictorSP", channel.ordinal(), this);
         UsageReporting.report(tResourceType.kResourceType_Talon, channel.ordinal());
     }

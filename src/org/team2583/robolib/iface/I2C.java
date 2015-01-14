@@ -15,6 +15,9 @@
 
 package org.team2583.robolib.iface;
 
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.communication.UsageReporting;
+
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
@@ -32,11 +35,12 @@ public class I2C extends Interface {
      * @param address
      */
     protected I2C(Port port, int address) {
-        super(InterfaceType.I2C, address);
+        super(InterfaceType.I2C);
         if(port.equals(Port.kMXP)){
-            allocateMXPPin(InterfaceType.I2C, 32);
-            allocateMXPPin(InterfaceType.I2C, 34);
+            allocateMXPPin(32);
+            allocateMXPPin(34);
         }
+        UsageReporting.report(tResourceType.kResourceType_I2C, address);
     }
 
 }

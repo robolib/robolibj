@@ -19,6 +19,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import org.team2583.robolib.exception.ChannelIndexException;
+
 /**
  * Common functions for use in the robot code.
  *
@@ -50,6 +52,16 @@ public class CommonFunctions {
         ByteBuffer status = ByteBuffer.allocateDirect(4);
         status.order(ByteOrder.LITTLE_ENDIAN);
         return status.asIntBuffer();
+    }
+    
+    public static <T extends Enum<T>> T getChannelFromInt(Class<T> channelType, int channel){
+        try{
+            return channelType.getEnumConstants()[channel];
+        }catch(IndexOutOfBoundsException e){
+            ChannelIndexException t = new ChannelIndexException("No such " + channelType.getSimpleName()+ " '" + channel + "'");
+            t.setStackTrace(e.getStackTrace());
+            throw t;
+        }
     }
 
 }

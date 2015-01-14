@@ -15,8 +15,6 @@
 
 package org.team2583.robolib.iface;
 
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
-
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
@@ -24,18 +22,12 @@ import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tReso
  */
 public enum InterfaceType {
     
-    ANALOG(tResourceType.kResourceType_AnalogChannel),
-    CAN(tResourceType.kResourceType_PWM),
-    DIGITALIO(tResourceType.kResourceType_DigitalInput),
-    I2C(tResourceType.kResourceType_I2C),
-    PWM(tResourceType.kResourceType_PWM),
-    SERIAL(tResourceType.kResourceType_SerialPort),
-    SPI(tResourceType.kResourceType_SPI);
-    
-    public final int m_resource;
-    
-    InterfaceType(int type){
-        m_resource = type;
-    }
+    ANALOG,
+    CAN,
+    DIGITALIO,
+    I2C,
+    PWM,
+    SERIAL,
+    SPI;
 
 }

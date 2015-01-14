@@ -13,39 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.iface;
-
-import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
-import org.team2583.robolib.communication.UsageReporting;
+package org.team2583.robolib.sensors;
 
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
- *
  */
-public class SPI extends Interface {
-
-    
-    public static enum Port {
-        kOnboardCS0,
-        kOnboardCS1,
-        kOnboardCS2,
-        kOnboardCS3,
-        kMXP;
-    };
-    
-    /**
-     * @param port 
-     */
-    public SPI(Port port) {
-        super(InterfaceType.SPI);
-        if(port.equals(Port.kMXP)){
-            allocateMXPPin(19);
-            allocateMXPPin(21);
-            allocateMXPPin(23);
-            allocateMXPPin(25);
-        }
-        UsageReporting.report(tResourceType.kResourceType_SPI, port.ordinal());
-    }
+public interface IUltrasonic {
 
 }

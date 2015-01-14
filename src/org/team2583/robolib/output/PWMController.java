@@ -24,7 +24,7 @@ import org.team2583.robolib.util.PDP.PowerChannel;
  * @author Austin Reuland <amreuland@gmail.com>
  *
  */
-public class PWMController extends PWM implements SpeedController, MotorSafety{
+public abstract class PWMController extends PWM implements SpeedController, MotorSafety{
     
     protected MotorSafetyHelper m_safetyHelper;
     
@@ -61,6 +61,34 @@ public class PWMController extends PWM implements SpeedController, MotorSafety{
     public PWMController(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc);
         setPeriodMultiplier(PeriodMultiplier.k1X);
+        setRaw(getCenterPWM());
+        setZeroLatch();
+        m_safetyHelper = MotorSafetyManager.addMotor(this);
+        if(pwChannel != null){
+            PDP.claimChannel(pwChannel, desc);
+        }
+    }
+    
+    /**
+     * Instantiates a new PWM motor controller.
+     * Giving a description helps with debugging. It will be used in log outputs.
+     * Giving a power channel will help with power logging. It will be shown as this
+     * controllers power channel on power log outputs.
+     *
+     * @param channel the pwm channel this controller operates on
+     * @param desc the description of this motor controller
+     * @param pwChannel The PDP(Power Distribution Panel) Channel
+     * @param boundsPosMax The maximum PWM pulse in ms
+     * @param boundsPosMin The maximum of the pulse deadband in ms
+     * @param boundsCenter The center/zero/off pulse width in ms
+     * @param boundsNegMax the mimium of the pulse deadband in ms
+     * @param boundsNegMin The minimum PWM pulse in ms
+     * @param multi The PeriodMultiplier enum
+     */
+    public PWMController(PWMChannel channel, String desc, PowerChannel pwChannel,
+            double boundsPosMax, double boundsPosMin, double boundsCenter,
+            double boundsNegMax, double boundsNegMin, PeriodMultiplier multi){
+        super(channel, desc, boundsPosMax, boundsPosMin, boundsCenter, boundsNegMax, boundsNegMin, multi);
         setRaw(getCenterPWM());
         setZeroLatch();
         m_safetyHelper = MotorSafetyManager.addMotor(this);

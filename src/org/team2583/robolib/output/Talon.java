@@ -59,8 +59,7 @@ public class Talon extends PWMController {
      * @param pwChannel The PDP(Power Distribution Panel) Channel
      */
     public Talon(PWMChannel channel, String desc, PowerChannel pwChannel){
-        super(channel, desc, pwChannel);
-        setBounds(2.037, 1.539, 1.513, 1.487, 0.989);
+        super(channel, desc, pwChannel, 2.037, 1.539, 1.513, 1.487, 0.989, PeriodMultiplier.k1X);
         LiveWindow.addActuator("Talon", channel.ordinal(), this);
         UsageReporting.report(tResourceType.kResourceType_Talon, channel.ordinal());
     }

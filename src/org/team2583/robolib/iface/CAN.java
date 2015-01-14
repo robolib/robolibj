@@ -27,7 +27,8 @@ public class CAN extends Interface {
      * @param address
      */
     protected CAN() {
-        super(InterfaceType.CAN, 0);
+        super(InterfaceType.CAN);
+        
     }
 
 }

@@ -105,6 +105,8 @@ public final class Logger extends ILogger {
         
         return m_loggers.get(c);
     }
+    
+    public static boolean m_debugEnabled = false;
 
     /**
      * Instantiates a new logger.
@@ -144,6 +146,13 @@ public final class Logger extends ILogger {
     public void registerOutput(LogOutput out){
         if(!m_outs.contains(out) && (!out.equals(LogOutput.TERM_OUT) || !out.equals(LogOutput.TERM_ERR)))
             m_outs.add(out);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void enableDebug(boolean enable){
+        m_debugEnabled = enable;
     }
 
     /**
@@ -209,7 +218,8 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void debug(String s){
-        sendMsg(LogLevel.DEBUG, s);
+        if(m_debugEnabled)
+            sendMsg(LogLevel.DEBUG, s);
     }
 
     /**

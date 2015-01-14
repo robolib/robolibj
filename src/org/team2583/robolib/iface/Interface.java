@@ -21,8 +21,6 @@ import java.util.Map;
 import org.team2583.robolib.exception.ResourceAllocationException;
 import org.team2583.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.communication.UsageReporting;
-
 /**
  * The Class Interface.
  *
@@ -112,9 +110,8 @@ public abstract class Interface {
      * @param iType the InterfaceType for this Interface
      * @param channel The channel/address this interface is accessing
      */
-    protected Interface(InterfaceType iType, int channel){
+    protected Interface(InterfaceType iType){
         m_ifaceType = iType;
-        UsageReporting.report(iType.m_resource, channel);
     }
 
     /**
@@ -123,12 +120,12 @@ public abstract class Interface {
      * @param type InterfaceType this pin would like to be.
      * @param pin the pin we are allocating.
      */
-    protected static final void allocateMXPPin(InterfaceType type, int pin){
+    protected final void allocateMXPPin(int pin){
         if(pin > 0){
-            if(m_mxpMap.containsKey(pin) || !m_mxpMap.get(pin).equals(type)){
+            if(m_mxpMap.containsKey(pin) || !m_mxpMap.get(pin).equals(m_ifaceType)){
                 throw new ResourceAllocationException("MXP pin '" + pin + "' already allocated as '" + m_mxpMap.get(pin).name() + "'.");
             }else{
-                m_mxpMap.put(pin, type);
+                m_mxpMap.put(pin, m_ifaceType);
             }
         }
     }
@@ -139,17 +136,17 @@ public abstract class Interface {
      * @param type the InterfaceType this pin should have been.
      * @param pin the pin we are allocating.
      */
-    protected static final void freeMXPPin(InterfaceType type, int pin){
+    protected final void freeMXPPin(int pin){
         if(pin > 0){
             if(m_mxpMap.containsKey(pin)){
-                if(m_mxpMap.get(pin).equals(type)){
+                if(m_mxpMap.get(pin).equals(m_ifaceType)){
                     m_mxpMap.remove(pin);
                 }else{
-                    Logger.get(Interface.class).warn("Attempt to release MXP pin '" + pin + "' (" + m_mxpMap.get(pin).name() + ")  failed. Type");
-                    Logger.get(Interface.class).warn("Allocated Type: " + m_mxpMap.get(pin).name() + ", Releasing type: " + type.name() + ".");
+                    Logger.get(this).warn("Attempt to release MXP pin '" + pin + "' (" + m_mxpMap.get(pin).name() + ")  failed. Type");
+                    Logger.get(this).warn("Allocated Type: " + m_mxpMap.get(pin).name() + ", Releasing type: " + m_ifaceType.name() + ".");
                 }
             }else{
-                Logger.get(Interface.class).warn("MXP pin '" + pin + "' Was not allocated. Should have been type: '" + type.name() + "'.");
+                Logger.get(this).warn("MXP pin '" + pin + "' Was not allocated. Should have been type: '" + m_ifaceType.name() + "'.");
             }
         }
     }

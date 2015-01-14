@@ -15,6 +15,8 @@
 
 package org.team2583.robolib.iface;
 
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.communication.UsageReporting;
 import org.team2583.robolib.exception.ResourceAllocationException;
 
 /**
@@ -79,7 +81,7 @@ public class Analog extends Interface {
      * @param dir the dir
      */
     protected Analog(AnalogChannel channel, Direction dir) {
-        super(InterfaceType.ANALOG, channel.ordinal());
+        super(InterfaceType.ANALOG);
         
         switch(dir){
         case IN:
@@ -99,5 +101,7 @@ public class Analog extends Interface {
             }
         break;
         }
+        
+        UsageReporting.report(tResourceType.kResourceType_AnalogChannel, channel.ordinal());
     }
 }
