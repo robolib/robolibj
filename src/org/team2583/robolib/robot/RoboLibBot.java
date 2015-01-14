@@ -64,7 +64,7 @@ public class RoboLibBot {
     public static final int MINOR_VERSION = 0;
     
     /** The Constant PATCH_VERSION. */
-    public static final int PATCH_VERSION = 1;
+    public static final int PATCH_VERSION = 2;
 
     /** The m_name. */
     private static String m_name;
