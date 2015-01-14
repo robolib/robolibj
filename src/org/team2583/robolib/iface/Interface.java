@@ -108,7 +108,6 @@ public abstract class Interface {
      * Instantiates a new interface.
      *
      * @param iType the InterfaceType for this Interface
-     * @param channel The channel/address this interface is accessing
      */
     protected Interface(InterfaceType iType){
         m_ifaceType = iType;
@@ -117,7 +116,6 @@ public abstract class Interface {
     /**
      * Allocate an MXP pin
      *
-     * @param type InterfaceType this pin would like to be.
      * @param pin the pin we are allocating.
      */
     protected final void allocateMXPPin(int pin){
@@ -133,7 +131,6 @@ public abstract class Interface {
     /**
      * Free an MXP pin
      *
-     * @param type the InterfaceType this pin should have been.
      * @param pin the pin we are allocating.
      */
     protected final void freeMXPPin(int pin){
@@ -142,11 +139,11 @@ public abstract class Interface {
                 if(m_mxpMap.get(pin).equals(m_ifaceType)){
                     m_mxpMap.remove(pin);
                 }else{
-                    Logger.get(this).warn("Attempt to release MXP pin '" + pin + "' (" + m_mxpMap.get(pin).name() + ")  failed. Type");
-                    Logger.get(this).warn("Allocated Type: " + m_mxpMap.get(pin).name() + ", Releasing type: " + m_ifaceType.name() + ".");
+                    Logger.get(Interface.class).warn("Attempt to release MXP pin '" + pin + "' (" + m_mxpMap.get(pin).name() + ")  failed. Type");
+                    Logger.get(Interface.class).warn("Allocated Type: " + m_mxpMap.get(pin).name() + ", Releasing type: " + m_ifaceType.name() + ".");
                 }
             }else{
-                Logger.get(this).warn("MXP pin '" + pin + "' Was not allocated. Should have been type: '" + m_ifaceType.name() + "'.");
+                Logger.get(Interface.class).warn("MXP pin '" + pin + "' Was not allocated. Should have been type: '" + m_ifaceType.name() + "'.");
             }
         }
     }

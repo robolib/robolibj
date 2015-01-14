@@ -6,23 +6,14 @@
 *.ear
 *.jardesc
 
-javadoc.xml
-
 *.sublime-*
 /ant/
-/build/
 /bin/
+/build/
 /doc/
 /test/
 /resources/
 /release/
-/nbproject/
 /dist/
-build.xml
-build.properties
-/.settings/
-.project
-.classpath
 
 /src/edu/
-/lib/linux-arm/librobolibJavaJNI.so
