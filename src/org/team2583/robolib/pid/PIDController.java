@@ -13,34 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.iface;
-
-import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
-import org.team2583.robolib.communication.UsageReporting;
+package org.team2583.robolib.pid;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public class Serial extends Interface {
-
-    public enum Port {
-        kOnboard,
-        kMXP,
-        kUSB;
-    };
-
-    /**
-     * @param port 
-     */
-    public Serial(Port port) {
-        super(InterfaceType.SERIAL);
-        if(port.equals(Port.kMXP)){
-            allocateMXPPin(14);
-            allocateMXPPin(10);
-        }
-        UsageReporting.report(tResourceType.kResourceType_SerialPort, port.ordinal());
-    }
+public class PIDController {
 
 }

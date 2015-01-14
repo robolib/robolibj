@@ -20,11 +20,13 @@ import static org.team2583.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.communication.UsageReporting;
 import org.team2583.robolib.exception.ResourceAllocationException;
-import org.team2583.robolib.util.log.Logger;
-
 import org.team2583.robolib.hal.DIOJNI;
 import org.team2583.robolib.hal.HALUtil;
+import org.team2583.robolib.util.log.Logger;
+
 
 /**
  * The Class DigitalIO.
@@ -163,12 +165,17 @@ public class DigitalIO extends Interface {
      *
      * @param channel the channel for this DigitalIO
      */
-    protected DigitalIO(DigitalChannel channel) {
-        super(InterfaceType.DIGITALIO, channel.ordinal());
+    protected DigitalIO(DigitalChannel channel, Direction dir) {
+        super(InterfaceType.DIGITALIO);
 
         allocateChannel(channel);
 
         m_channel = channel;
+        
+        if(dir == Direction.IN)        
+            UsageReporting.report(tResourceType.kResourceType_DigitalOutput, channel.ordinal());
+        else
+            UsageReporting.report(tResourceType.kResourceType_DigitalOutput, channel.ordinal());
     }
 
     /**
@@ -192,9 +199,9 @@ public class DigitalIO extends Interface {
      *
      * @param channel the DigitalIO channel to allocate
      */
-    private static void allocateChannel(DigitalChannel channel){
+    private void allocateChannel(DigitalChannel channel){
         if(channel.ordinal() > 9){
-            allocateMXPPin(InterfaceType.DIGITALIO, channel.m_mxpPin);
+            allocateMXPPin(channel.m_mxpPin);
         }
 
         if(m_usedChannels[channel.ordinal()] == false){
@@ -209,15 +216,15 @@ public class DigitalIO extends Interface {
      *
      * @param channel the DigitalIO channel to free
      */
-    private static void freeChannel(DigitalChannel channel){
+    private void freeChannel(DigitalChannel channel){
         if(channel.ordinal() > 9){
-            freeMXPPin(InterfaceType.DIGITALIO, channel.m_mxpPin);
+            freeMXPPin(channel.m_mxpPin);
         }
 
         if(m_usedChannels[channel.ordinal()] == true){
             m_usedChannels[channel.ordinal()] = false;
         }else{
-            Logger.get(DigitalIO.class).error("Digital IO Channel '" + channel.name() + "' was not allocated. How did you get here?");
+            Logger.get(this).error("Digital IO Channel '" + channel.name() + "' was not allocated. How did you get here?");
         }
     }
 

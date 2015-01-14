@@ -13,34 +13,21 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package org.team2583.robolib.iface;
-
-import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
-import org.team2583.robolib.communication.UsageReporting;
+package org.team2583.robolib.exception;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public class Serial extends Interface {
-
-    public enum Port {
-        kOnboard,
-        kMXP,
-        kUSB;
-    };
+public class ChannelIndexException extends RuntimeException {
 
     /**
-     * @param port 
+     * 
      */
-    public Serial(Port port) {
-        super(InterfaceType.SERIAL);
-        if(port.equals(Port.kMXP)){
-            allocateMXPPin(14);
-            allocateMXPPin(10);
-        }
-        UsageReporting.report(tResourceType.kResourceType_SerialPort, port.ordinal());
+    private static final long serialVersionUID = -6862051294773080694L;
+    
+    public ChannelIndexException(String msg){
+        super(msg);
     }
 
 }

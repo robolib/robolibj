@@ -15,6 +15,9 @@
 
 package org.team2583.robolib.iface;
 
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.communication.UsageReporting;
+
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
@@ -31,19 +34,18 @@ public class SPI extends Interface {
         kMXP;
     };
     
-    private static int devices = 0;
     /**
-     * @param iType
-     * @param address
+     * @param port 
      */
-    protected SPI(Port port, InterfaceType iType, byte address) {
-        super(InterfaceType.SPI, ++devices);
+    public SPI(Port port) {
+        super(InterfaceType.SPI);
         if(port.equals(Port.kMXP)){
-            allocateMXPPin(InterfaceType.SPI, 19);
-            allocateMXPPin(InterfaceType.SPI, 21);
-            allocateMXPPin(InterfaceType.SPI, 23);
-            allocateMXPPin(InterfaceType.SPI, 25);
+            allocateMXPPin(19);
+            allocateMXPPin(21);
+            allocateMXPPin(23);
+            allocateMXPPin(25);
         }
+        UsageReporting.report(tResourceType.kResourceType_SPI, port.ordinal());
     }
 
 }

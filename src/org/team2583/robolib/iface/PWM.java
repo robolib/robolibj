@@ -20,13 +20,15 @@ import static org.team2583.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.communication.UsageReporting;
 import org.team2583.robolib.exception.ResourceAllocationException;
-import org.team2583.robolib.util.MathUtils;
-import org.team2583.robolib.util.log.Loggable;
-import org.team2583.robolib.util.log.Logger;
 import org.team2583.robolib.hal.DIOJNI;
 import org.team2583.robolib.hal.HALUtil;
 import org.team2583.robolib.hal.PWMJNI;
+import org.team2583.robolib.util.MathUtils;
+import org.team2583.robolib.util.log.Loggable;
+import org.team2583.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -206,7 +208,7 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
 
     /** The PWM Channel this PWM is operating on. */
     private PWMChannel m_channel;
-    
+        
     public PWM(PWMChannel channel){
         this(channel, "PWM Output Ch" + channel.ordinal());
     }
@@ -218,7 +220,7 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      * @param desc 
      */
     public PWM(PWMChannel channel, String desc) {
-        super(InterfaceType.PWM, channel.ordinal());
+        super(InterfaceType.PWM);
         m_description = desc;
 
         allocateChannel(channel);
@@ -240,6 +242,15 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
 
         m_destroyDeadband = false;
 
+        UsageReporting.report(tResourceType.kResourceType_PWM, channel.ordinal());
+
+    }
+    
+    public PWM(PWMChannel channel, String desc, double boundsPosMax, double boundsPosMin,
+            double boundsCenter, double boundsNegMax, double boundsNegMin, PeriodMultiplier multi){
+        this(channel, desc);
+        setBounds(boundsPosMax, boundsPosMin, boundsCenter, boundsNegMax, boundsNegMin);
+        setPeriodMultiplier(multi);
     }
 
     /**
@@ -248,19 +259,20 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      * Free the resource associated with the PWM channel and set the value to 0.
      */
     public void free() {
-        freeChannel(getChannel());
-        IntBuffer status = getLE4IntBuffer();
+        if(freeChannel(getChannel())){
+            IntBuffer status = getLE4IntBuffer();
 
-        PWMJNI.setPWM(m_port, (short) 0, status);
-        HALUtil.checkStatus(status);
+            PWMJNI.setPWM(m_port, (short) 0, status);
+            HALUtil.checkStatus(status);
 
-        PWMJNI.freePWMChannel(m_port, status);
-        HALUtil.checkStatus(status);
+            PWMJNI.freePWMChannel(m_port, status);
+            HALUtil.checkStatus(status);
 
-        PWMJNI.freeDIO(m_port, status);
-        HALUtil.checkStatus(status);
+            PWMJNI.freeDIO(m_port, status);
+            HALUtil.checkStatus(status);
 
-        m_channel = null;
+            m_channel = null;
+        }
     }
 
     /**
@@ -268,9 +280,9 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      *
      * @param channel the PWM channel to allocate
      */
-    private static void allocateChannel(PWMChannel channel){
+    private void allocateChannel(PWMChannel channel){
         if(channel.ordinal() > 9){
-            allocateMXPPin(InterfaceType.PWM, channel.m_mxpPin);
+            allocateMXPPin(channel.m_mxpPin);
         }
 
         if(m_usedChannels[channel.ordinal()] == false){
@@ -285,15 +297,17 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      *
      * @param channel the PWM channel to free
      */
-    private static void freeChannel(PWMChannel channel){
+    private boolean freeChannel(PWMChannel channel){
         if(channel.ordinal() > 9){
-            freeMXPPin(InterfaceType.PWM, channel.m_mxpPin);
+            freeMXPPin(channel.m_mxpPin);
         }
 
         if(m_usedChannels[channel.ordinal()] == true){
             m_usedChannels[channel.ordinal()] = false;
+            return true;
         }else{
-            Logger.get(PWM.class, "PWM").error("PWM Channel '" + channel.name() + "' was not allocated. How did you get here?");
+            Logger.get(this).error("PWM Channel '" + channel.name() + "' was not allocated. How did you get here?");
+            return false;
         }
     }
 

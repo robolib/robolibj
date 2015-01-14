@@ -26,7 +26,6 @@ import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tInsta
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import org.team2583.robolib.communication.UsageReporting;
 import org.team2583.robolib.control.DriverStation;
-import org.team2583.robolib.exception.RobotException;
 import org.team2583.robolib.util.log.ILogger;
 import org.team2583.robolib.util.log.Logger;
 
@@ -68,28 +67,28 @@ public class RoboLibBot {
     public static final int PATCH_VERSION = 1;
 
     /** The m_name. */
-    private final String m_name;
+    private static String m_name;
     
     /** The m_version. */
-    private final String m_version;
+    private static String m_version;
     
     /** The m_log. */
-    private final ILogger m_log;
+    private static ILogger m_log;
     
     /** The m_run. */
     private static boolean m_run = true;
-    
-    /** The m_debug. */
-    private static boolean m_debug = true;
     
     /** The m_table. */
     private static ITable m_table;
     
     /** The Constant m_ds. */
-    protected static final DriverStation m_ds = DriverStation.getInstance();
+    private static final DriverStation m_ds = DriverStation.getInstance();
     
     /** The Constant m_modeSwitcher. */
     private static final ModeSwitcher m_modeSwitcher = ModeSwitcher.getInstance();
+    
+    /** The m_instance. */
+    private static RoboLibBot m_instance;
 
     /**
      * Robot Class Method.
@@ -122,7 +121,8 @@ public class RoboLibBot {
         NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
 
         m_table = NetworkTable.getTable("Robot");
-        m_log = Logger.get(this);
+        m_log = Logger.get(this, "Robot");
+        m_instance = this;
     }
 
     /**
@@ -138,8 +138,14 @@ public class RoboLibBot {
      * @param msg The message to be sent.
      */
     protected void debug(String msg){
-        if(m_debug)
-            m_log.debug(msg);
+        m_log.debug(msg);
+    }
+    
+    /**
+     * Enable Debug Messages.
+     */
+    public static void enableDebug(){
+        m_log.enableDebug();
     }
 
     /**
@@ -147,8 +153,8 @@ public class RoboLibBot {
      *
      * @param debug Enable or Disable
      */
-    public void enableDebug(boolean debug){
-        m_debug = debug;
+    public static void enableDebug(boolean debug){
+        m_log.enableDebug(debug);
     }
 
     /**
@@ -192,6 +198,13 @@ public class RoboLibBot {
     }
     
     /**
+     * Kill the robot.
+     */
+    public static void die(){
+        m_run = false;
+    }
+    
+    /**
      * Get the main NetworkTable table for the robot.
      * @return a networktable ITable
      */
@@ -212,7 +225,7 @@ public class RoboLibBot {
      * Get the current driver station indicated mode.
      * @return the driver station mode as a {@link GameMode}
      */
-    public GameMode getDSMode(){
+    public static GameMode getDSMode(){
         if(isDisabled())
             return GameMode.DISABLED;
         else if(isTest())
@@ -235,10 +248,10 @@ public class RoboLibBot {
      *
      * @param args the arguments
      */
-    public final void main(String args[]) {
+    public static void main(String args[]) {
         
-        msg("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
-        msg("Starting " + m_name);
+        m_instance.msg("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
+        m_instance.msg("Starting " + m_name);
         
         FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationReserve();
         Timer.SetImplementation(new HardwareTimer());
@@ -248,35 +261,35 @@ public class RoboLibBot {
         UsageReporting.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Java);
         
             
-        msg("Initializing Robot Network Table and Data");
+        m_instance.msg("Initializing Robot Network Table and Data");
         try{
             m_table.putString("name", m_name);
             m_table.putString("version", m_version);
         }catch(Throwable t){
-            fatal("Could not set Robot Name and Version in the Network Table. Did Something Screw Up?", t);
+            m_instance.fatal("Could not set Robot Name and Version in the Network Table. Did Something Screw Up?", t);
         }
         
 
         //Run User initialization
-        msg("Running User Initialization code");
+        m_instance.msg("Running User Initialization code");
         try{
-            robotInit();
+            m_instance.robotInit();
         }catch(Throwable t){
             DriverStation.reportError("ERROR Unhandled exception instantiating robot " + m_name + " " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
-            fatal("Error running User Init Code", t);
+            m_instance.fatal("Error running User Init Code", t);
         }
 
         checkVersionFile(new File("/tmp/frc_versions/FRC_Lib_Version.ini"));
         UsageReporting.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
         LiveWindow.setEnabled(false);
 
-        msg("Initializing Robot Modes");
+        m_instance.msg("Initializing Robot Modes");
         m_modeSwitcher.init();
 
-        msg(m_name + ", Version " + m_version + " Running");
+        m_instance.msg(m_name + ", Version " + m_version + " Running");
         FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramStarting();
         
-        msg("Starting Main Loop");
+        m_instance.msg("Starting Main Loop");
         try{
             while(m_run){
                 GameMode mode = getDSMode();
@@ -284,7 +297,7 @@ public class RoboLibBot {
                     m_modeSwitcher.switchMode(mode);
                 }
                 
-                if(isNewDataAvailable()){
+                if(m_ds.isNewControlData()){
                     m_modeSwitcher.run();
                 }
                 m_ds.waitForData();
@@ -292,9 +305,9 @@ public class RoboLibBot {
             
         }catch(Throwable t){
             DriverStation.reportError("ERROR Unhandled exception: " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
-            error("Error in Main Loop. Something should have caught this!!!", t);
+            m_instance.fatal("Error in Main Loop. Something should have caught this!!!", t);
         }finally{
-            fatal("ROBOTS DON'T QUIT!!!", new RobotException("Exited Main Loop"));
+            m_log.fatal("ROBOTS DON'T QUIT!!!", "Exited Main Loop");
         }
         System.exit(1);
     }
@@ -447,16 +460,6 @@ public class RoboLibBot {
      */
     public static boolean isBrownedOut() {
         return DriverStation.isBrownedOut();
-    }
-
-    /**
-     * Indicates if new data is available from the driver station.
-     *
-     * @return Has new data arrived over the network since the last time this
-     * function was called?
-     */
-    public static boolean isNewDataAvailable() {
-        return DriverStation.isNewControlData();
     }
 
 }

@@ -23,6 +23,7 @@ import java.nio.IntBuffer;
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
 import org.team2583.robolib.hal.HALUtil;
 import org.team2583.robolib.output.MotorSafetyManager;
+import org.team2583.robolib.util.log.Logger;
 
 /**
  * 
@@ -36,7 +37,7 @@ public class DriverStation implements Runnable {
     private Thread m_thread;
     private final Object m_dataSem;
     private volatile boolean m_thread_keepAlive = true;
-    private static boolean m_newControlData;
+    private boolean m_newControlData;
     private final ByteBuffer m_packetDataAvailableMutex;
     private final ByteBuffer m_packetDataAvailableSem;
     
@@ -61,7 +62,6 @@ public class DriverStation implements Runnable {
     }
     
     /**
-     * 
      * {@inheritDoc}
      */
     public void run(){
@@ -76,6 +76,8 @@ public class DriverStation implements Runnable {
                     int btns = FRCNetworkCommunicationsLibrary.HALGetJoystickButtons(stick, countBuffer);
                     Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());                    
                 }
+                
+                m_newControlData = true;
             }
             
             synchronized(m_dataSem){
@@ -86,7 +88,8 @@ public class DriverStation implements Runnable {
                 MotorSafetyManager.check();
                 safetyCounter = 0;
             }
-        }   
+        }
+        Logger.get(this).severe("Data Gathering Thread Ended!");
     }
     
     /**
@@ -115,7 +118,7 @@ public class DriverStation implements Runnable {
      * Has a new control packet from the driver station arrived since the last time this function was called?
      * @return True if the control data has been updated since the last call.
      */
-    public static synchronized boolean isNewControlData() {
+    public synchronized boolean isNewControlData() {
         boolean result = m_newControlData;
         m_newControlData = false;
         return result;
@@ -245,5 +248,9 @@ public class DriverStation implements Runnable {
      */
     public static void reportError(String err, boolean pT){
         
+    }
+    
+    public void exit(){
+        m_thread_keepAlive = false;
     }
 }

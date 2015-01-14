@@ -60,8 +60,7 @@ public class Jaguar extends PWMController {
      * @param pwChannel The PDP(Power Distribution Panel) Channel
      */
     public Jaguar(PWMChannel channel, String desc, PowerChannel pwChannel){
-        super(channel, desc, pwChannel);
-        setBounds(2.31, 1.55, 1.507, 1.454, 0.697);
+        super(channel, desc, pwChannel, 2.31, 1.55, 1.507, 1.454, 0.697, PeriodMultiplier.k1X);
         LiveWindow.addActuator("Jaguar", channel.ordinal(), this);
         UsageReporting.report(tResourceType.kResourceType_Jaguar, channel.ordinal());
     }

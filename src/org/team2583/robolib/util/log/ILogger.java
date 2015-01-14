@@ -15,6 +15,8 @@
 
 package org.team2583.robolib.util.log;
 
+import org.team2583.robolib.robot.RoboLibBot;
+
 /**
  * A Logging class.
  * 
@@ -43,6 +45,20 @@ public abstract class ILogger {
      * @param out a {@link LogOutput} instance
      */
     public abstract void registerOutput(LogOutput out);
+    
+    /**
+     * Enable the output of debug statements.
+     */
+    public final void enableDebug(){
+        enableDebug(true);
+    }
+    
+    /**
+     * Enable the output of debug statements.
+     * 
+     * @param enable enable the output of debug statements
+     */
+    public abstract void enableDebug(boolean enable);
 
     /**
      * Log an {@code Object} to the logger, with log status.
@@ -531,7 +547,7 @@ public abstract class ILogger {
     private final void severe_imp(String s, Object o){
         severe(s, o);
         if(o instanceof Error || o instanceof RuntimeException)
-            System.exit(1);
+            RoboLibBot.die();
     }
     
     /**
@@ -640,7 +656,7 @@ public abstract class ILogger {
      */
     private final void fatal_imp(String s, Object o){
         fatal(s, o);
-        System.exit(1);
+        RoboLibBot.die();
     }
     
     /**

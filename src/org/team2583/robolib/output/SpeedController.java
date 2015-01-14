@@ -15,11 +15,8 @@
 
 package org.team2583.robolib.output;
 
-//import org.team2583.robolib.iface.InterfaceType;
+import org.team2583.robolib.pid.PIDOutput;
 
-import edu.wpi.first.wpilibj.PIDOutput;
-
-// TODO: Auto-generated Javadoc
 /**
  * The Interface SpeedController.
  *
@@ -27,12 +24,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
  */
 public interface SpeedController extends PIDOutput {
     
-//    /**
-//     * Gets the interface type.
-//     *
-//     * @return the interface type
-//     */
-//    InterfaceType getInterfaceType();
     /**
      * Common interface for getting the current set speed of a speed controller.
      *

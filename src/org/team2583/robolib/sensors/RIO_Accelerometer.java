@@ -15,10 +15,10 @@
 
 package org.team2583.robolib.sensors;
 
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
-import edu.wpi.first.wpilibj.communication.UsageReporting;
+import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.communication.UsageReporting;
 import org.team2583.robolib.hal.AccelerometerJNI;
-import edu.wpi.first.wpilibj.interfaces.Accelerometer;
+
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -28,11 +28,13 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class RIO_Accelerometer implements Accelerometer, LiveWindowSendable {
+public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
 
     
     /** The m_table. */
     private ITable m_table;
+    
+    private Range m_range;
     
     /**
      * Instantiates a new RI o_ accelerometer.
@@ -56,6 +58,7 @@ public class RIO_Accelerometer implements Accelerometer, LiveWindowSendable {
      * {@inheritDoc}
      */
     public void setRange(Range range){
+        m_range = range;
         AccelerometerJNI.setAccelerometerActive(false);
         
         switch(range) {
@@ -73,6 +76,13 @@ public class RIO_Accelerometer implements Accelerometer, LiveWindowSendable {
         }
         
         AccelerometerJNI.setAccelerometerActive(true);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public Range getRange(){
+        return m_range;        
     }
     
     /**
@@ -122,7 +132,7 @@ public class RIO_Accelerometer implements Accelerometer, LiveWindowSendable {
      * {@inheritDoc}
      */
     public String getSmartDashboardType(){
-        return "3AxisAccelerometer";
+        return "Internal3AxisAccelerometer";
     }
 
     /**

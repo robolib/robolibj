@@ -4,11 +4,13 @@
 *.jar
 *.war
 *.ear
+*.jardesc
 
 javadoc.xml
 
 *.sublime-*
 /ant/
+/build/
 /bin/
 /doc/
 /test/
