@@ -31,7 +31,7 @@ import org.team2583.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  *
  */
-public class DriverStation implements Runnable {
+public final class DriverStation implements Runnable {
     
     
     private Thread m_thread;
@@ -53,7 +53,7 @@ public class DriverStation implements Runnable {
      * 
      */
     private DriverStation(){
-        m_log.debug("DriverStation interface initializing");
+        m_log.info("DriverStation interface initializing");
         m_dataSem = new Object();
         m_packetDataAvailableMutex = HALUtil.initializeMutexNormal();
         m_packetDataAvailableSem = HALUtil.initializeMultiWait();
@@ -103,6 +103,15 @@ public class DriverStation implements Runnable {
             m_thread_exit_error = true;
             m_thread.start();
         }
+    }
+    
+    public void exitNoError(){
+        m_thread_keepAlive = false;
+        m_thread_exit_error = false;
+    }
+    
+    public void exit(){
+        m_thread_keepAlive = false;
     }
     
     /**
@@ -263,14 +272,5 @@ public class DriverStation implements Runnable {
         }
         if(isDSAttached())
             FRCNetworkCommunicationsLibrary.HALSetErrorData(es);
-    }
-    
-    public void exitNoError(){
-        m_thread_keepAlive = false;
-        m_thread_exit_error = false;
-    }
-    
-    public void exit(){
-        m_thread_keepAlive = false;
     }
 }

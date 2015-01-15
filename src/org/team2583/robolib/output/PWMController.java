@@ -126,6 +126,11 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
         setSpeed(speed);
         m_safetyHelper.feed();
     }
+    
+    public void setSpeed(double speed){
+        super.setSpeed(speed);
+        m_safetyHelper.feed();
+    }
 
     /**
      * {@inheritDoc}

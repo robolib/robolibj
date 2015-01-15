@@ -139,7 +139,7 @@ public class RoboLibBot {
      *
      * @param debug Enable or Disable
      */
-    public void enableDebug(boolean debug){
+    protected void enableDebug(boolean debug){
         m_log.enableDebug(debug);
     }
 

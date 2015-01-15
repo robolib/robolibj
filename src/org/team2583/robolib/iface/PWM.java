@@ -27,7 +27,6 @@ import org.team2583.robolib.hal.DIOJNI;
 import org.team2583.robolib.hal.HALUtil;
 import org.team2583.robolib.hal.PWMJNI;
 import org.team2583.robolib.util.MathUtils;
-import org.team2583.robolib.util.log.Loggable;
 import org.team2583.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
@@ -39,7 +38,7 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWM extends Interface implements LiveWindowSendable, Loggable {
+public class PWM extends Interface implements LiveWindowSendable {
 
     /**
      * The PWM Channel enum.
@@ -199,6 +198,8 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
     private int m_scaleFactorFull;
     
     protected final String m_description;
+    
+    public static final int kSystemClockTicksPerMicrosecond = 40;
 
     /** Keep track of already used channels. */
     private static boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
@@ -348,7 +349,7 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      * @param min The minimum PWM pulse in ms
      */
     public void setBounds(double max, double deadMax, double center, double deadMin, double min){
-        double loopTime = (DIOJNI.getLoopTiming(getLE4IntBuffer())/40000);
+        double loopTime = DIOJNI.getLoopTiming(getLE4IntBuffer())/(kSystemClockTicksPerMicrosecond*1e3);
         m_boundsPositiveMax = (int) ((max - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
         m_boundsNegativeMin = (int) ((min - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
         m_boundsCenter = (int) ((center - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
@@ -412,12 +413,7 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      * @param speed the new speed
      */
     public void setSpeed(double speed){
-//        speed = MathUtils.clamp(speed, -1.0, 1.0);
-        if(speed < -1.0){
-            speed = -1.0;
-        }else if(speed > 1.0){
-            speed = 1.0;
-        }
+        speed = MathUtils.clamp(speed, -1.0, 1.0);
 
         int raw;
         if(speed == 0.0){
@@ -438,13 +434,13 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      */
     public double getSpeed(){
         int raw = getRaw();
-        if(raw >= m_boundsPositiveMax){
+        if(raw > m_boundsPositiveMax){
             return 1.0;
-        }else if(raw <= m_boundsNegativeMin){
+        }else if(raw < m_boundsNegativeMin){
             return -1.0;
-        }else if(raw >= m_boundsPositiveMin){
+        }else if(raw > m_boundsPositiveMin){
             return (double) (raw - m_boundsPositiveMin) / (double) m_scaleFactorPositive;
-        }else if(raw <= m_boundsNegativeMax){
+        }else if(raw < m_boundsNegativeMax){
             return (double) (raw - m_boundsNegativeMax) / (double) m_scaleFactorNegative;
         }else{
             return 0.0;

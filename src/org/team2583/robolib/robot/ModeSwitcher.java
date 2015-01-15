@@ -229,7 +229,7 @@ public class ModeSwitcher {
      * @param mode the {@link GameMode} to switch to.
      */
     public void switchMode(GameMode mode){
-        debug("Switching to " + mode.getName());
+        m_log.info("Switching to " + mode.getName());
         
         RobotMode rMode = getRobotMode();
         try{
