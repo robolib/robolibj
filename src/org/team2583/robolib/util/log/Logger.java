@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.team2583.robolib.robot.ModeSwitcher;
 import org.team2583.robolib.util.RoboRIO;
-//import org.team2583.robolib.util.RoboRIO;
 
 /**
  * A Logging class for the robot.
@@ -55,11 +54,17 @@ public final class Logger extends ILogger {
     /** The Constant m_defOuts. */
     private static final List<LogOutput> m_defOuts = new ArrayList<LogOutput>();
     
+    /** The m_debugEnabled. */
+    private static boolean m_debugEnabled = false;
+    
     /** The m_outs. */
     private final List<LogOutput> m_outs;
     
     /** The m_label. */
     private final String m_label;
+    
+    /** The m_acceptGlobals. */
+    private boolean m_acceptGlobals = true;
     
     
     /**
@@ -96,7 +101,7 @@ public final class Logger extends ILogger {
         return m_loggers.get(o);
     }
     
-    public static boolean m_debugEnabled = false;
+    
 
     /**
      * Instantiates a new logger.
@@ -137,6 +142,11 @@ public final class Logger extends ILogger {
         if(!m_outs.contains(out) && (!out.equals(LogOutput.TERM_OUT) || !out.equals(LogOutput.TERM_ERR)))
             m_outs.add(out);
     }
+    
+    public void clearOutputs(){
+        m_acceptGlobals = false;
+        m_outs.clear();
+    }
 
     /**
      * {@inheritDoc}
@@ -151,8 +161,10 @@ public final class Logger extends ILogger {
      * @param out a {@link LogOutput} instance
      */
     public static void registerToAll(LogOutput out){
-        for(Logger l : m_loggers.values())
-            l.registerOutput(out);
+        for(Logger l : m_loggers.values()){
+            if(l.m_acceptGlobals)
+                l.registerOutput(out);
+        }
         registerDefaultOutput(out);
     }
     

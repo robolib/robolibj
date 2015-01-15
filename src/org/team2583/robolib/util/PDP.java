@@ -19,7 +19,6 @@ import static org.team2583.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import org.team2583.robolib.exception.ResourceAllocationException;
 import org.team2583.robolib.hal.PDPJNI;
-import org.team2583.robolib.robot.RoboLibBot;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -72,7 +71,6 @@ public class PDP implements LiveWindowSendable{
      * Instantiates a new pdp.
      */
     private PDP(){
-        initTable(RoboLibBot.getRobotTable().getSubTable("PDP"));
     }
     
     /** The m_chan names. */

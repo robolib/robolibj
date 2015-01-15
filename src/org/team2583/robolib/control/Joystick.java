@@ -18,6 +18,7 @@ package org.team2583.robolib.control;
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
 import org.team2583.robolib.communication.UsageReporting;
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import org.team2583.robolib.util.RoboRIO;
 import org.team2583.robolib.util.log.Logger;
 
 /**
@@ -165,6 +166,16 @@ public class Joystick extends HIDBase {
         }
     }
     
+    private static double m_nextComplainTime = 0.0;
+    
+    protected synchronized static void complainJoystickMissing(String msg){
+        double c = RoboRIO.getFPGATimestamp();
+        if(c > m_nextComplainTime){
+            Logger.get(Joystick.class).error(msg);
+            m_nextComplainTime = c + 1.0;
+        }
+    }
+    
     /**
      * Gets the stick axis.
      *
@@ -174,7 +185,7 @@ public class Joystick extends HIDBase {
      */
     protected synchronized static double getStickAxis(Stick stick, int axis){
         if(m_joystickAxes[stick.ordinal()].length <= axis){
-            Logger.get(Joystick.class).error("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            complainJoystickMissing("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return 0.0;
         }
         
@@ -195,7 +206,7 @@ public class Joystick extends HIDBase {
      */
     protected synchronized static boolean getStickButton(Stick stick, int button){
         if(m_joystickButtonsCount[stick.ordinal()] <= button){
-            Logger.get(Joystick.class, "Joystick").error("Joystick Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            complainJoystickMissing("Joystick Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return false;
         }
         
