@@ -27,7 +27,7 @@ import org.team2583.robolib.hal.PowerJNI;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public final class RoboRIO {
+public class RoboRIO {
     
     /**
      * Instantiates a new robo rio.
@@ -196,7 +196,7 @@ public final class RoboRIO {
      *
      * @return the servo voltage
      */
-    public static double getServoVoltage(){
+    public static double getPWMVoltage(){
         IntBuffer status = getLE4IntBuffer();
         double retVal = PowerJNI.getUserVoltage6V(status);
         HALUtil.checkStatus(status);
@@ -208,7 +208,7 @@ public final class RoboRIO {
      *
      * @return the servo current
      */
-    public static double getServoCurrent(){
+    public static double getPWMCurrent(){
         IntBuffer status = getLE4IntBuffer();
         double retVal = PowerJNI.getUserCurrent6V(status);
         HALUtil.checkStatus(status);
@@ -220,7 +220,7 @@ public final class RoboRIO {
      *
      * @return the servo power enabled
      */
-    public static boolean getServoPowerEnabled(){
+    public static boolean getPWMPowerEnabled(){
         IntBuffer status = getLE4IntBuffer();
         boolean retVal = PowerJNI.getUserActive6V(status);
         HALUtil.checkStatus(status);
@@ -232,7 +232,7 @@ public final class RoboRIO {
      *
      * @return the servo fault count
      */
-    public static int getServoFaultCount(){
+    public static int getPWMFaultCount(){
         IntBuffer status = getLE4IntBuffer();
         int retVal = PowerJNI.getUserCurrentFaults6V(status);
         HALUtil.checkStatus(status);

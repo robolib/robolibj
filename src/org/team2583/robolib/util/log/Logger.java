@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.team2583.robolib.robot.ModeSwitcher;
+import org.team2583.robolib.util.RoboRIO;
 //import org.team2583.robolib.util.RoboRIO;
 
 /**
@@ -136,7 +137,7 @@ public final class Logger extends ILogger {
         if(!m_outs.contains(out) && (!out.equals(LogOutput.TERM_OUT) || !out.equals(LogOutput.TERM_ERR)))
             m_outs.add(out);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -162,7 +163,7 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendMsg(LogLevel l, String s){
-        String sout = "[" + System.currentTimeMillis() / 1000.0 + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_OUT.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
@@ -175,7 +176,7 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendErrMsg(LogLevel l, String s){
-        String sout = "[" + System.currentTimeMillis() / 1000.0 + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_ERR.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);

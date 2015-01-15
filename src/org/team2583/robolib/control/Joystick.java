@@ -25,7 +25,7 @@ import org.team2583.robolib.util.log.Logger;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class Joystick extends ControllerBase {   
+public class Joystick extends HIDBase {   
 
     
     /**
@@ -174,7 +174,7 @@ public class Joystick extends ControllerBase {
      */
     protected synchronized static double getStickAxis(Stick stick, int axis){
         if(m_joystickAxes[stick.ordinal()].length <= axis){
-            Logger.get(Joystick.class, "Joystick").error("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            Logger.get(Joystick.class).error("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return 0.0;
         }
         
