@@ -165,7 +165,7 @@ public class PWM extends Interface implements LiveWindowSendable {
     public static final int kPWMDisabled = 0;
 
     /** Should we be destroying the deadband? Only used by setBounds() */
-    private boolean m_destroyDeadband = false;
+    private boolean m_eliminateDeadband = false;
 
     /** The positive bounds scaling factor */
     private int m_scaleFactorPositive;
@@ -234,14 +234,14 @@ public class PWM extends Interface implements LiveWindowSendable {
         HALUtil.checkStatus(status);
 
         if(!PWMJNI.allocatePWMChannel(m_port,  status)){
-            throw new ResourceAllocationException("PWM channel '" + getChannelName() + "' already in use.");
+            throw new ResourceAllocationException("Cannot create '" + desc + "', PWM channel '" + getChannelName() + "' already in use.");
         }
         HALUtil.checkStatus(status);
 
         PWMJNI.setPWM(m_port, (short) 0, status);
         HALUtil.checkStatus(status);
 
-        m_destroyDeadband = false;
+        m_eliminateDeadband = false;
 
         UsageReporting.report(tResourceType.kResourceType_PWM, channel.ordinal());
 
@@ -289,7 +289,7 @@ public class PWM extends Interface implements LiveWindowSendable {
         if(m_usedChannels[channel.ordinal()] == false){
             m_usedChannels[channel.ordinal()] = true;
         }else{
-            throw new ResourceAllocationException("PWM channel '" + channel.name() + "' already in use.");
+            throw new ResourceAllocationException("Cannot create '" + m_description + "', PWM channel '" + getChannelName() + "' already in use.");
         }
     }
 
@@ -307,7 +307,7 @@ public class PWM extends Interface implements LiveWindowSendable {
             m_usedChannels[channel.ordinal()] = false;
             return true;
         }else{
-            Logger.get(PWM.class).error("PWM Channel '" + channel.name() + "' was not allocated. How did you get here?");
+            Logger.get(PWM.class).error("PWM Channel '" + getChannelName() + "' was not allocated. How did you get here?");
             return false;
         }
     }
@@ -356,7 +356,7 @@ public class PWM extends Interface implements LiveWindowSendable {
         m_boundsPositiveMinDeadband = (int) ((deadMax - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
         m_boundsNegativeMaxDeadband = (int) ((deadMin - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
 
-        enableDeadbandDestruction(m_destroyDeadband);
+        eliminateDeadband(m_eliminateDeadband);
     }
 
     /**
@@ -364,8 +364,8 @@ public class PWM extends Interface implements LiveWindowSendable {
      *
      * @param eliminateDeadband Yes or No
      */
-    public void enableDeadbandDestruction(boolean eliminateDeadband){
-        m_destroyDeadband = eliminateDeadband;
+    public void eliminateDeadband(boolean eliminateDeadband){
+        m_eliminateDeadband = eliminateDeadband;
         if(eliminateDeadband){
             m_boundsPositiveMin = m_boundsPositiveMinDeadband;
             m_boundsNegativeMax = m_boundsNegativeMaxDeadband;
@@ -474,6 +474,14 @@ public class PWM extends Interface implements LiveWindowSendable {
         return value;
     }
     
+    public void set(double value){
+        setSpeed(value);
+    }
+    
+    public double get(){
+        return getSpeed();
+    }
+    
     /**
      * Get the center PWM value.
      * 
@@ -533,7 +541,7 @@ public class PWM extends Interface implements LiveWindowSendable {
      */
     public void updateTable() {
         if(m_table != null){
-            m_table.putNumber("Value",  getSpeed());
+            m_table.putNumber("Value",  get());
         }
     }
 
@@ -544,7 +552,7 @@ public class PWM extends Interface implements LiveWindowSendable {
         setSpeed(0);
         m_table_listener = new ITableListener(){
             public void valueChanged(ITable itable, String key, Object value, boolean bln){
-                setSpeed(((Double) value).doubleValue());
+                set(((Double) value).doubleValue());
             }
         };
         m_table.addTableListener("Value", m_table_listener, true);
