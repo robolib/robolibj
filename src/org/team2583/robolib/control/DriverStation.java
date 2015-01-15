@@ -68,7 +68,7 @@ public final class DriverStation implements Runnable {
      * {@inheritDoc}
      */
     public void run(){
-        m_log.debug("DriverStation task thread started.");
+        m_log.info("DriverStation communications thread started.");
         int safetyCounter = 0;
         while (m_thread_keepAlive){
             HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
@@ -94,7 +94,7 @@ public final class DriverStation implements Runnable {
             }
         }
         if(m_thread_exit_error)
-            m_log.severe("DriverStation task thread ended!");
+            m_log.severe("DriverStation communications thread ended!");
     }
     
     public void startThread(){
