@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.jar.Manifest;
 
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary.tInstances;
@@ -80,15 +82,6 @@ public class RoboLibBot {
     
     /** The m_table. */
     private static ITable m_table;
-    
-    /** The Constant m_ds. */
-    private static final DriverStation m_ds = DriverStation.getInstance();
-    
-    /** The Constant m_modeSwitcher. */
-    private static final ModeSwitcher m_modeSwitcher = ModeSwitcher.getInstance();
-    
-    /** The m_instance. */
-    private static RoboLibBot m_instance;
 
     /**
      * Robot Class Method.
@@ -121,8 +114,7 @@ public class RoboLibBot {
         NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
 
         m_table = NetworkTable.getTable("Robot");
-        m_log = Logger.get(this, "Robot");
-        m_instance = this;
+        m_log = Logger.get(this.getClass());
     }
 
     /**
@@ -249,9 +241,33 @@ public class RoboLibBot {
      * @param args the arguments
      */
     public static void main(String args[]) {
+        ModeSwitcher m_modeSwitcher = ModeSwitcher.getInstance();
+        Logger.get(RoboLibBot.class, "RoboLibJ").info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
+        String robotName = "";
+        Enumeration<URL> resources = null;
+        try {
+            resources = RoboLibBot.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
+        } catch (IOException e) {e.printStackTrace();}
+        while (resources != null && resources.hasMoreElements()) {
+            try {
+                Manifest manifest = new Manifest(resources.nextElement().openStream());
+                robotName = manifest.getMainAttributes().getValue("Robot-Class");
+            } catch (IOException e) {e.printStackTrace();}
+        }
+
+        RoboLibBot robot;
+        try {
+            robot = (RoboLibBot) Class.forName(robotName).newInstance();
+        } catch (Throwable t) {
+//            DriverStation.reportError("ERROR Unhandled exception instantiating robot " + robotName + " " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
+            Logger.get(RoboLibBot.class, "Robot").severe("Robots don't quit!");
+            Logger.get(RoboLibBot.class).severe("Could not instantiate robot " + robotName + "!");
+            System.exit(1);
+            return;
+        }
         
-        m_instance.msg("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
-        m_instance.msg("Starting " + m_name);
+        
+        m_log.info("Starting " + m_name);
         
         FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationReserve();
         Timer.SetImplementation(new HardwareTimer());
@@ -261,36 +277,40 @@ public class RoboLibBot {
         UsageReporting.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Java);
         
             
-        m_instance.msg("Initializing Robot Network Table and Data");
+        m_log.info("Initializing Robot Network Table and Data");
         try{
             m_table.putString("name", m_name);
             m_table.putString("version", m_version);
         }catch(Throwable t){
-            m_instance.fatal("Could not set Robot Name and Version in the Network Table. Did Something Screw Up?", t);
+            robot.fatal("Could not set Robot Name and Version in the Network Table. Did Something Screw Up?", t);
         }
         
 
         //Run User initialization
-        m_instance.msg("Running User Initialization code");
+        m_log.info("Running User Initialization code");
         try{
-            m_instance.robotInit();
+            robot.robotInit();
         }catch(Throwable t){
-            DriverStation.reportError("ERROR Unhandled exception instantiating robot " + m_name + " " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
-            m_instance.fatal("Error running User Init Code", t);
+//            DriverStation.reportError("ERROR Unhandled exception instantiating robot " + m_name + " " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
+            m_log.fatal("Error running User Init Code", t);
+            System.exit(1);
+            return;
         }
 
         checkVersionFile(new File("/tmp/frc_versions/FRC_Lib_Version.ini"));
         UsageReporting.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
         LiveWindow.setEnabled(false);
 
-        m_instance.msg("Initializing Robot Modes");
+        m_log.info("Initializing Robot Modes");
         m_modeSwitcher.init();
 
-        m_instance.msg(m_name + ", Version " + m_version + " Running");
+        m_log.info(m_name + ", Version " + m_version + " Running");
         FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramStarting();
         
-        m_instance.msg("Starting Main Loop");
+        m_log.info("Starting Main Loop");
+        DriverStation m_ds = DriverStation.getInstance();
         try{
+            m_ds.startThread();
             while(m_run){
                 GameMode mode = getDSMode();
                 if(m_modeSwitcher.inNewMode(mode)){
@@ -301,15 +321,17 @@ public class RoboLibBot {
                     m_modeSwitcher.run();
                 }
                 m_ds.waitForData();
+//                robot.msg("ECHO");
             }
             
         }catch(Throwable t){
-            DriverStation.reportError("ERROR Unhandled exception: " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
-            m_instance.fatal("Error in Main Loop. Something should have caught this!!!", t);
+//            DriverStation.reportError("ERROR Unhandled exception: " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
+            m_log.fatal("Error in Main Loop. Something should have caught this!!!", t);
         }finally{
+            m_ds.exitNoError();
             m_log.fatal("ROBOTS DON'T QUIT!!!", "Exited Main Loop");
+            System.exit(1);
         }
-        System.exit(1);
     }
     
     /**
@@ -317,13 +339,12 @@ public class RoboLibBot {
      *
      * @param file the file
      */
-    @SuppressWarnings("null")
     private static void checkVersionFile(File file){
         
         if(!file.exists()){
             writeVersionFile(file);
         }else{
-            byte[] data = null;
+            byte[] data = "2015 Java 1.0.0".getBytes();
             try{
                 FileInputStream input = new FileInputStream(file);
                 input.read(data);
@@ -335,8 +356,7 @@ public class RoboLibBot {
                 file.delete();
                 writeVersionFile(file);
             }
-        }
-        
+        }   
     }
     
     /**

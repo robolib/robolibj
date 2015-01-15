@@ -306,7 +306,7 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
             m_usedChannels[channel.ordinal()] = false;
             return true;
         }else{
-            Logger.get(this).error("PWM Channel '" + channel.name() + "' was not allocated. How did you get here?");
+            Logger.get(PWM.class).error("PWM Channel '" + channel.name() + "' was not allocated. How did you get here?");
             return false;
         }
     }
@@ -349,11 +349,11 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      */
     public void setBounds(double max, double deadMax, double center, double deadMin, double min){
         double loopTime = (DIOJNI.getLoopTiming(getLE4IntBuffer())/40000);
-        m_boundsPositiveMax = ((int) ((max - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        m_boundsNegativeMin = ((int) ((min - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        m_boundsCenter = ((int) ((center - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        m_boundsPositiveMinDeadband = ((int) ((deadMax - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
-        m_boundsNegativeMaxDeadband = ((int) ((deadMin - kDefaultPWMCenter)/loopTime)) + kDefaultPWMStepsDown - 1;
+        m_boundsPositiveMax = (int) ((max - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
+        m_boundsNegativeMin = (int) ((min - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
+        m_boundsCenter = (int) ((center - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
+        m_boundsPositiveMinDeadband = (int) ((deadMax - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
+        m_boundsNegativeMaxDeadband = (int) ((deadMin - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
 
         enableDeadbandDestruction(m_destroyDeadband);
     }
@@ -412,15 +412,20 @@ public class PWM extends Interface implements LiveWindowSendable, Loggable {
      * @param speed the new speed
      */
     public void setSpeed(double speed){
-        speed = MathUtils.clamp(speed, -1.0, 1.0);
+//        speed = MathUtils.clamp(speed, -1.0, 1.0);
+        if(speed < -1.0){
+            speed = -1.0;
+        }else if(speed > 1.0){
+            speed = 1.0;
+        }
 
         int raw;
         if(speed == 0.0){
             raw = m_boundsCenter;
         }else if(speed > 0.0){
-            raw = (int) (speed * ((double)(m_scaleFactorPositive + m_boundsPositiveMin)) + 0.5);
+            raw = (int) (speed * ((double)m_scaleFactorPositive) + ((double)m_boundsPositiveMin) + 0.5);
         }else{
-            raw = (int) (speed * ((double)(m_scaleFactorNegative + m_boundsNegativeMax)) + 0.5);
+            raw = (int) (speed * ((double)m_scaleFactorNegative) + ((double)m_boundsNegativeMax) + 0.5);
         }
 
         setRaw(raw);

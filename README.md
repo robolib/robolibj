@@ -1,6 +1,5 @@
-RoboLibJ
+RoboLibJ - An FRC library
 ==
-A Better WPILib
 
 The point of this project is to completely replace WPILib, with a more complete library.
 

@@ -70,6 +70,7 @@ public abstract class RobotMode {
         m_name = name;
         if(active || !ModeSwitcher.getInstance().hasMode(mode))
             setActive();
+        Logger.get(this, m_name);
     }
     
     /**

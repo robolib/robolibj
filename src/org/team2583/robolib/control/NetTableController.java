@@ -16,6 +16,7 @@
 package org.team2583.robolib.control;
 
 import org.team2583.robolib.robot.RoboLibBot;
+
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**

@@ -141,12 +141,19 @@
       <fileset dir="${resources.dir}" excludes="CVS/** .svn" />
 
     </jar>
+    <copy todir="${wpilib.lib}">
+      <fileset dir="${dist.dir}">
+          <filename name="${dist.jar.name}"/>
+      </fileset>
+    </copy>
+
     <echo>[${project.name}-jar] COMPLETE! JarFile: ${dist.jar}</echo>
   </target>
   
   <target name="clean" description="Clean the build environment">
     <delete dir="${build.dir}"/>
     <delete dir="${dist.dir}"/>
+    <delete dir="${project.dir}/bin"/>
   </target>
 
   <target name="archive-source">
