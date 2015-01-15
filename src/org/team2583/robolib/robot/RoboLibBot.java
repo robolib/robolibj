@@ -19,8 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
+import java.io.InputStream;
 import java.util.jar.Manifest;
 
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
@@ -247,24 +246,25 @@ public class RoboLibBot {
         log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         
         String robotName = "";
-        Enumeration<URL> resources = null;
+        InputStream is = RoboLibBot.class.getResourceAsStream("/META-INF/MANIFEST.MF");
+        Manifest manifest;
         try {
-            resources = RoboLibBot.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
-        } catch (IOException e) {e.printStackTrace();}
-        while (resources != null && resources.hasMoreElements()) {
-            try {
-                Manifest manifest = new Manifest(resources.nextElement().openStream());
-                robotName = manifest.getMainAttributes().getValue("Robot-Class");
-            } catch (IOException e) {e.printStackTrace();}
+            manifest = new Manifest(is);
+            robotName = manifest.getMainAttributes().getValue("Robot-Class");
+        } catch (IOException e) {
+            log.fatal("Could not open manifest file.", e);
         }
+        
+        if(robotName == null)
+            log.fatal("No 'Robot-Class' in manifest file.");
 
         RoboLibBot robot;
         try {
             robot = (RoboLibBot) Class.forName(robotName).newInstance();
         } catch (Throwable t) {
 //            DriverStation.reportError("ERROR Unhandled exception instantiating robot " + robotName + " " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
-            log.severe("Robots don't quit!");
-            log.severe("Could not instantiate robot " + robotName + "!");
+            log.fatal("Robots don't quit!");
+            log.fatal("Could not instantiate robot " + robotName + "!", t);
             System.exit(1);
             return;
         }
@@ -327,7 +327,6 @@ public class RoboLibBot {
                     m_modeSwitcher.run();
                 }
                 m_ds.waitForData();
-//                robot.msg("ECHO");
             }
             
         }catch(Throwable t){
