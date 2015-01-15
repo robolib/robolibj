@@ -1,4 +1,5 @@
 /*
+
  * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining

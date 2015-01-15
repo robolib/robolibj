@@ -16,10 +16,9 @@
 package org.team2583.robolib.robot;
 
 import java.util.EnumMap;
-
-import edu.wpi.first.wpilibj.command.Scheduler;
-
+//import edu.wpi.first.wpilibj.command.Scheduler;=
 import org.team2583.robolib.exception.RobotException;
+import org.team2583.robolib.util.log.ILogger;
 import org.team2583.robolib.util.log.Logger;
 
 /**
@@ -44,17 +43,19 @@ public class ModeSwitcher {
     private final EnumMap<GameMode, RobotMode> m_modes;
     //private final RobotMode m_modes[];
     /** The m_scheduler. */
-    private final Scheduler m_scheduler;
+    //private final Scheduler m_scheduler;
     
     /** The Constant m_instance. */
-    private static final ModeSwitcher m_instance = new ModeSwitcher();
+    private static ModeSwitcher m_instance = null;
+    
+    private final ILogger m_log;
     
     /**
      * Returns the ModeSwitcher, creating it if one does not exists.
      * @return the ModeSwitcher
      */
     public static ModeSwitcher getInstance(){
-        return m_instance;
+        return m_instance == null ? m_instance = new ModeSwitcher() : m_instance;
     }
     
     /**
@@ -63,7 +64,8 @@ public class ModeSwitcher {
     private ModeSwitcher(){
         m_currentMode = GameMode.NONE;
         m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
-        m_scheduler = Scheduler.getInstance();
+        m_log = Logger.get(ModeSwitcher.class);
+//        m_scheduler = Scheduler.getInstance();
     }
     
     /**
@@ -72,7 +74,7 @@ public class ModeSwitcher {
      * @param msg the msg
      */
     private void debug(String msg){
-        Logger.get(this).debug(msg);
+        m_log.debug(msg);
     }
     
     /**
@@ -145,7 +147,7 @@ public class ModeSwitcher {
         //}catch(Throwable e){
             //Logger.get(getRobotMode()).fatal("Fatal action in RobotMode run method", e);
         //}
-        m_scheduler.run();
+//        m_scheduler.run();
     }
     
     /**
@@ -243,7 +245,7 @@ public class ModeSwitcher {
         try{
             rMode.modeInit();
         }catch(Throwable e){
-            Logger.get(getRobotMode()).fatal("Fatal action in RobotMode init method", e);
+            Logger.get(rMode).fatal("Fatal action in RobotMode init method", e);
         }
     }
     

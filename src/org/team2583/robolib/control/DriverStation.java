@@ -23,6 +23,7 @@ import java.nio.IntBuffer;
 import org.team2583.robolib.communication.FRCNetworkCommunicationsLibrary;
 import org.team2583.robolib.hal.HALUtil;
 import org.team2583.robolib.output.MotorSafetyManager;
+import org.team2583.robolib.util.log.ILogger;
 import org.team2583.robolib.util.log.Logger;
 
 /**
@@ -32,23 +33,27 @@ import org.team2583.robolib.util.log.Logger;
  */
 public class DriverStation implements Runnable {
     
-    private static DriverStation m_instance = new DriverStation();
     
     private Thread m_thread;
     private final Object m_dataSem;
     private volatile boolean m_thread_keepAlive = true;
+    private volatile boolean m_thread_exit_error = true;
     private boolean m_newControlData;
     private final ByteBuffer m_packetDataAvailableMutex;
     private final ByteBuffer m_packetDataAvailableSem;
+    private static final ILogger m_log = Logger.get(DriverStation.class);
+
+    private static DriverStation m_instance = null;
     
     public static DriverStation getInstance(){
-        return m_instance;
+        return m_instance == null ? m_instance = new DriverStation() : m_instance;
     }
     
     /**
      * 
      */
-    protected DriverStation(){
+    private DriverStation(){
+        m_log.debug("DriverStation interface initializing");
         m_dataSem = new Object();
         m_packetDataAvailableMutex = HALUtil.initializeMutexNormal();
         m_packetDataAvailableSem = HALUtil.initializeMultiWait();
@@ -57,24 +62,23 @@ public class DriverStation implements Runnable {
         m_thread = new Thread(this, "FRCDriverStation");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
         
-        m_thread.start();
-        
     }
     
     /**
      * {@inheritDoc}
      */
     public void run(){
+        m_log.debug("DriverStation task thread started.");
         int safetyCounter = 0;
-        ByteBuffer countBuffer = ByteBuffer.allocateDirect(1);
         while (m_thread_keepAlive){
             HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
             synchronized(this){
                 for(byte stick = 0; stick < Joystick.kNumJoysticks; stick++){
+                    ByteBuffer countBuffer = ByteBuffer.allocateDirect(1);
                     short axes[] = FRCNetworkCommunicationsLibrary.HALGetJoystickAxes(stick);
                     short povs[] = FRCNetworkCommunicationsLibrary.HALGetJoystickPOVs(stick);
                     int btns = FRCNetworkCommunicationsLibrary.HALGetJoystickButtons(stick, countBuffer);
-                    Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());                    
+                    Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());
                 }
                 
                 m_newControlData = true;
@@ -89,7 +93,12 @@ public class DriverStation implements Runnable {
                 safetyCounter = 0;
             }
         }
-        Logger.get(this).severe("Data Gathering Thread Ended!");
+        if(m_thread_exit_error)
+            m_log.severe("Data Gathering Thread Ended!");
+    }
+    
+    public void startThread(){
+        m_thread.start();
     }
     
     /**
@@ -248,6 +257,11 @@ public class DriverStation implements Runnable {
      */
     public static void reportError(String err, boolean pT){
         
+    }
+    
+    public void exitNoError(){
+        m_thread_keepAlive = false;
+        m_thread_exit_error = false;
     }
     
     public void exit(){

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.team2583.robolib.robot.ModeSwitcher;
-import org.team2583.robolib.util.RoboRIO;
+//import org.team2583.robolib.util.RoboRIO;
 
 /**
  * A Logging class for the robot.
@@ -49,7 +49,7 @@ public final class Logger extends ILogger {
     
     
 	/** The Constant m_loggers. */
-	private static final Map<Class, Logger> m_loggers = new HashMap<>();
+	private static final Map<Object, Logger> m_loggers = new HashMap<>();
     
     /** The Constant m_defOuts. */
     private static final List<LogOutput> m_defOuts = new ArrayList<LogOutput>();
@@ -68,18 +68,7 @@ public final class Logger extends ILogger {
      * @return an ILogger instance
      */
     public static ILogger get(Object o){
-        return get(o.getClass());
-    }
-
-    /**
-     * Get an ILogger instance for o.
-     *
-     * @param o the object to get the logger for.
-     * @param s the string to be prefixed to log messages.
-     * @return an ILogger instance
-     */
-    public static ILogger get(Object o, String s){
-        return get(o.getClass(), s);
+        return get(o, o.getClass().getSimpleName());
     }
 
     /**
@@ -95,15 +84,15 @@ public final class Logger extends ILogger {
     /**
      * Get an ILogger instance for c.
      *
-     * @param c the class to get the logger for.
+     * @param o the object to get the logger for.
      * @param s the string to be prefixed to log messages.
      * @return an ILogger instance
      */
-    public static Logger get(Class c, String s){
-        if(!m_loggers.containsKey(c))
-            m_loggers.put(c, new Logger(s));
+    public static Logger get(Object o, String s){
+        if(!m_loggers.containsKey(o))
+            m_loggers.put(o, new Logger(s));
         
-        return m_loggers.get(c);
+        return m_loggers.get(o);
     }
     
     public static boolean m_debugEnabled = false;
@@ -173,7 +162,7 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendMsg(LogLevel l, String s){
-        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + System.currentTimeMillis() / 1000.0 + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_OUT.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
@@ -186,7 +175,7 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendErrMsg(LogLevel l, String s){
-        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + System.currentTimeMillis() / 1000.0 + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         LogOutput.TERM_ERR.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
@@ -283,3 +272,17 @@ public final class Logger extends ILogger {
         }
     }
 }
+
+/*StringWriter errors = new StringWriter();
+errors.write(s + '\n');
+
+if(o != null){
+    if(o instanceof Throwable){
+        ((Throwable)o).printStackTrace(new PrintWriter(errors));
+    }else if(o instanceof String){
+        errors.write('\t' + (String)o);
+    }else{
+        errors.write('\t' + o.toString());
+    }
+}
+sendErrMsg(LogLevel.FATAL, errors.toString());*/

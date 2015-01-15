@@ -15,6 +15,7 @@
 
 package org.team2583.robolib.robot;
 
+
 /**
  * The Simple RoboLibBot Class.
  * This is a more simple version of the RoboLibBot class, it has pre-defined

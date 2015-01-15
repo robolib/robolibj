@@ -224,7 +224,7 @@ public class DigitalIO extends Interface {
         if(m_usedChannels[channel.ordinal()] == true){
             m_usedChannels[channel.ordinal()] = false;
         }else{
-            Logger.get(this).error("Digital IO Channel '" + channel.name() + "' was not allocated. How did you get here?");
+            Logger.get(DigitalIO.class).error("Digital IO Channel '" + channel.name() + "' was not allocated. How did you get here?");
         }
     }
 

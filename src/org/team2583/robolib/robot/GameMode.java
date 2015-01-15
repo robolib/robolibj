@@ -25,7 +25,7 @@ public enum GameMode {
 	
 	
     /** The none. */
-    NONE("NoMode", "N"),
+    NONE("Init", "I"),
     
     /** The disabled. */
     DISABLED("Disabled", "D"),

@@ -174,7 +174,7 @@ public class Joystick extends ControllerBase {
      */
     protected synchronized static double getStickAxis(Stick stick, int axis){
         if(m_joystickAxes[stick.ordinal()].length <= axis){
-            Logger.get(ControllerBase.class, "Joystick").error("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            Logger.get(Joystick.class, "Joystick").error("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return 0.0;
         }
         
@@ -195,7 +195,7 @@ public class Joystick extends ControllerBase {
      */
     protected synchronized static boolean getStickButton(Stick stick, int button){
         if(m_joystickButtonsCount[stick.ordinal()] <= button){
-            Logger.get(ControllerBase.class, "Joystick").error("Joystick Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            Logger.get(Joystick.class, "Joystick").error("Joystick Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return false;
         }
         
