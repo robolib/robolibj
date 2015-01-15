@@ -37,6 +37,12 @@ public class RMap {
         
     }
     
+    private static final Map<String, Class<? extends SpeedController>> map_SpeedController = new HashMap<>();
+    
+    private static final Map<String, Class<? extends SolenoidBase>> map_Solenoid = new HashMap<>();
+    
+    private static final Map<String, Class<? extends DigitalIO>> map_DigitalIO = new HashMap<>();
+    
     static{
         addSpeedControllerType("Talon", Talon.class);
         addSpeedControllerType("TalonSRX", TalonSRX.class);
@@ -48,14 +54,13 @@ public class RMap {
         addSolenoidType("SingleSolenoid", Solenoid.class);
         addSolenoidType("DoubleSolenoid", DoubleSolenoid.class);
         
+        map_DigitalIO.put("INPUT", DigitalIO.class);
+        map_DigitalIO.put("OUTPUT", DigitalIO.class);
+        
         
     }
     
-    private static final Map<String, Class<? extends SpeedController>> map_SpeedController = new HashMap<>();
     
-    private static final Map<String, Class<? extends SolenoidBase>> map_Solenoid = new HashMap<>();
-    
-    private static final Map<String, Class<? extends DigitalIO>> map_DigitalIO = new HashMap<>();
  
     /** The Constant runner. */
     public static final ConstantRunner runner = new ConstantRunner("RMap.ini");

@@ -64,7 +64,7 @@ public class ModeSwitcher {
     private ModeSwitcher(){
         m_currentMode = GameMode.NONE;
         m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
-        m_log = Logger.get(ModeSwitcher.class);
+        m_log = Logger.get(RoboLibBot.class);
 //        m_scheduler = Scheduler.getInstance();
     }
     
@@ -235,7 +235,7 @@ public class ModeSwitcher {
         try{
             rMode.modeEnd();
         }catch(Throwable e){
-            Logger.get(rMode).fatal("Fatal action in RobotMode end method", e);
+            Logger.get(rMode).fatal("Fatal error in RobotMode end method", e);
         }
         m_currentMode = mode;
         rMode = getRobotMode();
@@ -245,7 +245,7 @@ public class ModeSwitcher {
         try{
             rMode.modeInit();
         }catch(Throwable e){
-            Logger.get(rMode).fatal("Fatal action in RobotMode init method", e);
+            Logger.get(rMode).fatal("Fatal error in RobotMode init method", e);
         }
     }
     

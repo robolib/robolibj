@@ -20,12 +20,12 @@ import java.util.Arrays;
 import edu.wpi.first.wpilibj.GenericHID;
 
 /**
- * A middle-man in between the WPILib Library and the RoboLibJ Joysticks.
+ * The HID (Human Interface Device) base
  *
  * @author noriah Reuland <vix@noriah.dev>
  * @see Joystick
  */
-public abstract class ControllerBase extends GenericHID{
+public abstract class HIDBase extends GenericHID{
 
     
     /**
@@ -75,7 +75,7 @@ public abstract class ControllerBase extends GenericHID{
     /**
      * Provides a middle-man in between the WPILib Library and the RoboLibJ Joysticks.
      */
-    protected ControllerBase(){
+    protected HIDBase(){
         this(6, 12);
     }
     
@@ -84,7 +84,7 @@ public abstract class ControllerBase extends GenericHID{
      * @param numAxes the Number of Axes this Joystick will have
      * @param numBtns the Number of Buttons this Joystick will have
      */
-    protected ControllerBase(int numAxes, int numBtns){
+    protected HIDBase(int numAxes, int numBtns){
         m_numAxes = numAxes;
         m_numBtns = numBtns;
     }

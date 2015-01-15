@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class NetTableController extends ControllerBase {
+public class NetTableController extends HIDBase {
 
     /** The m_table. */
     private final ITable m_table;

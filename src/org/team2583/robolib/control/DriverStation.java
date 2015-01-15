@@ -36,8 +36,8 @@ public class DriverStation implements Runnable {
     
     private Thread m_thread;
     private final Object m_dataSem;
-    private volatile boolean m_thread_keepAlive = true;
-    private volatile boolean m_thread_exit_error = true;
+    private volatile boolean m_thread_keepAlive;
+    private volatile boolean m_thread_exit_error;
     private boolean m_newControlData;
     private final ByteBuffer m_packetDataAvailableMutex;
     private final ByteBuffer m_packetDataAvailableSem;
@@ -94,11 +94,15 @@ public class DriverStation implements Runnable {
             }
         }
         if(m_thread_exit_error)
-            m_log.severe("Data Gathering Thread Ended!");
+            m_log.severe("DriverStation task thread ended!");
     }
     
     public void startThread(){
-        m_thread.start();
+        if(!m_thread.isAlive()){
+            m_thread_keepAlive = true;
+            m_thread_exit_error = true;
+            m_thread.start();
+        }
     }
     
     /**
@@ -148,7 +152,6 @@ public class DriverStation implements Runnable {
      * @return True if the Robot is currently disabled by the field controls.
      */
     public static boolean isDisabled() {
-        //!2 ^ 0
         return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 1) == 0;
     }
 
@@ -158,7 +161,6 @@ public class DriverStation implements Runnable {
      * @return True if the Robot is currently enabled by the field controls.
      */
     public static boolean isEnabled() {
-        //2 ^ 0
         return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 1) != 0;
     }
 
@@ -169,7 +171,6 @@ public class DriverStation implements Runnable {
      * determined by the field controls.
      */
     public static boolean isAutonomous() {
-        //2 ^ 1
         return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 2) != 0;
     }
 
@@ -180,7 +181,6 @@ public class DriverStation implements Runnable {
      * determined by the driver station.
      */
     public static boolean isTest() {
-        //2 ^ 2
         return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 4) != 0;
     }
     
@@ -190,7 +190,6 @@ public class DriverStation implements Runnable {
      * @return True if the robot is currently emergency stopped.
      */
     public static boolean isEStopped(){
-        //2 ^ 3
         return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 8) != 0;
     }
     
@@ -200,7 +199,6 @@ public class DriverStation implements Runnable {
      * @return True if the FMS is attached
      */
     public static boolean isFMSAttached(){
-        //2 ^ 4
         return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 16) != 0;
     }
     
@@ -210,7 +208,6 @@ public class DriverStation implements Runnable {
      * @return True if we have a driver station
      */
     public static boolean isDSAttached(){
-        //2 ^ 5
         return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 32) != 0;
     }
 
@@ -256,7 +253,16 @@ public class DriverStation implements Runnable {
      * @param pT
      */
     public static void reportError(String err, boolean pT){
-        
+        String es = err;
+        if(pT){
+            es += " at ";
+            StackTraceElement traces[] = Thread.currentThread().getStackTrace();
+            for(int i=2; i<traces.length; i++){
+                es += traces[i].toString() + "\n";
+            }
+        }
+        if(isDSAttached())
+            FRCNetworkCommunicationsLibrary.HALSetErrorData(es);
     }
     
     public void exitNoError(){
