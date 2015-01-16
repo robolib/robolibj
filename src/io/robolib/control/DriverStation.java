@@ -23,6 +23,7 @@ import java.nio.IntBuffer;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary;
 import io.robolib.hal.HALUtil;
 import io.robolib.output.MotorSafetyManager;
+import io.robolib.util.PDP;
 import io.robolib.util.log.ILogger;
 import io.robolib.util.log.Logger;
 
@@ -90,6 +91,7 @@ public final class DriverStation implements Runnable {
             
             if(++safetyCounter >= 4){
                 MotorSafetyManager.check();
+                PDP.getInstance().updateTable();
                 safetyCounter = 0;
             }
         }

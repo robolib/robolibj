@@ -24,25 +24,28 @@ package io.robolib.control;
 public class XBoxController extends Joystick {
 
     /** Left X Axis ID. */
-    public static final int AXIS_LEFT_X = 0;
+    public static final int AXIS_X_LEFT = 0;
     
     /** Left Y Axis ID. */
-    public static final int AXIS_LEFT_Y = 1;
+    public static final int AXIS_Y_LEFT = 1;
     
-    /** Triggers Axis ID. */
-    public static final int AXIS_TRIGGERS = 2;
+    /** Left Trigger Axis ID. */
+    public static final int AXIS_TRIGGER_LEFT = 2;
+    
+    /** Right Trigger Axis ID. */
+    public static final int AXIS_TRIGGER_RIGHT = 3;
     
     /** Right X Axis ID. */
-    public static final int AXIS_RIGHT_X = 3;
+    public static final int AXIS_X_RIGHT = 4;
     
     /** Right Y Axis ID. */
-    public static final int AXIS_RIGHT_Y = 4;
+    public static final int AXIS_Y_RIGHT = 5;
     
     /** Hat X Axis ID. */
-    public static final int AXIS_HAT_X = 5;
+    public static final int AXIS_HAT_X = 6;
     
     /** Hat Y Axis ID. */
-    public static final int AXIS_HAT_Y = 6;
+    public static final int AXIS_HAT_Y = 7;
 
     /** A Button ID. */
     public static final int BTN_A = 0;
@@ -57,10 +60,10 @@ public class XBoxController extends Joystick {
     public static final int BTN_Y = 3;
     
     /** Left Shoulder Button ID. */
-    public static final int BTN_LEFT_SHOULDER = 4;
+    public static final int BTN_SHOULDER_LEFT = 4;
     
     /** Right Shoulder Button ID. */
-    public static final int BTN_RIGHT_SHOULDER = 5;
+    public static final int BTN_SHOULDER_RIGHT = 5;
     
     /** Start Button ID. */
     public static final int BTN_START = 7;
@@ -69,25 +72,28 @@ public class XBoxController extends Joystick {
     public static final int BTN_SELECT = 6;
     
     /** Left Stick Button ID. */
-    public static final int BTN_LEFT_STICK = 8;
+    public static final int BTN_STICK_LEFT = 8;
     
     /** Right Stick Button ID. */
-    public static final int BTN_RIGHT_STICK = 9;
+    public static final int BTN_STICK_RIGHT = 9;
     
     /** Left X Axis Button ID. */
-    public static final int BTN_AXIS_LEFT_X = AXIS_LEFT_X + 12;
+    public static final int BTN_AXIS_X_LEFT = AXIS_X_LEFT + 12;
     
     /** Left Y Axis Button ID. */
-    public static final int BTN_AXIS_LEFT_Y = AXIS_LEFT_Y + 12;
+    public static final int BTN_AXIS_Y_LEFT = AXIS_Y_LEFT + 12;
     
-    /** Triggers Axis Button ID. */
-    public static final int BTN_AXIS_TRIGGERS = AXIS_TRIGGERS + 12;
+    /** Left Trigger Axis Button ID. */
+    public static final int BTN_AXIS_TRIGGER_LEFT = AXIS_TRIGGER_LEFT + 12;
+    
+    /** Right Trigger Axis Button ID. */
+    public static final int BTN_AXIS_TRIGGER_RIGHT = AXIS_TRIGGER_RIGHT + 12;
     
     /** Right X Axis Button ID. */
-    public static final int BTN_AXIS_RIGHT_X = AXIS_RIGHT_X + 12;
+    public static final int BTN_AXIS_X_RIGHT = AXIS_X_RIGHT + 12;
     
     /** Right Y Axis Button ID. */
-    public static final int BTN_AXIS_RIGHT_Y = AXIS_RIGHT_Y + 12;
+    public static final int BTN_AXIS_Y_RIGHT = AXIS_Y_RIGHT + 12;
     
     /** Hat X Axis Button ID. */
     public static final int BTN_AXIS_HAT_X = AXIS_HAT_X + 12;
@@ -98,9 +104,9 @@ public class XBoxController extends Joystick {
      * @param port The Joystick Number this XBoxController is on.
      */
     public XBoxController(final Stick port){
-        super(port, 7, 10);
-        //invertAxis(AXIS_LEFT_Y);
-        //invertAxis(AXIS_RIGHT_Y);
+        super(port, 6, 10);
+        //invertAxis(AXIS_Y_LEFT);
+        //invertAxis(AXIS_Y_RIGHT);
         //invertAxis(AXIS_TRIGGERS);
     }
     
@@ -109,35 +115,42 @@ public class XBoxController extends Joystick {
      *
      * @return the left X axis value
      */
-    public double getLeftX(){return getRawAxis(AXIS_LEFT_X);}
+    public double getLeftX(){return getRawAxis(AXIS_X_LEFT);}
     
     /**
      * Get the Left Y Axis.
      *
      * @return the right Y axis value
      */
-    public double getLeftY(){return getRawAxis(AXIS_LEFT_Y);}
+    public double getLeftY(){return getRawAxis(AXIS_Y_LEFT);}
     
     /**
      * Get the Trigger Axis.
      *
      * @return the trigger axis value
      */
-    public double getTriggers(){return getRawAxis(AXIS_TRIGGERS);}
+    public double getLeftTrigger(){return getRawAxis(AXIS_TRIGGER_LEFT);}
+    
+    /**
+     * Get the Trigger Axis.
+     *
+     * @return the trigger axis value
+     */
+    public double getRightTrigger(){return getRawAxis(AXIS_TRIGGER_LEFT);}
 
     /**
      * Get the Right X Axis.
      *
      * @return the right x axis value
      */
-    public double getRightX(){return getRawAxis(AXIS_RIGHT_X);}
+    public double getRightX(){return getRawAxis(AXIS_X_RIGHT);}
     
     /**
      * Get the Right Y Axis.
      *
      * @return the right Y axis value
      */
-    public double getRightY(){return getRawAxis(AXIS_RIGHT_Y);}
+    public double getRightY(){return getRawAxis(AXIS_Y_RIGHT);}
 
     /**
      * Get the D-Pad/Hat X Axis.
@@ -186,14 +199,14 @@ public class XBoxController extends Joystick {
      *
      * @return the Left Shoulder button value
      */
-    public boolean btnLeftShoulder(){return getRawButton(BTN_LEFT_SHOULDER);}
+    public boolean btnLeftShoulder(){return getRawButton(BTN_SHOULDER_LEFT);}
     
     /**
      * Get the Right Shoulder Button.
      *
      * @return the Right Shoulder button value
      */
-    public boolean btnRightShoulder(){return getRawButton(BTN_RIGHT_SHOULDER);}
+    public boolean btnRightShoulder(){return getRawButton(BTN_SHOULDER_RIGHT);}
     
     /**
      * Get the Start Button.
@@ -214,14 +227,14 @@ public class XBoxController extends Joystick {
      *
      * @return the Left Stick button value
      */
-    public boolean btnLeftStick(){return getRawButton(BTN_LEFT_STICK);}
+    public boolean btnLeftStick(){return getRawButton(BTN_STICK_LEFT);}
     
     /**
      * Get the Right Stick Button.
      *
      * @return the Right Stick button value
      */
-    public boolean btnRightStick(){return getRawButton(BTN_RIGHT_STICK);}
+    public boolean btnRightStick(){return getRawButton(BTN_STICK_RIGHT);}
     
     /**
      * Get the magnitude of the direction vector formed by the left stick's

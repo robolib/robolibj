@@ -20,6 +20,7 @@ import static io.robolib.util.CommonFunctions.getLE4IntBuffer;
 import io.robolib.exception.ResourceAllocationException;
 import io.robolib.hal.PDPJNI;
 
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
@@ -53,7 +54,7 @@ public class PDP implements LiveWindowSendable{
     private ITable m_table;
     
     /** The Constant m_instance. */
-    public static final PDP m_instance = new PDP();
+    public static PDP m_instance = null;
     
     /**
      * Gets the single instance of PDP.
@@ -61,7 +62,7 @@ public class PDP implements LiveWindowSendable{
      * @return single instance of PDP
      */
     public static PDP getInstance(){
-        return m_instance;
+        return m_instance == null ? m_instance = new PDP() : m_instance;
     }
     
     /** Keep track of already used channels. */
@@ -71,6 +72,7 @@ public class PDP implements LiveWindowSendable{
      * Instantiates a new pdp.
      */
     private PDP(){
+        LiveWindow.addSensor("PDP", 0, this);
     }
     
     /** The m_chan names. */
