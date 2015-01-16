@@ -21,6 +21,9 @@ import java.nio.IntBuffer;
 
 import io.robolib.hal.HALUtil;
 import io.robolib.hal.PowerJNI;
+import io.robolib.robot.RoboLibBot;
+
+import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * The Class RoboRIO.
@@ -29,10 +32,21 @@ import io.robolib.hal.PowerJNI;
  */
 public class RoboRIO {
     
+    private ITable m_table;
+    
+    private static RoboRIO m_instance;
+    
+    public static final RoboRIO getInstance(){
+        return m_instance == null ? m_instance = new RoboRIO() : m_instance;
+    }
+    
     /**
      * Instantiates a new robo rio.
      */
-    private RoboRIO(){}
+    private RoboRIO(){
+        m_table = RoboLibBot.getRobotTable().getSubTable("Power").getSubTable("RIO");
+        updateTable();
+    }
     
     public static int getFPGAVersion(){
         IntBuffer status = getLE4IntBuffer();
@@ -237,6 +251,23 @@ public class RoboRIO {
         int retVal = PowerJNI.getUserCurrentFaults6V(status);
         HALUtil.checkStatus(status);
         return retVal;
+    }
+    
+    /**
+     * Update the table for this object with the latest values.
+     */
+    public void updateTable(){
+        m_table.putNumber("RIO Voltage", getVoltage());
+        m_table.putNumber("RIO Current", getCurrent());
+        
+        m_table.putNumber("3v3 Rail Voltage", getCommsVoltage());
+        m_table.putNumber("3v3 Rail Current", getCommsCurrent());
+        
+        m_table.putNumber("5v Rail Voltage", getIOVoltage());
+        m_table.putNumber("5v Rail Current", getIOCurrent());
+        
+        m_table.putNumber("6v Rail Voltage", getPWMVoltage());
+        m_table.putNumber("6v Rail Current", getPWMCurrent());
     }
     
     

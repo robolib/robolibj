@@ -105,8 +105,8 @@ public class XBoxController extends Joystick {
      */
     public XBoxController(final Stick port){
         super(port, 6, 10);
-        //invertAxis(AXIS_Y_LEFT);
-        //invertAxis(AXIS_Y_RIGHT);
+        invertAxis(AXIS_Y_LEFT);
+        invertAxis(AXIS_Y_RIGHT);
         //invertAxis(AXIS_TRIGGERS);
     }
     

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.robolib.control.DriverStation;
 import io.robolib.robot.ModeSwitcher;
 import io.robolib.util.RoboRIO;
 
@@ -189,6 +190,7 @@ public final class Logger extends ILogger {
      */
     private void sendErrMsg(LogLevel l, String s){
         String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        DriverStation.reportError(sout + "\n");
         LogOutput.TERM_ERR.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);

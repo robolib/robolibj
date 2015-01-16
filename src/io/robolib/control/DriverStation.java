@@ -24,6 +24,7 @@ import io.robolib.communication.FRCNetworkCommunicationsLibrary;
 import io.robolib.hal.HALUtil;
 import io.robolib.output.MotorSafetyManager;
 import io.robolib.util.PDP;
+import io.robolib.util.RoboRIO;
 import io.robolib.util.log.ILogger;
 import io.robolib.util.log.Logger;
 
@@ -88,10 +89,11 @@ public final class DriverStation implements Runnable {
             synchronized(m_dataSem){
                 m_dataSem.notifyAll();
             }
-            
+
+            PDP.getInstance().updateTable();
+            RoboRIO.getInstance().updateTable();
             if(++safetyCounter >= 4){
                 MotorSafetyManager.check();
-                PDP.getInstance().updateTable();
                 safetyCounter = 0;
             }
         }
@@ -263,16 +265,8 @@ public final class DriverStation implements Runnable {
      * @param err
      * @param pT
      */
-    public static void reportError(String err, boolean pT){
-        String es = err;
-        if(pT){
-            es += " at ";
-            StackTraceElement traces[] = Thread.currentThread().getStackTrace();
-            for(int i=2; i<traces.length; i++){
-                es += traces[i].toString() + "\n";
-            }
-        }
+    public static void reportError(String err){
         if(isDSAttached())
-            FRCNetworkCommunicationsLibrary.HALSetErrorData(es);
+            FRCNetworkCommunicationsLibrary.HALSetErrorData(err);
     }
 }

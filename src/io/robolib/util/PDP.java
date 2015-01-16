@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+' * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -19,9 +19,8 @@ import static io.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import io.robolib.exception.ResourceAllocationException;
 import io.robolib.hal.PDPJNI;
+import io.robolib.robot.RoboLibBot;
 
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
@@ -29,7 +28,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class PDP implements LiveWindowSendable{
+public class PDP {
     
     public static enum PowerChannel{
         Channel0,
@@ -50,11 +49,17 @@ public class PDP implements LiveWindowSendable{
         Channel15;
     }
     
-    /** The m_table. */
-    private ITable m_table;
+    /** Number of PDP channels. **/
+    public static final int kNumPowerChannels = 16;
     
     /** The Constant m_instance. */
-    public static PDP m_instance = null;
+    private static PDP m_instance = null;
+
+    /** Keep track of already used channels. */
+    private static boolean m_usedChannels[] = new boolean[kNumPowerChannels];
+    
+    /** The m_table. */
+    private ITable m_table;
     
     /**
      * Gets the single instance of PDP.
@@ -65,22 +70,16 @@ public class PDP implements LiveWindowSendable{
         return m_instance == null ? m_instance = new PDP() : m_instance;
     }
     
-    /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[16];
-    
     /**
-     * Instantiates a new pdp.
+     * Instantiates a PDP
      */
     private PDP(){
-        LiveWindow.addSensor("PDP", 0, this);
+        m_table = RoboLibBot.getRobotTable().getSubTable("Power").getSubTable("PDP");
+        updateTable();
     }
     
     /** The m_chan names. */
-    private static String m_chanNames[] = {
-        "Chan0", "Chan1", "Chan2", "Chan3",
-        "Chan4", "Chan5", "Chan6", "Chan7",
-        "Chan8", "Chan9", "Chan10", "Chan11",
-        "Chan12", "Chan13", "Chan14", "Chan15"};
+    private static String m_chanNames[] = new String[kNumPowerChannels];
     
     /**
      * Gets the channel name.
@@ -134,11 +133,16 @@ public class PDP implements LiveWindowSendable{
      * @return the current
      */
     public static double getCurrent(PowerChannel channel){
-//        checkPDPChannel(channel);
-        return getCurrent(channel.ordinal());
+        return PDPJNI.getPDPChannelCurrent((byte)channel.ordinal(), getLE4IntBuffer());
     }
-    
-    public static double getCurrent(int channel){
+
+    /**
+     * Gets the current
+     * 
+     * @param channel
+     * @return the current
+     */
+    private double getCurrent(int channel){
         return PDPJNI.getPDPChannelCurrent((byte)channel, getLE4IntBuffer());
     }
     
@@ -150,7 +154,6 @@ public class PDP implements LiveWindowSendable{
     public static double getTotalCurrent(){
         return PDPJNI.getPDPTotalCurrent(getLE4IntBuffer());
     }
-    
     
     /**
      * Gets the total power.
@@ -185,54 +188,14 @@ public class PDP implements LiveWindowSendable{
     }
     
     /**
-     * {@inheritDoc}
-     */
-    public void initTable(ITable subtable) {
-        m_table = subtable;
-        updateTable();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public ITable getTable() {
-        return m_table;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getSmartDashboardType() {
-        return "PowerDistributionPanel";
-    }
-
-    /**
-     * {@inheritDoc}
+     * Update the table for this object with the latest values.
      */
     public void updateTable() {
-        if (m_table != null) {
-            for(int i = 0; i < m_chanNames.length; i++)
+        for(int i = 0; i < m_chanNames.length; i++)
+            if(m_usedChannels[i])
                 m_table.putNumber(m_chanNames[i], getCurrent(i));
-            
-            m_table.putNumber("Voltage", getVoltage());
-            m_table.putNumber("TotalCurrent", getTotalCurrent());
-        }
         
+        m_table.putNumber("Voltage", getVoltage());
+        m_table.putNumber("TotalCurrent", getTotalCurrent());
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void startLiveWindowMode() {
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void stopLiveWindowMode() {
-        
-    }
-    
-
 }
