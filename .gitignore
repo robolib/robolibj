@@ -1,3 +1,4 @@
+# Java Build Files #
 *.class
 
 # Package Files #
@@ -6,7 +7,10 @@
 *.ear
 *.jardesc
 
+# Sublime Text Project Files #
 *.sublime-*
+
+# Un-Wanted Build/Temp directories #
 /ant/
 /bin/
 /build/
@@ -15,4 +19,12 @@
 /release/
 /dist/
 
+# WPILib Files #
 /src/edu/
+
+# Eclipse Files #
+/.settings/
+/.externalToolBuilders/
+.classpath
+.project
+
