@@ -17,6 +17,9 @@ package io.robolib.util;
 
 import static io.robolib.util.CommonFunctions.getLE4IntBuffer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.robolib.exception.ResourceAllocationException;
 import io.robolib.hal.PDPJNI;
 import io.robolib.robot.RoboLibBot;
@@ -53,10 +56,13 @@ public class PDP {
     public static final int kNumPowerChannels = 16;
     
     /** The Constant m_instance. */
-    private static PDP m_instance = null;
+    private static PDP m_instance;
 
     /** Keep track of already used channels. */
     private static boolean m_usedChannels[] = new boolean[kNumPowerChannels];
+    
+    /** */
+    private static List<Integer> m_updateChannels = new ArrayList<>();
     
     /** The m_table. */
     private ITable m_table;
@@ -106,6 +112,7 @@ public class PDP {
             throw new ResourceAllocationException("PDP channel '" + channel.name() + "' already claimed by '" + m_chanNames[channel.ordinal()] + "'.");
         }
         m_chanNames[channel.ordinal()] = name;
+        m_updateChannels.add(channel.ordinal());
     }
     
     /**
@@ -142,7 +149,7 @@ public class PDP {
      * @param channel
      * @return the current
      */
-    private double getCurrent(int channel){
+    private double getChannelCurrent(int channel){
         return PDPJNI.getPDPChannelCurrent((byte)channel, getLE4IntBuffer());
     }
     
@@ -191,11 +198,15 @@ public class PDP {
      * Update the table for this object with the latest values.
      */
     public void updateTable() {
-        for(int i = 0; i < m_chanNames.length; i++)
-            if(m_usedChannels[i])
-                m_table.putNumber(m_chanNames[i], getCurrent(i));
+        for(int i : m_updateChannels){
+            m_table.putString(m_chanNames[i], StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A"));
+        }
         
-        m_table.putNumber("Voltage", getVoltage());
-        m_table.putNumber("TotalCurrent", getTotalCurrent());
+        m_table.putString("Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
+        m_table.putString("TotalCurrent", StringUtils.getNumber2DWithUnits(getTotalCurrent(), "A"));
+        m_table.putString("Temperature", StringUtils.getNumber2DWithUnits(getTemperature(), "C"));
+        m_table.putString("Total Energy Usage", StringUtils.getNumber2DWithUnits(getTotalEnergy(), "J"));
+        m_table.putString("Total Power Usage", StringUtils.getNumber2DWithUnits(getTotalPower(), "A"));
+        
     }
 }

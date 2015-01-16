@@ -200,10 +200,12 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void log(LogLevel lvl, String s){
-        if(lvl.ordinal() < LogLevel.ERROR.ordinal()){
+        if(lvl.ordinal() < LogLevel.WARN.ordinal()){
             sendMsg(lvl, s);
+        }else if(lvl.equals(LogLevel.WARN)){
+            warn(s);
         }else if(lvl.equals(LogLevel.ERROR)){
-            error(s, null);
+            error(s);
         }else if(lvl.equals(LogLevel.SEVERE)){
             severe(s);
         }else{
@@ -230,7 +232,7 @@ public final class Logger extends ILogger {
      * {@inheritDoc}
      */
     public void warn(String s){
-        sendMsg(LogLevel.WARN, s);
+        sendErrMsg(LogLevel.WARN, s);
     }
 
     /**

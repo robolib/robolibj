@@ -27,6 +27,7 @@ import io.robolib.communication.UsageReporting;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.robolib.control.DriverStation;
+import io.robolib.pneumatic.Compressor;
 import io.robolib.util.PDP;
 import io.robolib.util.RoboRIO;
 import io.robolib.util.log.ILogger;
@@ -248,6 +249,7 @@ public class RoboLibBot {
         try {
             PDP.getInstance();
             RoboRIO.getInstance();
+            Compressor.getInstance();
         }catch(Throwable t){
             log.fatal("Failure creating framework", t);
         }

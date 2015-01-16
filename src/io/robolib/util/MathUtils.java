@@ -34,6 +34,18 @@ public class MathUtils {
         return Math.max(Math.min(value, max), min);
     }
     
+    public static boolean inBounds(double value, double min, double max){
+        return (min <= value) && (value <= max);
+    }
+    
+    public static boolean inBounds(float value, float min, float max){
+        return (min <= value) && (value <= max);
+    }
+    
+    public static boolean inBounds(int value, int min, int max){
+        return (min <= value) && (value <= max);
+    }
+    
     public static double squareSign(double value){
         if(value < 0){
             return -(value * value);

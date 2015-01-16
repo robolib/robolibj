@@ -16,9 +16,9 @@
 package io.robolib.output;
 
 import io.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import io.robolib.communication.UsageReporting;
 import io.robolib.iface.PWM;
 
-import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**

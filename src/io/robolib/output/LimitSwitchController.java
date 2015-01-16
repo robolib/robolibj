@@ -15,9 +15,8 @@
 
 package io.robolib.output;
 
-import edu.wpi.first.wpilibj.PIDOutput;
-
 import io.robolib.input.limitswitch.ILimitSwitchSystem;
+import io.robolib.pid.PIDOutput;
 
 // TODO: Auto-generated Javadoc
 /**

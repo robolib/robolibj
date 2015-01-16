@@ -16,8 +16,9 @@
 package io.robolib.control;
 
 import io.robolib.communication.FRCNetworkCommunicationsLibrary;
-import io.robolib.communication.UsageReporting;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import io.robolib.communication.UsageReporting;
+import io.robolib.util.MathUtils;
 import io.robolib.util.RoboRIO;
 import io.robolib.util.log.Logger;
 
@@ -26,7 +27,7 @@ import io.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Joystick extends HIDBase {   
+public class Joystick extends GenericHID {   
 
     
     /**
@@ -66,8 +67,7 @@ public class Joystick extends HIDBase {
         private double m_deadBand = 0.00;
         
         /** The m_channel. */
-        private final int m_channel;
-        
+        private final int m_channel;        
 
         /**
          * Instantiates a new joystick axis.
@@ -185,7 +185,7 @@ public class Joystick extends HIDBase {
      */
     protected synchronized static double getStickAxis(Stick stick, int axis){
         if(m_joystickAxes[stick.ordinal()].length <= axis){
-            complainJoystickMissing("Joystick Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            complainJoystickMissing("Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return 0.0;
         }
         
@@ -206,7 +206,7 @@ public class Joystick extends HIDBase {
      */
     protected synchronized static boolean getStickButton(Stick stick, int button){
         if(m_joystickButtonsCount[stick.ordinal()] <= button){
-            complainJoystickMissing("Joystick Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            complainJoystickMissing("Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return false;
         }
         
@@ -225,7 +225,16 @@ public class Joystick extends HIDBase {
     }
     
     /** The m_port. */
-    protected Stick m_port;    
+    private final Stick m_port;
+    
+    /** The m_portByte. */
+    private final byte m_portByte;
+    
+    /** The m_outputs. */
+    private int m_outputs;
+    
+    private short m_leftRumble;
+    private short m_rightRumble;
     
     /**
      * The RoboLibJ main Joystick.
@@ -247,6 +256,7 @@ public class Joystick extends HIDBase {
         super(numAxes, numBtns);
 
         m_port = port;
+        m_portByte = (byte)port.ordinal();
         m_axes = new JoystickAxis[numAxes];
         for(int i = 0; i < numAxes; i++){
             m_axes[i] = new JoystickAxis(i);
@@ -276,6 +286,58 @@ public class Joystick extends HIDBase {
     public Button getButton(int btn) {
         checkButton(btn);
         return m_btns[btn];
+    }
+    
+    /**
+     * Get the Port Stick that this Joystick is on
+     * @return the stick this joystick is on
+     */
+    public Stick getStickPort(){
+        return m_port;
+    }
+    
+    public static enum RumbleSide{
+        LEFT,
+        RIGHT,
+        BOTH;
+    }
+    
+    /**
+     * Set the rumble output for the joystick. The DS currently supports 2 rumble values,
+     * left rumble and right rumble
+     * @param type Which rumble value to set
+     * @param value The normalized value (0 to 1) to set the rumble to
+     */
+    public void setRumble(RumbleSide type, float value) {
+        short rVal = (short)(MathUtils.clamp(value, 0F, 1F) * 65535);
+        switch(type){
+        case LEFT:
+            m_leftRumble = rVal;
+            break;
+        case RIGHT:
+            m_rightRumble = rVal;
+            break;
+        case BOTH:
+            m_leftRumble = rVal;
+            m_rightRumble = rVal;
+            break;
+        }
+        FRCNetworkCommunicationsLibrary.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
+    }
+    
+    public void setOutput(int outputNumber, boolean value){
+        if(MathUtils.inBounds(outputNumber, 0, 31)){
+            m_outputs = (m_outputs & ~(1 << outputNumber)) | ((value?1:0) << outputNumber);
+            FRCNetworkCommunicationsLibrary.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
+        }else{
+            Logger.get(Joystick.class).warn("No such Output number '" + outputNumber + "' on joysticks.");
+        }
+            
+    }
+    
+    public void setOutputs(int value){
+        m_outputs = value;
+        FRCNetworkCommunicationsLibrary.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }
 
 }

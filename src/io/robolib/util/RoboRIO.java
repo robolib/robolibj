@@ -114,7 +114,7 @@ public class RoboRIO {
      * This rail is used for I2C, SPI, Serial, and CAN?
      * @return The 3.3 rail voltage
      */
-    public static double getCommsVoltage(){
+    public static double get3V3Voltage(){
         IntBuffer status = getLE4IntBuffer();
         double retVal = PowerJNI.getUserCurrent3V3(status);
         HALUtil.checkStatus(status);
@@ -126,7 +126,7 @@ public class RoboRIO {
      * This rail is used for I2C, SPI, Serial, and CAN?
      * @return The 3.3 rail current
      */
-    public static double getCommsCurrent(){
+    public static double get3V3Current(){
         IntBuffer status = getLE4IntBuffer();
         double retVal = PowerJNI.getUserCurrent3V3(status);
         HALUtil.checkStatus(status);
@@ -138,7 +138,7 @@ public class RoboRIO {
      *
      * @return the comms power enabled
      */
-    public static boolean getCommsPowerEnabled(){
+    public static boolean get3V3PowerEnabled(){
         IntBuffer status = getLE4IntBuffer();
         boolean retVal = PowerJNI.getUserActive3V3(status);
         HALUtil.checkStatus(status);
@@ -150,7 +150,7 @@ public class RoboRIO {
      *
      * @return the comms fault count
      */
-    public static int getCommsFaultCount(){
+    public static int get3V3FaultCount(){
         IntBuffer status = getLE4IntBuffer();
         int retVal = PowerJNI.getUserCurrentFaults3V3(status);
         HALUtil.checkStatus(status);
@@ -162,7 +162,7 @@ public class RoboRIO {
      *
      * @return the IO voltage
      */
-    public static double getIOVoltage(){
+    public static double get5VVoltage(){
         IntBuffer status = getLE4IntBuffer();
         double retVal = PowerJNI.getUserVoltage5V(status);
         HALUtil.checkStatus(status);
@@ -174,7 +174,7 @@ public class RoboRIO {
      *
      * @return the IO current
      */
-    public static double getIOCurrent(){
+    public static double get5VCurrent(){
         IntBuffer status = getLE4IntBuffer();
         double retVal = PowerJNI.getUserCurrent5V(status);
         HALUtil.checkStatus(status);
@@ -186,7 +186,7 @@ public class RoboRIO {
      *
      * @return the IO power enabled
      */
-    public static boolean getIOPowerEnabled(){
+    public static boolean get5VPowerEnabled(){
         IntBuffer status = getLE4IntBuffer();
         boolean retVal = PowerJNI.getUserActive5V(status);
         HALUtil.checkStatus(status);
@@ -198,7 +198,7 @@ public class RoboRIO {
      *
      * @return the IO fault count
      */
-    public static int getIOFaultCount(){
+    public static int get5VFaultCount(){
         IntBuffer status = getLE4IntBuffer();
         int retVal = PowerJNI.getUserCurrentFaults5V(status);
         HALUtil.checkStatus(status);
@@ -210,7 +210,7 @@ public class RoboRIO {
      *
      * @return the servo voltage
      */
-    public static double getPWMVoltage(){
+    public static double get6VVoltage(){
         IntBuffer status = getLE4IntBuffer();
         double retVal = PowerJNI.getUserVoltage6V(status);
         HALUtil.checkStatus(status);
@@ -222,7 +222,7 @@ public class RoboRIO {
      *
      * @return the servo current
      */
-    public static double getPWMCurrent(){
+    public static double get6VCurrent(){
         IntBuffer status = getLE4IntBuffer();
         double retVal = PowerJNI.getUserCurrent6V(status);
         HALUtil.checkStatus(status);
@@ -234,7 +234,7 @@ public class RoboRIO {
      *
      * @return the servo power enabled
      */
-    public static boolean getPWMPowerEnabled(){
+    public static boolean ge6VPowerEnabled(){
         IntBuffer status = getLE4IntBuffer();
         boolean retVal = PowerJNI.getUserActive6V(status);
         HALUtil.checkStatus(status);
@@ -246,7 +246,7 @@ public class RoboRIO {
      *
      * @return the servo fault count
      */
-    public static int getPWMFaultCount(){
+    public static int get6VFaultCount(){
         IntBuffer status = getLE4IntBuffer();
         int retVal = PowerJNI.getUserCurrentFaults6V(status);
         HALUtil.checkStatus(status);
@@ -257,17 +257,17 @@ public class RoboRIO {
      * Update the table for this object with the latest values.
      */
     public void updateTable(){
-        m_table.putNumber("RIO Voltage", getVoltage());
-        m_table.putNumber("RIO Current", getCurrent());
+        m_table.putString("RIO Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
+        m_table.putString("RIO Current", StringUtils.getNumber2DWithUnits(getCurrent(), "A"));
         
-        m_table.putNumber("3v3 Rail Voltage", getCommsVoltage());
-        m_table.putNumber("3v3 Rail Current", getCommsCurrent());
+        m_table.putString("3v3 Voltage", StringUtils.getNumber2DWithUnits(get3V3Voltage(), "V"));
+        m_table.putString("3v3 Current", StringUtils.getNumber2DWithUnits(get3V3Current(), "A"));
         
-        m_table.putNumber("5v Rail Voltage", getIOVoltage());
-        m_table.putNumber("5v Rail Current", getIOCurrent());
+        m_table.putString("5v Voltage", StringUtils.getNumber2DWithUnits(get5VVoltage(), "V"));
+        m_table.putString("5v Current", StringUtils.getNumber2DWithUnits(get5VCurrent(), "A"));
         
-        m_table.putNumber("6v Rail Voltage", getPWMVoltage());
-        m_table.putNumber("6v Rail Current", getPWMCurrent());
+        m_table.putString("6v Voltage", StringUtils.getNumber2DWithUnits(get6VVoltage(), "V"));
+        m_table.putString("6v Current", StringUtils.getNumber2DWithUnits(get6VCurrent(), "A"));
     }
     
     
