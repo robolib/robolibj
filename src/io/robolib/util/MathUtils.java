@@ -33,6 +33,13 @@ public class MathUtils {
     public static int clamp(int value, int min, int max){
         return Math.max(Math.min(value, max), min);
     }
+    
+    public static double squareSign(double value){
+        if(value < 0){
+            return -(value * value);
+        }
+        return value * value;
+    }
         
 
 }

@@ -28,6 +28,7 @@ import io.robolib.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.robolib.control.DriverStation;
 import io.robolib.util.PDP;
+import io.robolib.util.RoboRIO;
 import io.robolib.util.log.ILogger;
 import io.robolib.util.log.Logger;
 
@@ -244,7 +245,12 @@ public class RoboLibBot {
 
         m_table = NetworkTable.getTable("Robot");
 
-        PDP.getInstance();
+        try {
+            PDP.getInstance();
+            RoboRIO.getInstance();
+        }catch(Throwable t){
+            log.fatal("Failure creating framework", t);
+        }
         
         log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         
