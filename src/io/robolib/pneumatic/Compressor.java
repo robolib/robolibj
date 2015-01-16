@@ -34,13 +34,13 @@ import edu.wpi.first.wpilibj.tables.ITable;
 public final class Compressor {
     
     /** The m_table. */
-    private ITable m_table;
+    private final ITable m_table;
     
     /** The m_pcm_compressor. */
     private static ByteBuffer m_compressor;
     
     /** The Constant m_instance. */
-    private static final Compressor m_instance = new Compressor();
+    private static Compressor m_instance;
     
     /**
      * Gets the single instance of PCM.
@@ -48,15 +48,16 @@ public final class Compressor {
      * @return single instance of PCM
      */
     public static Compressor getInstance(){
-        return m_instance;
+        return m_instance == null ? m_instance = new Compressor() : m_instance;
     }
     
     /**
      * Instantiates a new pcm.
      */
     private Compressor(){
-        initTable(RoboLibBot.getRobotTable().getSubTable("PCM"));
         m_compressor = CompressorJNI.initializeCompressor((byte) 0);
+        m_table = RoboLibBot.getRobotTable().getSubTable("Compressor");
+        updateTable();
     }
     
     public void free(){
@@ -190,57 +191,12 @@ public final class Compressor {
         CompressorJNI.clearAllPCMStickyFaults(m_compressor, status);
         HALUtil.checkStatus(status);
     }
-    
-    /**
-     * {@inheritDoc}
-     * @param subtable 
-     */
-    public void initTable(ITable subtable) {
-        m_table = subtable;
-        updateTable();
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return 
-     */
-    public ITable getTable() {
-        return m_table;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return 
-     */
-    public String getSmartDashboardType() {
-        return "Compressor";
-    }
 
     /**
      * {@inheritDoc}
      */
     public void updateTable() {
-        if (m_table != null) {
-            m_table.putBoolean("Enabled", getCompressorEnabled());
-            m_table.putBoolean("Pressure Switch", getPressureSwitch());
-        }
+        m_table.putBoolean("Enabled", getCompressorEnabled());
+        m_table.putBoolean("Pressure Switch", getPressureSwitch());
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void startLiveWindowMode() {
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void stopLiveWindowMode() {
-        
-    }
-    
-    
-
 }

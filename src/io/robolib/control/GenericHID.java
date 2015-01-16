@@ -17,15 +17,14 @@ package io.robolib.control;
 
 import java.util.Arrays;
 
-import edu.wpi.first.wpilibj.GenericHID;
-
 /**
  * The HID (Human Interface Device) base
  *
  * @author Austin Reuland <amreuland@gmail.com>
  * @see Joystick
  */
-public abstract class HIDBase extends GenericHID{
+
+public abstract class GenericHID {
 
     
     /**
@@ -75,7 +74,7 @@ public abstract class HIDBase extends GenericHID{
     /**
      * Provides a middle-man in between the WPILib Library and the RoboLibJ Joysticks.
      */
-    protected HIDBase(){
+    protected GenericHID(){
         this(6, 12);
     }
     
@@ -84,7 +83,7 @@ public abstract class HIDBase extends GenericHID{
      * @param numAxes the Number of Axes this Joystick will have
      * @param numBtns the Number of Buttons this Joystick will have
      */
-    protected HIDBase(int numAxes, int numBtns){
+    protected GenericHID(int numAxes, int numBtns){
         m_numAxes = numAxes;
         m_numBtns = numBtns;
     }
@@ -121,6 +120,18 @@ public abstract class HIDBase extends GenericHID{
     }
     
     /**
+     * Get the x position of HID
+     * @return the x position
+     *//*
+    public abstract double getX();
+    
+    *//**
+     * Get the y position of the HID
+     * @return the y position
+     *//*
+    public abstract double getY();*/
+    
+    /**
      * Get a Joystick {@link Button}.
      * 
      * Returns a {@link Button} instance of the requested Button.
@@ -130,79 +141,29 @@ public abstract class HIDBase extends GenericHID{
      * @see Button
      */
     public abstract Button getButton(int btn);
-    
+
     /**
-     * {@inheritDoc} 
+     * Get the raw axis
+     * @param channel index of the axis
+     * @return the raw value of the selected axis
      */
-    public double getX(Hand hand) {
-        return getRawAxis(0);
+    public final double getRawAxis(int channel) {
+        return getAxis(channel).get();
     }
 
     /**
-     * {@inheritDoc} 
+     * Is the given button pressed
+     * @param channel which button number
+     * @return true if the button is pressed
      */
-    public double getY(Hand hand) {
-        return getRawAxis(1);
+    public final boolean getRawButton(int channel) {
+        return getButton(channel).get();
     }
 
     /**
-     * {@inheritDoc} 
-     */
-    public double getZ(Hand hand) {
-        return getRawAxis(2);
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    public double getTwist() {
-        return getRawAxis(3);
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    public double getThrottle() {
-        return getRawAxis(4);
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    public final double getRawAxis(int which) {
-        return getAxis(which).get();
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    public boolean getTrigger(Hand hand) {
-        return getRawButton(0);
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    public boolean getTop(Hand hand) {
-        return getRawButton(1);
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    public boolean getBumper(Hand hand) {
-        return getRawButton(2);
-    }
-
-    /**
-     * {@inheritDoc} 
-     */
-    public final boolean getRawButton(int button) {
-        return getButton(button).get();
-    }
-
-    /**
-     * {@inheritDoc}
+     * 
+     * @param pov
+     * @return
      */
     public int getPOV(int pov) {
         return 0;
@@ -211,28 +172,25 @@ public abstract class HIDBase extends GenericHID{
     /**
      * Get the magnitude of the direction vector formed by the joystick's
      * current position relative to its origin
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The magnitude of the direction vector
-     */
+     *//*
     public double getMagnitude() {
         return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
     }
 
-    /**
+    *//**
      * Get the direction of the vector formed by the joystick and its origin
      * in radians
      * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The direction of the vector in radians
-     */
+     *//*
     public double getDirectionRadians() {
         return Math.atan2(getX(), -getY());
     }
 
-    /**
+    *//**
      * Get the direction of the vector formed by the joystick and its origin
      * in degrees
      *
@@ -242,10 +200,10 @@ public abstract class HIDBase extends GenericHID{
      * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The direction of the vector in degrees
-     */
+     *//*
     public double getDirectionDegrees() {
         return Math.toDegrees(getDirectionRadians());
-    }
+    }*/
     
     /**
      * Adds the button.

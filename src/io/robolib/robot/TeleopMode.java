@@ -15,7 +15,7 @@
 
 package io.robolib.robot;
 
-import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
+import io.robolib.communication.FRCNetworkCommunicationsLibrary;
 
 /**
  * The Class TeleopMode.

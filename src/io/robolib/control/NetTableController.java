@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class NetTableController extends HIDBase {
+public class NetTableController extends GenericHID {
 
     /** The m_table. */
     private final ITable m_table;
@@ -168,8 +168,8 @@ public class NetTableController extends HIDBase {
      * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The direction of the vector in radians
-     */
+     *//*
     public double getDirectionRadians() {
         return Math.atan2(getX(), getY());
-    }
+    }*/
 }

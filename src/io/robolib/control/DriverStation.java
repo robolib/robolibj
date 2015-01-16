@@ -23,6 +23,7 @@ import java.nio.IntBuffer;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary;
 import io.robolib.hal.HALUtil;
 import io.robolib.output.MotorSafetyManager;
+import io.robolib.pneumatic.Compressor;
 import io.robolib.util.PDP;
 import io.robolib.util.RoboRIO;
 import io.robolib.util.log.ILogger;
@@ -55,7 +56,7 @@ public final class DriverStation implements Runnable {
      * 
      */
     private DriverStation(){
-        m_log.info("DriverStation interface initializing");
+        m_log.info("Interface initializing");
         m_dataSem = new Object();
         m_packetDataAvailableMutex = HALUtil.initializeMutexNormal();
         m_packetDataAvailableSem = HALUtil.initializeMultiWait();
@@ -70,7 +71,7 @@ public final class DriverStation implements Runnable {
      * {@inheritDoc}
      */
     public void run(){
-        m_log.info("DriverStation communications thread started.");
+        m_log.info("Communications thread started.");
         int safetyCounter = 0;
         while (m_thread_keepAlive){
             HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
@@ -90,15 +91,16 @@ public final class DriverStation implements Runnable {
                 m_dataSem.notifyAll();
             }
 
-            PDP.getInstance().updateTable();
-            RoboRIO.getInstance().updateTable();
             if(++safetyCounter >= 4){
                 MotorSafetyManager.check();
+                PDP.getInstance().updateTable();
+                RoboRIO.getInstance().updateTable();
+                Compressor.getInstance().updateTable();
                 safetyCounter = 0;
             }
         }
         if(m_thread_exit_error)
-            m_log.severe("DriverStation communications thread ended!");
+            m_log.severe("Communications thread ended!");
     }
     
     public void startThread(){
