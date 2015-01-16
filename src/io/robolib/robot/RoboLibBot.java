@@ -27,6 +27,7 @@ import io.robolib.communication.UsageReporting;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.robolib.control.DriverStation;
+import io.robolib.util.PDP;
 import io.robolib.util.log.ILogger;
 import io.robolib.util.log.Logger;
 
@@ -242,6 +243,8 @@ public class RoboLibBot {
         NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
 
         m_table = NetworkTable.getTable("Robot");
+
+        PDP.getInstance();
         
         log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         
