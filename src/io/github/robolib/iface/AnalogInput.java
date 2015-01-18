@@ -18,17 +18,11 @@ package io.github.robolib.iface;
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public enum InterfaceType {
+public class AnalogInput extends AnalogIO {
     
-    ANALOG,
-    CAN,
-    DIGITALIO,
-    I2C,
-    PWM,
-    RELAY,
-    SERIAL,
-    SPI;
+    public AnalogInput(AnalogChannel channel){
+        super(channel, Direction.IN);
+    }
 
 }

@@ -162,6 +162,11 @@ public class PWM extends Interface implements LiveWindowSendable {
 
     /** The default disable value for a PWM. */
     public static final int kPWMDisabled = 0;
+    
+    public static final int kSystemClockTicksPerMicrosecond = 40;
+
+    /** Keep track of already used channels. */
+    private static boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
 
     /** Should we be destroying the deadband? Only used by setBounds() */
     private boolean m_eliminateDeadband = false;
@@ -197,18 +202,17 @@ public class PWM extends Interface implements LiveWindowSendable {
     private int m_scaleFactorFull;
     
     protected final String m_description;
-    
-    public static final int kSystemClockTicksPerMicrosecond = 40;
-
-    /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
 
     /** The The RoboRIO port identifier. */
     private ByteBuffer m_port;
 
     /** The PWM Channel this PWM is operating on. */
     private PWMChannel m_channel;
-        
+
+    /**
+     *
+     * @param channel the channel for this pwm
+     */
     public PWM(PWMChannel channel){
         this(channel, "PWM Output Ch" + channel.ordinal());
     }

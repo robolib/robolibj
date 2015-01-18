@@ -61,7 +61,7 @@ public abstract class Interface {
      */
     protected static void checkAnalogInputChannel(final int channel){
         if(channel < 0 || channel > kMaxAnalogInputChannels){
-            throw new IndexOutOfBoundsException("Bad Analog Input Channel");
+            throw new IndexOutOfBoundsException("Bad AnalogIO Input Channel");
         }
     }
 
@@ -72,7 +72,7 @@ public abstract class Interface {
      */
     protected static void checkAnalogOutputChannel(final int channel){
         if(channel < 0 || channel > kMaxAnalogOutputChannels){
-            throw new IndexOutOfBoundsException("Bad Analog Output Channel");
+            throw new IndexOutOfBoundsException("Bad AnalogIO Output Channel");
         }
     }
 

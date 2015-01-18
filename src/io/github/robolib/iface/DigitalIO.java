@@ -32,7 +32,7 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DigitalIO extends Interface {
+public abstract class DigitalIO extends Interface {
 
     /**
      * The Enum Channel.
@@ -154,10 +154,13 @@ public class DigitalIO extends Interface {
     private static boolean m_usedChannels[] = new boolean[kMaxDigitalChannels];
 
     /** The The RoboRIO port identifier. */
-    private ByteBuffer m_port;
+    protected ByteBuffer m_port;
 
     /** The DigitalIO Channel this DigitalIO is operating on. */
-    private DigitalChannel m_channel;
+    protected DigitalChannel m_channel;
+    
+    /** The direction of this digital io. */
+    protected Direction m_direction;
 
     /**
      * Instantiates a new DigitalIO.
@@ -171,10 +174,16 @@ public class DigitalIO extends Interface {
 
         m_channel = channel;
         
-        if(dir == Direction.IN)        
-            UsageReporting.report(UsageReporting.kResourceType_DigitalOutput, channel.ordinal());
-        else
-            UsageReporting.report(UsageReporting.kResourceType_DigitalOutput, channel.ordinal());
+        int isIn = dir.equals(Direction.IN) ? 1 : 0;
+        
+        IntBuffer status = getLE4IntBuffer();
+        
+        m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte)channel.ordinal()), status);
+        HALUtil.checkStatus(status);
+        DIOJNI.allocateDIO(m_port, (byte) isIn, status);
+        HALUtil.checkStatus(status);
+        
+        UsageReporting.report(UsageReporting.kResourceType_DigitalOutput - isIn, channel.ordinal());
     }
 
     /**

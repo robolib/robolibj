@@ -13,22 +13,36 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public enum InterfaceType {
+public abstract class CounterBase {
     
-    ANALOG,
-    CAN,
-    DIGITALIO,
-    I2C,
-    PWM,
-    RELAY,
-    SERIAL,
-    SPI;
-
+    public static enum EncodingType {
+        k1X,
+        k2X,
+        k4X;
+    }
+    
+    protected int m_index;
+    
+    public int getFPGAIndex(){
+        return m_index;
+    }
+    
+    public abstract int get();
+    
+    public abstract void reset();
+    
+    public abstract double getPeriod();
+    
+    public abstract void setMaxPeriod(double max);
+    
+    public abstract boolean getStopped();
+    
+    public abstract boolean getDirection();
+    
 }

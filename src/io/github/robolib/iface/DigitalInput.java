@@ -15,20 +15,27 @@
 
 package io.github.robolib.iface;
 
+import java.nio.IntBuffer;
+
+import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+
+import io.github.robolib.hal.DIOJNI;
+import io.github.robolib.hal.HALUtil;
+
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public enum InterfaceType {
+public class DigitalInput extends DigitalIO {
     
-    ANALOG,
-    CAN,
-    DIGITALIO,
-    I2C,
-    PWM,
-    RELAY,
-    SERIAL,
-    SPI;
-
+    public DigitalInput(DigitalChannel channel){
+        super(channel, Direction.IN);
+    }
+    
+    public boolean get(){
+        IntBuffer status = getLE4IntBuffer();
+        boolean value = DIOJNI.getDIO(m_port, status) != 0;
+        HALUtil.checkStatus(status);
+        return value;
+    }
 }
