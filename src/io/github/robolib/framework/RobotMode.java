@@ -132,7 +132,7 @@ public abstract class RobotMode {
      * This calls the {@code run()} method once every period.
      */
     protected void modeRun(){
-        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramDisabled();
+        FRCNetworkCommunicationsLibrary.ObserveUserProgramDisabled();
         run();
     }
     

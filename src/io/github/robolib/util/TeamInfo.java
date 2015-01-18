@@ -40,7 +40,7 @@ public final class TeamInfo {
     }
     
     public static Alliance getAlliance(){
-        int sID = FRCNetworkCommunicationsLibrary.NativeHALGetAllianceStation();
+        int sID = FRCNetworkCommunicationsLibrary.HALGetAllianceStation();
         if(!MathUtils.inBounds(sID, 0, 5)){
             return Alliance.NONE;
         }
@@ -48,7 +48,7 @@ public final class TeamInfo {
     }
     
     public static StationID getStation(){
-        int sID = FRCNetworkCommunicationsLibrary.NativeHALGetAllianceStation();
+        int sID = FRCNetworkCommunicationsLibrary.HALGetAllianceStation();
         if(!MathUtils.inBounds(sID, 0, 5)){
             return StationID.NONE;
         }

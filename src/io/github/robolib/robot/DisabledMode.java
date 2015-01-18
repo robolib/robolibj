@@ -60,7 +60,7 @@ public abstract class DisabledMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramDisabled();
+        FRCNetworkCommunicationsLibrary.ObserveUserProgramDisabled();
         run();
     }
 }

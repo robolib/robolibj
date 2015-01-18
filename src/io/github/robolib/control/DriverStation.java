@@ -167,7 +167,7 @@ public final class DriverStation implements Runnable {
      * @return True if the Robot is currently disabled by the field controls.
      */
     public static boolean isDisabled() {
-        return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 1) == 0;
+        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 1) == 0;
     }
 
     /**
@@ -176,7 +176,7 @@ public final class DriverStation implements Runnable {
      * @return True if the Robot is currently enabled by the field controls.
      */
     public static boolean isEnabled() {
-        return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 1) != 0;
+        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 1) != 0;
     }
 
     /**
@@ -186,7 +186,7 @@ public final class DriverStation implements Runnable {
      * determined by the field controls.
      */
     public static boolean isAutonomous() {
-        return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 2) != 0;
+        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 2) != 0;
     }
 
     /**
@@ -196,7 +196,7 @@ public final class DriverStation implements Runnable {
      * determined by the driver station.
      */
     public static boolean isTest() {
-        return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 4) != 0;
+        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 4) != 0;
     }
     
     /**
@@ -205,7 +205,7 @@ public final class DriverStation implements Runnable {
      * @return True if the robot is currently emergency stopped.
      */
     public static boolean isEStopped(){
-        return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 8) != 0;
+        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 8) != 0;
     }
     
     /**
@@ -214,7 +214,7 @@ public final class DriverStation implements Runnable {
      * @return True if the FMS is attached
      */
     public static boolean isFMSAttached(){
-        return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 16) != 0;
+        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 16) != 0;
     }
     
     /**
@@ -223,7 +223,7 @@ public final class DriverStation implements Runnable {
      * @return True if we have a driver station
      */
     public static boolean isDSAttached(){
-        return (FRCNetworkCommunicationsLibrary.NativeHALGetControlWord() & 32) != 0;
+        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 32) != 0;
     }
 
     /**
@@ -233,7 +233,7 @@ public final class DriverStation implements Runnable {
      * determined by the field controls.
      */
     public static boolean isOperatorControl() {
-        int word = FRCNetworkCommunicationsLibrary.NativeHALGetControlWord();
+        int word = FRCNetworkCommunicationsLibrary.HALGetRobotStatus();
         return ((word & 6) == 0) && ((word & 1) != 0);
     }
     
