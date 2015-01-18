@@ -13,18 +13,21 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.robolib.output;
+package io.robolib.framework;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.robolib.output.MotorSafety;
+import io.robolib.output.MotorSafetyHelper;
+
 // TODO: Auto-generated Javadoc
 /**
- * The Class MotorSafetyManager.
+ * The Class SafetyManager.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public final class MotorSafetyManager {
+public final class SafetyManager {
     
     /** The m_safety objects. */
     private static List<MotorSafetyHelper> m_safetyObjects = new ArrayList<MotorSafetyHelper>();

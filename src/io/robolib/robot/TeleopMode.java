@@ -16,6 +16,7 @@
 package io.robolib.robot;
 
 import io.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.robolib.framework.RobotMode;
 
 /**
  * The Class TeleopMode.

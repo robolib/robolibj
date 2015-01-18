@@ -13,12 +13,18 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.robolib.robot;
+package io.robolib.framework;
 
 import java.util.EnumMap;
 //import edu.wpi.first.wpilibj.command.Scheduler;=
 
+
 import io.robolib.exception.RobotException;
+import io.robolib.robot.AutonMode;
+import io.robolib.robot.DisabledMode;
+import io.robolib.robot.GameMode;
+import io.robolib.robot.TeleopMode;
+import io.robolib.robot.TestMode;
 import io.robolib.util.log.ILogger;
 import io.robolib.util.log.Logger;
 

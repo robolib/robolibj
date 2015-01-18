@@ -15,6 +15,7 @@
 
 package io.robolib.output;
 
+import io.robolib.framework.SafetyManager;
 import io.robolib.robot.RobotState;
 import io.robolib.util.RoboRIO;
 import io.robolib.util.log.Logger;
@@ -110,7 +111,7 @@ public class MotorSafetyHelper {
         if(!m_enabled || RobotState.isDisabled() || RobotState.isTest())
             return;
         if(m_stopTime < RoboRIO.getFPGATimestamp()){
-            Logger.get(MotorSafetyManager.class).warn(m_safetyObject.getDescription() + "... Output not updated often enough.");
+            Logger.get(SafetyManager.class).warn(m_safetyObject.getDescription() + "... Output not updated often enough.");
             
             m_safetyObject.stopMotor();
         }

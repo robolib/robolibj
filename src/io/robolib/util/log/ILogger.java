@@ -16,7 +16,7 @@
 
 package io.robolib.util.log;
 
-import io.robolib.robot.RoboLibBot;
+import io.robolib.framework.RoboLibBot;
 
 /**
  * A Logging class.

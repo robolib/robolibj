@@ -23,7 +23,6 @@ import java.nio.IntBuffer;
 import io.robolib.exception.ResourceAllocationException;
 import io.robolib.hal.HALUtil;
 import io.robolib.hal.SolenoidJNI;
-import io.robolib.util.log.Loggable;
 import io.robolib.util.log.Logger;
 
 
@@ -32,7 +31,7 @@ import io.robolib.util.log.Logger;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public abstract class SolenoidBase implements Loggable {
+public abstract class SolenoidBase {
     
     /**
      * The Enum Channel.

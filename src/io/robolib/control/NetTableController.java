@@ -15,7 +15,7 @@
 
 package io.robolib.control;
 
-import io.robolib.robot.RoboLibBot;
+import io.robolib.framework.RoboLibBot;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.robolib.control.DriverStation;
-import io.robolib.robot.ModeSwitcher;
+import io.robolib.framework.ModeSwitcher;
 import io.robolib.util.RoboRIO;
 
 /**

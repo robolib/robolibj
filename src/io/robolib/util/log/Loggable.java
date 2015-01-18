@@ -21,5 +21,9 @@ package io.robolib.util.log;
  *
  */
 public interface Loggable {
+    
+    String getDescription();
+    
+    String getData();
 
 }
