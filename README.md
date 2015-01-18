@@ -1,6 +1,9 @@
 RoboLibJ - An FRC library
 ==
 
+Documentation
+http://robolib.github.io/robolibj/
+
 The point of this project is to completely replace WPILib, with a more complete library.
 
 Goals:

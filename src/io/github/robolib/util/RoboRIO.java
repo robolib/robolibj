@@ -234,7 +234,7 @@ public class RoboRIO {
      *
      * @return the servo power enabled
      */
-    public static boolean ge6VPowerEnabled(){
+    public static boolean get6VPowerEnabled(){
         IntBuffer status = getLE4IntBuffer();
         boolean retVal = PowerJNI.getUserActive6V(status);
         HALUtil.checkStatus(status);
