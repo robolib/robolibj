@@ -15,7 +15,7 @@
 
 package io.github.robolib.robot;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.framework.RobotMode;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -65,7 +65,7 @@ public abstract class TestMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.ObserveUserProgramTest();
+        NetworkCommunications.ObserveUserProgramTest();
         run();
     }
     

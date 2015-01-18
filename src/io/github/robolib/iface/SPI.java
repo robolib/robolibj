@@ -16,7 +16,7 @@
 package io.github.robolib.iface;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+
 
 /**
  * 
@@ -45,7 +45,7 @@ public class SPI extends Interface {
             allocateMXPPin(23);
             allocateMXPPin(25);
         }
-        UsageReporting.report(tResourceType.kResourceType_SPI, port.ordinal());
+        UsageReporting.report(UsageReporting.kResourceType_SPI, port.ordinal());
     }
 
 }

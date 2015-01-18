@@ -22,10 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.Manifest;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tInstances;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.control.DriverStation;
 import io.github.robolib.pneumatic.Compressor;
 import io.github.robolib.robot.GameMode;
@@ -238,7 +236,7 @@ public class RoboLibBot {
      * @param args the arguments
      */
     public static void main(String args[]) {
-        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationReserve();
+        NetworkCommunications.NetworkCommunicationReserve();
         ILogger log = Logger.get(RoboLibBot.class, "@Framework");
         
         NetworkTable.setServerMode();
@@ -274,7 +272,6 @@ public class RoboLibBot {
         try {
             robot = (RoboLibBot) Class.forName(robotName).newInstance();
         } catch (Throwable t) {
-//            DriverStation.reportError("ERROR Unhandled exception instantiating robot " + robotName + " " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
             log.fatal("Robots don't quit!");
             log.fatal("Could not instantiate robot " + robotName + "!", t);
             System.exit(1);
@@ -286,9 +283,8 @@ public class RoboLibBot {
         
         Timer.SetImplementation(new HardwareTimer());
         HLUsageReporting.SetImplementation(new HardwareHLUsageReporting());
-//        RobotState.SetImplementation(DriverStation.getInstance());
 
-        UsageReporting.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Java);
+        UsageReporting.report(UsageReporting.kResourceType_Language, UsageReporting.kLanguage_Java);
         
             
         log.info("Initializing Robot Network Table and Data");
@@ -305,14 +301,13 @@ public class RoboLibBot {
         try{
             robot.robotInit();
         }catch(Throwable t){
-//            DriverStation.reportError("ERROR Unhandled exception instantiating robot " + m_name + " " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
             log.fatal("Error running User Init Code", t);
             System.exit(1);
             return;
         }
 
         checkVersionFile(new File("/tmp/frc_versions/FRC_Lib_Version.ini"));
-        UsageReporting.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
+        UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
         LiveWindow.setEnabled(false);
 
         ModeSwitcher m_modeSwitcher = ModeSwitcher.getInstance();
@@ -324,7 +319,7 @@ public class RoboLibBot {
         
         log.info(robot.m_name + ", Version " + robot.m_version + " Running");
         
-        FRCNetworkCommunicationsLibrary.ObserveUserProgramStarting();
+        NetworkCommunications.ObserveUserProgramStarting();
         
         log.info("Starting Main Loop");
         
@@ -342,7 +337,6 @@ public class RoboLibBot {
             }
             
         }catch(Throwable t){
-//            DriverStation.reportError("ERROR Unhandled exception: " + t.toString() + " at " + Arrays.toString(t.getStackTrace()), false);
             log.fatal("Error in Main Loop. Something should have caught this!!!", t);
         }finally{
             m_ds.exitNoError();

@@ -21,7 +21,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
@@ -173,9 +172,9 @@ public class DigitalIO extends Interface {
         m_channel = channel;
         
         if(dir == Direction.IN)        
-            UsageReporting.report(tResourceType.kResourceType_DigitalOutput, channel.ordinal());
+            UsageReporting.report(UsageReporting.kResourceType_DigitalOutput, channel.ordinal());
         else
-            UsageReporting.report(tResourceType.kResourceType_DigitalOutput, channel.ordinal());
+            UsageReporting.report(UsageReporting.kResourceType_DigitalOutput, channel.ordinal());
     }
 
     /**

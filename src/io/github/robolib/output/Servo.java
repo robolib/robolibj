@@ -16,7 +16,6 @@
 package io.github.robolib.output;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.iface.PWM;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -39,7 +38,7 @@ public class Servo extends PWM {
         setPeriodMultiplier(PeriodMultiplier.k4X);
         
         LiveWindow.addActuator("Servo", getChannelNumber(), this);
-        UsageReporting.report(tResourceType.kResourceType_Servo, getChannelNumber());
+        UsageReporting.report(UsageReporting.kResourceType_Servo, getChannelNumber());
     }
     
     /**

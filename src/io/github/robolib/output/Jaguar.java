@@ -16,7 +16,6 @@
 package io.github.robolib.output;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.util.PDP.PowerChannel;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -62,7 +61,7 @@ public class Jaguar extends PWMController {
     public Jaguar(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.31, 1.55, 1.507, 1.454, 0.697, PeriodMultiplier.k1X);
         LiveWindow.addActuator("Jaguar", channel.ordinal(), this);
-        UsageReporting.report(tResourceType.kResourceType_Jaguar, channel.ordinal());
+        UsageReporting.report(UsageReporting.kResourceType_Jaguar, channel.ordinal());
     }
     
 }

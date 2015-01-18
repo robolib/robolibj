@@ -15,7 +15,7 @@
 
 package io.github.robolib.robot;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.framework.RobotMode;
 
 
@@ -56,7 +56,7 @@ public abstract class AutonMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.ObserveUserProgramAutonomous();
+        NetworkCommunications.ObserveUserProgramAutonomous();
         run();
     }
 }

@@ -16,7 +16,6 @@
 package io.github.robolib.iface;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 
 /**
  * 
@@ -40,7 +39,7 @@ public class Serial extends Interface {
             allocateMXPPin(14);
             allocateMXPPin(10);
         }
-        UsageReporting.report(tResourceType.kResourceType_SerialPort, port.ordinal());
+        UsageReporting.report(UsageReporting.kResourceType_SerialPort, port.ordinal());
     }
 
 }
