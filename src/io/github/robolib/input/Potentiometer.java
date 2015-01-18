@@ -34,7 +34,7 @@ public class Potentiometer implements IRoboSensor, IRoboAnalogSensor, PIDSource,
     /**
      * Instantiates a new potentiometer.
      *
-     * @param channel Analog Channel of the Potentiometer
+     * @param channel AnalogIO Channel of the Potentiometer
      * @param avgBits Number of Averaging Bits
      * @param ovrBits Number of Oversample Bits
      */

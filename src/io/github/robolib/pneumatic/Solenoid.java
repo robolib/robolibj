@@ -43,6 +43,14 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     }
     
     /**
+     * Set the solenoid with a boolean value.
+     * @param value on or off
+     */
+    public void set(boolean value){
+        set(m_port, value?kSolenoidOn:kSolenoidOff);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void set(Value value){

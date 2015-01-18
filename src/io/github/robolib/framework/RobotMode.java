@@ -108,7 +108,7 @@ public abstract class RobotMode {
     }
     
     /**
-     * Mode Specific init code.
+     * CounterMode Specific init code.
      * 
      * This calls the {@code init()} method when the mode changes.
      */
@@ -127,7 +127,7 @@ public abstract class RobotMode {
     }
     
     /**
-     * Mode Specific run code.
+     * CounterMode Specific run code.
      * 
      * This calls the {@code run()} method once every period.
      */
@@ -145,7 +145,7 @@ public abstract class RobotMode {
     public void run(){}
     
     /**
-     * Mode Specific end code.
+     * CounterMode Specific end code.
      * 
      * This calls the {@code end()} method when the mode changes.
      */

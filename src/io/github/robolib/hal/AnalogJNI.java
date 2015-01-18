@@ -6,17 +6,17 @@ import java.nio.LongBuffer;
 
 public class AnalogJNI extends JNIWrapper {
 	/**
-	 * <i>native declaration : AthenaJava\target\native\include\HAL\Analog.h:58</i><br>
+	 * <i>native declaration : AthenaJava\target\native\include\HAL\AnalogIO.h:58</i><br>
 	 * enum values
 	 */
 	public static interface AnalogTriggerType {
-		/** <i>native declaration : AthenaJava\target\native\include\HAL\Analog.h:54</i> */
+		/** <i>native declaration : AthenaJava\target\native\include\HAL\AnalogIO.h:54</i> */
 		public static final int kInWindow = 0;
-		/** <i>native declaration : AthenaJava\target\native\include\HAL\Analog.h:55</i> */
+		/** <i>native declaration : AthenaJava\target\native\include\HAL\AnalogIO.h:55</i> */
 		public static final int kState = 1;
-		/** <i>native declaration : AthenaJava\target\native\include\HAL\Analog.h:56</i> */
+		/** <i>native declaration : AthenaJava\target\native\include\HAL\AnalogIO.h:56</i> */
 		public static final int kRisingPulse = 2;
-		/** <i>native declaration : AthenaJava\target\native\include\HAL\Analog.h:57</i> */
+		/** <i>native declaration : AthenaJava\target\native\include\HAL\AnalogIO.h:57</i> */
 		public static final int kFallingPulse = 3;
 	};
 

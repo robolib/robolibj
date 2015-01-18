@@ -29,7 +29,7 @@ import io.github.robolib.util.log.Logger;
 
 /**
  * Handles the Switching of the Game mode and the Execution of the mode.
- * This controls what Mode the robot should run.
+ * This controls what CounterMode the robot should run.
  * It handles feeding the Watchdog and running the Scheduler.
  * 
  * @author Austin Reuland <amreuland@gmail.com>
@@ -98,10 +98,10 @@ public class ModeSwitcher {
     }
     
     /**
-     * Initializes the Game Mode Switcher.
+     * Initializes the Game CounterMode Switcher.
      * This method must be called when ready to start the robot.
      * 
-     * Checks each Mode to see if there is code to run, if not, a Default class
+     * Checks each CounterMode to see if there is code to run, if not, a Default class
      * will be added.
      *
      * @see DisabledMode
@@ -111,26 +111,26 @@ public class ModeSwitcher {
      */
     protected void init(){
         if(!m_modes.containsKey(GameMode.DISABLED)){
-            debug("No Disabled Robot Mode Defined");
-            debug("Creating Empty Disabled Mode");
+            debug("No Disabled Robot CounterMode Defined");
+            debug("Creating Empty Disabled CounterMode");
             new DisabledMode(){};
         }
         
         if(!m_modes.containsKey(GameMode.TEST)){
-            debug("No Test Robot Mode Defined");
-            debug("Creating Empty Test Mode");
+            debug("No Test Robot CounterMode Defined");
+            debug("Creating Empty Test CounterMode");
             new TestMode(){};
         }
         
         if(!m_modes.containsKey(GameMode.AUTON)){
-            debug("No Autonomous Robot Mode Defined");
-            debug("Creating Empty Autonomous Mode");
+            debug("No Autonomous Robot CounterMode Defined");
+            debug("Creating Empty Autonomous CounterMode");
             new AutonMode(){};
         }
         
         if(!m_modes.containsKey(GameMode.TELEOP)){
-            debug("No Teleop Robot Mode Defined");
-            debug("Creating Empty Teleop Mode");
+            debug("No Teleop Robot CounterMode Defined");
+            debug("Creating Empty Teleop CounterMode");
             new TeleopMode(){};
         }
         m_currentMode = GameMode.DISABLED;
@@ -168,7 +168,7 @@ public class ModeSwitcher {
     /**
      * Gets the current {@link RobotMode}.
      * 
-     * If there is no current Mode, then something went wrong,
+     * If there is no current CounterMode, then something went wrong,
      * and an error mode is returned that will cause the robot to quit.
      * 
      * @return the current {@link RobotMode}
@@ -177,7 +177,7 @@ public class ModeSwitcher {
         if(!m_modes.containsKey(m_currentMode)){
             return new RobotMode(){
                 public void init(){
-                    throw new RobotException("No Robot Mode");
+                    throw new RobotException("No Robot CounterMode");
                 }
             };
         }

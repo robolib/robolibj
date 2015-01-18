@@ -19,39 +19,39 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.exception.ResourceAllocationException;
 
 /**
- * The Class Analog.
+ * The Class AnalogIO.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class Analog extends Interface {
+public class AnalogIO extends Interface {
 
     /**
      * The Enum Channel.
      */
-    public static enum AnalogChannel{
+    public static enum AnalogChannel {
         
-        /**  Analog Channel 0. */
+        /**  AnalogIO Channel 0. */
         Channel0,
         
-        /**  Analog Channel 1. */
+        /**  AnalogIO Channel 1. */
         Channel1,
         
-        /**  Analog Channel 2. */
+        /**  AnalogIO Channel 2. */
         Channel2,
         
-        /**  Analog Channel 3. */
+        /**  AnalogIO Channel 3. */
         Channel3,
         
-        /**  Analog Channel 4, Channel 1 on MXP. */
+        /**  AnalogIO Channel 4, Channel 1 on MXP. */
         Channel4,
         
-        /**  Analog Channel 5, Channel 2 on MXP. */
+        /**  AnalogIO Channel 5, Channel 2 on MXP. */
         Channel5,
         
-        /**  Analog Channel 6, Channel 3 on MXP. */
+        /**  AnalogIO Channel 6, Channel 3 on MXP. */
         Channel6,
         
-        /**  Analog Channel 7, Channel 4 on MXP. */
+        /**  AnalogIO Channel 7, Channel 4 on MXP. */
         Channel7;
     }
     
@@ -79,14 +79,14 @@ public class Analog extends Interface {
      * @param channel the channel
      * @param dir the dir
      */
-    protected Analog(AnalogChannel channel, Direction dir) {
+    protected AnalogIO(AnalogChannel channel, Direction dir) {
         super(InterfaceType.ANALOG);
         
         switch(dir){
         case IN:
             checkAnalogInputChannel(channel.ordinal());
             if(m_usedInChannels[channel.ordinal()] == true){
-                throw new ResourceAllocationException("Analog Input channel '" + channel.name() + "' already in use.");
+                throw new ResourceAllocationException("AnalogIO Input channel '" + channel.name() + "' already in use.");
             }else{
                 m_usedInChannels[channel.ordinal()] = true;
             }
@@ -94,7 +94,7 @@ public class Analog extends Interface {
         case OUT:
             checkAnalogOutputChannel(channel.ordinal());
             if(m_usedOutChannels[channel.ordinal()] == true){
-                throw new ResourceAllocationException("Analog Output channel '" + channel.name() + "' already in use.");
+                throw new ResourceAllocationException("AnalogIO Output channel '" + channel.name() + "' already in use.");
             }else{
                 m_usedOutChannels[channel.ordinal()] = true;
             }

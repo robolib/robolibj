@@ -78,7 +78,7 @@ public class HALLibrary /* implements Library */ {
 	/** <i>native declaration : AthenaJava\target\native\include\HAL\Task.h</i> */
 	public static final int ERROR = (-1);
 	/** <i>native declaration : AthenaJava\target\native\include\HAL\Errors.h</i> */
-	public static final String SAMPLE_RATE_TOO_HIGH_MESSAGE = "Analog module sample rate is too high";
+	public static final String SAMPLE_RATE_TOO_HIGH_MESSAGE = "AnalogIO module sample rate is too high";
 	/** <i>native declaration : AthenaJava\target\native\include\HAL\Errors.h</i> */
 	public static final String SPI_WRITE_NO_MOSI_MESSAGE = "Cannot write to SPI port with no MOSI output";
 	/** <i>native declaration : AthenaJava\target\native\include\HAL\Errors.h</i> */

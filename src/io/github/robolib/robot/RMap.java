@@ -18,7 +18,7 @@ package io.github.robolib.robot;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.robolib.iface.Analog;
+import io.github.robolib.iface.AnalogIO;
 import io.github.robolib.iface.DigitalIO;
 import io.github.robolib.output.Jaguar;
 import io.github.robolib.output.SpeedController;
@@ -97,7 +97,7 @@ public class RMap {
         
     }
     
-    public static final void addAnalogType(String key, Class<? extends Analog> type){
+    public static final void addAnalogType(String key, Class<? extends AnalogIO> type){
         key = key.toUpperCase();
         
     }
