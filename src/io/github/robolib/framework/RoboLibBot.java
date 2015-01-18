@@ -324,7 +324,7 @@ public class RoboLibBot {
         
         log.info(robot.m_name + ", Version " + robot.m_version + " Running");
         
-        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramStarting();
+        FRCNetworkCommunicationsLibrary.ObserveUserProgramStarting();
         
         log.info("Starting Main Loop");
         

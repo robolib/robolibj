@@ -65,7 +65,7 @@ public abstract class TestMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramTest();
+        FRCNetworkCommunicationsLibrary.ObserveUserProgramTest();
         run();
     }
     

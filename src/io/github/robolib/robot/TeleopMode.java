@@ -55,7 +55,7 @@ public abstract class TeleopMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramTeleop();;
+        FRCNetworkCommunicationsLibrary.ObserveUserProgramTeleop();;
         run();
     }
 }
