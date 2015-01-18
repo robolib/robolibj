@@ -24,10 +24,9 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
-import io.github.robolib.iface.PWM.PWMChannel;
+import io.github.robolib.hal.RelayJNI;
 import io.github.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.hal.RelayJNI;
 
 /**
  * 
@@ -73,21 +72,30 @@ public class Relay extends Interface {
     
     /** Keep track of already used channels. */
     private static boolean m_usedChannels[] = new boolean[kMaxRelayChannels];
-
-    
-    
     
     /**
-     * @param channel 
+     * 
+     * @param channel
      */
     public Relay(RelayChannel channel) {
         this(channel, Direction.BOTH, "Relay Ch" + channel.ordinal());
     }
     
+    /**
+     * 
+     * @param channel
+     * @param dir
+     */
     public Relay(RelayChannel channel, Direction dir){
         this(channel, dir, "Relay Ch" + channel.ordinal());
     }
-    
+
+    /**
+     * 
+     * @param channel
+     * @param dir
+     * @param desc
+     */
     public Relay(RelayChannel channel, Direction dir, String desc){
         super(InterfaceType.RELAY);
         m_description = desc;
@@ -109,9 +117,7 @@ public class Relay extends Interface {
     }
     
     /**
-     * Free the PWM channel.
-     *
-     * @param channel the PWM channel to free
+     * Free the Relay channel.
      */
     public void free(){
         if(m_usedChannels[m_channel.ordinal()] == true){
@@ -119,38 +125,45 @@ public class Relay extends Interface {
         }else{
             Logger.get(Relay.class).error("Relay Channel '" + getChannelName() + "' was not allocated. How did you get here?");
         }
+        
+        IntBuffer status = getLE4IntBuffer();
+        set(Value.OFF);
+        DIOJNI.freeDIO(m_port, status);
+        HALUtil.checkStatus(status);
     }
     
+    /**
+     * 
+     * @param value
+     */
     public void set(boolean value){
         set(value?Value.ON:Value.OFF);
     }
     
+    /**
+     * 
+     * @param value
+     */
     public void set(Value value){
         IntBuffer status = getLE4IntBuffer();
         switch(value){
         case OFF:
-//            if((m_direction.ordinal() & 1) != 0)
-                RelayJNI.setRelayForward(m_port, kRelayOff, status);
-//            if((m_direction.ordinal() & 2) != 0)
-                RelayJNI.setRelayReverse(m_port, kRelayOff, status);
+            RelayJNI.setRelayForward(m_port, kRelayOff, status);
+            RelayJNI.setRelayReverse(m_port, kRelayOff, status);
             break;
         case FORWARD:
+            RelayJNI.setRelayReverse(m_port, kRelayOff, status);
             if(m_direction == Direction.REVERSE)
                 Logger.get(Relay.class).warn("Relay '" + m_description + "' configured for REVERSE. cannot go FORWARD.");
             else
                 RelayJNI.setRelayForward(m_port, kRelayOn, status);
-            
-//            if(m_direction == Direction.BOTH)
-                RelayJNI.setRelayReverse(m_port, kRelayOff, status);
             break;
         case REVERSE:
+            RelayJNI.setRelayForward(m_port, kRelayOff, status);
             if(m_direction == Direction.FORWARD)
                 Logger.get(Relay.class).warn("Relay '" + m_description + "' configured for FORWARD. cannot go REVERSE.");
             else
                 RelayJNI.setRelayReverse(m_port, kRelayOn, status);
-            
-//            if(m_direction == Direction.BOTH)
-                RelayJNI.setRelayForward(m_port, kRelayOff, status);
             break;
         case ON:
             if((m_direction.ordinal() & 1) != 0)
@@ -162,6 +175,10 @@ public class Relay extends Interface {
         HALUtil.checkStatus(status);
     }
     
+    /**
+     * 
+     * @return
+     */
     public Value get(){
         IntBuffer status = getLE4IntBuffer();
         int forward = RelayJNI.getRelayForward(m_port, status);
@@ -169,32 +186,37 @@ public class Relay extends Interface {
         return Value.values()[(forward | reverse)];
     }
     
+    /**
+     * 
+     * @param dir
+     */
     public void setDirection(Direction dir){
-        
+        set(Value.OFF);
+        m_direction = dir;
     }
     
     /**
-     * The channel this PWM is operating on.
+     * The channel this Relay is operating on.
      *
-     * @return {@link PWMChannel} representation of the PWM channel
+     * @return {@link RelayChannel} representation of the Relay channel
      */
     public RelayChannel getChannel(){
         return m_channel;
     }
 
     /**
-     * The channel this PWM is operating on, in integer form.
+     * The channel this Relay is operating on, in integer form.
      *
-     * @return integer representation of the PWM channel
+     * @return integer representation of the Relay channel
      */
     public int getChannelNumber(){
         return m_channel.ordinal();
     }
 
     /**
-     * The channel this PWM is operating on, in string form.
+     * The channel this Relay is operating on, in string form.
      *
-     * @return string representation of the PWM channel
+     * @return string representation of the Relay channel
      */
     public String getChannelName(){
         return m_channel.name();
