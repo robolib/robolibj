@@ -13,36 +13,29 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib;
+package io.github.robolib.sensor;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class CounterBase {
+public interface IAccelerometer {
     
-    public static enum EncodingType {
-        k1X,
-        k2X,
-        k4X;
+    public static enum Range {
+        k2G,
+        k4G,
+        k8G,
+        k16G;
     }
     
-    protected int m_index;
+    void setRange(Range range);
     
-    public int getFPGAIndex(){
-        return m_index;
-    }
+    Range getRange();
     
-    public abstract int get();
+    double getX();
     
-    public abstract void reset();
+    double getY();
     
-    public abstract double getPeriod();
-    
-    public abstract void setMaxPeriod(double max);
-    
-    public abstract boolean getStopped();
-    
-    public abstract boolean getDirection();
-    
+    double getZ();
+
 }

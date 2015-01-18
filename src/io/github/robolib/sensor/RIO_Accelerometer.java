@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensors;
+package io.github.robolib.sensor;
 
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.AccelerometerJNI;

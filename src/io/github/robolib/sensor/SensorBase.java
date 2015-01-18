@@ -13,13 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.command;
+package io.github.robolib.sensor;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public class Scheduler {
+public class SensorBase {
 
 }

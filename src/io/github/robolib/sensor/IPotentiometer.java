@@ -13,12 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensors;
+package io.github.robolib.sensor;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface IUltrasonic {
+public interface IPotentiometer {
 
 }
