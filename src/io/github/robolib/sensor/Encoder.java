@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib;
+package io.github.robolib.sensor;
 
 import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 

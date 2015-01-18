@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib;
+package io.github.robolib.sensor;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -75,28 +75,28 @@ public class Counter extends CounterBase implements PIDSource {
         
     }
     
-    public Counter(DigitalChannel aChannel){
+    public Counter(DigitalChannel upChannel){
         this();
-        setSource(SourceType.UP, aChannel);
+        setSource(SourceType.UP, upChannel);
     }
     
-    public Counter(DigitalIO aSource){
+    public Counter(DigitalIO upSource){
         this();
-        setSource(SourceType.UP, aSource);
+        setSource(SourceType.UP, upSource);
     }
     
-    public Counter(EncodingType eType, DigitalChannel aChannel, DigitalChannel bChannel, boolean inverted){
-        this(eType, new DigitalInput(aChannel), new DigitalInput(bChannel), inverted);
+    public Counter(EncodingType eType, DigitalChannel upChannel, DigitalChannel downChannel, boolean inverted){
+        this(eType, new DigitalInput(upChannel), new DigitalInput(downChannel), inverted);
         m_allocatedUpSource = true;
         m_allocatedDownSource = true;
     }
     
-    public Counter(EncodingType eType, DigitalIO aSource, DigitalIO bSource, boolean inverted){
+    public Counter(EncodingType eType, DigitalIO upSource, DigitalIO downSource, boolean inverted){
         this();
         setExternalDirectionMode();
         
-        setSource(SourceType.UP, aSource);
-        setSource(SourceType.DOWN, bSource);
+        setSource(SourceType.UP, upSource);
+        setSource(SourceType.DOWN, downSource);
         
         if(eType == EncodingType.k4X)
             throw new IllegalArgumentException("Counters only support 1X and 2X quadreature decoding!");

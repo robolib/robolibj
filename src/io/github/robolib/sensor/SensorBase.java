@@ -13,29 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensors;
+package io.github.robolib.sensor;
 
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface IAccelerometer {
-    
-    public static enum Range {
-        k2G,
-        k4G,
-        k8G,
-        k16G;
-    }
-    
-    void setRange(Range range);
-    
-    Range getRange();
-    
-    double getX();
-    
-    double getY();
-    
-    double getZ();
+public class SensorBase {
 
 }

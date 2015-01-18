@@ -13,12 +13,36 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensors;
+package io.github.robolib.sensor;
 
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface IGyro {
-
+public abstract class CounterBase {
+    
+    public static enum EncodingType {
+        k1X,
+        k2X,
+        k4X;
+    }
+    
+    protected int m_index;
+    
+    public int getFPGAIndex(){
+        return m_index;
+    }
+    
+    public abstract int get();
+    
+    public abstract void reset();
+    
+    public abstract double getPeriod();
+    
+    public abstract void setMaxPeriod(double max);
+    
+    public abstract boolean getStopped();
+    
+    public abstract boolean getDirection();
+    
 }

@@ -13,12 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensors;
+package io.github.robolib.sensor;
 
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class SensorBase {
+public interface IPotentiometer {
 
 }
