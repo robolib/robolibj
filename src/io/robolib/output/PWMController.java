@@ -15,6 +15,7 @@
 
 package io.robolib.output;
 
+import io.robolib.framework.SafetyManager;
 import io.robolib.iface.PWM;
 import io.robolib.util.PDP;
 import io.robolib.util.PDP.PowerChannel;
@@ -63,7 +64,7 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
         setPeriodMultiplier(PeriodMultiplier.k1X);
         setRaw(getCenterPWM());
         setZeroLatch();
-        m_safetyHelper = MotorSafetyManager.addMotor(this);
+        m_safetyHelper = SafetyManager.addMotor(this);
         if(pwChannel != null){
             PDP.claimChannel(pwChannel, desc);
         }
@@ -91,7 +92,7 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
         super(channel, desc, boundsPosMax, boundsPosMin, boundsCenter, boundsNegMax, boundsNegMin, multi);
         setRaw(getCenterPWM());
         setZeroLatch();
-        m_safetyHelper = MotorSafetyManager.addMotor(this);
+        m_safetyHelper = SafetyManager.addMotor(this);
         if(pwChannel != null){
             PDP.claimChannel(pwChannel, desc);
         }

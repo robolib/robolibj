@@ -19,9 +19,9 @@ import static io.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import java.nio.IntBuffer;
 
+import io.robolib.framework.RoboLibBot;
 import io.robolib.hal.HALUtil;
 import io.robolib.hal.PowerJNI;
-import io.robolib.robot.RoboLibBot;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

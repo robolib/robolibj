@@ -13,9 +13,10 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.robolib.robot;
+package io.robolib.framework;
 
 import io.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.robolib.robot.GameMode;
 import io.robolib.util.log.Logger;
 
 /**

@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.robolib.robot;
+package io.robolib.framework;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +28,7 @@ import io.robolib.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import io.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.robolib.control.DriverStation;
 import io.robolib.pneumatic.Compressor;
+import io.robolib.robot.GameMode;
 import io.robolib.util.PDP;
 import io.robolib.util.RoboRIO;
 import io.robolib.util.log.ILogger;

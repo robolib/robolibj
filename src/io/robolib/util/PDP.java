@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.robolib.exception.ResourceAllocationException;
+import io.robolib.framework.RoboLibBot;
 import io.robolib.hal.PDPJNI;
-import io.robolib.robot.RoboLibBot;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 
