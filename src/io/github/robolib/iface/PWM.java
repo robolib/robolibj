@@ -21,7 +21,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
@@ -243,7 +242,7 @@ public class PWM extends Interface implements LiveWindowSendable {
 
         m_eliminateDeadband = false;
 
-        UsageReporting.report(tResourceType.kResourceType_PWM, channel.ordinal());
+        UsageReporting.report(UsageReporting.kResourceType_PWM, channel.ordinal());
 
     }
     

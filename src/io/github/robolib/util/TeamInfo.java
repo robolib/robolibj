@@ -15,7 +15,7 @@
 
 package io.github.robolib.util;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 
 /**
  * 
@@ -40,7 +40,7 @@ public final class TeamInfo {
     }
     
     public static Alliance getAlliance(){
-        int sID = FRCNetworkCommunicationsLibrary.HALGetAllianceStation();
+        int sID = NetworkCommunications.HALGetAllianceStation();
         if(!MathUtils.inBounds(sID, 0, 5)){
             return Alliance.NONE;
         }
@@ -48,7 +48,7 @@ public final class TeamInfo {
     }
     
     public static StationID getStation(){
-        int sID = FRCNetworkCommunicationsLibrary.HALGetAllianceStation();
+        int sID = NetworkCommunications.HALGetAllianceStation();
         if(!MathUtils.inBounds(sID, 0, 5)){
             return StationID.NONE;
         }

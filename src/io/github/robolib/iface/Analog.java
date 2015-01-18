@@ -16,7 +16,6 @@
 package io.github.robolib.iface;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.exception.ResourceAllocationException;
 
 /**
@@ -102,6 +101,6 @@ public class Analog extends Interface {
         break;
         }
         
-        UsageReporting.report(tResourceType.kResourceType_AnalogChannel, channel.ordinal());
+        UsageReporting.report(UsageReporting.kResourceType_AnalogChannel, channel.ordinal());
     }
 }

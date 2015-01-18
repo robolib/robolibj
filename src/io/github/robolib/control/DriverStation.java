@@ -20,7 +20,7 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.framework.SafetyManager;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.pneumatic.Compressor;
@@ -60,7 +60,7 @@ public final class DriverStation implements Runnable {
         m_dataSem = new Object();
         m_packetDataAvailableMutex = HALUtil.initializeMutexNormal();
         m_packetDataAvailableSem = HALUtil.initializeMultiWait();
-        FRCNetworkCommunicationsLibrary.setNewDataSem(m_packetDataAvailableSem);
+        NetworkCommunications.setNewDataSem(m_packetDataAvailableSem);
         
         m_thread = new Thread(this, "FRCDriverStation");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
@@ -78,9 +78,9 @@ public final class DriverStation implements Runnable {
             synchronized(this){
                 for(byte stick = 0; stick < Joystick.kNumJoysticks; stick++){
                     ByteBuffer countBuffer = ByteBuffer.allocateDirect(1);
-                    short axes[] = FRCNetworkCommunicationsLibrary.HALGetJoystickAxes(stick);
-                    short povs[] = FRCNetworkCommunicationsLibrary.HALGetJoystickPOVs(stick);
-                    int btns = FRCNetworkCommunicationsLibrary.HALGetJoystickButtons(stick, countBuffer);
+                    short axes[] = NetworkCommunications.HALGetJoystickAxes(stick);
+                    short povs[] = NetworkCommunications.HALGetJoystickPOVs(stick);
+                    int btns = NetworkCommunications.HALGetJoystickButtons(stick, countBuffer);
                     Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());
                 }
                 
@@ -158,7 +158,7 @@ public final class DriverStation implements Runnable {
      * @return Time remaining in current match period (auto or teleop) in seconds 
      */
     public static double getMatchTime() {
-        return FRCNetworkCommunicationsLibrary.HALGetMatchTime();
+        return NetworkCommunications.HALGetMatchTime();
     }
     
     /**
@@ -167,7 +167,7 @@ public final class DriverStation implements Runnable {
      * @return True if the Robot is currently disabled by the field controls.
      */
     public static boolean isDisabled() {
-        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 1) == 0;
+        return (NetworkCommunications.HALGetRobotStatus() & 1) == 0;
     }
 
     /**
@@ -176,7 +176,7 @@ public final class DriverStation implements Runnable {
      * @return True if the Robot is currently enabled by the field controls.
      */
     public static boolean isEnabled() {
-        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 1) != 0;
+        return (NetworkCommunications.HALGetRobotStatus() & 1) != 0;
     }
 
     /**
@@ -186,7 +186,7 @@ public final class DriverStation implements Runnable {
      * determined by the field controls.
      */
     public static boolean isAutonomous() {
-        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 2) != 0;
+        return (NetworkCommunications.HALGetRobotStatus() & 2) != 0;
     }
 
     /**
@@ -196,7 +196,7 @@ public final class DriverStation implements Runnable {
      * determined by the driver station.
      */
     public static boolean isTest() {
-        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 4) != 0;
+        return (NetworkCommunications.HALGetRobotStatus() & 4) != 0;
     }
     
     /**
@@ -205,7 +205,7 @@ public final class DriverStation implements Runnable {
      * @return True if the robot is currently emergency stopped.
      */
     public static boolean isEStopped(){
-        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 8) != 0;
+        return (NetworkCommunications.HALGetRobotStatus() & 8) != 0;
     }
     
     /**
@@ -214,7 +214,7 @@ public final class DriverStation implements Runnable {
      * @return True if the FMS is attached
      */
     public static boolean isFMSAttached(){
-        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 16) != 0;
+        return (NetworkCommunications.HALGetRobotStatus() & 16) != 0;
     }
     
     /**
@@ -223,7 +223,7 @@ public final class DriverStation implements Runnable {
      * @return True if we have a driver station
      */
     public static boolean isDSAttached(){
-        return (FRCNetworkCommunicationsLibrary.HALGetRobotStatus() & 32) != 0;
+        return (NetworkCommunications.HALGetRobotStatus() & 32) != 0;
     }
 
     /**
@@ -233,7 +233,7 @@ public final class DriverStation implements Runnable {
      * determined by the field controls.
      */
     public static boolean isOperatorControl() {
-        int word = FRCNetworkCommunicationsLibrary.HALGetRobotStatus();
+        int word = NetworkCommunications.HALGetRobotStatus();
         return ((word & 6) == 0) && ((word & 1) != 0);
     }
     
@@ -244,7 +244,7 @@ public final class DriverStation implements Runnable {
      */
     public static boolean isSysActive() {
         IntBuffer status = getLE4IntBuffer();
-        boolean retVal = FRCNetworkCommunicationsLibrary.HALGetSystemActive(status);
+        boolean retVal = NetworkCommunications.HALGetSystemActive(status);
         HALUtil.checkStatus(status);
         return retVal;
     }
@@ -256,7 +256,7 @@ public final class DriverStation implements Runnable {
      */
     public static boolean isBrownedOut() {
         IntBuffer status = getLE4IntBuffer();
-        boolean retVal = FRCNetworkCommunicationsLibrary.HALGetBrownedOut(status);
+        boolean retVal = NetworkCommunications.HALGetBrownedOut(status);
         HALUtil.checkStatus(status);
         return retVal;
     }
@@ -269,6 +269,6 @@ public final class DriverStation implements Runnable {
      */
     public static void reportError(String err){
         if(isDSAttached())
-            FRCNetworkCommunicationsLibrary.HALSetErrorData(err);
+            NetworkCommunications.HALSetErrorData(err);
     }
 }

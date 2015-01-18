@@ -16,7 +16,6 @@
 package io.github.robolib.sensors;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.hal.AccelerometerJNI;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -50,7 +49,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      */
     public RIO_Accelerometer(Range range){
         setRange(range);
-        UsageReporting.report(tResourceType.kResourceType_Accelerometer, 0, 0, "Built-in accelerometer");
+        UsageReporting.report(UsageReporting.kResourceType_Accelerometer, 0, 0, "Built-in accelerometer");
         LiveWindow.addSensor("BuiltInAccel", 0, this);
     }
     

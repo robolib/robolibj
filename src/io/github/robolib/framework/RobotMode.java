@@ -15,7 +15,7 @@
 
 package io.github.robolib.framework;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.robot.GameMode;
 import io.github.robolib.util.log.Logger;
 
@@ -132,7 +132,7 @@ public abstract class RobotMode {
      * This calls the {@code run()} method once every period.
      */
     protected void modeRun(){
-        FRCNetworkCommunicationsLibrary.ObserveUserProgramDisabled();
+        NetworkCommunications.ObserveUserProgramDisabled();
         run();
     }
     

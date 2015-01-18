@@ -16,7 +16,6 @@
 package io.github.robolib.output;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.util.PDP.PowerChannel;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -64,7 +63,7 @@ public class Victor extends PWMController {
     public Victor(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.027, 1.525, 1.507, 1.49, 1.026, PeriodMultiplier.k2X);
         LiveWindow.addActuator("Victor", channel.ordinal(), this);
-        UsageReporting.report(tResourceType.kResourceType_Victor, channel.ordinal());
+        UsageReporting.report(UsageReporting.kResourceType_Victor, channel.ordinal());
     }
 
 }

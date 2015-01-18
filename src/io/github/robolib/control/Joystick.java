@@ -15,9 +15,8 @@
 
 package io.github.robolib.control;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.RoboRIO;
 import io.github.robolib.util.log.Logger;
@@ -131,10 +130,10 @@ public class Joystick extends GenericHID {
     public static final int kNumJoysticks = 6;
     
     /** The m_joystick axes. */
-    private static short m_joystickAxes[][] = new short[kNumJoysticks][FRCNetworkCommunicationsLibrary.kMaxJoystickAxes];
+    private static short m_joystickAxes[][] = new short[kNumJoysticks][NetworkCommunications.kMaxJoystickAxes];
     
     /** The m_joystick po vs. */
-    private static short m_joystickPOVs[][] = new short[kNumJoysticks][FRCNetworkCommunicationsLibrary.kMaxJoystickPOVs];
+    private static short m_joystickPOVs[][] = new short[kNumJoysticks][NetworkCommunications.kMaxJoystickPOVs];
     
     /** The m_joystick buttons. */
     private static int m_joystickButtons[] = new int[kNumJoysticks];
@@ -242,7 +241,7 @@ public class Joystick extends GenericHID {
      */
     public Joystick(final Stick port){
         this(port, 6, 12);
-        UsageReporting.report(tResourceType.kResourceType_Joystick, port.ordinal());
+        UsageReporting.report(UsageReporting.kResourceType_Joystick, port.ordinal());
     }
     
     /**
@@ -322,13 +321,13 @@ public class Joystick extends GenericHID {
             m_rightRumble = rVal;
             break;
         }
-        FRCNetworkCommunicationsLibrary.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
+        NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }
     
     public void setOutput(int outputNumber, boolean value){
         if(MathUtils.inBounds(outputNumber, 0, 31)){
             m_outputs = (m_outputs & ~(1 << outputNumber)) | ((value?1:0) << outputNumber);
-            FRCNetworkCommunicationsLibrary.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
+            NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
         }else{
             Logger.get(Joystick.class).warn("No such Output number '" + outputNumber + "' on joysticks.");
         }
@@ -337,7 +336,7 @@ public class Joystick extends GenericHID {
     
     public void setOutputs(int value){
         m_outputs = value;
-        FRCNetworkCommunicationsLibrary.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
+        NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }
 
 }

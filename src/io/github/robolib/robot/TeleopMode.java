@@ -15,7 +15,7 @@
 
 package io.github.robolib.robot;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.framework.RobotMode;
 
 /**
@@ -55,7 +55,7 @@ public abstract class TeleopMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.ObserveUserProgramTeleop();;
+        NetworkCommunications.ObserveUserProgramTeleop();;
         run();
     }
 }

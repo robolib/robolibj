@@ -18,8 +18,6 @@ package io.github.robolib.framework;
 import java.util.EnumMap;
 //import edu.wpi.first.wpilibj.command.Scheduler;=
 
-
-
 import io.github.robolib.exception.RobotException;
 import io.github.robolib.robot.AutonMode;
 import io.github.robolib.robot.DisabledMode;

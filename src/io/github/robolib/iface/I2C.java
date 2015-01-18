@@ -16,7 +16,7 @@
 package io.github.robolib.iface;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+
 
 /**
  * 
@@ -40,7 +40,7 @@ public class I2C extends Interface {
             allocateMXPPin(32);
             allocateMXPPin(34);
         }
-        UsageReporting.report(tResourceType.kResourceType_I2C, address);
+        UsageReporting.report(UsageReporting.kResourceType_I2C, address);
     }
 
 }

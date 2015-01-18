@@ -18,10 +18,18 @@ package io.github.robolib.robot;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.robolib.iface.*;
-import io.github.robolib.output.*;
-import io.github.robolib.pneumatic.*;
-import io.github.robolib.util.*;
+import io.github.robolib.iface.Analog;
+import io.github.robolib.iface.DigitalIO;
+import io.github.robolib.output.Jaguar;
+import io.github.robolib.output.SpeedController;
+import io.github.robolib.output.Talon;
+import io.github.robolib.output.TalonSRX;
+import io.github.robolib.output.Victor;
+import io.github.robolib.output.VictorSP;
+import io.github.robolib.pneumatic.DoubleSolenoid;
+import io.github.robolib.pneumatic.Solenoid;
+import io.github.robolib.pneumatic.SolenoidBase;
+import io.github.robolib.util.ConstantRunner;
 import io.github.robolib.util.log.Logger;
 
 

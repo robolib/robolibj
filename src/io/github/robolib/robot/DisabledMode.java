@@ -15,7 +15,7 @@
 
 package io.github.robolib.robot;
 
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary;
+import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.framework.RobotMode;
 
 
@@ -60,7 +60,7 @@ public abstract class DisabledMode extends RobotMode {
      * {@inheritDoc}
      */
     protected final void modeRun(){
-        FRCNetworkCommunicationsLibrary.ObserveUserProgramDisabled();
+        NetworkCommunications.ObserveUserProgramDisabled();
         run();
     }
 }

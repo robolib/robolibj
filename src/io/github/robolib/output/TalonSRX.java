@@ -16,7 +16,6 @@
 package io.github.robolib.output;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import io.github.robolib.util.PDP.PowerChannel;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -61,7 +60,7 @@ public class TalonSRX extends PWMController {
     public TalonSRX(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.004, 1.52, 1.50, 1.48, 0.997, PeriodMultiplier.k1X);
         LiveWindow.addActuator("TalonSRX", channel.ordinal(), this);
-        UsageReporting.report(tResourceType.kResourceType_Talon, channel.ordinal());
+        UsageReporting.report(UsageReporting.kResourceType_Talon, channel.ordinal());
     }
     
 }

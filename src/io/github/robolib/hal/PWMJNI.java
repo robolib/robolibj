@@ -1,7 +1,7 @@
 package io.github.robolib.hal;
 
-import java.nio.IntBuffer;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 // import edu.wpi.first.wpilibj.SensorBase;
 
