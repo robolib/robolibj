@@ -15,22 +15,52 @@
 
 package io.github.robolib.input.limitswitch;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
-import edu.wpi.first.wpilibj.tables.ITable;
+import io.github.robolib.iface.DigitalIO.DigitalChannel;
+import io.github.robolib.iface.DigitalInput;
 
 /**
  * Limit Switch Class.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class LimitSwitch implements IStandardSwitch, LiveWindowSendable {
+public class LimitSwitch implements StandardSwitch {
+    
+    public enum SwitchType {
+        
+        /** Normally Open Switch. */
+        NO(true),
+        
+        /** Normally Closed Switch. */
+        NC(false);
+        
+        /** The open. */
+        private final boolean open;
+        
+        /**
+         * Instantiates a new e switch type.
+         *
+         * @param open the open
+         */
+        SwitchType(boolean open){
+            this.open = open;
+        }
+        
+        /**
+         * Gets the value.
+         *
+         * @param value the value
+         * @return the value
+         */
+        public boolean getValue(boolean value){
+            return this.open && value;
+        }
+    }
     
     /** The m_limit switch. */
     private DigitalInput m_limitSwitch;
     
     /** The m_type. */
-    private ESwitchType m_type;
+    private SwitchType m_type;
     
     /**
      * Instantiates a new limit switch.
@@ -38,7 +68,7 @@ public class LimitSwitch implements IStandardSwitch, LiveWindowSendable {
      * @param channel the channel
      * @param type the type
      */
-    public LimitSwitch(int channel, ESwitchType type){
+    public LimitSwitch(DigitalChannel channel, SwitchType type){
         m_limitSwitch = new DigitalInput(channel);
         this.m_type = type;
     }
@@ -53,57 +83,7 @@ public class LimitSwitch implements IStandardSwitch, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
-    public int getChannel() {
-        return m_limitSwitch.getChannel();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public ESwitchType getType() {
+    public SwitchType getType() {
         return m_type;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void updateTable() {
-        m_limitSwitch.updateTable();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void startLiveWindowMode() {
-        m_limitSwitch.startLiveWindowMode();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void stopLiveWindowMode() {
-        m_limitSwitch.stopLiveWindowMode();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void initTable(ITable arg0) {
-        m_limitSwitch.initTable(arg0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public ITable getTable() {
-        return m_limitSwitch.getTable();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getSmartDashboardType() {
-        return m_limitSwitch.getSmartDashboardType();
-    }
-
 }

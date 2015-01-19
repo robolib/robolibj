@@ -32,9 +32,7 @@ import io.github.robolib.util.RoboRIO;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.HLUsageReporting;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.internal.HardwareHLUsageReporting;
 import edu.wpi.first.wpilibj.internal.HardwareTimer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
@@ -282,7 +280,6 @@ public class RoboLibBot {
         log.info("Starting " + robot.m_name);
         
         Timer.SetImplementation(new HardwareTimer());
-        HLUsageReporting.SetImplementation(new HardwareHLUsageReporting());
 
         UsageReporting.report(UsageReporting.kResourceType_Language, UsageReporting.kLanguage_Java);
         

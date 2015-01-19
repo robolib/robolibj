@@ -27,28 +27,63 @@ import io.github.robolib.hal.PDPJNI;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
- * A better class for accessing the Power Distribution Panel.
+ * A class for accessing the Power Distribution Panel.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class PDP {
     
+    /**
+     * The Enum PowerChannel.
+     */
     public static enum PowerChannel{
+        
+        /** Channel 0 on the Power Distribution Panel. */
         Channel0,
+        
+        /** Channel 1 on the Power Distribution Panel. */
         Channel1,
+        
+        /** Channel 2 on the Power Distribution Panel. */
         Channel2,
+        
+        /** Channel 3 on the Power Distribution Panel. */
         Channel3,
+        
+        /** Channel 4 on the Power Distribution Panel. */
         Channel4,
+        
+        /** Channel 5 on the Power Distribution Panel. */
         Channel5,
+        
+        /** Channel 6 on the Power Distribution Panel. */
         Channel6,
+        
+        /** Channel 7 on the Power Distribution Panel. */
         Channel7,
+        
+        /** Channel 8 on the Power Distribution Panel. */
         Channel8,
+        
+        /** Channel 9 on the Power Distribution Panel. */
         Channel9,
+        
+        /** Channel 10 on the Power Distribution Panel. */
         Channel10,
+        
+        /** Channel 11 on the Power Distribution Panel. */
         Channel11,
+        
+        /** Channel 12 on the Power Distribution Panel. */
         Channel12,
+        
+        /** Channel 13 on the Power Distribution Panel. */
         Channel13,
+        
+        /** Channel 14 on the Power Distribution Panel. */
         Channel14,
+        
+        /** Channel 15 on the Power Distribution Panel. */
         Channel15;
     }
     
@@ -57,11 +92,8 @@ public class PDP {
     
     /** The Constant m_instance. */
     private static PDP m_instance;
-
-    /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[kNumPowerChannels];
     
-    /** */
+    /** The m_update channels. */
     private static List<Integer> m_updateChannels = new ArrayList<>();
     
     /** The m_table. */
@@ -77,7 +109,7 @@ public class PDP {
     }
     
     /**
-     * Instantiates a PDP
+     * Instantiates a PDP.
      */
     private PDP(){
         m_table = RoboLibBot.getRobotTable().getSubTable("Power").getSubTable("PDP");
@@ -94,7 +126,6 @@ public class PDP {
      * @return the channel name
      */
     public static String getChannelName(PowerChannel channel){
-//        checkPDPChannel(channel);
         return m_chanNames[channel.ordinal()];
     }
     
@@ -106,11 +137,9 @@ public class PDP {
      */
     public static void claimChannel(PowerChannel channel, String name){
 
-        if(m_usedChannels[channel.ordinal()] == false){
-            m_usedChannels[channel.ordinal()] = true;
-        }else{
+        if(m_updateChannels.contains(channel.ordinal()))
             throw new ResourceAllocationException("PDP channel '" + channel.name() + "' already claimed by '" + m_chanNames[channel.ordinal()] + "'.");
-        }
+        
         m_chanNames[channel.ordinal()] = name;
         m_updateChannels.add(channel.ordinal());
     }
@@ -144,9 +173,9 @@ public class PDP {
     }
 
     /**
-     * Gets the current
-     * 
-     * @param channel
+     * Gets the current.
+     *
+     * @param channel the channel
      * @return the current
      */
     private double getChannelCurrent(int channel){

@@ -15,38 +15,26 @@
 
 package io.github.robolib.input.limitswitch;
 
+import io.github.robolib.input.limitswitch.LimitSwitch.SwitchType;
+
 /**
- * Limit Switch Type Enum.
+ * Interface for a Limit Switch.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public enum ESwitchType {
-    
-    /** Normally Open Switch. */
-    NO(true),
-    
-    /** Normally Closed Switch. */
-    NC(false);
-    
-    /** The open. */
-    private final boolean open;
+public interface StandardSwitch {
     
     /**
-     * Instantiates a new e switch type.
+     * State.
      *
-     * @param open the open
+     * @return true, if successful
      */
-    ESwitchType(boolean open){
-        this.open = open;
-    }
+    public boolean state();
     
     /**
-     * Gets the value.
+     * Gets the type.
      *
-     * @param value the value
-     * @return the value
+     * @return the type
      */
-    public boolean getValue(boolean value){
-        return this.open && value;
-    }
+    public SwitchType getType();
 }

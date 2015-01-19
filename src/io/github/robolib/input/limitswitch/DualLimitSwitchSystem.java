@@ -15,12 +15,15 @@
 
 package io.github.robolib.input.limitswitch;
 
+import io.github.robolib.iface.DigitalIO.DigitalChannel;
+import io.github.robolib.input.limitswitch.LimitSwitch.SwitchType;
+
 /**
  * A Limit Switch System using two Switches.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DualLimitSwitchSystem implements ILimitSwitchSystem{
+public class DualLimitSwitchSystem implements LimitSwitchSystem{
     
     /** The m_bottom switch. */
     private LimitSwitch m_topSwitch, m_bottomSwitch;
@@ -33,8 +36,8 @@ public class DualLimitSwitchSystem implements ILimitSwitchSystem{
      * @param bottomChannel the bottom channel
      * @param bottomType the bottom type
      */
-    public DualLimitSwitchSystem(int topChannel, ESwitchType topType,
-            int bottomChannel, ESwitchType bottomType){
+    public DualLimitSwitchSystem(DigitalChannel topChannel, SwitchType topType,
+            DigitalChannel bottomChannel, SwitchType bottomType){
         this(new LimitSwitch(topChannel, topType),
                 new LimitSwitch(bottomChannel, bottomType));
     }

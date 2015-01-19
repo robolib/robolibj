@@ -15,19 +15,32 @@
 
 package io.github.robolib.input.limitswitch;
 
+import io.github.robolib.iface.DigitalIO.DigitalChannel;
+import io.github.robolib.input.limitswitch.LimitSwitch.SwitchType;
+
 /**
  * A Limit Switch System using only one Switch.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
+public class SingleLimitSwitchSystem implements LimitSwitchSystem {
+    
+    public static enum SingleSystemType {
+        
+        /** The top limit. */
+        TOP_LIMIT,
+        
+        /** The bottom limit. */
+        BOTTOM_LIMIT;
+
+    }
     
    
     /** The m_limit switch. */
     private LimitSwitch m_limitSwitch;
     
     /** The m_type. */
-    private ESingleSystemType m_type;
+    private SingleSystemType m_type;
     
     /**
      * Construct a new Single Limit Switch System for use with a LimitSwitchController.
@@ -36,7 +49,7 @@ public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
      * @param switchType Limit Switch Type (SwitchType)
      * @param systemType Single Switch System Type (SingleSystemType)
      */ 
-    public SingleLimitSwitchSystem(int channel, ESwitchType switchType, ESingleSystemType systemType){
+    public SingleLimitSwitchSystem(DigitalChannel channel, SwitchType switchType, SingleSystemType systemType){
         this(new LimitSwitch(channel, switchType), systemType);
     }
     
@@ -46,7 +59,7 @@ public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
      * @param limitSwitch Limit Switch
      * @param type Single Switch System Type (SingleSystemType)
      */
-    public SingleLimitSwitchSystem(LimitSwitch limitSwitch, ESingleSystemType type){
+    public SingleLimitSwitchSystem(LimitSwitch limitSwitch, SingleSystemType type){
         this.m_limitSwitch = limitSwitch;
         this.m_type = type;
     }
@@ -58,7 +71,7 @@ public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
      * @return LimitSwitch value
      */
     public boolean canUp() {
-        if(m_type == ESingleSystemType.BOTTOM_LIMIT) return true;
+        if(m_type == SingleSystemType.BOTTOM_LIMIT) return true;
         return !m_limitSwitch.state();
     }
     
@@ -68,7 +81,7 @@ public class SingleLimitSwitchSystem implements ILimitSwitchSystem{
      * @return LimitSwitch value
      */
     public boolean canDown() {
-        if(m_type == ESingleSystemType.TOP_LIMIT) return true;
+        if(m_type == SingleSystemType.TOP_LIMIT) return true;
         return !m_limitSwitch.state();
     }
 
