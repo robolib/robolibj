@@ -15,7 +15,7 @@
 
 package io.github.robolib.output;
 
-import io.github.robolib.input.limitswitch.ILimitSwitchSystem;
+import io.github.robolib.input.limitswitch.LimitSwitchSystem;
 import io.github.robolib.pid.PIDOutput;
 
 // TODO: Auto-generated Javadoc
@@ -30,7 +30,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     private final SpeedController m_motor;
     
     /** The m_switch system. */
-    private final ILimitSwitchSystem m_switchSystem;
+    private final LimitSwitchSystem m_switchSystem;
     
     /**
      * Instantiates a new limit switch controller.
@@ -38,7 +38,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
      * @param motor the motor
      * @param switchSystem the switch system
      */
-    public LimitSwitchController(SpeedController motor, ILimitSwitchSystem switchSystem){
+    public LimitSwitchController(SpeedController motor, LimitSwitchSystem switchSystem){
         this.m_motor = motor;
         this.m_switchSystem = switchSystem;
     }

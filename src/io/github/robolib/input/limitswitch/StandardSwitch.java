@@ -15,17 +15,26 @@
 
 package io.github.robolib.input.limitswitch;
 
+import io.github.robolib.input.limitswitch.LimitSwitch.SwitchType;
+
 /**
- * Single System Type.
+ * Interface for a Limit Switch.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public enum ESingleSystemType {
+public interface StandardSwitch {
     
-    /** The top limit. */
-    TOP_LIMIT,
+    /**
+     * State.
+     *
+     * @return true, if successful
+     */
+    public boolean state();
     
-    /** The bottom limit. */
-    BOTTOM_LIMIT;
-
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
+    public SwitchType getType();
 }

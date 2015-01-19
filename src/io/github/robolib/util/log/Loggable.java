@@ -25,5 +25,7 @@ public interface Loggable {
     String getDescription();
     
     String getData();
+    
+    LogLevel getLevel();
 
 }

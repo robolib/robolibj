@@ -20,7 +20,7 @@ package io.github.robolib.input.limitswitch;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface ILimitSwitchSystem {
+public interface LimitSwitchSystem {
     
     /**
      * Can up.
