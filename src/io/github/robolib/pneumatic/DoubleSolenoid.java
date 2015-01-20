@@ -17,14 +17,18 @@ package io.github.robolib.pneumatic;
 
 import java.nio.ByteBuffer;
 
+import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
+
+import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.tables.ITableListener;
 
 /**
  * The Class DoubleSolenoid.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DoubleSolenoid extends SolenoidBase {
+public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     
     private SolenoidChannel m_forwardChannel;
     private SolenoidChannel m_reverseChannel;
@@ -32,8 +36,9 @@ public class DoubleSolenoid extends SolenoidBase {
     private ByteBuffer m_forwardPort;
     private ByteBuffer m_reversePort;
     
-//    public 
-    
+    private ITable m_table;
+    private ITableListener m_table_listener;
+
     public DoubleSolenoid(SolenoidChannel forwardChannel, SolenoidChannel reverseChannel){
         m_forwardChannel = forwardChannel;
         m_reverseChannel = reverseChannel;
@@ -89,10 +94,88 @@ public class DoubleSolenoid extends SolenoidBase {
             return Value.OFF;
         }
     }
+   
+    /**
+     * Check if the forward solenoid is blacklisted.
+     *      If a solenoid is shorted, it is added to the blacklist and
+     *      disabled until power cycle, or until faults are cleared.
+     *      @see #clearAllPCMStickyFaults()
+     *
+     * @return If solenoid is disabled due to short.
+     */
+    public boolean isFwdSolenoidBlackListed() {
+        int blackList = getPCMSolenoidBlacklist(m_forwardChannel.ordinal() / 8) & (1 << m_forwardChannel.ordinal());
+        return blackList != 0;
+    }
+    /**
+     * Check if the reverse solenoid is blacklisted.
+     *      If a solenoid is shorted, it is added to the blacklist and
+     *      disabled until power cycle, or until faults are cleared.
+     *      @see #clearAllPCMStickyFaults()
+     *
+     * @return If solenoid is disabled due to short.
+     */
+    public boolean isRevSolenoidBlackListed() {
+        int blackList = getPCMSolenoidBlacklist(m_reverseChannel.ordinal() / 8) & (1 << m_reverseChannel.ordinal());
+        return blackList != 0;
+    }
     
-//    public boolean isForwardSolenoidBlacklisted(){
-//        int 
-//    }
+    /*
+     * Live Window code, only does anything if live window is activated.
+     */
+    public String getSmartDashboardType() {
+        return "Double Solenoid";
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initTable(ITable subtable) {
+        m_table = subtable;
+        updateTable();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        return m_table;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateTable() {
+        if (m_table != null) {
+            m_table.putString("Value", (get() == Value.FORWARD ? "Forward" : (get() == Value.REVERSE ? "Reverse" : "Off")));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void startLiveWindowMode() {
+        set(Value.OFF);
+        m_table_listener = new ITableListener() {
+            public void valueChanged(ITable itable, String key, Object value, boolean bln) {
+                if (value.toString().equalsIgnoreCase("Reverse"))
+                    set(Value.REVERSE);
+                else if (value.toString().equalsIgnoreCase("Forward"))
+                    set(Value.FORWARD);
+                else
+                    set(Value.OFF);
+            }
+        };
+        m_table.addTableListener("Value", m_table_listener, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void stopLiveWindowMode() {
+        set(Value.OFF);
+        m_table.removeTableListener(m_table_listener);
+    }
     
     
     
