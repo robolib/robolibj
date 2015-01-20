@@ -21,6 +21,7 @@ import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.tables.ITableListener;
 
 /**
  * The Class Solenoid.
@@ -32,10 +33,17 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     private ByteBuffer m_port;
     private SolenoidChannel m_channel;
     
+    private ITable m_table;
+    private ITableListener m_table_listener;
+    
     public Solenoid(SolenoidChannel channel){
         m_channel = channel;
         m_port = initChannel(channel);
         
+    }
+    
+    public int getChannelNumber(){
+        return m_channel.ordinal();
     }
     
     public SolenoidChannel getChannel(){
@@ -76,53 +84,73 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     public Value get(){
         return get(m_port) ? Value.ON : Value.OFF;
     }
+    
+    public boolean getRaw(){
+        return get(m_port);
+    }
+    
+    /**
+     * Check if solenoid is blacklisted.
+     *      If a solenoid is shorted, it is added to the blacklist and
+     *      disabled until power cycle, or until faults are cleared.
+     *      @see clearAllPCMStickyFaults()
+     *
+     * @return If solenoid is disabled due to short.
+     */
+    public boolean isBlackListed(){
+        int value = getPCMSolenoidBlacklist(m_channel.ordinal() / 8) & (1 << m_channel.ordinal());
+        return value != 0;
+    }
 
+    /*
+     * Live Window code, only does anything if live window is activated.
+     */
+    public String getSmartDashboardType() {
+        return "Solenoid";
+    }
+    
     /**
      * {@inheritDoc}
      */
     public void initTable(ITable subtable) {
-        // TODO Auto-generated method stub
-        
+        m_table = subtable;
+        updateTable();
     }
 
     /**
      * {@inheritDoc}
      */
     public ITable getTable() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getSmartDashboardType() {
-        // TODO Auto-generated method stub
-        return null;
+        return m_table;
     }
 
     /**
      * {@inheritDoc}
      */
     public void updateTable() {
-        // TODO Auto-generated method stub
-        
+        if (m_table != null) {
+            m_table.putBoolean("Value", getRaw());
+        }
     }
-
+    
     /**
      * {@inheritDoc}
      */
     public void startLiveWindowMode() {
-        // TODO Auto-generated method stub
-        
+        m_table_listener = new ITableListener() {
+            public void valueChanged(ITable itable, String key, Object value, boolean bln) {
+                set(((Boolean) value).booleanValue());
+            }
+        };
+        m_table.addTableListener("Value", m_table_listener, true);
     }
 
     /**
      * {@inheritDoc}
      */
     public void stopLiveWindowMode() {
-        // TODO Auto-generated method stub
-        
+        set(false);
+        m_table.removeTableListener(m_table_listener);
     }
 
 }
