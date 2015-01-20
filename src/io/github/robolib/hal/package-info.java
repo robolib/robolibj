@@ -13,16 +13,8 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input.i2c;
-
 /**
- * A Sensor class for the HMC5883L Compass Module.
- * 
- * Porting from PyI2C Library
- * https://github.com/amreuland/PyI2C/blob/master/PyI2C/HMC5883L.py
- * 
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class HMC5883L {
-
-}
+package io.github.robolib.hal;

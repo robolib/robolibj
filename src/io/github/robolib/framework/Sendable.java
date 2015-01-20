@@ -26,6 +26,8 @@ public interface Sendable {
     void initTable(ITable subtable);
     
     ITable getTable();
+    
+    void updateTable();
 
     String getSmartDashboardType();
     

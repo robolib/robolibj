@@ -21,6 +21,8 @@ import java.nio.IntBuffer;
 
 import io.github.robolib.exception.ChannelIndexException;
 
+import edu.wpi.first.wpilibj.tables.ITable;
+
 /**
  * Common functions for use in the robot code.
  *
@@ -62,6 +64,14 @@ public class CommonFunctions {
             t.setStackTrace(e.getStackTrace());
             throw t;
         }
+    }
+    
+    public static ITable getTable(ITable table, String path){
+        String[] a = path.split("/");
+        for(String s : a){
+            table = table.getSubTable(s);
+        }
+        return table;
     }
 
 }

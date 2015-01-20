@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.control;
+package io.github.robolib.framework;
 
 import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 
@@ -21,11 +21,9 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.communication.NetworkCommunications;
-import io.github.robolib.framework.SafetyManager;
+import io.github.robolib.control.Joystick;
 import io.github.robolib.hal.HALUtil;
-import io.github.robolib.pneumatic.Compressor;
-import io.github.robolib.util.PDP;
-import io.github.robolib.util.RoboRIO;
+import io.github.robolib.util.TableSender;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
@@ -75,6 +73,7 @@ public final class DriverStation {
     private void commTask(){
         m_log.info("Communications thread started.");
         byte safetyCounter = 0;
+        byte tableCounter = 0;
         while (m_thread_keepAlive){
             HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
             synchronized(this){
@@ -92,12 +91,14 @@ public final class DriverStation {
             synchronized(m_dataSem){
                 m_dataSem.notifyAll();
             }
+            
+            if(++tableCounter >= 2){
+                TableSender.getInstance().runFramework();
+                tableCounter = 0;
+            }
 
             if(++safetyCounter >= 4){
                 SafetyManager.check();
-                PDP.getInstance().updateTable();
-                RoboRIO.getInstance().updateTable();
-                Compressor.getInstance().updateTable();
                 safetyCounter = 0;
             }
         }
@@ -105,7 +106,7 @@ public final class DriverStation {
             m_log.severe("Communications thread ended!");
     }
     
-    public void startThread(){
+    protected void startThread(){
         if(!m_thread.isAlive()){
             m_thread_keepAlive = true;
             m_thread_exit_error = true;
@@ -267,7 +268,6 @@ public final class DriverStation {
      * Report an error to the Driver Station
      * 
      * @param err
-     * @param pT
      */
     public static void reportError(String err){
         if(isDSAttached())

@@ -20,7 +20,7 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.control.Button;
-import io.github.robolib.framework.RoboLibBot;
+import io.github.robolib.framework.Sendable;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PowerJNI;
 
@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class RoboRIO {
+public class RoboRIO implements Sendable {
     
     private ITable m_table;
     
@@ -46,10 +46,7 @@ public class RoboRIO {
     /**
      * Instantiates a new robo rio.
      */
-    private RoboRIO(){
-        m_table = RoboLibBot.getRobotTable().getSubTable("Power").getSubTable("RIO");
-        updateTable();
-    }
+    private RoboRIO(){}
     
     public static int getFPGAVersion(){
         IntBuffer status = getLE4IntBuffer();
@@ -260,6 +257,28 @@ public class RoboRIO {
         int retVal = PowerJNI.getUserCurrentFaults6V(status);
         HALUtil.checkStatus(status);
         return retVal;
+    }
+    
+    /*
+     * Live Window code, only does anything if live window is activated.
+     */
+    public String getSmartDashboardType() {
+        return "Solenoid";
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initTable(ITable subtable) {
+        m_table = subtable;
+        updateTable();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        return m_table;
     }
     
     /**

@@ -23,8 +23,6 @@ import io.github.robolib.framework.Sendable;
  */
 public interface LiveWindowSendable extends Sendable {
     
-    void updateTable();
-    
     void startLiveWindowMode();
     
     void stopLiveWindowMode();

@@ -21,8 +21,10 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.framework.RoboLibBot;
+import io.github.robolib.framework.Sendable;
 import io.github.robolib.hal.CompressorJNI;
 import io.github.robolib.hal.HALUtil;
+import io.github.robolib.util.StringUtils;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 
@@ -31,10 +33,10 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class Compressor {
+public final class Compressor implements Sendable {
     
     /** The m_table. */
-    private final ITable m_table;
+    private ITable m_table;
     
     /** The m_pcm_compressor. */
     private static ByteBuffer m_compressor;
@@ -56,8 +58,7 @@ public final class Compressor {
      */
     private Compressor(){
         m_compressor = CompressorJNI.initializeCompressor((byte) 0);
-        m_table = RoboLibBot.getRobotTable().getSubTable("Compressor");
-        updateTable();
+        initTable(RoboLibBot.getRobotTable().getSubTable("Compressor"));
     }
     
     public void free(){
@@ -198,5 +199,28 @@ public final class Compressor {
     public void updateTable() {
         m_table.putBoolean("Enabled", getCompressorEnabled());
         m_table.putBoolean("Pressure Switch", getPressureSwitch());
+        m_table.putString("Current", StringUtils.getNumber2DWithUnits(getCompressorCurrent(), "A"));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initTable(ITable subtable) {
+        m_table = subtable;
+        updateTable();       
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        return m_table;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getSmartDashboardType() {
+        return "Compressor";
     }
 }

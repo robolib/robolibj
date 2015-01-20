@@ -20,6 +20,7 @@ import java.util.Vector;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.control.Trigger.ButtonScheduler;
 import io.github.robolib.framework.RoboLibBot;
+import io.github.robolib.framework.Sendable;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
@@ -32,7 +33,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Scheduler {
+public class Scheduler implements Sendable {
     
     /** The m_instance. */
     private static Scheduler m_instance;
@@ -244,9 +245,14 @@ public class Scheduler {
     private NumberArray ids, toCancel;
     
     /**
-     * Inits the table.
-     *
-     * @param subtable the subtable
+     * {@inheritDoc}
+     */
+    public String getSmartDashboardType() {
+        return "Scheduler";
+    }
+    
+    /**
+     * {@inheritDoc}
      */
     public void initTable(ITable subtable){
         m_table = subtable;
@@ -260,7 +266,14 @@ public class Scheduler {
     }
     
     /**
-     * Update table.
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        return m_table;
+    }
+    
+    /**
+     * {@inheritDoc}
      */
     public void updateTable(){
         if(m_table != null){
@@ -291,5 +304,4 @@ public class Scheduler {
             m_table.putValue("Ids", ids);
         }
     }
-
 }

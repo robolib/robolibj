@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input;
+package io.github.robolib.sensor;
 
 import io.github.robolib.iface.AnalogInput;
 

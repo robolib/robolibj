@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.robolib.exception.ResourceAllocationException;
-import io.github.robolib.framework.RoboLibBot;
+import io.github.robolib.framework.Sendable;
 import io.github.robolib.hal.PDPJNI;
 
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -31,12 +31,12 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PDP {
+public class PDP implements Sendable {
     
     /**
      * The Enum PowerChannel.
      */
-    public static enum PowerChannel{
+    public static enum PowerChannel {
         
         /** Channel 0 on the Power Distribution Panel. */
         Channel0,
@@ -111,10 +111,7 @@ public class PDP {
     /**
      * Instantiates a PDP.
      */
-    private PDP(){
-        m_table = RoboLibBot.getRobotTable().getSubTable("Power").getSubTable("PDP");
-        updateTable();
-    }
+    private PDP(){}
     
     /** The m_chan names. */
     private static String m_chanNames[] = new String[kNumPowerChannels];
@@ -223,13 +220,33 @@ public class PDP {
         PDPJNI.clearPDPStickyFaults(getLE4IntBuffer());
     }
     
+    /*
+     * Live Window code, only does anything if live window is activated.
+     */
+    public String getSmartDashboardType() {
+        return "Power Distribution Panel";
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initTable(ITable subtable) {
+        m_table = subtable;
+        updateTable();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        return m_table;
+    }
+    
     /**
      * Update the table for this object with the latest values.
      */
     public void updateTable() {
-        for(int i : m_updateChannels){
-            m_table.putString(m_chanNames[i], StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A"));
-        }
+        m_updateChannels.forEach(i -> m_table.putString(m_chanNames[i], StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A")));
         
         m_table.putString("Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
         m_table.putString("TotalCurrent", StringUtils.getNumber2DWithUnits(getTotalCurrent(), "A"));

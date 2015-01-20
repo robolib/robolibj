@@ -99,7 +99,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
      * Check if the forward solenoid is blacklisted.
      *      If a solenoid is shorted, it is added to the blacklist and
      *      disabled until power cycle, or until faults are cleared.
-     *      @see #clearAllPCMStickyFaults()
+     *      @see SolenoidBase#clearAllPCMStickyFaults(int)
      *
      * @return If solenoid is disabled due to short.
      */
@@ -111,7 +111,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
      * Check if the reverse solenoid is blacklisted.
      *      If a solenoid is shorted, it is added to the blacklist and
      *      disabled until power cycle, or until faults are cleared.
-     *      @see #clearAllPCMStickyFaults()
+     *      @see SolenoidBase#clearAllPCMStickyFaults(int)
      *
      * @return If solenoid is disabled due to short.
      */
