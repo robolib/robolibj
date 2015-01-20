@@ -25,12 +25,12 @@ import java.util.jar.Manifest;
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.control.DriverStation;
 import io.github.robolib.livewindow.LiveWindow;
 import io.github.robolib.pneumatic.Compressor;
 import io.github.robolib.robot.GameMode;
 import io.github.robolib.util.PDP;
 import io.github.robolib.util.RoboRIO;
+import io.github.robolib.util.TableSender;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
@@ -243,9 +243,9 @@ public class RoboLibBot {
         m_table = NetworkTable.getTable("Robot");
 
         try {
-            PDP.getInstance();
-            RoboRIO.getInstance();
-            Compressor.getInstance();
+            TableSender.addFramework(PDP.getInstance(), "Power/PDP");
+            TableSender.addFramework(RoboRIO.getInstance(), "Power/RIO");
+            TableSender.addFramework(Compressor.getInstance(), "Compressor");
             Scheduler.getInstance();
         }catch(Throwable t){
             log.fatal("Failure creating framework", t);

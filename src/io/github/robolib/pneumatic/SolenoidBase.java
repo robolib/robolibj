@@ -177,7 +177,7 @@ public abstract class SolenoidBase {
      * 
      *      If a solenoid is shorted, it is added to the blacklist and
      *      disabled until power cycle, or until faults are cleared.
-     *      @see #clearAllPCMStickyFaults()
+     *      @see #clearAllPCMStickyFaults(int)
      *
      * @param module 
      * @return The solenoid blacklist of all 8 solenoids on the module.

@@ -19,7 +19,7 @@ import static io.github.robolib.util.RoboRIO.getFPGATimestamp;
 
 import java.util.Vector;
 
-import io.github.robolib.control.DriverStation;
+import io.github.robolib.framework.DriverStation;
 
 // TODO: Auto-generated Javadoc
 /**

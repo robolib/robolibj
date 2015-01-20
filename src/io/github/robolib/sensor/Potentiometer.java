@@ -13,18 +13,36 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.livewindow;
+package io.github.robolib.sensor;
 
-import io.github.robolib.framework.Sendable;
+import io.github.robolib.iface.AnalogInput;
 
 /**
- * 
+ * Potentiometer Class.
+ * Wraps the AnalogInput class.
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface LiveWindowSendable extends Sendable {
+public class Potentiometer extends AnalogInput {
     
-    void startLiveWindowMode();
+    /**
+     * Instantiates a new potentiometer.
+     *
+     * @param channel AnalogIO Channel of the Potentiometer
+     * @param avgBits Number of Averaging Bits
+     * @param ovrBits Number of Oversample Bits
+     */
+    public Potentiometer(AnalogChannel channel, int avgBits, int ovrBits){
+        super(channel);
+        setAverageBits(avgBits);
+        setOversampleBits(ovrBits);
+    }
     
-    void stopLiveWindowMode();
+    /**
+     * {@inheritDoc}
+     */
+    public String getSmartDashboardType() {
+        return "Potentiometer";
+    }
 
 }

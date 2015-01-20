@@ -13,36 +13,9 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input;
-
-import io.github.robolib.iface.AnalogInput;
-
 /**
- * Potentiometer Class.
- * Wraps the AnalogInput class.
- *
+ * Contains classes that have to do with pneumatics.
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class Potentiometer extends AnalogInput {
-    
-    /**
-     * Instantiates a new potentiometer.
-     *
-     * @param channel AnalogIO Channel of the Potentiometer
-     * @param avgBits Number of Averaging Bits
-     * @param ovrBits Number of Oversample Bits
-     */
-    public Potentiometer(AnalogChannel channel, int avgBits, int ovrBits){
-        super(channel);
-        setAverageBits(avgBits);
-        setOversampleBits(ovrBits);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public String getSmartDashboardType() {
-        return "Potentiometer";
-    }
-
-}
+package io.github.robolib.pneumatic;

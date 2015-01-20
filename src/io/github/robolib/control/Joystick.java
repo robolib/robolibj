@@ -143,6 +143,8 @@ public class Joystick extends GenericHID {
     
     /**
      * Sets the joystick data.
+     * THIS SHOULD ONLY BE CALLED BY THE DRIVESTATION CLASS!!!
+     * TEAMS SHOULD NOT BE CALLING THIS!!!
      *
      * @param stick the stick
      * @param axes the axes
@@ -150,7 +152,7 @@ public class Joystick extends GenericHID {
      * @param buttons the buttons
      * @param numBtns the num btns
      */
-    protected static final void setJoystickData(int stick, short[] axes, short[] povs, int buttons, byte numBtns){
+    public static final void setJoystickData(int stick, short[] axes, short[] povs, int buttons, byte numBtns){
         synchronized(m_joystickAxes){
             m_joystickAxes[stick] = axes;
         }

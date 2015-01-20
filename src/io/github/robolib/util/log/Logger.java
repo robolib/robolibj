@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.robolib.control.DriverStation;
+import io.github.robolib.framework.DriverStation;
 import io.github.robolib.framework.ModeSwitcher;
 import io.github.robolib.util.RoboRIO;
 
