@@ -13,13 +13,38 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util;
+package io.github.robolib.control;
+
+import io.github.robolib.command.Command;
 
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
- *
  */
-public class Timer {
+public abstract class Button extends Trigger {
+    
+    public void runWhenPressed(final Command command){
+        runWhenActive(command);
+    }
+    
+    public void runWhileHeld(final Command command){
+        runWhileActive(command);
+    }
+    
+    public void runWhenReleased(final Command command){
+        runWhenInactive(command);
+    }
+    
+    public void runWhileReleased(final Command command){
+        runWhileInactive(command);
+    }
+    
+    public void togglenWhenPressed(final Command command){
+        toggleWhenActive(command);
+    }
+    
+    public void cancelWhenPressed(final Command command){
+        cancelWhenActive(command);
+    }
 
 }

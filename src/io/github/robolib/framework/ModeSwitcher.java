@@ -18,6 +18,7 @@ package io.github.robolib.framework;
 import java.util.EnumMap;
 //import edu.wpi.first.wpilibj.command.Scheduler;=
 
+import io.github.robolib.command.Scheduler;
 import io.github.robolib.exception.RobotException;
 import io.github.robolib.robot.AutonMode;
 import io.github.robolib.robot.DisabledMode;
@@ -49,7 +50,7 @@ public class ModeSwitcher {
     private final EnumMap<GameMode, RobotMode> m_modes;
     //private final RobotMode m_modes[];
     /** The m_scheduler. */
-    //private final Scheduler m_scheduler;
+    private final Scheduler m_scheduler;
     
     /** The Constant m_instance. */
     private static ModeSwitcher m_instance = null;
@@ -71,7 +72,7 @@ public class ModeSwitcher {
         m_currentMode = GameMode.NONE;
         m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
         m_log = Logger.get(RoboLibBot.class);
-//        m_scheduler = Scheduler.getInstance();
+        m_scheduler = Scheduler.getInstance();
     }
     
     /**
@@ -151,9 +152,9 @@ public class ModeSwitcher {
         //try{
             getRobotMode().modeRun();
         //}catch(Throwable e){
-            //Logger.get(getRobotMode()).fatal("Fatal action in RobotMode run method", e);
+//            Logger.get(getRobotMode()).fatal("Fatal action in RobotMode run method", e);
         //}
-//        m_scheduler.run();
+        m_scheduler.run();
     }
     
     /**

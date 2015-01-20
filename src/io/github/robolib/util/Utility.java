@@ -13,12 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensor;
+package io.github.robolib.util;
 
 /**
  * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class SensorBase {
+public class Utility {
 
 }

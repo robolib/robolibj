@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.Manifest;
 
+import io.github.robolib.command.Scheduler;
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.control.DriverStation;
@@ -32,8 +33,6 @@ import io.github.robolib.util.RoboRIO;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.internal.HardwareTimer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -247,6 +246,7 @@ public class RoboLibBot {
             PDP.getInstance();
             RoboRIO.getInstance();
             Compressor.getInstance();
+            Scheduler.getInstance();
         }catch(Throwable t){
             log.fatal("Failure creating framework", t);
         }
@@ -278,8 +278,6 @@ public class RoboLibBot {
         log.debug("Debug statements Enabled");
         
         log.info("Starting " + robot.m_name);
-        
-        Timer.SetImplementation(new HardwareTimer());
 
         UsageReporting.report(UsageReporting.kResourceType_Language, UsageReporting.kLanguage_Java);
         

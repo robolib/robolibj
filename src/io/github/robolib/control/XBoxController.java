@@ -239,8 +239,6 @@ public class XBoxController extends Joystick {
     /**
      * Get the magnitude of the direction vector formed by the left stick's
      * current position relative to its origin
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The magnitude of the direction vector of the left stick
      */
@@ -251,8 +249,6 @@ public class XBoxController extends Joystick {
     /**
      * Get the direction of the vector formed by the left stick and its origin
      * in radians
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The direction of the vector in radians of the left stick
      */
@@ -266,8 +262,6 @@ public class XBoxController extends Joystick {
      *
      * uses acos(-1) to represent Pi due to absence of readily accessable Pi
      * constant in C++
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The direction of the vector in degrees of the left stick
      */
@@ -278,8 +272,6 @@ public class XBoxController extends Joystick {
     /**
      * Get the magnitude of the direction vector formed by the right stick's
      * current position relative to its origin
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The magnitude of the direction vector of the right stick
      */
@@ -290,8 +282,6 @@ public class XBoxController extends Joystick {
     /**
      * Get the direction of the vector formed by the right stick and its origin
      * in radians
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The direction of the vector in radians of the right stick
      */
@@ -305,8 +295,6 @@ public class XBoxController extends Joystick {
      *
      * uses acos(-1) to represent Pi due to absence of readily accessable Pi
      * constant in C++
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The direction of the vector in degrees of the right stick
      */
