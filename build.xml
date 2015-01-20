@@ -29,7 +29,7 @@
     <isset property="env.BUILD_TYPE"/>
   </condition>
 
-  <target name="build" description="Build the Library" depends="compile,get-release-version,jar"/>
+  <target name="build" description="Build the Library" depends="clean,compile,get-release-version,jar"/>
 
   <target name="compile" description="Compile the source code.">
     <mkdir dir="${build.dir}"/>
