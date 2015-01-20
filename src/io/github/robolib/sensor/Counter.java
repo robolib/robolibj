@@ -15,10 +15,10 @@
 
 package io.github.robolib.sensor;
 
+import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.CounterJNI;

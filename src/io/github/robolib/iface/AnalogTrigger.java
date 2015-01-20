@@ -13,20 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input;
+package io.github.robolib.iface;
 
 /**
- * The Interface IRoboAnalogSensor.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface IRoboAnalogSensor {
-    
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public int getValue();
+public class AnalogTrigger {
 
 }

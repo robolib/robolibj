@@ -15,6 +15,9 @@
 
 package io.github.robolib.util;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+
 import io.github.robolib.communication.NetworkCommunications;
 
 /**
@@ -37,6 +40,21 @@ public final class TeamInfo {
         BLUE2,
         BLUE3,
         NONE;
+    }
+    
+    public static String getTeamNumber(){
+        Runtime run = Runtime.getRuntime();
+        Process proc;
+        try {
+            proc = run.exec("hostname");
+            BufferedInputStream in = new BufferedInputStream(proc.getInputStream());
+            byte [] b = new byte[256];
+            in.read(b, 0, 256);
+            return new String(b).trim();
+        } catch(IOException e1) {
+            e1.printStackTrace();
+        }
+        return null;
     }
     
     public static Alliance getAlliance(){

@@ -18,8 +18,6 @@ package io.github.robolib.output;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.util.PDP.PowerChannel;
 
-import io.github.robolib.livewindow.LiveWindow;
-
 /**
  * Cross the Road Electronics (CTRE) Talon and Talon SR Speed Controller
  *
@@ -59,7 +57,6 @@ public class Talon extends PWMController {
      */
     public Talon(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.037, 1.539, 1.513, 1.487, 0.989, PeriodMultiplier.k1X);
-        LiveWindow.addActuator("Talon", channel.ordinal(), this);
         UsageReporting.report(UsageReporting.kResourceType_Talon, channel.ordinal());
     }
 
