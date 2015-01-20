@@ -24,8 +24,8 @@
 /src/edu/
 
 # Eclipse Files #
-/.settings/
-/.externalToolBuilders/
-.classpath
-.project
+#/.settings/
+#/.externalToolBuilders/
+#.classpath
+#.project
 
