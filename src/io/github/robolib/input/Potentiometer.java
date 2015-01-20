@@ -18,7 +18,7 @@ package io.github.robolib.input;
 import io.github.robolib.pid.PIDSource;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
+import io.github.robolib.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**

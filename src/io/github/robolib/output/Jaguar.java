@@ -18,7 +18,7 @@ package io.github.robolib.output;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.util.PDP.PowerChannel;
 
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import io.github.robolib.livewindow.LiveWindow;
 
 /**
  * Texas Instruments / VEX Robotics Jaguar Speed Controller.

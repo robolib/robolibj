@@ -18,8 +18,8 @@ package io.github.robolib.sensor;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.AccelerometerJNI;
 
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
+import io.github.robolib.livewindow.LiveWindow;
+import io.github.robolib.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
