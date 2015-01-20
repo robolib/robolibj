@@ -18,8 +18,6 @@ package io.github.robolib.output;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.util.PDP.PowerChannel;
 
-import io.github.robolib.livewindow.LiveWindow;
-
 /**
  * VEX Robotics Victor SP Speed Controller
  * 
@@ -60,7 +58,6 @@ public class VictorSP extends PWMController {
      */
     public VictorSP(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.004, 1.52, 1.50, 1.48, 0.997, PeriodMultiplier.k1X);
-        LiveWindow.addActuator("VictorSP", channel.ordinal(), this);
         UsageReporting.report(UsageReporting.kResourceType_Talon, channel.ordinal());
     }
 

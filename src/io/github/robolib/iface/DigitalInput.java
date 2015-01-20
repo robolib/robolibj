@@ -15,9 +15,9 @@
 
 package io.github.robolib.iface;
 
-import java.nio.IntBuffer;
-
 import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+
+import java.nio.IntBuffer;
 
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;

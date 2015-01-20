@@ -15,8 +15,15 @@
 
 package io.github.robolib.iface;
 
+import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.exception.ResourceAllocationException;
+import io.github.robolib.hal.AnalogJNI;
+import io.github.robolib.hal.HALUtil;
 
 /**
  * The Class AnalogIO.
@@ -72,6 +79,10 @@ public class AnalogIO extends Interface {
     
     /** The m_used out channels. */
     private static boolean m_usedOutChannels[] = new boolean[kMaxAnalogOutputChannels];
+    
+    
+    protected ByteBuffer m_port;
+    protected AnalogChannel m_channel;
      
     /**
      * Instantiates a new analog.
@@ -82,25 +93,59 @@ public class AnalogIO extends Interface {
     protected AnalogIO(AnalogChannel channel, Direction dir) {
         super(InterfaceType.ANALOG);
         
+        ByteBuffer port = AnalogJNI.getPort((byte) channel.ordinal());
+        IntBuffer status = getLE4IntBuffer();
+
         switch(dir){
         case IN:
             checkAnalogInputChannel(channel.ordinal());
-            if(m_usedInChannels[channel.ordinal()] == true){
+            if(m_usedInChannels[channel.ordinal()] == true)
                 throw new ResourceAllocationException("AnalogIO Input channel '" + channel.name() + "' already in use.");
-            }else{
-                m_usedInChannels[channel.ordinal()] = true;
-            }
+            
+            m_usedInChannels[channel.ordinal()] = true;
+            m_port = AnalogJNI.initializeAnalogInputPort(port, status);
         break;
         case OUT:
             checkAnalogOutputChannel(channel.ordinal());
-            if(m_usedOutChannels[channel.ordinal()] == true){
+            if(m_usedOutChannels[channel.ordinal()] == true)
                 throw new ResourceAllocationException("AnalogIO Output channel '" + channel.name() + "' already in use.");
-            }else{
-                m_usedOutChannels[channel.ordinal()] = true;
-            }
+            
+            m_usedOutChannels[channel.ordinal()] = true;
+            m_port = AnalogJNI.initializeAnalogOutputPort(port, status);
+            
         break;
         }
         
+        HALUtil.checkStatus(status);
+        
         UsageReporting.report(UsageReporting.kResourceType_AnalogChannel, channel.ordinal());
     }
+    
+    /**
+     * Channel destructor.
+     */
+    public void free(){
+        m_channel = null;
+    }
+    
+    
+    /**
+     * Get the AnalogChannel.
+     *
+     * @return The channel AnalogChannel.
+     */
+    public AnalogChannel getChannel(){
+        return m_channel;
+    }
+    
+    /**
+     * Get the channel number.
+     *
+     * @return The channel number.
+     */
+    public int getChannelNumber(){
+        return m_channel.ordinal();
+    }
+    
+    
 }

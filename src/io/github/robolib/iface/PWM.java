@@ -25,10 +25,9 @@ import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PWMJNI;
+import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.log.Logger;
-
-import io.github.robolib.livewindow.LiveWindowSendable;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;

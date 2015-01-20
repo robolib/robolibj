@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 // import edu.wpi.first.wpilibj.DriverStation;
 
+import io.github.robolib.util.log.Logger;
+
 public class HALUtil extends JNIWrapper {
 	public static final int NULL_PARAMETER = -1005;
 	public static final int SAMPLE_RATE_TOO_HIGH = 1001;
@@ -47,8 +49,7 @@ public class HALUtil extends JNIWrapper {
 			String message = getHALErrorMessage(s);
 			throw new RuntimeException(" Code: " + s + ". " + message);
 		} else if (s > 0) {
-//			String message = getHALErrorMessage(s);
-			//DriverStation.reportError(message, true);
+			Logger.get(HALUtil.class).warn(getHALErrorMessage(s));
 		}
 	}
 

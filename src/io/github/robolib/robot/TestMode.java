@@ -17,7 +17,6 @@ package io.github.robolib.robot;
 
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.framework.RobotMode;
-
 import io.github.robolib.livewindow.LiveWindow;
 
 /**

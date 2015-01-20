@@ -13,20 +13,20 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input;
+package io.github.robolib.util;
 
 /**
- * The Interface IRoboSensor.
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface IRoboSensor {
+public class Timer {
     
-    /**
-     * Gets the chanel.
-     *
-     * @return the chanel
-     */
-    public int getChanel();
-    
+    public static void delay(final double seconds){
+        try {
+            Thread.sleep((long) (seconds * 1e3));
+        } catch (final InterruptedException e) {
+        }
+        
+    }
+
 }

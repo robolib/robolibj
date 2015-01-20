@@ -13,13 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input;
+package io.github.robolib.iface;
 
 /**
- * The Interface IRoboDigitalSensor.
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface IRoboDigitalSensor {
+public class AnalogTrigger {
 
 }
