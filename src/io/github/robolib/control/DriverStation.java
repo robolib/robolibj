@@ -34,7 +34,7 @@ import io.github.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  *
  */
-public final class DriverStation implements Runnable {
+public final class DriverStation {
     
     
     private Thread m_thread;
@@ -62,7 +62,9 @@ public final class DriverStation implements Runnable {
         m_packetDataAvailableSem = HALUtil.initializeMultiWait();
         NetworkCommunications.setNewDataSem(m_packetDataAvailableSem);
         
-        m_thread = new Thread(this, "FRCDriverStation");
+        //WOO lookie here. Lambda functions ^_^
+        Runnable r = () -> commTask();
+        m_thread = new Thread(r, "FRCDriverStation");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
         
     }
@@ -70,9 +72,9 @@ public final class DriverStation implements Runnable {
     /**
      * {@inheritDoc}
      */
-    public void run(){
+    private void commTask(){
         m_log.info("Communications thread started.");
-        int safetyCounter = 0;
+        byte safetyCounter = 0;
         while (m_thread_keepAlive){
             HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
             synchronized(this){

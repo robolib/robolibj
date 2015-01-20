@@ -18,8 +18,7 @@ package io.github.robolib.util;
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public class Timer {
+public class Utility {
 
 }

@@ -48,9 +48,7 @@ public final class SafetyManager {
      * Check.
      */
     public static void check(){
-        for(MotorSafetyHelper msh : m_safetyObjects){
-            msh.check();
-        }
+        m_safetyObjects.forEach(msh -> msh.check());
     }
 
 }

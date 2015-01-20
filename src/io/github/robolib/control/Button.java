@@ -13,55 +13,38 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.command;
+package io.github.robolib.control;
 
-// TODO: Auto-generated Javadoc
+import io.github.robolib.command.Command;
+
 /**
- * Delays a Command Group.
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class C_Delay extends Command {
-
-    /**
-     * Instantiates a new c_ delay.
-     *
-     * @param sec the sec
-     */
-    public C_Delay(double sec) {
-
-        super("C_Delay");
-        setTimeout(sec);
+public abstract class Button extends Trigger {
+    
+    public void runWhenPressed(final Command command){
+        runWhenActive(command);
+    }
+    
+    public void runWhileHeld(final Command command){
+        runWhileActive(command);
+    }
+    
+    public void runWhenReleased(final Command command){
+        runWhenInactive(command);
+    }
+    
+    public void runWhileReleased(final Command command){
+        runWhileInactive(command);
+    }
+    
+    public void togglenWhenPressed(final Command command){
+        toggleWhenActive(command);
+    }
+    
+    public void cancelWhenPressed(final Command command){
+        cancelWhenActive(command);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void initialize() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected void execute() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected boolean isFinished() {
-        return isTimedOut();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected void end() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected void interrupted() {
-    }
 }
