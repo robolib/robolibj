@@ -26,6 +26,7 @@ import io.github.robolib.command.Scheduler;
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.control.DriverStation;
+import io.github.robolib.livewindow.LiveWindow;
 import io.github.robolib.pneumatic.Compressor;
 import io.github.robolib.robot.GameMode;
 import io.github.robolib.util.PDP;
@@ -33,7 +34,6 @@ import io.github.robolib.util.RoboRIO;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
 

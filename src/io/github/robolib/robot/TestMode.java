@@ -18,7 +18,7 @@ package io.github.robolib.robot;
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.framework.RobotMode;
 
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import io.github.robolib.livewindow.LiveWindow;
 
 /**
  * The Class TestMode.
