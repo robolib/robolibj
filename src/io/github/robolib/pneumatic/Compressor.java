@@ -207,7 +207,6 @@ public final class Compressor implements Sendable {
      */
     public void initTable(ITable subtable) {
         m_table = subtable;
-        updateTable();       
     }
 
     /**

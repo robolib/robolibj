@@ -47,7 +47,7 @@ public class HALUtil extends JNIWrapper {
 		if (s < 0)
 		{
 			String message = getHALErrorMessage(s);
-			//throw new RuntimeException(" Code: " + s + ". " + message);
+			throw new RuntimeException(" Code: " + s + ". " + message);
 		} else if (s > 0) {
 			Logger.get(HALUtil.class).warn(getHALErrorMessage(s));
 		}
