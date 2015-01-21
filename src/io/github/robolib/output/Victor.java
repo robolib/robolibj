@@ -19,9 +19,9 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.util.PDP.PowerChannel;
 
 /**
- * VEX Robotics Victor 888 Speed Controller
+ * VEX Robotics Victor 888 Speed JSID
  * 
- * The Vex Robotics Victor 884 Speed Controller can also be used with this
+ * The Vex Robotics Victor 884 Speed JSID can also be used with this
  * class but may need to be calibrated per the Victor 884 user manual.
  * 
  * @author noriah Reuland <vix@noriah.dev>

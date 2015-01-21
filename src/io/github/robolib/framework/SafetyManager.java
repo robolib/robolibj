@@ -20,8 +20,6 @@ import java.util.List;
 
 import io.github.robolib.output.MotorSafety;
 import io.github.robolib.output.MotorSafetyHelper;
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class SafetyManager.
  *

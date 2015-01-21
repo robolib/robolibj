@@ -31,6 +31,8 @@ public class TableSender {
 //    private static Vector<Sendable> m_userSends = new Vector<Sendable>();
     private static Vector<Sendable> m_framework = new Vector<Sendable>();
     
+    private static boolean m_enabled = true;
+    
     public static final TableSender getInstance(){
         return m_instance == null ? m_instance = new TableSender() : m_instance;
     }
@@ -38,11 +40,16 @@ public class TableSender {
     private TableSender(){}
     
     public void runFramework(){
-        m_framework.forEach(send -> send.updateTable());
+        if(m_enabled)
+            m_framework.forEach(send -> send.updateTable());
     }
     
     public void runUser(){
         
+    }
+    
+    public static void setEnabled(boolean enabled){
+        m_enabled = enabled;
     }
     
 //    public static void addSendable(Sendable sendable, String tableName){

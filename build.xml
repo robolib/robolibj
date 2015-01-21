@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." name="RoboLibJ" default="build">
+<project basedir="." name="robolibj" default="build">
 
   <property file="build.properties"/>
 
@@ -29,7 +29,7 @@
     <isset property="env.BUILD_TYPE"/>
   </condition>
 
-  <target name="build" description="Build the Library" depends="clean,compile,get-release-version,jar"/>
+  <target name="build" description="Build the Library" depends="compile,get-release-version,jar,copytowpi"/>
 
   <target name="compile" description="Compile the source code.">
     <mkdir dir="${build.dir}"/>
@@ -48,6 +48,22 @@
       <compilerarg value="-Xlint:deprecation"/>
     </javac>
     <echo>[${project.name}-compile] COMPLETE</echo>
+  </target>
+
+  <target name="full" description="Run the full script" depends="package,copytowpi"/>
+
+  <target name="package" description="Package the project" depends="compile,get-release-version,jar,src-package,javadoc-package"/>
+
+  <target name="src-package" description="Package the Sourcce">
+    <jar destfile="${dist.src.jar}">
+      <fileset dir="${src.dir}" />
+    </jar>
+  </target>
+
+  <target name="javadoc-package" description="Generate a jar of the Javadocs" depends="javadoc">
+    <jar destfile="${dist.javadoc.jar}">
+      <fileset dir="${dist.javadoc.dir}" />
+    </jar>
   </target>
 
   <target name="javadoc" description="Generate the Javadocs">
@@ -141,13 +157,13 @@
       <fileset dir="${resources.dir}" excludes="CVS/** .svn" />
 
     </jar>
-    <copy todir="${wpilib.lib}">
-      <fileset dir="${dist.dir}">
-          <filename name="${dist.jar.name}"/>
-      </fileset>
-    </copy>
-
     <echo>[${project.name}-jar] COMPLETE! JarFile: ${dist.jar}</echo>
+  </target>
+
+  <target name="copytowpi" depends="jar">
+    <copy todir="${wpilib.lib}">
+      <fileset dir="${dist.dir}" />
+    </copy>
   </target>
   
   <target name="clean" description="Clean the build environment">

@@ -45,4 +45,11 @@ public interface SpeedController extends PIDOutput {
      * @param speed The speed to set.  Value should be between -1.0 and 1.0.
      */
     void set(double speed);
+    
+    /**
+     * Set the inverted state of the speed controller.
+     * 
+     * @param inverted true to invert the values sent to the motor.
+     */
+    void setInverted(boolean inverted);
 }

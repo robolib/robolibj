@@ -17,7 +17,7 @@ package io.github.robolib.control;
 
 
 /**
- * A better Joystick implementation for the XBox Controller.
+ * A better Joystick implementation for the XBox JSID.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
@@ -71,10 +71,10 @@ public class XBoxController extends Joystick {
     /** Back Button ID. */
     public static final int BTN_SELECT = 6;
     
-    /** Left Stick Button ID. */
+    /** Left JSID Button ID. */
     public static final int BTN_STICK_LEFT = 8;
     
-    /** Right Stick Button ID. */
+    /** Right JSID Button ID. */
     public static final int BTN_STICK_RIGHT = 9;
     
     /** Left X Axis Button ID. */
@@ -99,11 +99,11 @@ public class XBoxController extends Joystick {
     public static final int BTN_AXIS_HAT_X = AXIS_HAT_X + 12;
 
     /**
-     * A better Joystick implementation for the XBox Controller.
+     * A better Joystick implementation for the XBox JSID.
      *
      * @param port The Joystick Number this XBoxController is on.
      */
-    public XBoxController(final Stick port){
+    public XBoxController(final JSID port){
         super(port, 6, 10);
         invertAxis(AXIS_Y_LEFT);
         invertAxis(AXIS_Y_RIGHT);
@@ -223,16 +223,16 @@ public class XBoxController extends Joystick {
     public boolean btnSelect(){return getRawButton(BTN_SELECT);}
     
     /**
-     * Get the Left Stick Button.
+     * Get the Left JSID Button.
      *
-     * @return the Left Stick button value
+     * @return the Left JSID button value
      */
     public boolean btnLeftStick(){return getRawButton(BTN_STICK_LEFT);}
     
     /**
-     * Get the Right Stick Button.
+     * Get the Right JSID Button.
      *
-     * @return the Right Stick button value
+     * @return the Right JSID button value
      */
     public boolean btnRightStick(){return getRawButton(BTN_STICK_RIGHT);}
     

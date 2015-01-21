@@ -29,6 +29,8 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
     
     protected MotorSafetyHelper m_safetyHelper;
     
+    private byte m_invert;
+    
     /**
      * Instantiates a new PWM motor controller.
      *
@@ -129,8 +131,12 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
     }
     
     public void setSpeed(double speed){
-        super.setSpeed(speed);
+        super.setSpeed(speed * m_invert);
         m_safetyHelper.feed();
+    }
+    
+    public void setInverted(boolean inverted){
+        m_invert = (byte)(inverted ? -1 : 1);
     }
 
     /**
@@ -165,7 +171,7 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
      * {@inheritDoc}
      */
     public void stopMotor() {
-        setRaw(kPWMDisabled);
+        set(0.0);
     }
 
     /**

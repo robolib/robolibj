@@ -123,7 +123,7 @@ public abstract class RobotMode {
      * It is called before anything in {@code run()} is run.
      */
     public void init(){
-        Logger.get(this).debug("Default init() Method... Overload me!");
+        
     }
     
     /**
@@ -142,7 +142,9 @@ public abstract class RobotMode {
      * This is called every period.
      * Every time the robot runs through a loop, this is called.
      */
-    public void run(){}
+    public void run(){
+        
+    }
     
     /**
      * CounterMode Specific end code.
@@ -162,7 +164,6 @@ public abstract class RobotMode {
      * Overload this to write your own end method.
      */
     public void end(){
-        Logger.get(this).debug("Default end() Method... Overload me!");
+        
     }
-    
 }
