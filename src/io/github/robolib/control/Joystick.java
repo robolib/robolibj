@@ -30,27 +30,27 @@ public class Joystick extends GenericHID {
 
     
     /**
-     * The Enum Stick.
+     * The Enum JSID.
      */
-    public static enum Stick{
+    public static enum JSID{
         
-        /** The Stick0. */
-        Stick0,
+        /** The first Joystick input device. */
+        JS0,
         
-        /** The Stick1. */
-        Stick1,
+        /** The second Joystick input device. */
+        JS1,
         
-        /** The Stick2. */
-        Stick2,
+        /** The thrid Joystick input device. */
+        JS2,
         
-        /** The Stick3. */
-        Stick3,
+        /** The fourth Joystick input device. */
+        JS3,
         
-        /** The Stick4. */
-        Stick4,
+        /** The fifth Joystick input device. */
+        JS4,
         
-        /** The Stick5. */
-        Stick5;
+        /** The sixth Joystick input device. */
+        JS5;
     }
     
     
@@ -83,7 +83,6 @@ public class Joystick extends GenericHID {
         public double get(){
             double out = getStickAxis(m_port, m_channel) * m_invert;
             return (Math.abs(out) >= m_deadBand ? out : 0D);
-            //return DSInfo.getStickAxis(m_port, m_channel) * m_invert;
         }
 
         /**
@@ -184,7 +183,7 @@ public class Joystick extends GenericHID {
      * @param axis the axis
      * @return the stick axis
      */
-    protected synchronized static double getStickAxis(Stick stick, int axis){
+    protected synchronized static double getStickAxis(JSID stick, int axis){
         if(m_joystickAxes[stick.ordinal()].length <= axis){
             complainJoystickMissing("Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return 0.0;
@@ -205,7 +204,7 @@ public class Joystick extends GenericHID {
      * @param button the button
      * @return the stick button
      */
-    protected synchronized static boolean getStickButton(Stick stick, int button){
+    protected synchronized static boolean getStickButton(JSID stick, int button){
         if(m_joystickButtonsCount[stick.ordinal()] <= button){
             complainJoystickMissing("Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return false;
@@ -226,7 +225,7 @@ public class Joystick extends GenericHID {
     }
     
     /** The m_port. */
-    private final Stick m_port;
+    private final JSID m_port;
     
     /** The m_portByte. */
     private final byte m_portByte;
@@ -241,7 +240,7 @@ public class Joystick extends GenericHID {
      * The RoboLibJ main Joystick.
      * @param port The Joystick Number
      */
-    public Joystick(final Stick port){
+    public Joystick(final JSID port){
         this(port, 6, 12);
         UsageReporting.report(UsageReporting.kResourceType_Joystick, port.ordinal());
     }
@@ -253,7 +252,7 @@ public class Joystick extends GenericHID {
      * @param numAxes the num axes
      * @param numBtns the num btns
      */
-    public Joystick(final Stick port, int numAxes, int numBtns){
+    public Joystick(final JSID port, int numAxes, int numBtns){
         super(numAxes, numBtns);
 
         m_port = port;
@@ -290,10 +289,10 @@ public class Joystick extends GenericHID {
     }
     
     /**
-     * Get the Port Stick that this Joystick is on
+     * Get the Port JSID that this Joystick is on
      * @return the stick this joystick is on
      */
-    public Stick getStickPort(){
+    public JSID getStickPort(){
         return m_port;
     }
     
