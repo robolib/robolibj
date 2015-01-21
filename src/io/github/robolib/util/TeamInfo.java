@@ -50,7 +50,7 @@ public final class TeamInfo {
             BufferedInputStream in = new BufferedInputStream(proc.getInputStream());
             byte [] b = new byte[256];
             in.read(b, 0, 256);
-            return new String(b).trim();
+            return new String(b).trim().replace("roboRIO-", "");
         } catch(IOException e1) {
             e1.printStackTrace();
         }

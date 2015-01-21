@@ -232,7 +232,6 @@ public class PDP implements Sendable {
      */
     public void initTable(ITable subtable) {
         m_table = subtable;
-        updateTable();
     }
 
     /**
