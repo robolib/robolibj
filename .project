@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>wpilibj</name>
-			<type>2</type>
-			<location>/home/wolf/sunspotfrcsdk/lib/wpilibj.src</location>
-		</link>
-	</linkedResources>
 </projectDescription>
