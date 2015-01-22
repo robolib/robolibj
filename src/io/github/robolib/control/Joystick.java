@@ -63,7 +63,7 @@ public class Joystick extends GenericHID {
         private int m_invert = 1;
         
         /** The m_dead band. */
-        private double m_deadBand = 0.00;
+        private double m_deadBand = 0.0;
         
         /** The m_channel. */
         private final int m_channel;        
@@ -82,14 +82,14 @@ public class Joystick extends GenericHID {
          */
         public double get(){
             double out = getStickAxis(m_port, m_channel) * m_invert;
-            return (Math.abs(out) >= m_deadBand ? out : 0D);
+            return (Math.abs(out) >= m_deadBand ? out : 0.0);
         }
 
         /**
          * {@inheritDoc}
          */
-        public void invert(){
-            m_invert = 0 - m_invert;
+        public void setInverted(boolean inverted){
+            m_invert = inverted ? -1 : 1;
         }
 
         /**
@@ -172,7 +172,7 @@ public class Joystick extends GenericHID {
         double c = RoboRIO.getFPGATimestamp();
         if(c > m_nextComplainTime){
             Logger.get(Joystick.class).error(msg);
-            m_nextComplainTime = c + 1.0;
+            m_nextComplainTime = c + 5.0;
         }
     }
     

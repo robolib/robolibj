@@ -13,14 +13,18 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib.exception;
 
 /**
  * 
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class AnalogTrigger {
-	
-	
+public class CANMessageNotFoundException extends RuntimeException {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8233681586441184325L;
 
 }

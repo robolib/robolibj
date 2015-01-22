@@ -13,8 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
+package io.github.robolib.framework;
+
 /**
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-package io.github.robolib.can;
+public class LoggingSystem {
+
+}

@@ -20,7 +20,7 @@ public class JNIWrapper
 			if( !libraryLoaded )
 			{
 				// create temporary file
-				jniLibrary = File.createTempFile("librobolibJavaJNI", ".so");
+				jniLibrary = File.createTempFile("librobolibJNI", ".so");
 				// flag for delete on exit
 				jniLibrary.deleteOnExit();
 
@@ -28,7 +28,7 @@ public class JNIWrapper
 
 				int readBytes;
 
-				InputStream is = JNIWrapper.class.getResourceAsStream("/linux-arm/librobolibJavaJNI.so");
+				InputStream is = JNIWrapper.class.getResourceAsStream("/linux-arm/librobolibJNI.so");
 
 				OutputStream os = new FileOutputStream(jniLibrary);
 

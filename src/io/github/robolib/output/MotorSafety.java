@@ -63,7 +63,7 @@ public interface MotorSafety {
      *
      * @param enabled the enabled
      */
-    void enableSafety(boolean enabled);
+    void setSafetyEnabled(boolean enabled);
     
     /**
      * Checks if is safety enabled.

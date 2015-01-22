@@ -70,8 +70,8 @@ public class NetTableController extends GenericHID {
         /**
          * {@inheritDoc}
          */
-        public void invert(){
-            m_invert = 0 - m_invert;
+        public void setInverted(boolean inverted){
+            m_invert = inverted ? -1 : 1;
         }
 
         /**

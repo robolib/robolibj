@@ -108,8 +108,8 @@ public class DriveTrain implements MotorSafety {
     /**
      * {@inheritDoc}
      */
-    public void enableSafety(boolean enabled){
-        m_safetyHelper.enableSafety(enabled);
+    public void setSafetyEnabled(boolean enabled){
+        m_safetyHelper.setSafetyEnabled(enabled);
     }
 
     /**

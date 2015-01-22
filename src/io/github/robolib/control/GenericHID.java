@@ -41,7 +41,7 @@ public abstract class GenericHID {
         /**
          * Invert the Axis.
          */
-        public void invert();
+        public void setInverted(boolean inverted);
         
         /**
          * Set the Deadband of the Axis.
@@ -105,7 +105,7 @@ public abstract class GenericHID {
      * @see Axis
      */
     public void invertAxis(int axis){
-        getAxis(axis).invert();
+        getAxis(axis).setInverted(true);
     }
     
     /**
