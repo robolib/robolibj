@@ -13,14 +13,20 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib.exception;
 
 /**
- * 
+ * Exception indicating that a CAN driver library entry-point
+ * was passed an invalid buffer.  Typically, this is due to a
+ * buffer being too small to include the needed safety token.
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogTrigger {
-	
-	
+public class CANInvalidBufferException extends RuntimeException {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4584380779021379374L;
 
 }

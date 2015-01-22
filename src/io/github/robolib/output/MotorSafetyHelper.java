@@ -64,7 +64,7 @@ public class MotorSafetyHelper {
      *
      * @param enabled the enabled
      */
-    public void enableSafety(boolean enabled){
+    public void setSafetyEnabled(boolean enabled){
         m_enabled = enabled;
     }
     

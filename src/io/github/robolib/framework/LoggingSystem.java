@@ -13,14 +13,12 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib.framework;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogTrigger {
-	
-	
+public class LoggingSystem {
 
 }

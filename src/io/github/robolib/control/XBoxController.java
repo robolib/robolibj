@@ -125,18 +125,18 @@ public class XBoxController extends Joystick {
     public double getLeftY(){return getRawAxis(AXIS_Y_LEFT);}
     
     /**
-     * Get the Trigger Axis.
+     * Get the Left Trigger Axis.
      *
      * @return the trigger axis value
      */
     public double getLeftTrigger(){return getRawAxis(AXIS_TRIGGER_LEFT);}
     
     /**
-     * Get the Trigger Axis.
+     * Get the Right Trigger Axis.
      *
      * @return the trigger axis value
      */
-    public double getRightTrigger(){return getRawAxis(AXIS_TRIGGER_LEFT);}
+    public double getRightTrigger(){return getRawAxis(AXIS_TRIGGER_RIGHT);}
 
     /**
      * Get the Right X Axis.

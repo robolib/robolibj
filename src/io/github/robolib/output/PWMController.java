@@ -23,13 +23,12 @@ import io.github.robolib.util.PDP.PowerChannel;
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
 public abstract class PWMController extends PWM implements SpeedController, MotorSafety{
     
     protected MotorSafetyHelper m_safetyHelper;
     
-    private byte m_invert;
+    private byte m_inverted = 1;
     
     /**
      * Instantiates a new PWM motor controller.
@@ -113,13 +112,19 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
     public double get() {
         return getSpeed();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public double getSpeed(){
+    	return super.getSpeed() * m_inverted;
+    }
 
     /**
      * {@inheritDoc}
      */
     public void set(double speed, byte syncGroup) {
         setSpeed(speed);
-        m_safetyHelper.feed();
     }
 
     /**
@@ -127,16 +132,21 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
      */
     public void set(double speed) {
         setSpeed(speed);
-        m_safetyHelper.feed();
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void setSpeed(double speed){
-        super.setSpeed(speed * m_invert);
+        super.setSpeed(speed * m_inverted);
         m_safetyHelper.feed();
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void setInverted(boolean inverted){
-        m_invert = (byte)(inverted ? -1 : 1);
+        m_inverted = (byte)(inverted ? -1 : 1);
     }
 
     /**
@@ -171,14 +181,14 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
      * {@inheritDoc}
      */
     public void stopMotor() {
-        set(0.0);
+        setRaw(kPWMDisabled);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void enableSafety(boolean enabled) {
-        m_safetyHelper.enableSafety(enabled);
+    public void setSafetyEnabled(boolean enabled) {
+        m_safetyHelper.setSafetyEnabled(enabled);
     }
 
     /**
