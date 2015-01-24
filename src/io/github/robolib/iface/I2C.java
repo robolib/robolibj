@@ -26,9 +26,8 @@ import io.github.robolib.util.MathUtils;
 
 
 /**
- * 
+ * I2C Interface class.
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
 public class I2C extends Interface {
 

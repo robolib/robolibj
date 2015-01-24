@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.robolib.framework.DriverStation;
-import io.github.robolib.framework.ModeSwitcher;
+import io.github.robolib.framework.GameManager;
 import io.github.robolib.util.RoboRIO;
 
 /**
@@ -118,10 +118,10 @@ public final class Logger extends ILogger {
     }
     
     /** The Constant TERM_OUT. */
-    public static final LogOutput TERM_OUT = (String msg) -> System.out.println(msg);
+    public static final LogOutput TERM_OUT = System.out::println;
 
     /** The Constant TERM_ERR. */
-    public static final LogOutput TERM_ERR = (String msg) -> System.err.println(msg);
+    public static final LogOutput TERM_ERR = System.err::println;
 
     /**
      * File output.
@@ -209,10 +209,9 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendMsg(LogLevel l, String s){
-        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + GameManager.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         TERM_OUT.sendMsg(sout);
-        for(LogOutput out : m_outs)
-            out.sendMsg(sout);
+        m_outs.forEach(lo -> lo.sendMsg(sout));
     }
 
     /**
@@ -222,11 +221,10 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendErrMsg(LogLevel l, String s){
-        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + GameManager.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         DriverStation.reportError(sout + "\n");
         TERM_ERR.sendMsg(sout);
-        for(LogOutput out : m_outs)
-            out.sendMsg(sout);
+        m_outs.forEach(lo -> lo.sendMsg(sout));
     }
     
     /**

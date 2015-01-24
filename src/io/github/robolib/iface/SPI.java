@@ -15,13 +15,17 @@
 
 package io.github.robolib.iface;
 
-import io.github.robolib.communication.UsageReporting;
+import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 
+import java.nio.IntBuffer;
+
+import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.hal.HALUtil;
+import io.github.robolib.hal.SPIJNI;
 
 /**
- * 
+ * SPI Interface class.
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
 public class SPI extends Interface {
 
@@ -34,6 +38,13 @@ public class SPI extends Interface {
         kMXP;
     };
     
+//    private static int m_devices = 0;
+    
+    private byte m_port;
+//    private int m_bitOrder;
+//    private int m_clockPolarity;
+//    private int m_dataOnTrailing;
+    
     /**
      * @param port 
      */
@@ -45,7 +56,20 @@ public class SPI extends Interface {
             allocateMXPPin(23);
             allocateMXPPin(25);
         }
+        
+        IntBuffer status = getLE4IntBuffer();
+        
+        m_port = (byte)port.ordinal();
+//        m_devices++;
+        
+        SPIJNI.spiInitialize(m_port, status);
+        HALUtil.checkStatus(status);        
+        
         UsageReporting.report(UsageReporting.kResourceType_SPI, port.ordinal());
+    }
+    
+    public void free(){
+        SPIJNI.spiClose(m_port);
     }
 
 }

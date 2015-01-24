@@ -27,7 +27,7 @@ import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.livewindow.LiveWindow;
 import io.github.robolib.pneumatic.Compressor;
-import io.github.robolib.robot.GameMode;
+//import io.github.robolib.robot.GameMode;
 import io.github.robolib.util.PDP;
 import io.github.robolib.util.RoboRIO;
 import io.github.robolib.util.TableSender;
@@ -65,6 +65,8 @@ public class RoboLibBot {
     
     /** The Constant PATCH_VERSION. */
     public static final int PATCH_VERSION = 2;
+    
+//    private static final int 
 
     /** The m_name. */
     protected String m_name;
@@ -75,8 +77,10 @@ public class RoboLibBot {
     /** The m_log. */
     protected ILogger m_log;
     
+    private static final Object m_sem = new Object();
+    
     /** The m_run. */
-    private static boolean m_run = true;
+//    private static boolean m_run = true;
     
     /** The m_table. */
     private static ITable m_table;
@@ -157,7 +161,7 @@ public class RoboLibBot {
      * @param e The throwable object to send with this message
      */
     protected void error(String msg, Throwable e){
-        m_run = false;
+//        m_run = false;
         m_log.error(msg, e);
     }
     
@@ -177,15 +181,22 @@ public class RoboLibBot {
      * @param e The throwable object to send with this message
      */
     protected void fatal(String msg, Throwable e){
-        m_run = false;
+//        m_run = false;
         m_log.fatal(msg, e);
+    }
+    
+    public static void wake(){
+        synchronized(m_sem){
+            m_sem.notifyAll();
+        }
     }
     
     /**
      * Kill the robot.
      */
     public static void die(){
-        m_run = false;
+//        m_run = false;
+        wake();
     }
     
     /**
@@ -203,21 +214,6 @@ public class RoboLibBot {
      */
     public void robotInit(){
         debug("Default Robot.robotInit() method... Overload me!");
-    }
-
-    /**
-     * Get the current driver station indicated mode.
-     * @return the driver station mode as a {@link GameMode}
-     */
-    public static GameMode getDSMode(){
-        if(isDisabled())
-            return GameMode.DISABLED;
-        else if(isTest())
-            return GameMode.TEST;
-        else if(isAutonomous())
-            return GameMode.AUTON;
-        else
-            return GameMode.TELEOP;
     }
 
     /**
@@ -305,39 +301,35 @@ public class RoboLibBot {
         UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
         LiveWindow.setEnabled(false);
 
-        ModeSwitcher m_modeSwitcher = ModeSwitcher.getInstance();
+        GameManager gameManager = GameManager.getInstance();
         log.info("Initializing Robot Modes");
-        m_modeSwitcher.init();
+        gameManager.init();
 
-        DriverStation m_ds = DriverStation.getInstance();
-        m_ds.startThread();
+        DriverStation ds = DriverStation.getInstance();
+        ds.startThread();
+        
+        ds.waitForData();
+        
+        
+        
+        log.info("Starting Main Loop");
+        gameManager.startThread();
         
         log.info(robot.m_name + ", Version " + robot.m_version + " Running");
         
         NetworkCommunications.ObserveUserProgramStarting();
         
-        log.info("Starting Main Loop");
         
-        try{
-            while(m_run){
-                GameMode mode = getDSMode();
-                if(m_modeSwitcher.inNewMode(mode)){
-                    m_modeSwitcher.switchMode(mode);
-                }
-                
-                if(m_ds.isNewControlData()){
-                    m_modeSwitcher.run();
-                }
-                m_ds.waitForData();
+        log.debug("Main Thread dropping to sleep.");
+        synchronized (m_sem) {
+            try {
+                m_sem.wait(0);
+            } catch (InterruptedException e) {
             }
-            
-        }catch(Throwable t){
-            log.fatal("Error in Main Loop. Something should have caught this!!!", t);
-        }finally{
-            m_ds.exitNoError();
-            log.fatal("ROBOTS DON'T QUIT!!!", "Exited Main Loop");
-            System.exit(1);
         }
+        System.exit(0);
+            
+        
     }
     
     /**

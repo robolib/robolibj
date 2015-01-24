@@ -46,7 +46,7 @@ public final class SafetyManager {
      * Check.
      */
     public static void check(){
-        m_safetyObjects.forEach(msh -> msh.check());
+        m_safetyObjects.forEach(MotorSafetyHelper::check);
     }
 
 }

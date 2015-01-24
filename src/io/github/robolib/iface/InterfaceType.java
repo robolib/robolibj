@@ -23,7 +23,6 @@ package io.github.robolib.iface;
 public enum InterfaceType {
     
     ANALOG,
-    CAN,
     DIGITALIO,
     I2C,
     PWM,

@@ -23,6 +23,7 @@ import java.nio.IntBuffer;
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.control.Joystick;
 import io.github.robolib.hal.HALUtil;
+import io.github.robolib.robot.GameMode;
 import io.github.robolib.util.TableSender;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
@@ -61,8 +62,7 @@ public final class DriverStation {
         NetworkCommunications.setNewDataSem(m_packetDataAvailableSem);
         
         //WOO lookie here. Lambda functions ^_^
-        Runnable r = () -> commTask();
-        m_thread = new Thread(r, "FRCDriverStation");
+        m_thread = new Thread(() -> commTask(), "FRCDriverStation");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
         
     }
@@ -74,6 +74,9 @@ public final class DriverStation {
         m_log.info("Communications thread started.");
         byte safetyCounter = 0;
         byte tableCounter = 0;
+        synchronized(m_dataSem){
+            m_dataSem.notifyAll();
+        }
         while (m_thread_keepAlive){
             HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
             synchronized(this){
@@ -149,19 +152,10 @@ public final class DriverStation {
      * Has a new control packet from the driver station arrived since the last time this function was called?
      * @return True if the control data has been updated since the last call.
      */
-    public synchronized boolean isNewControlData() {
+    protected synchronized boolean isNewControlData() {
         boolean result = m_newControlData;
         m_newControlData = false;
         return result;
-    }
-    
-    /**
-     * An approxamation of the time left in the current period
-     * 
-     * @return Time remaining in current match period (auto or teleop) in seconds 
-     */
-    public static double getMatchTime() {
-        return NetworkCommunications.HALGetMatchTime();
     }
     
     /**
@@ -262,6 +256,21 @@ public final class DriverStation {
         boolean retVal = NetworkCommunications.HALGetBrownedOut(status);
         HALUtil.checkStatus(status);
         return retVal;
+    }
+    
+    /**
+     * Get the current driver station indicated mode.
+     * @return the driver station mode as a {@link GameMode}
+     */
+    public static GameMode getGameMode(){
+        if(isDisabled())
+            return GameMode.DISABLED;
+        else if(isTest())
+            return GameMode.TEST;
+        else if(isAutonomous())
+            return GameMode.AUTON;
+        else
+            return GameMode.TELEOP;
     }
 
     /**

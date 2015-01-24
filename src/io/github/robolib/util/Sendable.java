@@ -13,22 +13,22 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib.util;
+
+import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public class CAN extends Interface {
+public interface Sendable {
+    
+    void initTable(ITable subtable);
+    
+    ITable getTable();
+    
+    void updateTable();
 
-    /**
-     * @param iType
-     * @param address
-     */
-    protected CAN() {
-        super(InterfaceType.CAN);
-        
-    }
-
+    String getSmartDashboardType();
+    
 }

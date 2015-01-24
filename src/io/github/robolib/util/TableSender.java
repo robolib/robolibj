@@ -18,7 +18,6 @@ package io.github.robolib.util;
 import java.util.Vector;
 
 import io.github.robolib.framework.RoboLibBot;
-import io.github.robolib.framework.Sendable;
 
 /**
  * 
@@ -40,8 +39,7 @@ public class TableSender {
     private TableSender(){}
     
     public void runFramework(){
-        if(m_enabled)
-            m_framework.forEach(send -> send.updateTable());
+        if(m_enabled) m_framework.forEach(Sendable::updateTable);
     }
     
     public void runUser(){

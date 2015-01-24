@@ -15,10 +15,28 @@
 
 package io.github.robolib.util;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class Utility {
+    
+    public static String getTeamNumber(){
+        Runtime run = Runtime.getRuntime();
+        Process proc;
+        try {
+            proc = run.exec("hostname");
+            BufferedInputStream in = new BufferedInputStream(proc.getInputStream());
+            byte [] b = new byte[256];
+            in.read(b, 0, 256);
+            return new String(b).trim().replace("roboRIO-", "");
+        } catch(IOException e1) {
+            e1.printStackTrace();
+        }
+        return null;
+    }
 
 }
