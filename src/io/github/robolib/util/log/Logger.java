@@ -15,8 +15,10 @@
 
 package io.github.robolib.util.log;
 
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,6 +117,38 @@ public final class Logger extends ILogger {
         m_label = "(" + label + ")";
     }
     
+    /** The Constant TERM_OUT. */
+    public static final LogOutput TERM_OUT = (String msg) -> System.out.println(msg);
+
+    /** The Constant TERM_ERR. */
+    public static final LogOutput TERM_ERR = (String msg) -> System.err.println(msg);
+
+    /**
+     * File output.
+     *
+     * @param s the s
+     * @return the log output
+     */
+    @SuppressWarnings("resource")
+    public static LogOutput fileOutput(final String s){
+        
+        final PrintWriter mWriter;
+        try {
+            mWriter = new PrintWriter(s, "UTF-8");
+        } catch (FileNotFoundException ex) {
+            get(LogOutput.class).warn("Cannot Find/Create Log File: " + s);
+            return null;
+        } catch (UnsupportedEncodingException ex) {
+            get(LogOutput.class).warn("What the Heck? - PrintWriter Rejected UTF-8 Encoding...");
+            return null;
+        }
+        
+        return (String msg) -> {
+            mWriter.println(msg);
+            mWriter.flush();
+        };
+    }
+    
     /**
      * Adds a {@link LogOutput} to the list of default outputs.
      * Also adds the output to all of the current Loggers.
@@ -123,7 +157,7 @@ public final class Logger extends ILogger {
      * @param out a {@link LogOutput} instance
      */
     public static void registerDefaultOutput(LogOutput out){
-        if(!m_defOuts.contains(out) && (!out.equals(LogOutput.TERM_OUT) || !out.equals(LogOutput.TERM_ERR)))
+        if(!m_defOuts.contains(out) && (!out.equals(TERM_OUT) || !out.equals(TERM_ERR)))
             m_defOuts.add(out);
     }
 
@@ -133,14 +167,14 @@ public final class Logger extends ILogger {
      * @param s the s
      */
     public static void registerDefaultFileOutput(String s){
-        registerDefaultOutput(LogOutput.fileOutput(s));
+        registerDefaultOutput(fileOutput(s));
     }
     
     /**
      * {@inheritDoc}
      */
     public void registerOutput(LogOutput out){
-        if(!m_outs.contains(out) && (!out.equals(LogOutput.TERM_OUT) || !out.equals(LogOutput.TERM_ERR)))
+        if(!m_outs.contains(out) && (!out.equals(TERM_OUT) || !out.equals(TERM_ERR)))
             m_outs.add(out);
     }
     
@@ -162,11 +196,10 @@ public final class Logger extends ILogger {
      * @param out a {@link LogOutput} instance
      */
     public static void registerToAll(LogOutput out){
-        for(Logger l : m_loggers.values()){
+        m_loggers.values().forEach(l -> {
             if(l.m_acceptGlobals)
                 l.registerOutput(out);
-        }
-        registerDefaultOutput(out);
+        });
     }
     
     /**
@@ -177,7 +210,7 @@ public final class Logger extends ILogger {
      */
     private void sendMsg(LogLevel l, String s){
         String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
-        LogOutput.TERM_OUT.sendMsg(sout);
+        TERM_OUT.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
     }
@@ -191,7 +224,7 @@ public final class Logger extends ILogger {
     private void sendErrMsg(LogLevel l, String s){
         String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + ModeSwitcher.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
         DriverStation.reportError(sout + "\n");
-        LogOutput.TERM_ERR.sendMsg(sout);
+        TERM_ERR.sendMsg(sout);
         for(LogOutput out : m_outs)
             out.sendMsg(sout);
     }

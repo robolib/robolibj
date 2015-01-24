@@ -397,7 +397,7 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 
 			sendMessage(messageID, data, dataSize, kSendMessagePeriod);
 
-			if(m_safetyHelper != null) m_safetyHelper.feed();
+			if(m_safetyHelper != null) feed();
 		}
 
 		m_value = outputValue;
@@ -421,6 +421,13 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	public void set(double value) {
 		set(value, (byte)0);
 	}
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setSpeed(double speed) {
+        set(speed);
+    }
 	
 	/**
 	 * {@inheritDoc}
@@ -2064,25 +2071,9 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	public boolean FXP16_EQ(double a, double b) {
 		return (int)(a * 65536.0) == (int)(b * 65536.0);
 	}
-
-	public void setSafetyExpiration(double timeout) {
-		m_safetyHelper.setExpiration(timeout);
-	}
-
-	public double getSafetyExpiration() {
-		return m_safetyHelper.getExpiration();
-	}
-
-	public boolean isAlive() {
-		return m_safetyHelper.isAlive();
-	}
-
-	public boolean isSafetyEnabled() {
-		return m_safetyHelper.isSafetyEnabled();
-	}
-
-	public void setSafetyEnabled(boolean enabled) {
-		m_safetyHelper.setSafetyEnabled(enabled);
+	
+	public MotorSafetyHelper getSafetyHelper(){
+	    return m_safetyHelper;
 	}
 
 	public String getDescription() {

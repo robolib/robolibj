@@ -41,7 +41,7 @@ public class I2C extends Interface {
         this(Port.kOnboard, address);
     }
     
-    private byte m_port;
+    protected byte m_port;
     protected byte m_address;
     private static boolean m_portInitialized[] = new boolean[2];
     
@@ -79,11 +79,11 @@ public class I2C extends Interface {
      * @param dataToSend
      *            Buffer of data to send as part of the transaction.
      * @param sendSize
-     *            Number of bytes to send as part of the transaction. [0..6]
+     *            Number of bytes to send as part of the transaction.
      * @param dataReceived
      *            Buffer to read data into.
      * @param receiveSize
-     *            Number of bytes to read from the device. [0..7]
+     *            Number of bytes to read from the device.
      * @return Transfer Aborted... false for success, true for aborted.
      */
     public synchronized boolean transaction(byte[] dataToSend, int sendSize, byte[] dataReceived, int receiveSize){
@@ -155,22 +155,22 @@ public class I2C extends Interface {
     /**
      * Execute a read transaction with the device.
      *
-     * Read 1 to 7 bytes from a device. Most I2C devices will auto-increment the
-     * register pointer internally allowing you to read up to 7 consecutive
+     * Read bytes from a device. Most I2C devices will auto-increment the
+     * register pointer internally allowing you to read consecutive
      * registers on a device in a single transaction.
      *
      * @param registerAddr
      *            The register to read first in the transaction.
      * @param count
-     *            The number of bytes to read in the transaction. [1..7]
+     *            The number of bytes to read in the transaction.
      * @param buffer
      *            A pointer to the array of bytes to store the data read from
      *            the device.
      * @return Transfer Aborted... false for success, true for aborted.
      */
     public boolean read(int registerAddr, int count, byte[] buffer){
-        if(!MathUtils.inBounds(count, 1, 7))
-            throw new IllegalArgumentException("Count must be between 1 and 7");
+        /*if(!MathUtils.inBounds(count, 1, 7))
+            throw new IllegalArgumentException("Count must be between 1 and 7");*/
         
         byte[] registerArray = new byte[1];
         registerArray[0] = (byte)registerAddr;
@@ -188,7 +188,7 @@ public class I2C extends Interface {
      *            A pointer to the array of bytes to store the data read from
      *            the device.
      * @param count
-     *            The number of bytes to read in the transaction. [1..7]
+     *            The number of bytes to read in the transaction.
      * @return Transfer Aborted... false for success, true for aborted.
      */
     public boolean readOnly(byte[] buffer, int count){

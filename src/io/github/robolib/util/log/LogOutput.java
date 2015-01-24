@@ -15,10 +15,6 @@
 
 package io.github.robolib.util.log;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-
 /**
  * A Logging class.
  * 
@@ -37,56 +33,14 @@ import java.io.UnsupportedEncodingException;
  * @see Logger
  * @see ILogger
  */
-public abstract class LogOutput{
+public interface LogOutput{
         
     /**
      * Sends the message to the output.
      * @param s the message to be sent
      */
-    public abstract void sendMsg(String s);
+    void sendMsg(String s);
         
     
-    /** The Constant TERM_OUT. */
-    public static final LogOutput TERM_OUT = new LogOutput(){
-        public void sendMsg(String msg){
-            System.out.println(msg);
-        }
-    };
-
-    /** The Constant TERM_ERR. */
-    public static final LogOutput TERM_ERR = new LogOutput(){
-        public void sendMsg(String msg){
-            System.err.println(msg);
-        }
-    };
-
-    /**
-     * File output.
-     *
-     * @param s the s
-     * @return the log output
-     */
-    @SuppressWarnings("resource")
-	public static LogOutput fileOutput(final String s){
-        
-        final PrintWriter mWriter;
-        try {
-            mWriter = new PrintWriter(s, "UTF-8");
-        } catch (FileNotFoundException ex) {
-            Logger.get(LogOutput.class).warn("Cannot Find/Create Log File: " + s);
-            return null;
-        } catch (UnsupportedEncodingException ex) {
-            Logger.get(LogOutput.class).warn("What the Heck? - PrintWriter Rejected UTF-8 Encoding...");
-            return null;
-        }
-        
-        return new LogOutput(){
-            private final PrintWriter writer = mWriter;
-
-            public void sendMsg(String msg){
-                writer.println(msg);
-                writer.flush();
-            }
-        };
-    }
+    
 }

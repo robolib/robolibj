@@ -37,14 +37,25 @@ public interface SpeedController extends PIDOutput {
      * @param speed The speed to set.  Value should be between -1.0 and 1.0.
      * @param syncGroup The update group to add this Set() to, pending UpdateSyncGroup().  If 0, update immediately.
      */
-    void set(double speed, byte syncGroup);
+    public default void set(double speed, byte syncGroup){
+        setSpeed(speed);
+    }
 
     /**
      * Common interface for setting the speed of a speed controller.
      *
      * @param speed The speed to set.  Value should be between -1.0 and 1.0.
      */
-    void set(double speed);
+    public default void set(double speed){
+        setSpeed(speed);
+    }
+    
+    /**
+     * Set the speed of the SpeedController
+     * 
+     * @param speed the speed to set
+     */
+    void setSpeed(double speed);
     
     /**
      * Set the inverted state of the speed controller.

@@ -17,11 +17,9 @@ package io.github.robolib.output;
 
 import io.github.robolib.iface.PWM.PWMChannel;
 
-
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
 public class DriveTrain implements MotorSafety {
     
@@ -64,27 +62,8 @@ public class DriveTrain implements MotorSafety {
 //        if
 //    }
     
-    
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isAlive() {
-        return m_safetyHelper.isAlive();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setSafetyExpiration(double timeout) {
-        m_safetyHelper.setExpiration(timeout);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public double getSafetyExpiration() {
-        return m_safetyHelper.getExpiration();
+    public MotorSafetyHelper getSafetyHelper(){
+        return m_safetyHelper;
     }
 
     /**
@@ -103,20 +82,6 @@ public class DriveTrain implements MotorSafety {
         m_rearRightMotor.set(0.0);
         
         m_safetyHelper.feed();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setSafetyEnabled(boolean enabled){
-        m_safetyHelper.setSafetyEnabled(enabled);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isSafetyEnabled() {
-        return m_safetyHelper.isSafetyEnabled();
     }
 
     /**

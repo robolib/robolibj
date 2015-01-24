@@ -24,7 +24,7 @@ import io.github.robolib.util.PDP.PowerChannel;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class PWMController extends PWM implements SpeedController, MotorSafety{
+public class PWMController extends PWM implements SpeedController, MotorSafety{
     
     protected MotorSafetyHelper m_safetyHelper;
     
@@ -109,6 +109,13 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
     /**
      * {@inheritDoc}
      */
+    public MotorSafetyHelper getSafetyHelper() {
+        return m_safetyHelper;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public double get() {
         return getSpeed();
     }
@@ -118,20 +125,6 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
      */
     public double getSpeed(){
     	return super.getSpeed() * m_inverted;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void set(double speed, byte syncGroup) {
-        setSpeed(speed);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void set(double speed) {
-        setSpeed(speed);
     }
     
     /**
@@ -152,52 +145,10 @@ public abstract class PWMController extends PWM implements SpeedController, Moto
     /**
      * {@inheritDoc}
      */
-    public boolean isAlive() {
-        return m_safetyHelper.isAlive();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setSafetyExpiration(double timeout) {
-        m_safetyHelper.setExpiration(timeout);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public double getSafetyExpiration() {
-        return m_safetyHelper.getExpiration();
-    }
-    
-    /**
-     * Feed the MotorSafetyHelper
-     */
-    public void feed(){
-        m_safetyHelper.feed();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void stopMotor() {
         setRaw(kPWMDisabled);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setSafetyEnabled(boolean enabled) {
-        m_safetyHelper.setSafetyEnabled(enabled);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isSafetyEnabled() {
-        return m_safetyHelper.isSafetyEnabled();
-    }
-
+    
     /**
      * {@inheritDoc}
      */
