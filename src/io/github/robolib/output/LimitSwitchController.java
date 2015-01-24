@@ -73,6 +73,13 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
         this.speed = speed;
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public void setSpeed(double speed) {
+        set(speed);
+    }
+    
     public void setInverted(boolean inverted){
         m_motor.setInverted(inverted);
     }

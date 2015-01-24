@@ -15,7 +15,6 @@
 
 package io.github.robolib.output;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface MotorSafety.
  *
@@ -33,25 +32,45 @@ public interface MotorSafety {
     public static final double SAFETY_TIMEOUT_LOOSE = 0.5;
     
     /**
+     * Return the MotorSafetyHelper object for this MotorSafety Object
+     * 
+     * @return the motor safety helper
+     */
+    MotorSafetyHelper getSafetyHelper();
+    
+    /**
+     * Feed the safety helper
+     */
+    public default void feed(){
+        getSafetyHelper().feed();
+    }
+    
+    /**
      * Checks if is alive.
      *
      * @return true, if is alive
      */
-    boolean isAlive();
+    public default boolean isAlive(){
+        return getSafetyHelper().isAlive();
+    }
     
     /**
      * Sets the safety expiration.
      *
      * @param timeout the new safety expiration
      */
-    void setSafetyExpiration(double timeout);
+    public default void setSafetyExpiration(double timeout){
+        getSafetyHelper().setExpiration(timeout);
+    }
     
     /**
      * Gets the safety expiration.
      *
      * @return the safety expiration
      */
-    double getSafetyExpiration();
+    public default double getSafetyExpiration(){
+        return getSafetyHelper().getExpiration();
+    }
     
     /**
      * Stop motor.
@@ -63,14 +82,18 @@ public interface MotorSafety {
      *
      * @param enabled the enabled
      */
-    void setSafetyEnabled(boolean enabled);
+    public default void setSafetyEnabled(boolean enabled){
+        getSafetyHelper().setSafetyEnabled(enabled);
+    }
     
     /**
      * Checks if is safety enabled.
      *
      * @return true, if is safety enabled
      */
-    boolean isSafetyEnabled();
+    public default boolean isSafetyEnabled(){
+        return getSafetyHelper().isSafetyEnabled();
+    }
     
     /**
      * Gets the description.

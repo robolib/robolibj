@@ -21,4 +21,8 @@ package io.github.robolib.sensor;
  */
 public interface IUltrasonic {
 
+    double getDistance();
+    
+    
+    
 }
