@@ -15,7 +15,7 @@
 
 package io.github.robolib.livewindow;
 
-import io.github.robolib.framework.Sendable;
+import io.github.robolib.util.Sendable;
 
 /**
  * 

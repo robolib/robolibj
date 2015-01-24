@@ -59,6 +59,9 @@ public abstract class Command {
     /** The m_run when disabled. */
     private boolean m_runWhenDisabled = false;
     
+    /** The m_cancel on mode switched */
+    private boolean m_cancelOnModeSwitched = true;
+    
     /** The m_parent. */
     private CommandGroup m_parent;
     
@@ -420,6 +423,24 @@ public abstract class Command {
      */
     public boolean willRunWhenDisabled(){
         return m_runWhenDisabled;
+    }
+    
+    /**
+     * Sets whether or not this {@link Command} should continue running when the robot switches mode.
+     * 
+     * <p>By default a command will cancel when the mode is switched</p>
+     * @param cancel whether or not this command should cancel when the robot switches mode.
+     */
+    public void setCancelOnModeSwitch(boolean cancel){
+        m_cancelOnModeSwitched = cancel;
+    }
+    
+    /**
+     * Returns whether or not this {@link Command} will cancel when the robot switches modes.
+     * @return whether or not this {@link Command} will cancel when the robot switches modes.
+     */
+    public boolean willCancelOnModeSwitch(){
+        return m_cancelOnModeSwitched;
     }
     
     /**

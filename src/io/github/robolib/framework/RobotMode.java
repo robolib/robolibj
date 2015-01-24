@@ -68,7 +68,7 @@ public abstract class RobotMode {
     protected RobotMode(GameMode mode, String name, boolean active){
         m_mode = mode;
         m_name = name;
-        if(active || !ModeSwitcher.getInstance().hasMode(mode))
+        if(active || !GameManager.getInstance().hasMode(mode))
             setActive();
         Logger.get(this, m_name);
     }
@@ -97,14 +97,14 @@ public abstract class RobotMode {
      * @return is this the active RobotMode for its {@link GameMode}
      */
     public final boolean getActive(){
-        return ModeSwitcher.getInstance().getRobotMode(m_mode).equals(this);
+        return GameManager.getInstance().getRobotMode(m_mode).equals(this);
     }
     
     /**
      * Set this RobotMode as the active robot mode for its {@link GameMode}.
      */
     public final void setActive(){
-        ModeSwitcher.getInstance().set(m_mode, this);
+        GameManager.getInstance().set(m_mode, this);
     }
     
     /**

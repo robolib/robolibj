@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.robolib.exception.ResourceAllocationException;
-import io.github.robolib.framework.Sendable;
 import io.github.robolib.hal.PDPJNI;
 
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -245,7 +244,8 @@ public class PDP implements Sendable {
      * Update the table for this object with the latest values.
      */
     public void updateTable() {
-        m_updateChannels.forEach(i -> m_table.putString(m_chanNames[i], StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A")));
+        m_updateChannels.forEach(i -> m_table.putString(m_chanNames[i],
+                StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A")));
         
         m_table.putString("Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
         m_table.putString("TotalCurrent", StringUtils.getNumber2DWithUnits(getTotalCurrent(), "A"));

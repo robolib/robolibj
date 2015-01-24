@@ -20,7 +20,6 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.control.Button;
-import io.github.robolib.framework.Sendable;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PowerJNI;
 

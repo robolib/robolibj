@@ -20,7 +20,7 @@ import java.util.Vector;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.control.Trigger.ButtonScheduler;
 import io.github.robolib.framework.RoboLibBot;
-import io.github.robolib.framework.Sendable;
+import io.github.robolib.util.Sendable;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
@@ -166,7 +166,7 @@ public class Scheduler implements Sendable {
             return;
         }
         
-        m_buttons.forEach(btn -> btn.execute());
+        m_buttons.forEach(ButtonScheduler::execute);
         
         m_commandList.forEach(cmd -> {
             if(!cmd.run()){
@@ -175,7 +175,7 @@ public class Scheduler implements Sendable {
             }
         });
         
-        m_additions.forEach(cmd -> add_impl(cmd));
+        m_additions.forEach(this::add_impl);
         m_additions.removeAllElements();
         
         m_subsystems.forEach(system -> {
@@ -217,7 +217,7 @@ public class Scheduler implements Sendable {
      * Removes the all.
      */
     public void removeAll(){
-        m_commandList.forEach(cmd -> remove(cmd));
+        m_commandList.forEach(this::remove);
     }
     
     /**
