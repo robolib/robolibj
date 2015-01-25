@@ -19,7 +19,7 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.util.PDP.PowerChannel;
 
 /**
- * Cross the Road Electronics (CTRE) Talon and Talon SR Speed JSID
+ * Cross the Road Electronics (CTRE) Talon and Talon SR Speed Controller
  *
  * @author noriah Reuland <vix@noriah.dev>
  */

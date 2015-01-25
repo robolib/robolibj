@@ -13,16 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib.control;
 
 /**
- * 
+ * A class representation of a Joystick Button.
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogTrigger {
+public interface HIDButton {
     
-    
-	
-	
+    /**
+     * Get the Value of the Button.
+     * @return the value of the Button.
+     */
+    public boolean get();
 
 }

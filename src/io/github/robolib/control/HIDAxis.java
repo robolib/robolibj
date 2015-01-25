@@ -13,16 +13,29 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib.control;
 
 /**
- * 
+ * A class representation of a Joystick Axis.
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogTrigger {
+public interface HIDAxis {
     
+    /**
+     * Get the Value of the Axis.
+     * @return the value of the Axis.
+     */
+    public double get();
     
-	
-	
-
+    /**
+     * Invert the Axis.
+     */
+    public void setInverted(boolean inverted);
+    
+    /**
+     * Set the Deadband of the Axis.
+     * @param deadband the deadband value of the axis.
+     */
+    public void setDeadband(double deadband);
 }

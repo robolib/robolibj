@@ -30,15 +30,15 @@ public class NetTableController extends GenericHID {
     private final ITable m_table;
     
     /** The m_axes. */
-    private Axis m_axes[];
+    private HIDAxis m_axes[];
     
     /** The m_btns. */
-    private Button m_btns[];
+    private HIDButton m_btns[];
     
     /**
      * The Class NetTableAxis.
      */
-    public class NetTableAxis implements Axis {
+    public class NetTableAxis implements HIDAxis {
 
         /** The m_invert. */
         private int m_invert = 1;
@@ -85,7 +85,7 @@ public class NetTableController extends GenericHID {
     /**
      * The Class NetTableButton.
      */
-    public class NetTableButton implements Button {
+    public class NetTableButton implements HIDButton {
         
         /** The m_invert. */
         private boolean m_invert = false;
@@ -146,7 +146,7 @@ public class NetTableController extends GenericHID {
      * @return a {@link NetTableAxis} instance of the requested Axis
      * @see NetTableAxis
      */
-    public Axis getAxis(int axis) {
+    public HIDAxis getAxis(int axis) {
         checkAxis(axis);
         return m_axes[axis - 1];
     }
@@ -156,7 +156,7 @@ public class NetTableController extends GenericHID {
      * @return a {@link NetTableButton} instance of the requested Button
      * @see NetTableButton
      */
-    public Button getButton(int btn) {
+    public HIDButton getButton(int btn) {
         checkButton(btn);
         return m_btns[btn - 1];
     }

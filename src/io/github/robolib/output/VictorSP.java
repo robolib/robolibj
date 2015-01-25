@@ -19,7 +19,7 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.util.PDP.PowerChannel;
 
 /**
- * VEX Robotics Victor SP Speed JSID
+ * VEX Robotics Victor SP Speed Controller
  * 
  * @author noriah Reuland <vix@noriah.dev>
  *

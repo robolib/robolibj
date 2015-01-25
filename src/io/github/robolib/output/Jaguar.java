@@ -19,7 +19,7 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.util.PDP.PowerChannel;
 
 /**
- * Texas Instruments / VEX Robotics Jaguar Speed JSID.
+ * Texas Instruments / VEX Robotics Jaguar Speed Controller.
  * 
  * @author noriah Reuland <vix@noriah.dev>
  *

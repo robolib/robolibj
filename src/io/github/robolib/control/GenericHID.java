@@ -25,61 +25,25 @@ import java.util.Arrays;
  */
 
 public abstract class GenericHID {
-
-    
-    /**
-     * A class representation of a Joystick Axis.
-     */
-    public interface Axis {
-        
-        /**
-         * Get the Value of the Axis.
-         * @return the value of the Axis.
-         */
-        public double get();
-        
-        /**
-         * Invert the Axis.
-         */
-        public void setInverted(boolean inverted);
-        
-        /**
-         * Set the Deadband of the Axis.
-         * @param deadband the deadband value of the axis.
-         */
-        public void setDeadband(double deadband);
-    }
-    
-    /**
-     * A class representation of a Joystick Button.
-     */
-    public interface Button {
-        
-        /**
-         * Get the Value of the Button.
-         * @return the value of the Button.
-         */
-        public boolean get();
-    }
     
     /** The m_axes. */
-    protected Axis m_axes[];
+    protected HIDAxis m_axes[];
     
     /** The m_btns. */
-    protected Button m_btns[];
+    protected HIDButton m_btns[];
     
     /** The m_num btns. */
     protected int m_numAxes, m_numBtns;
 
     /**
-     * Provides a middle-man in between the WPILib Library and the RoboLibJ Joysticks.
+     * RoboLibJ Joysticks.
      */
     protected GenericHID(){
         this(6, 12);
     }
     
     /**
-     * Provides a middle-man in between the WPILib Library and the RoboLibJ Joysticks.
+     * RoboLibJ Joysticks.
      * @param numAxes the Number of Axes this Joystick will have
      * @param numBtns the Number of Buttons this Joystick will have
      */
@@ -89,31 +53,31 @@ public abstract class GenericHID {
     }
     
     /**
-     * Get a Joystick {@link Axis}.
+     * Get a Joystick {@link HIDAxis}.
      * 
-     * Returns an {@link Axis} instance of the requested Axis.
+     * Returns an {@link HIDAxis} instance of the requested Axis.
      * 
      * @param axis the axis to get
-     * @return a {@link Axis} instance of the requested Axis
-     * @see Axis
+     * @return a {@link HIDAxis} instance of the requested Axis
+     * @see HIDAxis
      */
-    public abstract Axis getAxis(int axis);
+    public abstract HIDAxis getAxis(int axis);
 
     /**
-     * Invert a Joystick {@link Axis}.
+     * Invert a Joystick {@link HIDAxis}.
      * @param axis the axis to invert
-     * @see Axis
+     * @see HIDAxis
      */
-    public void invertAxis(int axis){
+    public void setAxisInverted(int axis){
         getAxis(axis).setInverted(true);
     }
     
     /**
-     * Set a Joystick {@link Axis} Deadband.
+     * Set a Joystick {@link HIDAxis} Deadband.
      *
      * @param axis the axis
      * @param deadband the deadband
-     * @see Axis
+     * @see HIDAxis
      */
     public void setAxisDeadband(int axis, double deadband){
         getAxis(axis).setDeadband(deadband);
@@ -132,15 +96,15 @@ public abstract class GenericHID {
     public abstract double getY();*/
     
     /**
-     * Get a Joystick {@link Button}.
+     * Get a Joystick {@link HIDButton}.
      * 
-     * Returns a {@link Button} instance of the requested Button.
+     * Returns a {@link HIDButton} instance of the requested Button.
      * 
      * @param btn the button to get
-     * @return a {@link Button} instance of the requested Button
-     * @see Button
+     * @return a {@link HIDButton} instance of the requested Button
+     * @see HIDButton
      */
-    public abstract Button getButton(int btn);
+    public abstract HIDButton getButton(int btn);
 
     /**
      * Get the raw axis
@@ -196,8 +160,6 @@ public abstract class GenericHID {
      *
      * uses acos(-1) to represent Pi due to absence of readily accessable Pi
      * constant in C++
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
      *
      * @return The direction of the vector in degrees
      *//*
@@ -210,8 +172,8 @@ public abstract class GenericHID {
      *
      * @param btn the btn
      */
-    protected void addButton(final Button btn){
-        m_btns = (Button[]) Arrays.copyOf(m_btns, m_numBtns + 1);
+    protected void addButton(final HIDButton btn){
+        m_btns = (HIDButton[]) Arrays.copyOf(m_btns, m_numBtns + 1);
         m_btns[m_btns.length - 1] = btn;
         m_numBtns = m_btns.length;
     }
@@ -224,7 +186,7 @@ public abstract class GenericHID {
      * @param negThresh the neg thresh
      */
     protected void addAxisButton(final int channel, final double posThresh, final double negThresh){
-        addButton(new Button(){           
+        addButton(new HIDButton(){           
             public boolean get() {
                 double axis = getRawAxis(channel);
                 return axis >= posThresh || axis <= negThresh;
@@ -254,7 +216,7 @@ public abstract class GenericHID {
      * Check if the axis requested exists.
      *
      * @param axis the axis being checked
-     * @see Axis
+     * @see HIDAxis
      */
     protected void checkAxis(int axis){
         if(0 > axis || m_numAxes < axis){
@@ -284,7 +246,7 @@ public abstract class GenericHID {
      * Check if the button requested exists.
      *
      * @param btn the button being checked.
-     * @see Button
+     * @see HIDButton
      */
     protected void checkButton(int btn){
         if(0 > btn || m_numBtns < btn){

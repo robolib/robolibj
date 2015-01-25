@@ -44,13 +44,6 @@ public class PIDController {
 	    }
 	}
 
-    public class NullTolerance implements Tolerance {
-        
-    public boolean onTarget() {
-            throw new RuntimeException("No tolerance value set when using PIDController.onTarget()");
-        }
-    }
-
 	public static final double kDefaultPeriod = 0.05;
 	private static int m_instances = 0;
 	

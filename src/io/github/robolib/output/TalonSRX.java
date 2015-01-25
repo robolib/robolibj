@@ -19,7 +19,7 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.util.PDP.PowerChannel;
 
 /**
- * Cross the Road Electronics (CTRE) Talon SRX Speed JSID with PWM control
+ * Cross the Road Electronics (CTRE) Talon SRX Speed Controller with PWM control
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */

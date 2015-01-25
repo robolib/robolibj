@@ -18,7 +18,26 @@ package io.github.robolib.sensor;
 import io.github.robolib.iface.I2C;
 
 /**
+ * Honeywell HMC5883L I2C 3-axis compass class
  * 
+ * <p>The Honeywell HMC5883L magnetoresistive sensor circuit is a trio of sensors and application specific support circuits to
+ * measure magnetic fields. With power supply applied, the sensor converts any incident magnetic field in the sensitive axis
+ * directions to a differential voltage output. The magnetoresistive sensors are made of a nickel-iron (Permalloy) thin-film and
+ * patterned as a resistive strip element. In the presence of a magnetic field, a change in the bridge resistive elements
+ * causes a corresponding change in voltage across the bridge outputs.</p>
+ * <p>These resistive elements are aligned together to have a common sensitive axis (indicated by arrows in the pinout
+ * diagram) that will provide positive voltage change with magnetic fields increasing in the sensitive direction. Because the
+ * output is only proportional to the magnetic field component along its axis, additional sensor bridges are placed at
+ * orthogonal directions to permit accurate measurement of magnetic field in any orientation.</p>
+ * 
+ * <p>To check the HMC5883L for proper operation, a self test feature in incorporated in which the sensor is internally excited
+ * with a nominal magnetic field (in either positive or negative bias configuration). This field is then measured and reported.
+ * This function is enabled and the polarity is set by bits MS[n] in the configuration register A. An internal current source
+ * generates DC current (about 10 mA) from the VDD supply. This DC current is applied to the offset straps of the magnetoresistive
+ * sensor, which creates an artificial magnetic field bias on the sensor. The difference of this measurement and the
+ * measurement of the ambient field will be put in the data output register for each of the three axes. By using this built-in
+ * function, the manufacturer can quickly verify the sensor’s full functionality after the assembly without additional test setup.
+ * The self test results can also be used to estimate/compensate the sensor’s sensitivity drift due to temperature.</p>
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
@@ -38,14 +57,30 @@ public class HMC5883L extends I2C {
     public static final byte HMC_MMODE_LEN = (byte)2;
     
     /**
-     * Enum for setting the Measurement Mode
+     * Measurement Configuration Bits.
+     * These bits define the measurement flow of the device,
+     * specifically whether or not to incorporate an applied
+     * bias into the measurement.
      */
     public static enum MeasurementMode {
-        /** Normal Measurement Config (Default) */
+        /**
+         * Normal Measurement Config (Default)
+         * In normal measurement configuration the device follows
+         * normal measurement flow. The positive and negative pins
+         * of the resistive load are left floating and high impedance.
+         */
         kNORMAL(0x00),
-        /** Positive bias configuration */
+        /**
+         * Positive bias configuration for X, Y, and Z axes
+         * In this configuration, a positive current is forced across
+         * the resistive load for all three axes.
+         */
         kPOSBIAS(0x01),
-        /** Negative bias configuration */
+        /**
+         * Negative bias configuration for X, Y and Z axes
+         * In this configuration, a negative current is forced across
+         * the resistive load for all three axes.
+         */
         kNEGBIAS(0x02),
         /** Reserved */
         MODE_RES(0x03);
@@ -56,11 +91,6 @@ public class HMC5883L extends I2C {
             value = (byte)val;
         }
     }
-    
-    /*public static final byte HMC_MMODE_NORM = (byte)0x00;
-    public static final byte HMC_MMODE_POSB = (byte)0x01;
-    public static final byte HMC_MMODE_NEGB = (byte)0x02;
-    public static final byte HMC_MMODE_RES = (byte)0x03;*/
 
     /** Rate bits start */
     public static final byte HMC_RATE_BIT = (byte)4;
@@ -68,7 +98,9 @@ public class HMC5883L extends I2C {
     public static final byte HMC_RATE_LEN = (byte)3;
     
     /**
-     * Enum for setting the Data Output Rate.
+     * Data Output Rate Bits
+     * These bits set the rate at which data is written to
+     * all three data output registers.
      */
     public static enum Rate {
         /** 0.75Hz */
@@ -94,15 +126,6 @@ public class HMC5883L extends I2C {
             value = (byte)val;
         }
     }
-    
-    /*public static final byte HMC_RATE_075 = (byte)0x00;
-    public static final byte HMC_RATE_1P5 = (byte)0x01;
-    public static final byte HMC_RATE_3P0 = (byte)0x02;
-    public static final byte HMC_RATE_7P5 = (byte)0x03;
-    public static final byte HMC_RATE_15P = (byte)0x04;
-    public static final byte HMC_RATE_30P = (byte)0x05;
-    public static final byte HMC_RATE_75P = (byte)0x06;
-    public static final byte HMC_RATE_RES = (byte)0x07;*/
 
     /** Averaging bits start */
     public static final byte HMC_AVRG_BIT = (byte)6;
@@ -110,7 +133,8 @@ public class HMC5883L extends I2C {
     public static final byte HMC_AVRG_LEN = (byte)2;
     
     /**
-     * Enum for setting the number of samples to average.
+     * Select number of samples averaged (1 to 8) per measurement output.
+     * 00 = 1(Default); 01 = 2; 10 = 4; 11 = 8
      */
     public static enum Averaging {
         /** 1 Sample (Default) */
@@ -128,12 +152,6 @@ public class HMC5883L extends I2C {
             value = (byte)val;
         }
     }
-    
-    /*public static final byte HMC_AVRG_1 = (byte)0x00;
-    public static final byte HMC_AVRG_2 = (byte)0x01;
-    public static final byte HMC_AVRG_4 = (byte)0x02;
-    public static final byte HMC_AVRG_8 = (byte)0x03;*/
-
 
     /** Configuration Register B */
 
@@ -142,26 +160,35 @@ public class HMC5883L extends I2C {
     /** Gain bits length */
     public static final byte HMC_GAIN_LEN = (byte)3;
     
+    /**
+     * Gain Configuration Bits
+     * These bits configure the gain for the device.
+     * The gain configuration is common for all channels.
+     */
     public static enum Gain {
-        GAIN_1370,
+        /** +/- 0.88 Ga / 1370 Gain LSb/Gauss */
+        GAIN_1370(0x00),
+        /** +/- 1.30 Ga / 1090 Gain LSb/Gauss (Default) */
+        GAIN_1090(0x20),
+        /** +/- 1.90 Ga / 820 Gain LSb/Gauss */
+        GAIN_820(0x40),
+        /** +/- 2.50 Ga / 660 Gain LSb/Gauss */
+        GAIN_660(0x60),
+        /** +/- 4.00 Ga / 440 Gain LSb/Gauss */
+        GAIN_440(0x80),
+        /** +/- 4.70 Ga / 390 Gain LSb/Gauss */
+        GAIN_390(0xa0),
+        /** +/- 5.60 Ga / 330 Gain LSb/Gauss */
+        GAIN_330(0xc0),
+        /** +/- 8.10 Ga / 230 Gain LSb/Gauss */
+        GAIN_230(0xe0);
+        
+        public byte value;
+        
+        Gain(int val){
+            value = (byte)val;
+        }
     }
-    /** +/- 0.88 Ga / 1370 Gain LSb/Gauss */
-    public static final byte HMC_GAIN_1370 = (byte)0x00;
-    /** +/- 1.30 Ga / 1090 Gain LSb/Gauss (Default) */
-    public static final byte HMC_GAIN_1090 = (byte)0x01;
-    /** +/- 1.90 Ga / 820 Gain LSb/Gauss */
-    public static final byte HMC_GAIN_820 = (byte)0x02;
-    /** +/- 2.50 Ga / 660 Gain LSb/Gauss */
-    public static final byte HMC_GAIN_660 = (byte)0x03;
-    /** +/- 4.00 Ga / 440 Gain LSb/Gauss */
-    public static final byte HMC_GAIN_440 = (byte)0x04;
-    /** +/- 4.70 Ga / 390 Gain LSb/Gauss */
-    public static final byte HMC_GAIN_390 = (byte)0x05;
-    /** +/- 5.60 Ga / 330 Gain LSb/Gauss */
-    public static final byte HMC_GAIN_330 = (byte)0x06;
-    /** +/- 8.10 Ga / 230 Gain LSb/Gauss */
-    public static final byte HMC_GAIN_230 = (byte)0x07;
-
 
     /** Mode Register */
 
@@ -169,24 +196,49 @@ public class HMC5883L extends I2C {
     public static final byte HMC_MODE_BIT = (byte)1;
     /** Mode bits length */
     public static final byte HMC_MODE_LEN = (byte)2;
+    
     /**
-     * Enum for setting the Operating Mode
-     */
-    
+     * Mode Select Bits.
+     * These bits select the operation mode of this device.
+     */    
     public static enum OperatingMode {
-        /** Continuous-Measurement Mode */
-        kCONTINUOUS,
-        /** Single-Measurement Mode (Default) */
-        kSINGLE,
-        /** Idle Mode (Power Saving) */
-        kIDLE,
+        /**
+         * Continuous-Measurement Mode
+         * In continuous-measurement mode, the device continuously
+         * performs measurements and places the result in the data
+         * register. RDY goes high when new data is placed in all
+         * three registers. After a power-on or a write to the mode
+         * or configuration register, the first measurement set is
+         * available from all three data output registers after a
+         * period of 2/fDO and subsequent measurements are available
+         * at a frequency of fDO, where fDO is the frequency of data
+         * output.
+         */
+        kCONTINUOUS(0x00),
+        /** 
+         * Single-Measurement Mode (Default)
+         * When single-measurement mode is selected, device performs
+         * a single measurement, sets RDY high and returned to idle
+         * mode. Mode register returns to idle mode bit values. The
+         * measurement remains in the data output register and RDY
+         * remains high until the data output register is read or
+         * another measurement is performed. 
+         */
+        kSINGLE(0x01),
+        /**
+         * Idle Mode (Power Saving)
+         * Device is placed in idle mode.
+         */
+        kIDLE(0x02),
         /** Reserved */
-        MODE_RES;
+        MODE_RES(0x03);
+        
+        public byte value;
+        
+        OperatingMode(int val){
+            value = (byte)val;
+        }
     }
-    
-    /*public static final byte HMC_MODE_CONTINUOUS = (byte)0x00;
-    public static final byte HMC_MODE_SINGLE = (byte)0x01;
-    public static final byte HMC_MODE_IDLE = (byte)0x02;*/
 
     /**
      * Status Register
@@ -220,6 +272,7 @@ public class HMC5883L extends I2C {
     public static final byte HMC_REG_Y_MSB = (byte)0x07;
     /** Data Output Y LSB Register */
     public static final byte HMC_REG_Y_LSB = (byte)0x08;
+    
     /** Status Register */
     public static final byte HMC_REG_STATUS = (byte)0x09;
     /** Identification Register A */
