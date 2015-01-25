@@ -29,7 +29,6 @@ import io.github.robolib.hal.SPIJNI;
  */
 public class SPI extends Interface {
 
-    
     public static enum Port {
         kOnboardCS0,
         kOnboardCS1,

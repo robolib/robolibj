@@ -97,8 +97,8 @@ public class GameManager {
         m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
         m_log = Logger.get(RoboLibBot.class);
         
-        m_thread = new Thread(() -> task(), "s");
-        m_thread.setPriority((int) ((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) * 0.75));
+        m_thread = new Thread(() -> task(), "GameManager");
+        m_thread.setPriority(((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2) + 1);
         
     }
     
