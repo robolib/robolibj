@@ -57,7 +57,7 @@ public class Joystick extends GenericHID {
     /**
      * The Class JoystickAxis.
      */
-    private class JoystickAxis implements Axis {
+    private class JoystickAxis implements HIDAxis {
 
         /** The m_invert. */
         private int m_invert = 1;
@@ -103,7 +103,7 @@ public class Joystick extends GenericHID {
     /**
      * The Class JoystickButton.
      */
-    private class JoystickButton implements Button {
+    private class JoystickButton implements HIDButton {
         
         /** The m_channel. */
         private final int m_channel;
@@ -210,7 +210,23 @@ public class Joystick extends GenericHID {
             return false;
         }
         
-        return ((0x1 << button) & m_joystickButtons[stick.ordinal()]) != 0;
+        return ((1 << button) & m_joystickButtons[stick.ordinal()]) != 0;
+    }
+    
+    /**
+     * Gets the stick pov.
+     *
+     * @param stick the stick
+     * @param pov the pov
+     * @return the stick pov
+     */
+    protected synchronized static int getStickPOV(JSID stick, int pov){
+        if(m_joystickButtonsCount[stick.ordinal()] <= pov){
+            complainJoystickMissing("Button '" + pov + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+            return 0;
+        }
+        
+        return m_joystickPOVs[stick.ordinal()][pov];
     }
     
     /**
@@ -242,7 +258,6 @@ public class Joystick extends GenericHID {
      */
     public Joystick(final JSID port){
         this(port, 6, 12);
-        UsageReporting.report(UsageReporting.kResourceType_Joystick, port.ordinal());
     }
     
     /**
@@ -266,6 +281,7 @@ public class Joystick extends GenericHID {
         for(int i = 0; i < numBtns; i++){
             m_btns[i] = new JoystickButton(i);
         }
+        UsageReporting.report(UsageReporting.kResourceType_Joystick, port.ordinal());
     }
 
     /**
@@ -273,7 +289,7 @@ public class Joystick extends GenericHID {
      * @return a {@link JoystickAxis} instance of the requested Axis
      * @see JoystickAxis
      */
-    public Axis getAxis(int axis) {
+    public HIDAxis getAxis(int axis) {
         checkAxis(axis);
         return m_axes[axis];
     }
@@ -283,9 +299,16 @@ public class Joystick extends GenericHID {
      * @return a {@link JoystickButton} instance of the requested Button
      * @see JoystickButton
      */
-    public Button getButton(int btn) {
+    public HIDButton getButton(int btn) {
         checkButton(btn);
         return m_btns[btn];
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getPOV(int pov){
+        return getStickPOV(m_port, pov);
     }
     
     /**
