@@ -62,7 +62,7 @@ public final class DriverStation {
         NetworkCommunications.setNewDataSem(m_packetDataAvailableSem);
         
         //WOO lookie here. Lambda functions ^_^
-        m_thread = new Thread(() -> commTask(), "FRCDriverStation");
+        m_thread = new Thread(() -> commTask(), "DriverStation");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
         
     }
