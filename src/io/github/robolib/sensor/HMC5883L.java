@@ -16,6 +16,10 @@
 package io.github.robolib.sensor;
 
 import io.github.robolib.iface.I2C;
+import io.github.robolib.livewindow.LiveWindowSendable;
+import io.github.robolib.util.Timer;
+
+import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * Honeywell HMC5883L I2C 3-axis compass class
@@ -41,7 +45,7 @@ import io.github.robolib.iface.I2C;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class HMC5883L extends I2C {
+public class HMC5883L extends I2C implements LiveWindowSendable {
     
     /** Device I2C Address */
     public static final byte HMC_I2C_ADDR = (byte)0x1e;
@@ -50,11 +54,6 @@ public class HMC5883L extends I2C {
     public static final byte HMC_SCALE = (byte)0.92;
 
     /** Configuration Register A */
-
-    /** Measurement Mode bits start */
-    public static final byte HMC_MMODE_BIT = (byte)1;
-    /** Measurement Mode bits length */
-    public static final byte HMC_MMODE_LEN = (byte)2;
     
     /**
      * Measurement Configuration Bits.
@@ -91,18 +90,13 @@ public class HMC5883L extends I2C {
             value = (byte)val;
         }
     }
-
-    /** Rate bits start */
-    public static final byte HMC_RATE_BIT = (byte)4;
-    /** Rate bits length */
-    public static final byte HMC_RATE_LEN = (byte)3;
     
     /**
      * Data Output Rate Bits
      * These bits set the rate at which data is written to
      * all three data output registers.
      */
-    public static enum Rate {
+    public static enum OutputRate {
         /** 0.75Hz */
         k075Hz(0x00),
         /** 1.50Hz */
@@ -122,16 +116,11 @@ public class HMC5883L extends I2C {
         
         public byte value;
         
-        Rate(int val){
+        OutputRate(int val){
             value = (byte)val;
         }
     }
 
-    /** Averaging bits start */
-    public static final byte HMC_AVRG_BIT = (byte)6;
-    /** Averaging bits length */
-    public static final byte HMC_AVRG_LEN = (byte)2;
-    
     /**
      * Select number of samples averaged (1 to 8) per measurement output.
      * 00 = 1(Default); 01 = 2; 10 = 4; 11 = 8
@@ -154,11 +143,6 @@ public class HMC5883L extends I2C {
     }
 
     /** Configuration Register B */
-
-    /** Gain bits start */
-    public static final byte HMC_GAIN_BIT = (byte)7;
-    /** Gain bits length */
-    public static final byte HMC_GAIN_LEN = (byte)3;
     
     /**
      * Gain Configuration Bits
@@ -167,21 +151,21 @@ public class HMC5883L extends I2C {
      */
     public static enum Gain {
         /** +/- 0.88 Ga / 1370 Gain LSb/Gauss */
-        GAIN_1370(0x00),
+        k1370(0x00),
         /** +/- 1.30 Ga / 1090 Gain LSb/Gauss (Default) */
-        GAIN_1090(0x20),
+        k1090(0x20),
         /** +/- 1.90 Ga / 820 Gain LSb/Gauss */
-        GAIN_820(0x40),
+        k820(0x40),
         /** +/- 2.50 Ga / 660 Gain LSb/Gauss */
-        GAIN_660(0x60),
+        k660(0x60),
         /** +/- 4.00 Ga / 440 Gain LSb/Gauss */
-        GAIN_440(0x80),
+        k440(0x80),
         /** +/- 4.70 Ga / 390 Gain LSb/Gauss */
-        GAIN_390(0xa0),
+        k390(0xa0),
         /** +/- 5.60 Ga / 330 Gain LSb/Gauss */
-        GAIN_330(0xc0),
+        k330(0xc0),
         /** +/- 8.10 Ga / 230 Gain LSb/Gauss */
-        GAIN_230(0xe0);
+        k230(0xe0);
         
         public byte value;
         
@@ -191,11 +175,6 @@ public class HMC5883L extends I2C {
     }
 
     /** Mode Register */
-
-    /** Mode bits start */
-    public static final byte HMC_MODE_BIT = (byte)1;
-    /** Mode bits length */
-    public static final byte HMC_MODE_LEN = (byte)2;
     
     /**
      * Mode Select Bits.
@@ -245,14 +224,12 @@ public class HMC5883L extends I2C {
      */
 
     /** Data output register lock */
-    public static final byte HMC_LOCK_BIT = (byte)2;
+    public static final byte HMC_LOCK_BIT = (byte)1;
     /** Ready Bit */
-    public static final byte HMC_RDY_BIT = (byte)1;
+    public static final byte HMC_READY_BIT = (byte)0;
 
 
-    /**
-     * Read Registers
-     */
+    /** Registers */
      
     /** Configuration Register A */
     public static final byte HMC_REG_CFG_A = (byte)0x00;
@@ -272,7 +249,6 @@ public class HMC5883L extends I2C {
     public static final byte HMC_REG_Y_MSB = (byte)0x07;
     /** Data Output Y LSB Register */
     public static final byte HMC_REG_Y_LSB = (byte)0x08;
-    
     /** Status Register */
     public static final byte HMC_REG_STATUS = (byte)0x09;
     /** Identification Register A */
@@ -281,59 +257,379 @@ public class HMC5883L extends I2C {
     public static final byte HMC_REG_IDB = (byte)0x0B;
     /** Identification Register C */
     public static final byte HMC_REG_IDC = (byte)0x0C;
-
-    private MeasurementMode m_mMode;
-    private Rate m_rate;
-    private Averaging m_averaging;
-    private Gain m_gain;
-    private OperatingMode m_oMode;
     
+    public static enum Axis{
+        X(0),
+        Z(2),
+        Y(4);
+        public byte value;
+        Axis(int val){
+            value = (byte)val;
+        }
+    }
+
+    private MeasurementMode m_mMode = MeasurementMode.kNORMAL;
+    private OutputRate m_rate = OutputRate.k15Hz;
+    private Averaging m_averaging = Averaging.k1SAMPLES;
+    private Gain m_gain = Gain.k1090;
+    private OperatingMode m_oMode = OperatingMode.kCONTINUOUS;
+    
+    private boolean m_highSpeed = false;
+    
+    private ITable m_table;
+    
+    /**
+     * Create a new HMC5883L compass on I2C Port.
+     * @param port
+     */
     public HMC5883L(Port port){
         super(port, HMC_I2C_ADDR);
-        
-        
+        writeRegisterA();
+        writeRegisterB();
+        writeModeRegister();
+        Timer.delay(0.7);
     }
     
+    /**
+     * Get the heading around the X axis in radians.
+     * This is not the direction the X axis is pointing,
+     * but the value of rotation around the X axis.
+     * @return the heading around the X axis.
+     */
+    public double getHeadingXRad(){
+        double mags[] = getAllMagnitudes();
+        double head = Math.atan2(mags[1], mags[2]);
+        return head < 0.0 ? head + Math.PI * 2 : head;
+    }
+    
+    /**
+     * Get the heading around the X axis in degrees.
+     * This is not the direction the X axis is pointing,
+     * but the value of rotation around the X axis.
+     * @return the heading around the X axis.
+     */
+    public double getHeadingXDeg(){
+        return Math.toDegrees(getHeadingXRad());
+    }
+    
+    /**
+     * Get magnitude for the X Axis.
+     * @return the X axis magnitude value.
+     */
+    public double getXMagnitude(){
+        return getMagnitude(Axis.X);
+    }
+    
+    /**
+     * Get the heading around the Y axis in radians.
+     * This is not the direction the Y axis is pointing,
+     * but the value of rotation around the Y axis.
+     * @return the heading around the Y axis.
+     */
+    public double getHeadingYRad(){
+        double mags[] = getAllMagnitudes();
+        double head = Math.atan2(mags[0], mags[2]);
+        return head < 0.0 ? head + Math.PI * 2 : head;
+    }
+    
+    /**
+     * Get the heading around the Y axis in degrees.
+     * This is not the direction the Y axis is pointing,
+     * but the value of rotation around the Y axis.
+     * @return the heading around the Y axis.
+     */
+    public double getHeadingYDeg(){
+        return Math.toDegrees(getHeadingYRad());
+    }
+    
+    /**
+     * Get magnitude for the Y Axis.
+     * @return the Y axis magnitude value.
+     */
+    public double getYMagnitude(){
+        return getMagnitude(Axis.Y);
+    }
+    
+    /**
+     * Get the heading around the Z axis in radians.
+     * This is not the direction the Z axis is pointing,
+     * but the value of rotation around the Z axis.
+     * @return the heading around the Z axis.
+     */
+    public double getHeadingZRad(){
+        double mags[] = getAllMagnitudes();
+        double head = Math.atan2(mags[1], mags[0]);
+        return head < 0.0 ? head + Math.PI * 2 : head;
+    }
+    
+    /**
+     * Get the heading around the Z axis in degrees.
+     * This is not the direction the Z axis is pointing,
+     * but the value of rotation around the Z axis.
+     * @return the heading around the Z axis.
+     */
+    public double getHeadingZDeg(){
+        return Math.toDegrees(getHeadingZRad());
+    }
+    
+    /**
+     * Get magnitude for the Z Axis.
+     * @return the Z axis magnitude value.
+     */
+    public double getZMagnitude(){
+        return getMagnitude(Axis.Z);
+    }
+    
+    /**
+     * Get magnitude for givien {@link Axis}
+     * @see Axis
+     * @param axis the {@link Axis} to get
+     * @return the given axis magnitude value.
+     */
+    public double getMagnitude(Axis axis){
+        byte[] regs = new byte[6];
+        read(HMC_REG_X_MSB, 6, regs);
+        byte addr = axis.value;
+        return magnitudeFromBytes(regs[addr], regs[addr+1]);
+    }
+    
+    /**
+     * Get all magnitude values. Headings are in the order of X, Y, Z.
+     * @return all magnitude values.
+     */
+    public double[] getAllMagnitudes(){
+        byte[] regs = new byte[6];
+        read(HMC_REG_X_MSB, 6, regs);
+        return new double[]{
+                magnitudeFromBytes(regs[0], regs[1]),
+                magnitudeFromBytes(regs[4], regs[5]),
+                magnitudeFromBytes(regs[2], regs[3])
+                };
+    }
+    
+    /**
+     * Data output register lock bit status.
+     * <p>This bit is set when: <ol><li>some but not all for of the six
+     * data output registers have been read</li><li>Mode register has
+     * been read</li></ol></p><p>When this bit is set, the six data output
+     * registers are locked and any new data will not be placed in these
+     * register until one of these conditions are met: <ol><li>all six
+     * bytes have been read</li><li>the mode register is changed</li>
+     * <li>the measurement configuration (CRA) is changed</li><li>power
+     * is reset.</li></ol></p>
+     * @return the status of the lock bit.
+     */
+    public boolean getLock(){
+        return readBit(HMC_REG_STATUS, HMC_LOCK_BIT);
+    }
+    
+    /**
+     * Get the status of the Ready Bit.
+     * Set when data is written to all six data registers.
+     * Cleared when device initiates a write to the data output
+     * registers and after one or more of the data output registers
+     * are written to. When RDY bit is clear it shall remain cleared
+     * for a 250 μs. DRDY pin can be used as an alternative to
+     * the status register for monitoring the device for
+     * measurement data.
+     * @return the status of the ready bit
+     */
+    public boolean getReady(){
+        return readBit(HMC_REG_STATUS, HMC_READY_BIT);
+    }
+    
+    /**
+     * Turn two bytes into a magnitude
+     * @param first the MSB byte
+     * @param second the LSB byte
+     * @return magnitude from bytes
+     */
+    private double magnitudeFromBytes(byte first, byte second){
+        return ((first << 8) | second);
+    }
+    
+    /**
+     * Write the A configuration register
+     */
+    private void writeRegisterA(){
+        byte val = 0;
+        val |= m_mMode.value;
+        val |= m_rate.value;
+        val |= m_averaging.value;
+        write(HMC_REG_CFG_A, val);
+    }
+    
+    /**
+     * Write the B configuration register
+     */
+    private void writeRegisterB(){
+        byte val = 0;
+        val |= m_gain.value;
+        write(HMC_REG_CFG_B, val);
+    }
+    
+    /**
+     * Write the Mode configuration register
+     */
+    private void writeModeRegister(){
+        byte val = 0;
+        val |= (m_highSpeed ? 1 : 0) << 7;
+        val |= m_oMode.value;
+        write(HMC_REG_CFG_MODE, val);
+    }
+    
+    /**
+     * Set the {@link MeasurementMode} to use
+     * @see MeasurementMode
+     * @param mode the {@link MeasurementMode} to use
+     */
     public void setMeasurementMode(MeasurementMode mode){
         m_mMode = mode;
+        writeRegisterA();
     }
     
+    /**
+     * Get the {@link MeasurementMode} being used.
+     * @see MeasurementMode
+     * @return the {@link MeasurementMode} being used.
+     */
     public MeasurementMode getMeasurementMode(){
         return m_mMode;
     }
     
-    public void setOutputRate(Rate rate){
+    /**
+     * Set the {@link OutputRate} to used.
+     * @see OutputRate
+     * @param rate the {@link OutputRate} to used.
+     */
+    public void setOutputRate(OutputRate rate){
         m_rate = rate;
+        writeRegisterA();
     }
     
-    public Rate getOutputRate(){
+    /**
+     * Get the {@link OutputRate} being used.
+     * @see OutputRate
+     * @return the {@link OutputRate} being used.
+     */
+    public OutputRate getOutputRate(){
         return m_rate;
     }
     
+    /**
+     * Set the {@link Averaging} mode to use.
+     * @see Averaging
+     * @param avg the {@link Averaging} mode to use.
+     */
     public void setSamplesPerAverage(Averaging avg){
         m_averaging = avg;
+        writeRegisterA();
     }
     
+    /**
+     * Get the {@link Averaging} mode being used.
+     * @see Averaging
+     * @return the {@link Averaging} mode being used.
+     */
     public Averaging getSamplesPerAverage(){
         return m_averaging;
     }
     
+    /**
+     * Set the {@link Gain} to use for measurement.
+     * @see Gain
+     * @param gain the {@link Gain} to use.
+     */
     public void setGain(Gain gain){
         m_gain = gain;
+        writeRegisterB();
     }
     
+    /**
+     * Get the {@link Gain} used for measurements.
+     * @see Gain
+     * @return the {@link Gain} used for measurements.
+     */
     public Gain getGain(){
         return m_gain;
     }
     
+    /**
+     * Set the {@link OperatingMode} to run in.
+     * @see OperatingMode
+     * @param mode the {@link OperatingMode} to run in.
+     */
     public void setOperatingMode(OperatingMode mode){
         m_oMode = mode;
+        writeModeRegister();
     }
     
+    /**
+     * Get the {@link OperatingMode} being run.
+     * @see OperatingMode
+     * @return the {@link OperatingMode} being run.
+     */
     public OperatingMode getOperatingMode(){
         return m_oMode;
     }
     
+    /**
+     * Set whether or not to use High Speed I2C mode (3400kHz)
+     * @param highSpeed use high speed or not
+     */
+    public void setUsingHighSpeed(boolean highSpeed){
+        m_highSpeed = highSpeed;
+        writeModeRegister();
+    }
     
-    
+    /**
+     * Get whether or not we are using High Speed I2C mode (3400kHz)
+     * @return using high speed or not
+     */
+    public boolean getUsingHighSpeed(){
+        return m_highSpeed;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initTable(ITable subtable) {
+        m_table = subtable;
+        updateTable();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        return m_table;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateTable() {
+        if(m_table != null){
+            m_table.putNumber("X Heading", getHeadingXDeg());
+            m_table.putNumber("Y Heading", getHeadingYDeg());
+            m_table.putNumber("Z Heading", getHeadingZDeg());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getSmartDashboardType() {
+        return "3-Axis Compass";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void startLiveWindowMode() {}
+
+    /**
+     * {@inheritDoc}
+     */
+    public void stopLiveWindowMode() {}
 }

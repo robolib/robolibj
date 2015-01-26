@@ -29,6 +29,9 @@ public abstract class CounterBase {
     
     protected int m_index;
     
+    /**
+     * @return the Counter's FPGA index
+     */
     public int getFPGAIndex(){
         return m_index;
     }

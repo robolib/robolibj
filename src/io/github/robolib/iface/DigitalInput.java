@@ -19,6 +19,7 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import java.nio.IntBuffer;
 
+import io.github.robolib.control.Trigger;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
 
@@ -26,7 +27,7 @@ import io.github.robolib.hal.HALUtil;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DigitalInput extends DigitalIO {
+public class DigitalInput extends DigitalIO implements Trigger {
     
     public DigitalInput(DigitalChannel channel){
         super(channel, Direction.IN);

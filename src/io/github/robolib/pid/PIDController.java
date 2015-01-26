@@ -180,15 +180,15 @@ public class PIDController {
      * @param i Integral coefficient
      * @param d Differential coefficient
      */
-	public synchronized void setPID(double P, double I, double D){
-	    m_P = P;
-	    m_I = I;
-	    m_D = D;
+	public synchronized void setPID(double p, double i, double d){
+	    m_P = p;
+	    m_I = i;
+	    m_D = d;
 	    
 	    if(m_table != null){
-	        m_table.putNumber("P", P);
-	        m_table.putNumber("I", I);
-	        m_table.putNumber("D", D);
+	        m_table.putNumber("P", p);
+	        m_table.putNumber("I", i);
+	        m_table.putNumber("D", d);
 	    }
 	}
 	
@@ -200,17 +200,17 @@ public class PIDController {
 	    * @param d Differential coefficient
 	    * @param f Feed forward coefficient
 	    */
-	public synchronized void setPID(double P, double I, double D, double F){
-        m_P = P;
-        m_I = I;
-        m_D = D;
-        m_F = F;
+	public synchronized void setPID(double p, double i, double d, double f){
+        m_P = p;
+        m_I = i;
+        m_D = d;
+        m_F = f;
         
         if(m_table != null){
-            m_table.putNumber("P", P);
-            m_table.putNumber("I", I);
-            m_table.putNumber("D", D);
-            m_table.putNumber("F", F);
+            m_table.putNumber("P", p);
+            m_table.putNumber("I", i);
+            m_table.putNumber("D", d);
+            m_table.putNumber("F", f);
         }
     }
 	
@@ -267,8 +267,8 @@ public class PIDController {
 	/**
      * Sets the maximum and minimum values expected from the input and setpoint.
      *
-     * @param minimumInput the minimum value expected from the input
-     * @param maximumInput the maximum value expected from the input
+     * @param min the minimum value expected from the input
+     * @param max the maximum value expected from the input
      */
 	public synchronized void setInputRange(double min, double max){
 	    if(min > max) throw new IllegalArgumentException("Min cannot be larger than Max");
@@ -280,8 +280,8 @@ public class PIDController {
 	/**
      * Sets the minimum and maximum values to write.
      *
-     * @param minimumOutput the minimum percentage to write to the output
-     * @param maximumOutput the maximum percentage to write to the output
+     * @param min the minimum percentage to write to the output
+     * @param max the maximum percentage to write to the output
      */
 	public synchronized void setOutputRange(double min, double max){
 	    if(min > max) throw new IllegalArgumentException("Min cannot be larger than Max");
@@ -291,7 +291,7 @@ public class PIDController {
 	
 	/**
      * Set the setpoint for the PIDController
-     * @param setpoint the desired setpoint
+     * @param point the desired setpoint
      */
 	public synchronized void setSetpoint(double point){
 	    if (m_maxInput > m_minInput){
@@ -348,7 +348,7 @@ public class PIDController {
 	/**
      * Set the absolute error which is considered tolerable for use with
      * OnTarget.
-     * @param absvalue absolute error which is tolerable in the units of the input object
+     * @param absValue absolute error which is tolerable in the units of the input object
      */
 	public synchronized void setAbsoluteTolerance(final double absValue){
 		m_tolerance = () -> (Math.abs(getError()) < absValue);

@@ -21,29 +21,29 @@ import io.github.robolib.command.Command;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class Button extends Trigger {
+public interface ButtonTrigger extends Trigger {
     
-    public void runWhenPressed(final Command command){
+    public default void runWhenPressed(final Command command){
         runWhenActive(command);
     }
     
-    public void runWhileHeld(final Command command){
+    public default void runWhileHeld(final Command command){
         runWhileActive(command);
     }
     
-    public void runWhenReleased(final Command command){
+    public default void runWhenReleased(final Command command){
         runWhenInactive(command);
     }
     
-    public void runWhileReleased(final Command command){
+    public default void runWhileReleased(final Command command){
         runWhileInactive(command);
     }
     
-    public void togglenWhenPressed(final Command command){
+    public default void togglenWhenPressed(final Command command){
         toggleWhenActive(command);
     }
     
-    public void cancelWhenPressed(final Command command){
+    public default void cancelWhenPressed(final Command command){
         cancelWhenActive(command);
     }
 

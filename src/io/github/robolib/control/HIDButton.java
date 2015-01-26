@@ -20,7 +20,7 @@ package io.github.robolib.control;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface HIDButton {
+public interface HIDButton extends ButtonTrigger {
     
     /**
      * Get the Value of the Button.

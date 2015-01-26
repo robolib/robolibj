@@ -70,7 +70,7 @@
     <mkdir dir="${dist.dir.name}"/>
     <mkdir dir="${dist.javadoc.dir}"/>
     <echo>[${project.name}-javadoc] ${src.dir} -> ${dist.javadoc.dir}</echo>
-    <javadoc additionalparam=""
+    <javadoc additionalparam="-Xdoclint:none"
       author="true"
       charset="UTF-8"
       destdir="${dist.javadoc.dir}"

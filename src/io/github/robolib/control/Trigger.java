@@ -22,7 +22,7 @@ import io.github.robolib.command.Scheduler;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class Trigger {
+public interface Trigger {
     
     public abstract class ButtonScheduler{
         
@@ -32,13 +32,11 @@ public abstract class Trigger {
         public abstract void execute();
     }
 
-    public abstract boolean get();
+    public boolean get();
     
-    public void runWhenActive(final Command command){
+    public default void runWhenActive(final Command command){
         new ButtonScheduler(){
-            
             boolean pressed = false;
-
             public void execute() {
                 if(get()){
                     if(!pressed){
@@ -52,7 +50,7 @@ public abstract class Trigger {
         };
     }
     
-    public void runWhileActive(final Command command){
+    public default void runWhileActive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
             public void execute() {
@@ -67,7 +65,7 @@ public abstract class Trigger {
         };
     }
     
-    public void runWhenInactive(final Command command){
+    public default void runWhenInactive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
             public void execute() {
@@ -81,7 +79,7 @@ public abstract class Trigger {
         };
     }
     
-    public void runWhileInactive(final Command command){
+    public default void runWhileInactive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
             public void execute() {
@@ -98,7 +96,7 @@ public abstract class Trigger {
         };
     }
     
-    public void toggleWhenActive(final Command command){
+    public default void toggleWhenActive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
             public void execute() {
@@ -116,7 +114,7 @@ public abstract class Trigger {
         };
     }
     
-    public void cancelWhenActive(final Command command){
+    public default void cancelWhenActive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
             public void execute() {
