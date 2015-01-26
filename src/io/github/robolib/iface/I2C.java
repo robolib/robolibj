@@ -171,10 +171,26 @@ public class I2C extends Interface {
         /*if(!MathUtils.inBounds(count, 1, 7))
             throw new IllegalArgumentException("Count must be between 1 and 7");*/
         
-        byte[] registerArray = new byte[1];
-        registerArray[0] = (byte)registerAddr;
+        byte[] registerArray = {(byte)registerAddr};
         
-        return transaction(registerArray, registerArray.length, buffer, count);
+        return transaction(registerArray, 1, buffer, count);
+    }
+    
+    public byte readSingleAddr(int registerAddr){
+        byte retVal[] = new byte[1];
+        
+        byte[] registerArray = {(byte)registerAddr};
+        
+        transaction(registerArray, 1, retVal, 1);
+        return retVal[0];
+        
+    }
+    
+    public boolean readBit(int registerAddr, int bitNumber){
+        byte[] retVal = new byte[1];
+        byte[] registerArray = {(byte)registerAddr};
+        transaction(registerArray, 1, retVal, 1);
+        return ((1 << bitNumber) & retVal[0]) != 0;
     }
     
     /**
@@ -221,9 +237,6 @@ public class I2C extends Interface {
      * Most devices will have a set of registers that contain a known value that
      * can be used to identify them. This allows an I2C device driver to easily
      * verify that the device contains the expected value.
-     *
-     * @pre The device must support and be configured to use register
-     *      auto-increment.
      *
      * @param registerAddr
      *            The base register to start reading from the device.

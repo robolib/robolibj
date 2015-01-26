@@ -68,7 +68,7 @@ public final class DriverStation {
     }
     
     /**
-     * {@inheritDoc}
+     * Task run by the Robot to get DS data.
      */
     private void commTask(){
         m_log.info("Communications thread started.");

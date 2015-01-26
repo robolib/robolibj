@@ -19,7 +19,7 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import java.nio.IntBuffer;
 
-import io.github.robolib.control.Button;
+import io.github.robolib.control.ButtonTrigger;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PowerJNI;
 
@@ -36,7 +36,7 @@ public class RoboRIO implements Sendable {
     
     private static RoboRIO m_instance;
     
-    private static Button m_userButton;
+    private static ButtonTrigger m_userButton;
     
     public static final RoboRIO getInstance(){
         return m_instance == null ? m_instance = new RoboRIO() : m_instance;
@@ -84,8 +84,8 @@ public class RoboRIO implements Sendable {
         return value;
     }
     
-    public static Button getUserButtonAsButton(){
-        return m_userButton == null ? m_userButton = new Button(){
+    public static ButtonTrigger getUserButtonAsButton(){
+        return m_userButton == null ? m_userButton = new ButtonTrigger(){
             public boolean get(){return getUserButton();}
             } : m_userButton;
     }
