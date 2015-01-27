@@ -75,14 +75,10 @@ public class I2C extends Interface {
      * This is a lower-level interface to the I2C hardware giving you more
      * control over each transaction.
      *
-     * @param dataToSend
-     *            Buffer of data to send as part of the transaction.
-     * @param sendSize
-     *            Number of bytes to send as part of the transaction.
-     * @param dataReceived
-     *            Buffer to read data into.
-     * @param receiveSize
-     *            Number of bytes to read from the device.
+     * @param dataToSend Buffer of data to send as part of the transaction.
+     * @param sendSize Number of bytes to send as part of the transaction.
+     * @param dataReceived Buffer to read data into.
+     * @param receiveSize Number of bytes to read from the device.
      * @return Transfer Aborted... false for success, true for aborted.
      */
     public synchronized boolean transaction(byte[] dataToSend, int sendSize, byte[] dataReceived, int receiveSize){
@@ -118,15 +114,13 @@ public class I2C extends Interface {
      * Write a single byte to a register on a device and wait until the
      * transaction is complete.
      *
-     * @param registerAddress
-     *            The address of the register on the device to be written.
-     * @param data
-     *            The byte to write to the register on the device.
+     * @param reg The address of the register on the device to be written.
+     * @param data The byte to write to the register on the device.
      * @return whether the write succeeded
      */
-    public synchronized boolean write(int registerAddress, int data){
+    public synchronized boolean write(int reg, int data){
         byte[] buffer = new byte[2];
-        buffer[0] = (byte) registerAddress;
+        buffer[0] = (byte) reg;
         buffer[1] = (byte) data;
 
         ByteBuffer dataToSendBuffer = ByteBuffer.allocateDirect(2);
@@ -141,8 +135,7 @@ public class I2C extends Interface {
      * Write multiple bytes to a register on a device and wait until the
      * transaction is complete.
      *
-     * @param data
-     *            The data to write to the device.
+     * @param data The data to write to the device.
      * @return whether the write sccceeded
      */
     public synchronized boolean writeBulk(byte[] data){
@@ -152,43 +145,168 @@ public class I2C extends Interface {
     }
     
     /**
+     * write a single bit in an 8-bit device register.
+     *
+     * @param reg Register regAddr to write to
+     * @param bit Bit position to write (0-7)
+     * @param value New bit value to write
+     * @return Status of operation (true = success)
+     */
+    public synchronized boolean writeBit(int reg, int bit, byte value){
+        return writeBit(reg, bit, value != 0);
+    }
+
+    /**
+     * write a single bit in an 8-bit device register.
+     *
+     * @param reg Register regAddr to write to
+     * @param bit Bit position to write (0-7)
+     * @param value New bit value to write
+     * @return Status of operation (true = success)
+     */
+    public synchronized boolean writeBit(int reg, int bit, boolean value){
+        byte[] b = new byte[1];
+        readByte(reg, b);
+        b[0] = (byte) (value ? (b[0] | (1 << bit)) : (b[0] & ~(1 << bit)));
+        return writeByte(reg, b[0]);
+    }
+
+    /**
+     * Write multiple bits in an 8-bit device register.
+     *
+     * @param reg Register regAddr to write to
+     * @param bitStart First bit position to write (0-7)
+     * @param length Number of bits to write (not more than 8)
+     * @param data Right-aligned value to write
+     * @return Status of operation (true = success)
+     */
+    public synchronized boolean writeBits(int reg, int bitStart, int length, byte data){
+        byte[] b = new byte[1];
+        if(readByte(reg, b)){
+            byte mask = (byte) (((1 << length) - 1) << (bitStart - length + 1));
+            data <<= (bitStart - length + 1);
+            data &= mask;
+            b[0] &= ~(mask);
+            b[0] |= data;
+            return writeByte(reg, b[0]);
+        }
+        return false;
+    }
+
+    /**
+     * Write single byte to an 8-bit device register.
+     *
+     * @param reg Register address to write to
+     * @param data New byte value to write
+     * @return Status of operation (true = success)
+     */
+    public synchronized boolean writeByte(int reg, byte data){
+
+        byte[] buffer = new byte[2];
+        buffer[0] = (byte) reg;
+        buffer[1] = (byte) data;
+
+        ByteBuffer sendBuffer = ByteBuffer.allocateDirect(2);
+        sendBuffer.put(buffer);
+
+        return I2CJNI.i2CWrite(m_port, m_address, sendBuffer, (byte)2) <= 0;
+    }
+
+    /**
+     * Read a single bit from an 8-bit device register.
+     *
+     * @param reg Register regAddr to read from
+     * @param bit Bit position to read (0-7)
+     * @param data Container for single bit value
+     * @return Status of read operation (true = success)
+     */
+    public synchronized boolean readBit(int reg, int bit, byte[] data){
+        byte[] b = new byte[1];
+        boolean a = readByte(reg, b);
+        data[0] = (byte) (b[0] & (1 << bit));
+        return a; 
+    }
+
+    /**
+     * Read multiple bits from an 8-bit device register.
+     *
+     * @param reg Register regAddr to read from
+     * @param bitStart First bit position to read (0-7)
+     * @param length Number of bits to read (not more than 8)
+     * @param data Container for right-aligned value (i.e. '101' read from any bitStart position will equal 0x05)
+     * @return Status of read operation (true = success)
+     */
+    public synchronized boolean readBits(int reg, int bitStart, int length, byte[] data){
+        byte[] b = new byte[1];
+        boolean a;
+        if(a = readByte(reg, b)){
+            byte mask = (byte) (((1 << length) - 1) << (bitStart - length + 1));
+            b[0] &= mask;
+            b[0] >>= (byte) (bitStart - length + 1);
+            data[0] = b[0];
+        }
+        return a;
+    }
+    
+    /**
+     * Read single byte from an 8-bit device register.
+     *
+     * @param reg Register regAddr to read from
+     * @param data Container for byte value read from device
+     * @return Status of read operation (true = success)
+     */
+    public synchronized boolean readByte(int reg, byte[] data){
+        return readBytes(reg, 1, data);
+    }
+
+    /**
+     * Read multiple bytes from an 8-bit device register.
+     *
+     * @param reg First register regAddr to read from
+     * @param length Number of bytes to read
+     * @param data Buffer to store read data in
+     * @return Status of read operation (true = success)
+     */
+    public synchronized boolean readBytes(int reg, int length, byte[] data){
+        byte[] regArray = {(byte)reg};
+        return transaction(regArray, 1, data, length);
+    }
+
+    /**
      * Execute a read transaction with the device.
      *
      * Read bytes from a device. Most I2C devices will auto-increment the
      * register pointer internally allowing you to read consecutive
      * registers on a device in a single transaction.
      *
-     * @param registerAddr
-     *            The register to read first in the transaction.
-     * @param count
-     *            The number of bytes to read in the transaction.
-     * @param buffer
-     *            A pointer to the array of bytes to store the data read from
-     *            the device.
+     * @param reg The register to read first in the transaction.
+     * @param count The number of bytes to read in the transaction.
+     * @param buffer A pointer to the array of bytes to store the data read
+     * from the device.
      * @return Transfer Aborted... false for success, true for aborted.
      */
-    public boolean read(int registerAddr, int count, byte[] buffer){
+    public boolean read(int reg, int count, byte[] buffer){
         /*if(!MathUtils.inBounds(count, 1, 7))
             throw new IllegalArgumentException("Count must be between 1 and 7");*/
         
-        byte[] registerArray = {(byte)registerAddr};
+        byte[] registerArray = {(byte)reg};
         
         return transaction(registerArray, 1, buffer, count);
     }
     
-    public byte readSingleAddr(int registerAddr){
+    public byte readSingleAddr(int reg){
         byte retVal[] = new byte[1];
         
-        byte[] registerArray = {(byte)registerAddr};
+        byte[] registerArray = {(byte)reg};
         
         transaction(registerArray, 1, retVal, 1);
         return retVal[0];
         
     }
     
-    public boolean readBit(int registerAddr, int bitNumber){
+    public boolean readBit(int reg, int bitNumber){
         byte[] retVal = new byte[1];
-        byte[] registerArray = {(byte)registerAddr};
+        byte[] registerArray = {(byte)reg};
         transaction(registerArray, 1, retVal, 1);
         return ((1 << bitNumber) & retVal[0]) != 0;
     }
@@ -199,11 +317,9 @@ public class I2C extends Interface {
      * Read 1 to 7 bytes from a device. This method does not write any data to prompt
      * the device.
      *
-     * @param buffer
-     *            A pointer to the array of bytes to store the data read from
-     *            the device.
-     * @param count
-     *            The number of bytes to read in the transaction.
+     * @param buffer A pointer to the array of bytes to store the data read from
+     * the device.
+     * @param count The number of bytes to read in the transaction.
      * @return Transfer Aborted... false for success, true for aborted.
      */
     public boolean readOnly(byte[] buffer, int count){
@@ -222,12 +338,10 @@ public class I2C extends Interface {
      *
      * This is not currently implemented!
      *
-     * @param registerAddr
-     *            The register to write on all devices on the bus.
-     * @param data
-     *            The value to write to the devices.
+     * @param reg The register to write on all devices on the bus.
+     * @param data The value to write to the devices.
      */
-    public void broadcast(int registerAddr, int data){
+    public void broadcast(int reg, int data){
         
     }
     
@@ -238,18 +352,15 @@ public class I2C extends Interface {
      * can be used to identify them. This allows an I2C device driver to easily
      * verify that the device contains the expected value.
      *
-     * @param registerAddr
-     *            The base register to start reading from the device.
-     * @param count
-     *            The size of the field to be verified.
-     * @param expected
-     *            A buffer containing the values expected from the device.
+     * @param reg The base register to start reading from the device.
+     * @param count The size of the field to be verified.
+     * @param expected A buffer containing the values expected from the device.
      * @return true if the sensor was verified to be connected
      */
-    public boolean verifySensor(int registerAddr, int count, byte[] expected){
+    public boolean verifySensor(int reg, int count, byte[] expected){
         byte[] devData = new byte[4];
         
-        for(int i = 0, currentAddress = registerAddr; i < count; i += 4, currentAddress += 4){
+        for(int i = 0, currentAddress = reg; i < count; i += 4, currentAddress += 4){
             int toRead = count - i < 4 ? count - i : 4;
             
             if(read(currentAddress, toRead, devData))
