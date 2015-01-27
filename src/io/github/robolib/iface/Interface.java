@@ -120,7 +120,7 @@ public abstract class Interface {
      */
     protected final void allocateMXPPin(int pin){
         if(pin > 0){
-            if(m_mxpMap.containsKey(pin) || !m_mxpMap.get(pin).equals(m_ifaceType)){
+            if(m_mxpMap.containsKey(pin)){
                 throw new ResourceAllocationException("MXP pin '" + pin + "' already allocated as '" + m_mxpMap.get(pin).name() + "'.");
             }else{
                 m_mxpMap.put(pin, m_ifaceType);

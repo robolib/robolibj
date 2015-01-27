@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.I2CJNI;
 import io.github.robolib.util.MathUtils;
 
@@ -62,6 +63,7 @@ public class I2C extends Interface {
         if(!m_portInitialized[port.ordinal()]){
             IntBuffer status = getLE4IntBuffer();
             I2CJNI.i2CInitialize(m_port, status);
+            HALUtil.checkStatus(status);
             m_portInitialized[port.ordinal()] = true;
         }
         
@@ -89,7 +91,7 @@ public class I2C extends Interface {
         
         aborted = I2CJNI.i2CTransaction(m_port, m_address, dataSendBuffer, (byte)sendSize, dataReceiveBuffer, (byte)receiveSize) != 0;
         
-        if(receiveSize > 0 && dataReceiveBuffer != null)
+        if(receiveSize > 0 && dataReceived != null)
             dataReceiveBuffer.get(dataReceived);
         
         return aborted;
@@ -105,7 +107,7 @@ public class I2C extends Interface {
      * @return Transfer Aborted... false for success, true for aborted.
      */
     public boolean checkAddress(){
-        return transaction(null, 0, null, 0); 
+        return transaction(new byte[1], 1, null, 0); 
     }
     
     /**
