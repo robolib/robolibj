@@ -107,7 +107,7 @@ public class I2C extends Interface {
      * @return Transfer Aborted... false for success, true for aborted.
      */
     public boolean checkAddress(){
-        return transaction(new byte[1], 1, null, 0); 
+        return transaction(null, 0, null, 0); 
     }
     
     /**
@@ -203,15 +203,50 @@ public class I2C extends Interface {
      * @return Status of operation (true = success)
      */
     public synchronized boolean writeByte(int reg, byte data){
+        return write(reg, data);
+    }
 
-        byte[] buffer = new byte[2];
-        buffer[0] = (byte) reg;
-        buffer[1] = (byte) data;
+    /**
+     * Write single word to a 16-bit device register.
+     * 
+     * @param reg Register address to write to
+     * @param data New word value to write
+     * @return Status of operation (true = success)
+     */
+    public synchronized boolean writeWord(int reg, short data) {
+        return writeWords(reg, 1, new short[]{data});
+    }
 
-        ByteBuffer sendBuffer = ByteBuffer.allocateDirect(2);
-        sendBuffer.put(buffer);
+    /**
+     * Write multiple bytes to an 8-bit device register.
+     * 
+     * @param reg First register address to write to
+     * @param length Number of bytes to write
+     * @param data Buffer to copy new data from
+     * @return Status of operation (true = success)
+     */
+    public synchronized boolean writeBytes(int reg, byte[] data, int length){
+        ByteBuffer b = ByteBuffer.allocateDirect(data.length + 1);
+        b.put((byte)reg);
+        b.put(data);
+        return I2CJNI.i2CWrite(m_port, m_address, b, (byte)data.length) < 0;
+    }
 
-        return I2CJNI.i2CWrite(m_port, m_address, sendBuffer, (byte)2) <= 0;
+    /**
+     * Write multiple words to a 16-bit device register.
+     * 
+     * @param reg First register address to write to
+     * @param length Number of words to write
+     * @param data Buffer to copy new data from
+     * @return Status of operation (true = success)
+     */
+    public synchronized boolean writeWords(int reg, int length, short[] data){
+        byte[] out = new byte[length * 2];
+        for(int i = 0; i < length; i++){
+            out[length * 2] = (byte) (data[i] >> 8);
+            out[length * 2 + 1] = (byte)data[i];
+        }
+        return writeBytes(reg, out, length * 2);
     }
 
     /**
@@ -261,6 +296,17 @@ public class I2C extends Interface {
         return readBytes(reg, 1, data);
     }
 
+    /** Read single word from a 16-bit device register.
+     * 
+     * @param reg Register regAddr to read from
+     * @param data Container for word value read from device
+     * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
+     * @return Status of read operation (true = success)
+     */
+    public synchronized boolean readWord(byte reg, short[] data) {
+        return readWords(reg, 1, data);
+    }
+
     /**
      * Read multiple bytes from an 8-bit device register.
      *
@@ -272,6 +318,35 @@ public class I2C extends Interface {
     public synchronized boolean readBytes(int reg, int length, byte[] data){
         byte[] regArray = {(byte)reg};
         return transaction(regArray, 1, data, length);
+    }
+
+    /**
+     * Read multiple words from a 16-bit device register.
+     * 
+     * @param reg First register regAddr to read from
+     * @param length Number of words to read
+     * @param data Buffer to store read data in
+     * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
+     * @return Number of words read (-1 indicates failure)
+     */
+    public synchronized boolean readWords(byte reg, int length, short[] data) {
+
+        boolean count = false;
+
+        // Fastwire library
+        // no loop required for fastwire
+        byte[] intermediate = new byte[length * 2];
+        boolean status = read(reg, length * 2, intermediate);
+        if (!status) {
+            count = false;
+            for (int i = 0; i < length; i++) {
+                data[i] = (short) ((intermediate[2*i] << 8) | intermediate[2*i + 1]);
+            }
+        } else {
+            count = true; // error
+        }
+        
+        return count;
     }
 
     /**
