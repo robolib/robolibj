@@ -16,6 +16,7 @@
 package io.github.robolib.sensor;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import io.github.robolib.iface.I2C;
 import io.github.robolib.iface.Serial;
@@ -3345,7 +3346,7 @@ public class MPU6050 extends I2C {
         return (short)((buffer[0] << 8) | buffer[1]);
     }
     public void setXAccelOffset(short offset) {
-        //writeWord(MPU6050_RA_XA_OFFS_H, offset);
+        writeWord(MPU6050_RA_XA_OFFS_H, offset);
     }
 
     // YA_OFFS_* register
@@ -3355,7 +3356,7 @@ public class MPU6050 extends I2C {
         return (short)((buffer[0] << 8) | buffer[1]);
     }
     public void setYAccelOffset(short offset) {
-//        writeWord(MPU6050_RA_YA_OFFS_H, offset);
+        writeWord(MPU6050_RA_YA_OFFS_H, offset);
     }
 
     // ZA_OFFS_* register
@@ -3365,7 +3366,7 @@ public class MPU6050 extends I2C {
         return (short)((buffer[0] << 8) | buffer[1]);
     }
     public void setZAccelOffset(short offset) {
-//        writeWord(MPU6050_RA_ZA_OFFS_H, offset);
+        writeWord(MPU6050_RA_ZA_OFFS_H, offset);
     }
 
     // XG_OFFS_USR* registers
@@ -3375,7 +3376,7 @@ public class MPU6050 extends I2C {
         return (short)((buffer[0] << 8) | buffer[1]);
     }
     public void setXGyroOffset(short offset) {
-//        writeWord(MPU6050_RA_XG_OFFS_USRH, offset);
+        writeWord(MPU6050_RA_XG_OFFS_USRH, offset);
     }
 
     // YG_OFFS_USR* register
@@ -3385,7 +3386,7 @@ public class MPU6050 extends I2C {
         return (short)((buffer[0] << 8) | buffer[1]);
     }
     public void setYGyroOffset(short offset) {
-//        writeWord(MPU6050_RA_YG_OFFS_USRH, offset);
+        writeWord(MPU6050_RA_YG_OFFS_USRH, offset);
     }
 
     // ZG_OFFS_USR* register
@@ -3395,7 +3396,7 @@ public class MPU6050 extends I2C {
         return (short)((buffer[0] << 8) | buffer[1]);
     }
     public void setZGyroOffset(short offset) {
-//        writeWord(MPU6050_RA_ZG_OFFS_USRH, offset);
+        writeWord(MPU6050_RA_ZG_OFFS_USRH, offset);
     }
 
     // INT_ENABLE register (DMP functions)
@@ -3490,47 +3491,17 @@ public class MPU6050 extends I2C {
     public void writeMemoryByte(byte data) {
         writeByte(MPU6050_RA_MEM_R_W, data);
     }
-    /**public void readMemoryBlock(byte data, short dataSize, byte bank, byte address) {
-        setMemoryBank(bank);
+    
+    /*public synchronized boolean writeMemoryBlock(byte[] data, short dataSize, byte bank, byte address, boolean verify, boolean useProgMem) {
+        setMemoryBank(bank, false, false);
         setMemoryStartAddress(address);
         byte chunkSize;
-        for (short i = 0; i < dataSize;) {
-            // determine correct chunk size according to bank position and data size
-            chunkSize = MPU6050_DMP_MEMORY_CHUNK_SIZE;
-
-            // make sure we don't go past the data size
-            if (i + chunkSize > dataSize) chunkSize = dataSize - i;
-
-            // make sure this chunk doesn't go past the bank boundary (256 bytes)
-            if (chunkSize > 256 - address) chunkSize = 256 - address;
-
-            // read the chunk of data as specified
-            readBytes(MPU6050_RA_MEM_R_W, chunkSize, data + i);
-            
-            // increase byte index by [chunkSize]
-            i += chunkSize;
-
-            // byte automatically wraps to 0 at 256
-            address += chunkSize;
-
-            // if we aren't done, update bank (if necessary) and address
-            if (i < dataSize) {
-                if (address == 0) bank++;
-                setMemoryBank(bank);
-                setMemoryStartAddress(address);
-            }
-        }
-    }
-    public boolean writeMemoryBlock(final byte data, short dataSize, byte bank, byte address, boolean verify, boolean useProgMem) {
-        setMemoryBank(bank);
-        setMemoryStartAddress(address);
-        byte chunkSize;
-        ByteBuffer verifyBuffer;
-        ByteBuffer progBuffer;
+        byte[] verifyBuffer;
+        byte[] progBuffer;
         short i;
         byte j;
-        if (verify) verifyBuffer = ByteBuffer.allocateDirect(MPU6050_DMP_MEMORY_CHUNK_SIZE);
-        if (useProgMem) progBuffer = ByteBuffer.allocateDirect(MPU6050_DMP_MEMORY_CHUNK_SIZE);
+        if (verify) verifyBuffer = new byte[MPU6050_DMP_MEMORY_CHUNK_SIZE];
+        if (useProgMem) progBuffer = new byte[MPU6050_DMP_MEMORY_CHUNK_SIZE];
         for (i = 0; i < dataSize;) {
             // determine correct chunk size according to bank position and data size
             chunkSize = MPU6050_DMP_MEMORY_CHUNK_SIZE;
@@ -3539,45 +3510,27 @@ public class MPU6050 extends I2C {
             if (i + chunkSize > dataSize) chunkSize = (byte) (dataSize - i);
 
             // make sure this chunk doesn't go past the bank boundary (256 bytes)
-            if (chunkSize > 256 - address) chunkSize = 256 - address;
+            if (chunkSize > 256 - address) chunkSize = (byte) (256 - address);
             
             if (useProgMem) {
                 // write the chunk of data as specified
-                for (j = 0; j < chunkSize; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+                for (j = 0; j < chunkSize; j++) progBuffer[j] = data[i + j];
             } else {
                 // write the chunk of data as specified
                 progBuffer = (byte *)data + i;
             }
 
-            writeBytes(MPU6050_RA_MEM_R_W, chunkSize, progBuffer);
+            writeBytes(MPU6050_RA_MEM_R_W, progBuffer, chunkSize);
 
             // verify data if needed
             if (verify && verifyBuffer) {
-                setMemoryBank(bank);
+                setMemoryBank(bank, false, false);
                 setMemoryStartAddress(address);
                 readBytes(MPU6050_RA_MEM_R_W, chunkSize, verifyBuffer);
-                if (memcmp(progBuffer, verifyBuffer, chunkSize) != 0) {
-                    Serial.print("Block write verification error, bank ");
-                    Serial.print(bank, DEC);
-                    Serial.print(", address ");
-                    Serial.print(address, DEC);
-                    Serial.print("!\nExpected:");
-                    for (j = 0; j < chunkSize; j++) {
-                        Serial.print(" 0x");
-                        if (progBuffer[j] < 16) Serial.print("0");
-                        Serial.print(progBuffer[j], HEX);
-                    }
-                    Serial.print("\nReceived:");
-                    for (byte j = 0; j < chunkSize; j++) {
-                        Serial.print(" 0x");
-                        if (verifyBuffer[i + j] < 16) Serial.print("0");
-                        Serial.print(verifyBuffer[i + j], HEX);
-                    }
-                    Serial.print("\n");
-                    free(verifyBuffer);
-                    if (useProgMem) free(progBuffer);
-                    return false; // uh oh.
-                }
+                progBuffer = Arrays.copyOf(verifyBuffer, chunkSize);
+                verifyBuffer = null;
+                if (useProgMem) progBuffer = null;
+                return false; // uh oh.
             }
 
             // increase byte index by [chunkSize]
@@ -3589,22 +3542,24 @@ public class MPU6050 extends I2C {
             // if we aren't done, update bank (if necessary) and address
             if (i < dataSize) {
                 if (address == 0) bank++;
-                setMemoryBank(bank);
+                setMemoryBank(bank, false, false);
                 setMemoryStartAddress(address);
             }
         }
-        if (verify) free(verifyBuffer);
-        if (useProgMem) free(progBuffer);
+        if (verify) verifyBuffer = null;
+        if (useProgMem) progBuffer = null;
         return true;
     }
-    public boolean writeProgMemoryBlock(final byte data, short dataSize, byte bank, byte address, boolean verify) {
+    public boolean writeProgMemoryBlock(byte[] data, short dataSize, byte bank, byte address, boolean verify) {
         return writeMemoryBlock(data, dataSize, bank, address, verify, true);
     }
-    public boolean writeDMPConfigurationSet(final byte data, short dataSize, boolean useProgMem) {
-        ByteBuffer progBuffer, success, special;
+    public boolean writeDMPConfigurationSet(final byte[] data, short dataSize, boolean useProgMem) {
+        byte[] progBuffer;
+        boolean success;
+        byte special;
         short i, j;
         if (useProgMem) {
-            progBuffer = ByteBuffer.allocateDirect(8); // assume 8-byte blocks, realloc later if necessary
+            progBuffer = new byte[8]; // assume 8-byte blocks, realloc later if necessary
         }
 
         // config set data is a long string of blocks with the following structure:
@@ -3612,9 +3567,9 @@ public class MPU6050 extends I2C {
         byte bank, offset, length;
         for (i = 0; i < dataSize;) {
             if (useProgMem) {
-                bank = pgm_read_byte(data + i++);
-                offset = pgm_read_byte(data + i++);
-                length = pgm_read_byte(data + i++);
+                bank = data[i++];
+                offset = data[i++];
+                length = data[i++];
             } else {
                 bank = data[i++];
                 offset = data[i++];
@@ -3624,19 +3579,14 @@ public class MPU6050 extends I2C {
             // write data or perform special action
             if (length > 0) {
                 // regular block of data to write
-                Serial.print("Writing config block to bank ");
-                Serial.print(bank);
-                Serial.print(", offset ");
-                Serial.print(offset);
-                Serial.print(", length=");
-                Serial.println(length);
+
                 if (useProgMem) {
-                    if (sizeof(progBuffer) < length) progBuffer = (byte *)realloc(progBuffer, length);
-                    for (j = 0; j < length; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+                    if (progBuffer.length < length) progBuffer = new byte[length];
+                    for (j = 0; j < length; j++) progBuffer[j] = data[i + j];
                 } else {
                     progBuffer = (byte *)data + i;
                 }
-                success = writeMemoryBlock(progBuffer, length, bank, offset, true);
+                success = writeMemoryBlock(progBuffer, length, bank, offset, true, false);
                 i += length;
             } else {
                 // special instruction
@@ -3645,20 +3595,17 @@ public class MPU6050 extends I2C {
                 // behavior only, and exactly why (or even whether) it has to be here
                 // is anybody's guess for now.
                 if (useProgMem) {
-                    special = pgm_read_byte(data + i++);
+                    special = data[i++];
                 } else {
                     special = data[i++];
                 }
-                Serial.print("Special command code ");
-                Serial.print(special, HEX);
-                Serial.println(" found...");
                 if (special == 0x01) {
                     // enable DMP-related interrupts
                     
                     //setIntZeroMotionEnabled(true);
                     //setIntFIFOBufferOverflowEnabled(true);
                     //setIntDMPEnabled(true);
-                    writeByte(MPU6050_RA_INT_ENABLE, 0x32);  // single operation
+                    writeByte(MPU6050_RA_INT_ENABLE, (byte) 0x32);  // single operation
 
                     success = true;
                 } else {
@@ -3668,16 +3615,16 @@ public class MPU6050 extends I2C {
             }
             
             if (!success) {
-                if (useProgMem) free(progBuffer);
+                if (useProgMem) progBuffer = null;
                 return false; // uh oh
             }
         }
-        if (useProgMem) free(progBuffer);
+        if (useProgMem) progBuffer = null;
         return true;
     }
-    public boolean writeProgDMPConfigurationSet(const byte *data, short dataSize) {
+    public boolean writeProgDMPConfigurationSet(final byte[] data, short dataSize) {
         return writeDMPConfigurationSet(data, dataSize, true);
-    }
+    }*/
 
     // DMP_CFG_1 register
 
@@ -3697,5 +3644,5 @@ public class MPU6050 extends I2C {
     }
     public void setDMPConfig2(byte config) {
         writeByte(MPU6050_RA_DMP_CFG_2, config);
-    }*/
+    }
 }

@@ -24,34 +24,50 @@ import io.github.robolib.iface.I2C;
  */
 public class ArdEx extends I2C {
     
-    private static final char ARDEX_CMD_SET_PIN_MODE = 'M';
-    private static final char ARDEX_CMD_DIGITAL = 'D';
-    private static final char ARDEX_CMD_ANALOG = 'A';
-    private static final char ARDEX_CMD_PWM = 'P';
+    private static final byte ARDEX_CMD_SET_PIN_MODE = 'M';
+    private static final byte ARDEX_CMD_DIGITAL = 'D';
+    private static final byte ARDEX_CMD_ANALOG = 'A';
+    private static final byte ARDEX_CMD_PWM = 'P';
+    private static final byte ARDEX_CMD_RESET = 'Q';
     
-    private static final char ARDEX_MODE_OUTPUT = 'O';
+    private static final byte ARDEX_MODE_OUTPUT = 'O';
     
-    private static final char ARDEX_JOB_WRITE = 'W';
-    private static final char ARDEX_JOB_READ = 'R';
+    private static final byte ARDEX_JOB_WRITE = 'W';
+    private static final byte ARDEX_JOB_READ = 'R';
     
     public ArdEx(Port port, byte address){
         super(port, address);
     }
     
-    private short ardexRead(char cmd, int pin, char job, byte val8, byte bytes){
-        byte[] a = {(byte)cmd, (byte)pin, (byte)job, val8};
-        byte[] result = new byte[2];
-        transaction(a, 4, result, 2);
-        return (short) ((result[0] << 8) + result[1]);
+    private short ardexRead(byte cmd, int pin, byte job, byte val8, byte bytes){
+        byte[] a = {cmd, (byte)0, (byte)pin, job, val8};
+        byte[] result = new byte[1];
+        writeBulk(a);
+        for(int i = 0; i < 30; i++){
+            readOnly(result, 1);
+            if(result[0] > 0) break;
+        }
+        byte b = result[0];
+        short c = 0;
+        for(byte i = 0; i < b; i++){
+            c <<= 8;
+            readOnly(result, 1);
+            c += result[0];
+        }
+        return c;
     }
     
-    private void ardexWrite(char cmd, int pin, char job, byte var1, byte var2){
+    private void ardexWrite(byte cmd, int pin, byte job, byte var1, byte var2){
 //        transaction(new byte[]{(byte)cmd, (byte)pin, (byte)job, var1, var2}, 5, null, 0);
-        writeBulk(new byte[]{(byte)cmd, (byte)0, (byte)pin, (byte)job, var1, var2});
+        writeBulk(new byte[]{cmd, (byte)0, (byte)pin, job, var1, var2});
     }
     
     public void setPinAsOutput(int dpin){
         ardexWrite(ARDEX_CMD_SET_PIN_MODE, dpin, ARDEX_MODE_OUTPUT, (byte)0, (byte)0);
+    }
+    
+    public void resetArduino(){
+        ardexWrite(ARDEX_CMD_RESET, 0, ARDEX_JOB_WRITE, (byte)0, (byte)0);
     }
     
     public void setPullup(int dpin, boolean lowHigh){
