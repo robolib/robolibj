@@ -388,7 +388,7 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
      */
     public double getMagnitude(Axis axis){
         byte[] regs = new byte[6];
-        read(HMC_REG_X_MSB, 6, regs);
+        read(HMC_REG_X_MSB, regs, 6);
         byte addr = axis.value;
         return magnitudeFromBytes(regs[addr], regs[addr+1]);
     }
@@ -399,7 +399,7 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
      */
     public double[] getAllMagnitudes(){
         byte[] regs = new byte[6];
-        read(HMC_REG_X_MSB, 6, regs);
+        read(HMC_REG_X_MSB, regs, 6);
         return new double[]{
                 magnitudeFromBytes(regs[0], regs[1]),
                 magnitudeFromBytes(regs[4], regs[5]),
