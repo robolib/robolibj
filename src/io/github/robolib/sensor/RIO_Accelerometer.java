@@ -32,13 +32,13 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /** The m_table. */
     private ITable m_table;
     
-    private Range m_range;
+    private AccelRange m_range;
     
     /**
      * Instantiates a new RI o_ accelerometer.
      */
     public RIO_Accelerometer(){
-        this(Range.k8G);
+        this(AccelRange.k8G);
     }
     
     /**
@@ -46,15 +46,15 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @param range the range
      */
-    public RIO_Accelerometer(Range range){
-        setRange(range);
+    public RIO_Accelerometer(AccelRange range){
+        setAccelRange(range);
         UsageReporting.report(UsageReporting.kResourceType_Accelerometer, 0, 0, "Built-in accelerometer");
     }
     
     /**
      * {@inheritDoc}
      */
-    public void setRange(Range range){
+    public void setAccelRange(AccelRange range){
         m_range = range;
         AccelerometerJNI.setAccelerometerActive(false);
         
@@ -78,7 +78,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
-    public Range getRange(){
+    public AccelRange getAccelRange(){
         return m_range;        
     }
     
@@ -87,7 +87,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the X axis in g-forces
      */
-    public double getX() {
+    public double getAccelerationX() {
         return AccelerometerJNI.getAccelerometerX();
     }
 
@@ -96,7 +96,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the Y axis in g-forces
      */
-    public double getY() {
+    public double getAccelerationY() {
         return AccelerometerJNI.getAccelerometerY();
     }
 
@@ -105,7 +105,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the Z axis in g-forces
      */
-    public double getZ() {
+    public double getAccelerationZ() {
         return AccelerometerJNI.getAccelerometerZ();
     }
     
@@ -137,9 +137,9 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      */
     public void updateTable() {
         if (m_table != null) {
-            m_table.putNumber("X", getX());
-            m_table.putNumber("Y", getY());
-            m_table.putNumber("Z", getZ());
+            m_table.putNumber("X", getAccelerationX());
+            m_table.putNumber("Y", getAccelerationY());
+            m_table.putNumber("Z", getAccelerationZ());
         }
     }
 

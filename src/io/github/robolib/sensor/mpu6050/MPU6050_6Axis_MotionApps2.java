@@ -13,29 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensor;
+package io.github.robolib.sensor.mpu6050;
 
 /**
  * 
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface IAccelerometer {
-    
-    public static enum AccelRange {
-        k2G,
-        k4G,
-        k8G,
-        k16G;
-    }
-    
-    void setAccelRange(AccelRange range);
-    
-    AccelRange getAccelRange();
-    
-    double getAccelerationX();
-    
-    double getAccelerationY();
-    
-    double getAccelerationZ();
+public class MPU6050_6Axis_MotionApps2 {
 
 }

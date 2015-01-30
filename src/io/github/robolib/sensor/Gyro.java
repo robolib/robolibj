@@ -15,27 +15,30 @@
 
 package io.github.robolib.sensor;
 
+import io.github.robolib.iface.AnalogInput;
+import io.github.robolib.livewindow.LiveWindowSendable;
+import io.github.robolib.pid.PIDSource;
+
 /**
  * 
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface IAccelerometer {
+public class Gyro extends AnalogInput implements IGyro, PIDSource, LiveWindowSendable {
     
-    public static enum AccelRange {
-        k2G,
-        k4G,
-        k8G,
-        k16G;
+    public static final int OVERSAMPLE_BITS = 10;
+    public static final int AVERAGE_BITS = 0;
+    
+    public static final double SAMPLES_PER_SEC = 50.0;
+    
+    public static final double CALIBRATE_SAMPLE_TIME = 5.0;
+    
+    public static final double DEF_VOLTAGE_PER_DEGREE = 0.007;
+    
+    public Gyro(AnalogChannel channel){
+        super(channel);
+        
+        
     }
-    
-    void setAccelRange(AccelRange range);
-    
-    AccelRange getAccelRange();
-    
-    double getAccelerationX();
-    
-    double getAccelerationY();
-    
-    double getAccelerationZ();
 
 }
