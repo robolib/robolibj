@@ -49,28 +49,24 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     public double get() {
         return m_motor.get();
     }
-    
-    /** The speed. */
-    private double speed = 0;
 
     /**
      * {@inheritDoc}
      */
     public void set(double speed, byte syncGroup) {
-        speed = speed > 0 && !m_switchSystem.canUp() ? 0.00 : speed;
-        speed = speed < 0 && !m_switchSystem.canDown() ? 0.00 : speed;
+        speed = speed > 0 && !m_switchSystem.canForward() ? 0.00 : speed;
+        speed = speed < 0 && !m_switchSystem.canReverse() ? 0.00 : speed;
         m_motor.set(speed, syncGroup);
-        this.speed = speed;
     }
 
     /**
      * {@inheritDoc}
      */
     public void set(double speed) {
-        speed = speed > 0 && !m_switchSystem.canUp() ? 0.00 : speed;
-        speed = speed < 0 && !m_switchSystem.canDown() ? 0.00 : speed;
+        if(speed > 0)
+        speed = speed > 0 && !m_switchSystem.canForward() ? 0.00 : speed;
+        speed = speed < 0 && !m_switchSystem.canReverse() ? 0.00 : speed;
         m_motor.set(speed);
-        this.speed = speed;
     }
     
     /**
@@ -85,13 +81,30 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     }
     
     /**
-     * At limit.
+     * At a limit.
      *
-     * @return true, if successful
+     * @return true, if at a limit
      */
     public boolean atLimit(){
-        if(speed >= 0 && !m_switchSystem.canUp()) return true;
-        return speed < 0 && !m_switchSystem.canDown();
+        return atForwardLimit() || atReverseLimit();
+    }
+    
+    /**
+     * At far limit.
+     * 
+     * @return true, if at far limit.
+     */
+    public boolean atForwardLimit(){
+        return !m_switchSystem.canForward();
+    }
+    
+    /**
+     * At near limit
+     * 
+     * @return true, if at near limit.
+     */
+    public boolean atReverseLimit(){
+        return !m_switchSystem.canReverse();
     }
 
     /**

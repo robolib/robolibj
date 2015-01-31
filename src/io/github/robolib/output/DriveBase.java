@@ -21,7 +21,7 @@ import io.github.robolib.iface.PWM.PWMChannel;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DriveTrain implements MotorSafety {
+public class DriveBase implements MotorSafety {
     
     public static enum MotorType {
         FRONT_LEFT,
@@ -40,20 +40,20 @@ public class DriveTrain implements MotorSafety {
     
     
     
-    public DriveTrain(PWMChannel left, PWMChannel right){
+    public DriveBase(PWMChannel left, PWMChannel right){
         
     }
     
-    public DriveTrain(SpeedController left, SpeedController right){
+    public DriveBase(SpeedController left, SpeedController right){
         
     }
     
-    public DriveTrain(PWMChannel frontLeft, PWMChannel frontRight,
+    public DriveBase(PWMChannel frontLeft, PWMChannel frontRight,
             PWMChannel rearLeft, PWMChannel rearRight){
         
     }
     
-    public DriveTrain(SpeedController frontLeft, SpeedController frontRight,
+    public DriveBase(SpeedController frontLeft, SpeedController frontRight,
             SpeedController rearLeft, SpeedController rearRight){
         
     }

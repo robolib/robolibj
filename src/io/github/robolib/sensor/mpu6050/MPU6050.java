@@ -30,6 +30,7 @@ import io.github.robolib.util.log.Logger;
  * @author Jeff Rowberg <jeff@rowberg.net>
  * @author noriah Reuland <vix@noriah.dev>
  */
+@SuppressWarnings("unused")
 public class MPU6050 extends I2C implements IAccelerometer, IGyro{
 
     /** address pin low (GND), default for InvenSense evaluation board */
@@ -648,7 +649,7 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
      * the default internal clock source.
      */
     public void initialize() {
-        setMasterClockSpeed(ClockSpeed.k258kHz);
+//        setMasterClockSpeed(ClockSpeed.k258kHz);
         setClockSource(GyroClockSource.PLL_XGYRO);
         setFullScaleGyroRange(GyroRange.FS_250);
         setFullScaleAccelRange(AccelRange.k2G);
@@ -2456,10 +2457,10 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
      * @see getRotation()
      * @see MPU6050_RA_ACCEL_XOUT_H
      */
-    public double[] getMotion6() {
-        short[] buffer = new short[14];
+    public short[] getMotion6() {
+        short[] buffer = new short[7];
         readWords(MPU6050_RA_ACCEL_XOUT_H, buffer, 7);
-        return new double[]{
+        return new short[]{
                 buffer[0],
                 buffer[1],
                 buffer[2],
@@ -2862,7 +2863,6 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
      * @see MPU6050_DELAYCTRL_DELAY_ES_SHADOW_BIT
      */
     public void setExternalShadowDelayEnabled(boolean enabled) {
-        byte[] buffer = new byte[1];
         writeBit(MPU6050_RA_I2C_MST_DELAY_CTRL, MPU6050_DELAYCTRL_DELAY_ES_SHADOW_BIT, enabled);
     }
     /**

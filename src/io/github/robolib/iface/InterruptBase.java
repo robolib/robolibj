@@ -15,38 +15,46 @@
 
 package io.github.robolib.iface;
 
+import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import io.github.robolib.hal.HALUtil;
+import io.github.robolib.hal.InterruptJNI;
+
 /**
  * 
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogTrigger {
+public abstract class InterruptBase extends Interface {
 
-    /**
-     * {@inheritDoc}
-     */
-    boolean isAnalogTrigger() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    int getChannelForRouting() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    byte getModuleForRouting() {
-        // TODO Auto-generated method stub
-        return 0;
+    static {
+        IntBuffer status = getLE4IntBuffer();
+        InterruptJNI.initializeInterruptJVM(status);
+        HALUtil.checkStatus(status);
     }
     
     
-	
-	
+    protected ByteBuffer m_interrupt = null;
+    
+    protected boolean m_isSyncInterrupt = false;
+    
+    protected int m_interruptIndex;
+    
+    /**
+     * @param iType
+     */
+    protected InterruptBase(InterfaceType iType) {
+        super(iType);
+    }
+    
+
+    
+    abstract boolean isAnalogTrigger();
+    
+    abstract int getChannelNumber();   
+    
 
 }

@@ -52,6 +52,7 @@ public abstract class Subsystem {
     public Subsystem(String name){
         m_name = name;
         Scheduler.getInstance().registerSubsystem(this);
+        m_currentCommandChanged = true;
     }
     
     /**

@@ -32,7 +32,7 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class DigitalIO extends Interface {
+public abstract class DigitalIO extends InterruptBase {
 
     /**
      * The Enum Channel.
@@ -261,6 +261,13 @@ public abstract class DigitalIO extends Interface {
      */
     public String getChannelName(){
         return m_channel.name();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isAnalogTrigger(){
+        return false;
     }
 
 }
