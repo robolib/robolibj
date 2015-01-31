@@ -24,7 +24,6 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.I2CJNI;
 import io.github.robolib.util.MathUtils;
-import io.github.robolib.util.log.Logger;
 
 
 /**
@@ -332,8 +331,8 @@ public class I2C extends Interface {
 
         byte[] intermediate = new byte[length * 2];
         if (read(reg, intermediate, length * 2)) {
-            for (int i = 0; i < length * 2; i++) {
-                data[i] = (short) ((intermediate[i] << 8) | intermediate[++i]);
+            for (int i = 0; i < length; i++) {
+                data[i] = (short) ((intermediate[i*2] << 8) | intermediate[i*2 + 1]);
             }
             return true;
         }

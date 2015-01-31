@@ -31,15 +31,15 @@ public class DualLimitSwitchSystem implements LimitSwitchSystem{
     /**
      * Instantiates a new dual limit switch system.
      *
-     * @param topChannel the top channel
-     * @param topType the top type
-     * @param bottomChannel the bottom channel
-     * @param bottomType the bottom type
+     * @param forwardLimitChannel the top channel
+     * @param forwardLimitType the top type
+     * @param reverseLimitChannel the bottom channel
+     * @param reverseLimitType the bottom type
      */
-    public DualLimitSwitchSystem(DigitalChannel topChannel, SwitchType topType,
-            DigitalChannel bottomChannel, SwitchType bottomType){
-        this(new LimitSwitch(topChannel, topType),
-                new LimitSwitch(bottomChannel, bottomType));
+    public DualLimitSwitchSystem(DigitalChannel forwardLimitChannel, SwitchType forwardLimitType,
+            DigitalChannel reverseLimitChannel, SwitchType reverseLimitType){
+        this(new LimitSwitch(forwardLimitChannel, forwardLimitType),
+                new LimitSwitch(reverseLimitChannel, reverseLimitType));
     }
     
     /**
@@ -56,14 +56,14 @@ public class DualLimitSwitchSystem implements LimitSwitchSystem{
     /**
      * {@inheritDoc}
      */
-    public boolean canUp() {
+    public boolean canForward() {
         return !m_topSwitch.state();
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean canDown() {
+    public boolean canReverse() {
         return !m_bottomSwitch.state();
     }
 

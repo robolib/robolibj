@@ -27,13 +27,13 @@ public interface LimitSwitchSystem {
      *
      * @return Can we go Up
      */
-    public boolean canUp();
+    public boolean canForward();
     
     /**
      * Can down.
      *
      * @return Can we go Down
      */ 
-    public boolean canDown();
+    public boolean canReverse();
     
 }

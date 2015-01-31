@@ -20,5 +20,9 @@ package io.github.robolib.sensor;
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface IGyro {
+    
+//    double getRotationX();
+    
+//    double getRotationY();
 
 }
