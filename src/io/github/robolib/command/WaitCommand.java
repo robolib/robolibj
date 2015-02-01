@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 noriah <vix@noriah.dev>.
+1 * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -15,58 +15,31 @@
 
 package io.github.robolib.command;
 
-// TODO: Auto-generated Javadoc
 /**
- * Delays a Command Group.
+ * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class C_Delay extends Command {
-
-    /**
-     * Instantiates a new c_ delay.
-     *
-     * @param sec the sec
-     */
-    public C_Delay(double sec) {
-
-        super("C_Delay");
-        setTimeout(sec);
+public class WaitCommand extends Command {
+    
+    public WaitCommand(double timeout){
+        this("Wait " + timeout, timeout);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void initialize() {
+    
+    public WaitCommand(String name, double timeout){
+        super(name, timeout);
     }
+    
+    protected void initialize() {}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void execute() {
-    }
+    protected void execute() {}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     protected boolean isFinished() {
         return isTimedOut();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void end() {
-    }
+    protected void end() {}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void interrupted() {
-    }
+    protected void interrupted() {}
+
 }

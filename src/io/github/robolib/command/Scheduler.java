@@ -126,7 +126,7 @@ public class Scheduler implements Sendable {
         if(!m_commandList.contains(command)){
             Vector<Subsystem> requires = command.getRequirements();
             if(requires.stream().anyMatch(system -> system.getCurrentCommand() != null &&
-                    system.getCurrentCommand().isInterruptible())) return;
+                    !system.getCurrentCommand().isInterruptible())) return;
             
             m_adding = true;
             requires.forEach(system -> {

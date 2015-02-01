@@ -13,20 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util.datapacks;
-
-import io.github.robolib.iface.PWM.PWMChannel;
-import io.github.robolib.util.PDP.PowerChannel;
+package io.github.robolib.command;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWMControllerPack {
-    
-    public PWMChannel m_pwmChannel;
-    public String m_name;
-    public PowerChannel m_powerChannel;
+public class PIDSubsystem {
 
 }

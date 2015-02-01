@@ -26,6 +26,7 @@ import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.pid.PIDSource;
+import io.github.robolib.util.DoubleSource;
 import io.github.robolib.util.Timer;
 
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -34,7 +35,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendable {
+public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendable, DoubleSource {
     
     public class AccumulatorResult {
         public long value;
@@ -129,6 +130,14 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
         double value = AnalogJNI.getAnalogAverageVoltage(m_port, status);
         HALUtil.checkStatus(status);
         return value;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double get(){
+        return getAverageVoltage();
     }
 
     /**

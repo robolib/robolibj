@@ -13,28 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input.limitswitch;
-
-import io.github.robolib.input.limitswitch.LimitSwitch.SwitchType;
+package io.github.robolib.util;
 
 /**
- * Interface for a Limit Switch.
+ * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface StandardSwitch {
+public interface BooleanSource {
     
-    /**
-     * State.
-     *
-     * @return true, if successful
-     */
-    public boolean state();
-    
-    /**
-     * Gets the type.
-     *
-     * @return the type
-     */
-    public SwitchType getType();
+    boolean get();
+
 }

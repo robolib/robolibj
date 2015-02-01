@@ -13,32 +13,38 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib.command;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
-
-import java.nio.IntBuffer;
-
-import io.github.robolib.control.Trigger;
-import io.github.robolib.hal.DIOJNI;
-import io.github.robolib.hal.HALUtil;
-import io.github.robolib.util.BooleanSource;
+import io.github.robolib.framework.RoboLibBot;
 
 /**
  * 
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DigitalInput extends DigitalIO implements Trigger, BooleanSource {
+public class WaitUntilCommand extends Command {
     
-    public DigitalInput(DigitalChannel channel){
-        super(channel, Direction.IN);
+    private double m_time;
+    
+    public WaitUntilCommand(double time){
+        this("WaitUntil " + time, time);
     }
     
-    @Override
-    public boolean get(){
-        IntBuffer status = getLE4IntBuffer();
-        boolean value = DIOJNI.getDIO(m_port, status) != 0;
-        HALUtil.checkStatus(status);
-        return value;
+    public WaitUntilCommand(String name, double time){
+        super(name);
+        m_time = time;
     }
+    
+    public void initialize() {}
+
+    public void execute() {}
+
+    public boolean isFinished() {
+        return RoboLibBot.getMatchTime() >= m_time;
+    }
+
+    public void end() {}
+
+    public void interrupted() {}
+
 }

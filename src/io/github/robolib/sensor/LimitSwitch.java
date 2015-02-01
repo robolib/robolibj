@@ -13,9 +13,8 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input.limitswitch;
+package io.github.robolib.sensor;
 
-import io.github.robolib.iface.DigitalIO.DigitalChannel;
 import io.github.robolib.iface.DigitalInput;
 
 /**
@@ -23,18 +22,18 @@ import io.github.robolib.iface.DigitalInput;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class LimitSwitch implements StandardSwitch {
+public class LimitSwitch extends DigitalInput {
     
-    public enum SwitchType {
+    public static enum SwitchType {
         
         /** Normally Open Switch. */
-        NO(true),
+        OPEN(true),
         
         /** Normally Closed Switch. */
-        NC(false);
+        CLOSED(false);
         
         /** The open. */
-        private final boolean open;
+        public boolean value;
         
         /**
          * Instantiates a new e switch type.
@@ -42,25 +41,16 @@ public class LimitSwitch implements StandardSwitch {
          * @param open the open
          */
         SwitchType(boolean open){
-            this.open = open;
-        }
-        
-        /**
-         * Gets the value.
-         *
-         * @param value the value
-         * @return the value
-         */
-        public boolean getValue(boolean value){
-            return this.open && value;
+            value = open;
         }
     }
     
-    /** The m_limit switch. */
-    private DigitalInput m_limitSwitch;
-    
     /** The m_type. */
     private SwitchType m_type;
+    
+    public LimitSwitch(DigitalChannel channel){
+        this(channel, SwitchType.OPEN);
+    }
     
     /**
      * Instantiates a new limit switch.
@@ -69,7 +59,7 @@ public class LimitSwitch implements StandardSwitch {
      * @param type the type
      */
     public LimitSwitch(DigitalChannel channel, SwitchType type){
-        m_limitSwitch = new DigitalInput(channel);
+        super(channel);
         this.m_type = type;
     }
     
@@ -77,14 +67,15 @@ public class LimitSwitch implements StandardSwitch {
      * {@inheritDoc}
      */
     @Override
-    public boolean state() {
-        return m_type.getValue(m_limitSwitch.get());
+    public boolean get() {
+        return m_type.value && super.get();
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the type.
+     *
+     * @return the type
      */
-    @Override
     public SwitchType getType() {
         return m_type;
     }

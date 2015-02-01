@@ -41,7 +41,7 @@ public class NullController implements SpeedController {
      * Do absolutely nothing
      */
     @Override
-    public void setSpeed(double speed) {}
+    public void set(double speed) {}
 
     /**
      * Do absolutely nothing

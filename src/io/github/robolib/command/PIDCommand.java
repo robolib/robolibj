@@ -13,27 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input.limitswitch;
+package io.github.robolib.command;
 
 /**
- * The Limit Switch System Interface.
+ * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface LimitSwitchSystem {
-    
-    /**
-     * Can up.
-     *
-     * @return Can we go Up
-     */
-    public boolean canForward();
-    
-    /**
-     * Can down.
-     *
-     * @return Can we go Down
-     */ 
-    public boolean canReverse();
-    
+public class PIDCommand {
+
 }

@@ -15,21 +15,21 @@
 
 package io.github.robolib.output;
 
-import io.github.robolib.input.limitswitch.LimitSwitchSystem;
-import io.github.robolib.pid.PIDOutput;
+import io.github.robolib.framework.SafetyManager;
+import io.github.robolib.util.LimitSystem;
 
 /**
- * A SpeedController limited by Limit Switches.
+ * A SpeedController limited by {@link BooleanSource}(s).
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class LimitSwitchController implements SpeedController, PIDOutput {
+public class LimitedController implements SpeedController {
     
     /** The m_motor. */
     private final SpeedController m_motor;
     
     /** The m_switch system. */
-    private final LimitSwitchSystem m_switchSystem;
+    private final LimitSystem m_system;
     
     private final MotorSafetyHelper m_safetyHelper;
     
@@ -39,10 +39,10 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
      * @param motor the motor
      * @param switchSystem the switch system
      */
-    public LimitSwitchController(SpeedController motor, LimitSwitchSystem switchSystem){
+    public LimitedController(SpeedController motor, LimitSystem system){
         m_motor = motor;
-        m_switchSystem = switchSystem;
-        m_safetyHelper = new MotorSafetyHelper(this);
+        m_system = system;
+        m_safetyHelper = SafetyManager.addMotor(this);
     }
 
     /**
@@ -57,29 +57,10 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
      * {@inheritDoc}
      */
     @Override
-    public void set(double speed, byte syncGroup) {
-        speed = speed > 0 && !m_switchSystem.canForward() ? 0.00 : speed;
-        speed = speed < 0 && !m_switchSystem.canReverse() ? 0.00 : speed;
-        m_motor.set(speed, syncGroup);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void set(double speed) {
-        if(speed > 0)
-        speed = speed > 0 && !m_switchSystem.canForward() ? 0.00 : speed;
-        speed = speed < 0 && !m_switchSystem.canReverse() ? 0.00 : speed;
+        speed = speed > 0 && !m_system.canForward() ? 0.00 : speed;
+        speed = speed < 0 && !m_system.canReverse() ? 0.00 : speed;
         m_motor.set(speed);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setSpeed(double speed) {
-        set(speed);
     }
     
     @Override
@@ -93,7 +74,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
      * @return true, if at a limit
      */
     public boolean atLimit(){
-        return atForwardLimit() || atReverseLimit();
+        return atFrontLimit() || atBackLimit();
     }
     
     /**
@@ -101,8 +82,8 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
      * 
      * @return true, if at far limit.
      */
-    public boolean atForwardLimit(){
-        return !m_switchSystem.canForward();
+    public boolean atFrontLimit(){
+        return !m_system.canForward();
     }
     
     /**
@@ -110,16 +91,8 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
      * 
      * @return true, if at near limit.
      */
-    public boolean atReverseLimit(){
-        return !m_switchSystem.canReverse();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pidWrite(double output) {
-        m_motor.pidWrite(output);
+    public boolean atBackLimit(){
+        return !m_system.canReverse();
     }
 
     /**
