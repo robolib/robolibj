@@ -13,15 +13,28 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util;
+package io.github.robolib.lang;
 
 /**
+ * An exception for use with robot code.
  * 
+ * throw this exception when something goes wrong with the robot that does
+ * not fall under any other exception type.
  *
  * @author Austin Reuland <amreuland@gmail.com>
+ * @since 0.1.0
  */
-public interface BooleanSource {
-    
-    boolean get();
+public final class RobotException extends RuntimeException {
 
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 3748667178724340857L;
+
+    /**
+     * Instantiates a new robot exception.
+     *
+     * @param msg the msg
+     */
+    public RobotException(String msg){
+        super(msg);
+    }
 }

@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.exception;
+package io.github.robolib.lang;
 
 /**
  * Exception indicating that the CAN driver layer has not been initialized.

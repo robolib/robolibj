@@ -13,12 +13,21 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensor;
+package io.github.robolib.lang;
 
 /**
- * 
+ * Exception indicating that the Jaguar CAN Driver layer refused to send a
+ * restricted message ID to the CAN bus.
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface IPotentiometer {
+public class CANMessageNotAllowedException extends RuntimeException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2755736457012620920L;
 
+    public CANMessageNotAllowedException(String msg) {
+        super(msg);
+    }
 }

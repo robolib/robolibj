@@ -16,10 +16,10 @@
 package io.github.robolib.hal;
 
 import io.github.robolib.communication.NIRioStatus;
-import io.github.robolib.exception.CANInvalidBufferException;
-import io.github.robolib.exception.CANMessageNotAllowedException;
-import io.github.robolib.exception.CANMessageNotFoundException;
-import io.github.robolib.exception.CANNotInitializedException;
+import io.github.robolib.lang.CANInvalidBufferException;
+import io.github.robolib.lang.CANMessageNotAllowedException;
+import io.github.robolib.lang.CANMessageNotFoundException;
+import io.github.robolib.lang.CANNotInitializedException;
 
 /**
  * 

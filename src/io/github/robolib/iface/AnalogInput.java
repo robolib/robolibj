@@ -21,12 +21,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
+import io.github.robolib.lang.DoubleSource;
+import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.pid.PIDSource;
-import io.github.robolib.util.DoubleSource;
 import io.github.robolib.util.Timer;
 
 import edu.wpi.first.wpilibj.tables.ITable;

@@ -13,18 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.exception;
+package io.github.robolib.lang;
 
 /**
- * 
+ * An interface for a class that takes a double as a value.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class CANMessageNotFoundException extends RuntimeException {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8233681586441184325L;
+public interface DoubleSink {
+    
+    void set(double value);
 
 }

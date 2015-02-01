@@ -21,9 +21,9 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
+import io.github.robolib.lang.ResourceAllocationException;
 
 /**
  * The Class AnalogIO.

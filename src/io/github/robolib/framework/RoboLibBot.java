@@ -26,7 +26,7 @@ import java.util.jar.Manifest;
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.exception.RobotException;
+import io.github.robolib.lang.RobotException;
 import io.github.robolib.livewindow.LiveWindow;
 import io.github.robolib.pneumatic.Compressor;
 import io.github.robolib.robot.AutonMode;

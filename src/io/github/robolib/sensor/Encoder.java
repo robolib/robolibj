@@ -495,7 +495,7 @@ public class Encoder extends CounterBase implements PIDSource {
      * @return The distance driven since the last reset as scaled by the value
      * from setDistancePerPulse().
      */
-    double getDistance(){
+    public double getDistance(){
         return getRaw() * decodingScaleFactor() * m_distancePerPulse;
     }
     

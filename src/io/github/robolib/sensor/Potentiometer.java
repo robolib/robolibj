@@ -23,7 +23,7 @@ import io.github.robolib.iface.AnalogInput;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class Potentiometer extends AnalogInput implements IPotentiometer {
+public class Potentiometer extends AnalogInput {
     
     /**
      * Instantiates a new potentiometer.

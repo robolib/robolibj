@@ -13,16 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensor;
+package io.github.robolib.lang;
 
 /**
  * 
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface IGyro {
+public interface DoubleSource {
     
-//    double getRotationX();
-    
-//    double getRotationY();
+    double get();
 
 }
