@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
+1 * Copyright (c) 2015 Westwood Robotics <code.westwoodrobotics@gmail.com>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -13,27 +13,33 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.input.limitswitch;
+package io.github.robolib.command;
 
 /**
- * The Limit Switch System Interface.
+ * 
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface LimitSwitchSystem {
+public class WaitCommand extends Command {
     
-    /**
-     * Can up.
-     *
-     * @return Can we go Up
-     */
-    public boolean canForward();
+    public WaitCommand(double timeout){
+        this("Wait " + timeout, timeout);
+    }
     
-    /**
-     * Can down.
-     *
-     * @return Can we go Down
-     */ 
-    public boolean canReverse();
+    public WaitCommand(String name, double timeout){
+        super(name, timeout);
+    }
     
+    protected void initialize() {}
+
+    protected void execute() {}
+
+    protected boolean isFinished() {
+        return isTimedOut();
+    }
+
+    protected void end() {}
+
+    protected void interrupted() {}
+
 }

@@ -15,58 +15,11 @@
 
 package io.github.robolib.command;
 
-// TODO: Auto-generated Javadoc
 /**
- * Delays a Command Group.
+ * 
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class C_Delay extends Command {
+public class PIDSubsystem {
 
-    /**
-     * Instantiates a new c_ delay.
-     *
-     * @param sec the sec
-     */
-    public C_Delay(double sec) {
-
-        super("C_Delay");
-        setTimeout(sec);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void initialize() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void execute() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isFinished() {
-        return isTimedOut();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void end() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void interrupted() {
-    }
 }

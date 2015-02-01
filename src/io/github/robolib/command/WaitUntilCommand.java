@@ -13,20 +13,38 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util.datapacks;
+package io.github.robolib.command;
 
-import io.github.robolib.iface.PWM.PWMChannel;
-import io.github.robolib.util.PDP.PowerChannel;
+import io.github.robolib.framework.RoboLibBot;
 
 /**
  * 
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class PWMControllerPack {
+public class WaitUntilCommand extends Command {
     
-    public PWMChannel m_pwmChannel;
-    public String m_name;
-    public PowerChannel m_powerChannel;
+    private double m_time;
+    
+    public WaitUntilCommand(double time){
+        this("WaitUntil " + time, time);
+    }
+    
+    public WaitUntilCommand(String name, double time){
+        super(name);
+        m_time = time;
+    }
+    
+    public void initialize() {}
+
+    public void execute() {}
+
+    public boolean isFinished() {
+        return RoboLibBot.getMatchTime() >= m_time;
+    }
+
+    public void end() {}
+
+    public void interrupted() {}
 
 }

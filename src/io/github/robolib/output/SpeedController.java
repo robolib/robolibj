@@ -30,6 +30,15 @@ public interface SpeedController extends MotorSafety, PIDOutput {
      * @return The current set speed.  Value is between -1.0 and 1.0.
      */
     double get();
+    
+    /**
+     * Common interface for getting the current set speed of a speed controller.
+     *
+     * @return The current set speed.  Value is between -1.0 and 1.0.
+     */
+    public default double getSpeed(){
+        return get();
+    }
 
     /**
      * Common interface for setting the speed of a speed controller.
@@ -38,7 +47,7 @@ public interface SpeedController extends MotorSafety, PIDOutput {
      * @param syncGroup The update group to add this Set() to, pending UpdateSyncGroup().  If 0, update immediately.
      */
     public default void set(double speed, byte syncGroup){
-        setSpeed(speed);
+        set(speed);
     }
 
     /**
@@ -46,16 +55,16 @@ public interface SpeedController extends MotorSafety, PIDOutput {
      *
      * @param speed The speed to set.  Value should be between -1.0 and 1.0.
      */
-    public default void set(double speed){
-        setSpeed(speed);
-    }
+    void set(double speed);
     
     /**
      * Set the speed of the SpeedController
      * 
      * @param speed the speed to set
      */
-    void setSpeed(double speed);
+    public default void setSpeed(double speed){
+        set(speed);
+    }
     
     /**
      * Set the inverted state of the speed controller.
@@ -69,7 +78,7 @@ public interface SpeedController extends MotorSafety, PIDOutput {
      */
     @Override
     public default void pidWrite(double value){
-        setSpeed(value);
+        set(value);
     }
     
     /**
@@ -77,6 +86,6 @@ public interface SpeedController extends MotorSafety, PIDOutput {
      */
     @Override
     public default void stopMotor(){       
-        setSpeed(0.0);
+        set(0.0);
     }
 }

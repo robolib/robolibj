@@ -159,6 +159,8 @@ public class DriveBase implements MotorSafety {
      * @param rotation The value to use for the rotate right/left
      */
     public void arcade(double forward, double rotation){
+        forward = MathUtils.clamp(forward, -1.0, 1.0);
+        rotation = MathUtils.clamp(rotation, -1.0, 1.0);
         
         setMotors(forward - rotation);
         
@@ -194,8 +196,6 @@ public class DriveBase implements MotorSafety {
      * @param squared If set, decreases the sensitivity at low speeds
      */
     public void arcade(double forward, double rotation, boolean squared){
-        forward = MathUtils.clamp(forward, -1.0, 1.0);
-        rotation = MathUtils.clamp(rotation, -1.0, 1.0);
         if(squared){
             forward = squareInput(forward);
             rotation = squareInput(rotation);
