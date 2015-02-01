@@ -22,6 +22,8 @@ package io.github.robolib.util;
  */
 public class MathUtils {
     
+    public static final double PI_180 = Math.PI / 180.0;
+    
     public static double clamp(double value, double min, double max){
         return Math.max(Math.min(value, max), min);
     }
