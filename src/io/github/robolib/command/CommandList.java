@@ -108,14 +108,17 @@ public class CommandList implements Iterable<Command> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Iterator<Command> iterator() {
         return new Iterator<Command>(){
             ListElement current = firstElement;
             ListElement next = current.next;
+            @Override
             public boolean hasNext() {
                 return next != null;
             }
 
+            @Override
             public Command next() {
                 current = next;
                 next = current.next;

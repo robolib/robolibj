@@ -144,6 +144,7 @@ public class DriveBase implements MotorSafety {
     /**
      * {@inheritDoc}
      */
+    @Override
     public MotorSafetyHelper getSafetyHelper(){
         return m_safetyHelper;
     }
@@ -151,6 +152,7 @@ public class DriveBase implements MotorSafety {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stopMotor() {
         m_frontLeftMotor.set(0.0);
         m_frontRightMotor.set(0.0);
@@ -191,6 +193,7 @@ public class DriveBase implements MotorSafety {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getDescription() {
         return "Robot DriveBase";
     }

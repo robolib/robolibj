@@ -250,6 +250,7 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @return integer representation of the DigitalIO channel
      */
+    @Override
     public int getChannelNumber(){
         return m_channel.ordinal();
     }
@@ -266,6 +267,7 @@ public abstract class DigitalIO extends InterruptBase {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isAnalogTrigger(){
         return false;
     }

@@ -29,6 +29,7 @@ public class NullSafetyHelper extends MotorSafetyHelper {
     /**
      * Feed.
      */
+    @Override
     public void feed(){}
     
     /**
@@ -36,6 +37,7 @@ public class NullSafetyHelper extends MotorSafetyHelper {
      *
      * @param enabled the enabled
      */
+    @Override
     public void setSafetyEnabled(boolean enabled){}
     
     /**
@@ -43,6 +45,7 @@ public class NullSafetyHelper extends MotorSafetyHelper {
      *
      * @return true, if is safety enabled
      */
+    @Override
     public boolean isSafetyEnabled(){
         return false;
     }
@@ -52,6 +55,7 @@ public class NullSafetyHelper extends MotorSafetyHelper {
      *
      * @param exp the new expiration
      */
+    @Override
     public void setExpiration(double exp){}
     
     /**
@@ -59,6 +63,7 @@ public class NullSafetyHelper extends MotorSafetyHelper {
      *
      * @return the expiration
      */
+    @Override
     public double getExpiration(){
         return 0.0;
     }
@@ -68,6 +73,7 @@ public class NullSafetyHelper extends MotorSafetyHelper {
      *
      * @return true, if is alive
      */
+    @Override
     public boolean isAlive(){
         return true;
     }
@@ -75,5 +81,6 @@ public class NullSafetyHelper extends MotorSafetyHelper {
     /**
      * Check.
      */
+    @Override
     public void check(){}
 }

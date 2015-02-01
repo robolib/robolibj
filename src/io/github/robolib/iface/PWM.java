@@ -390,7 +390,7 @@ public class PWM extends Interface implements LiveWindowSendable {
     public void setPosition(double angle){
         angle = MathUtils.clamp(angle, 0.0, 1.0);
         int raw;
-        raw = (int) ((angle * (double)m_scaleFactorFull) + m_boundsNegativeMin);
+        raw = (int) ((angle * m_scaleFactorFull) + m_boundsNegativeMin);
         setRaw(raw);
     }
 
@@ -422,9 +422,9 @@ public class PWM extends Interface implements LiveWindowSendable {
         if(speed == 0.0){
             raw = m_boundsCenter;
         }else if(speed > 0.0){
-            raw = (int) (speed * ((double)m_scaleFactorPositive) + ((double)m_boundsPositiveMin) + 0.5);
+            raw = (int) (speed * (m_scaleFactorPositive) + (m_boundsPositiveMin) + 0.5);
         }else{
-            raw = (int) (speed * ((double)m_scaleFactorNegative) + ((double)m_boundsNegativeMax) + 0.5);
+            raw = (int) (speed * (m_scaleFactorNegative) + (m_boundsNegativeMax) + 0.5);
         }
 
         setRaw(raw);
@@ -520,6 +520,7 @@ public class PWM extends Interface implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
@@ -528,6 +529,7 @@ public class PWM extends Interface implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -535,6 +537,7 @@ public class PWM extends Interface implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getSmartDashboardType() {
         return m_description;
     }
@@ -542,6 +545,7 @@ public class PWM extends Interface implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable() {
         if(m_table != null){
             m_table.putNumber("Value",  get());
@@ -551,9 +555,11 @@ public class PWM extends Interface implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void startLiveWindowMode() {
         setSpeed(0);
         m_table_listener = new ITableListener(){
+            @Override
             public void valueChanged(ITable itable, String key, Object value, boolean bln){
                 set(((Double) value).doubleValue());
             }
@@ -564,6 +570,7 @@ public class PWM extends Interface implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stopLiveWindowMode() {
         setSpeed(0);
         m_table.removeTableListener(m_table_listener);

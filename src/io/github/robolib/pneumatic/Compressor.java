@@ -74,7 +74,7 @@ public final class Compressor implements Sendable {
         IntBuffer status = getLE4IntBuffer();
         float current = CompressorJNI.getCompressorCurrent(m_compressor, status);
         HALUtil.checkStatus(status);   
-        return (double)current;
+        return current;
     }
     
     /**
@@ -196,6 +196,7 @@ public final class Compressor implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable() {
         m_table.putBoolean("Enabled", getCompressorEnabled());
         m_table.putBoolean("Pressure Switch", getPressureSwitch());
@@ -205,6 +206,7 @@ public final class Compressor implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
     }
@@ -212,6 +214,7 @@ public final class Compressor implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -219,6 +222,7 @@ public final class Compressor implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getSmartDashboardType() {
         return "Compressor";
     }

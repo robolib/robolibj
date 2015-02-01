@@ -70,6 +70,7 @@ public class SingleLimitSwitchSystem implements LimitSwitchSystem {
      *
      * @return LimitSwitch value
      */
+    @Override
     public boolean canForward() {
         if(m_type == SingleSystemType.BOTTOM_LIMIT) return true;
         return !m_limitSwitch.state();
@@ -80,6 +81,7 @@ public class SingleLimitSwitchSystem implements LimitSwitchSystem {
      *
      * @return LimitSwitch value
      */
+    @Override
     public boolean canReverse() {
         if(m_type == SingleSystemType.TOP_LIMIT) return true;
         return !m_limitSwitch.state();

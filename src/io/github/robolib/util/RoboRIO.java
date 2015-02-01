@@ -58,7 +58,7 @@ public class RoboRIO implements Sendable {
         IntBuffer status = getLE4IntBuffer();
         int value = HALUtil.getFPGARevision(status);
         HALUtil.checkStatus(status);
-        return (long) value;
+        return value;
     }
     
     public static long getFPGATime(){
@@ -86,6 +86,7 @@ public class RoboRIO implements Sendable {
     
     public static ButtonTrigger getUserButtonAsButton(){
         return m_userButton == null ? m_userButton = new ButtonTrigger(){
+            @Override
             public boolean get(){return getUserButton();}
             } : m_userButton;
     }
@@ -261,6 +262,7 @@ public class RoboRIO implements Sendable {
     /*
      * Live Window code, only does anything if live window is activated.
      */
+    @Override
     public String getSmartDashboardType() {
         return "Solenoid";
     }
@@ -268,6 +270,7 @@ public class RoboRIO implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
     }
@@ -275,6 +278,7 @@ public class RoboRIO implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -282,6 +286,7 @@ public class RoboRIO implements Sendable {
     /**
      * Update the table for this object with the latest values.
      */
+    @Override
     public void updateTable(){
         m_table.putString("RIO Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
         m_table.putString("RIO Current", StringUtils.getNumber2DWithUnits(getCurrent(), "A"));

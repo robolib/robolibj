@@ -41,6 +41,7 @@ public class Potentiometer extends AnalogInput implements IPotentiometer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getSmartDashboardType() {
         return "Potentiometer";
     }

@@ -41,6 +41,7 @@ public class Servo extends PWM {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void set(double value){
         setPosition(value);
     }
@@ -48,6 +49,7 @@ public class Servo extends PWM {
     /**
      * {@inheritDoc}
      */
+    @Override
     public double get(){
         return getPosition();
     }

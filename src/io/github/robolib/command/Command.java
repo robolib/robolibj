@@ -447,6 +447,7 @@ public abstract class Command {
      * The string representation for a {@link Command} is by default its name.
      * @return the string representation of this object
      */
+    @Override
     public String toString(){
         return m_name;
     }

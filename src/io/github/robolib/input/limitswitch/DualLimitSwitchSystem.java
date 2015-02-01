@@ -56,6 +56,7 @@ public class DualLimitSwitchSystem implements LimitSwitchSystem{
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canForward() {
         return !m_topSwitch.state();
     }
@@ -63,6 +64,7 @@ public class DualLimitSwitchSystem implements LimitSwitchSystem{
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canReverse() {
         return !m_bottomSwitch.state();
     }

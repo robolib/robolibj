@@ -314,6 +314,7 @@ public class Counter extends CounterBase implements PIDSource {
      * still be running, so it reflects the current value. Next time it is read,
      * it might have a different value.
      */
+    @Override
     public int get(){
         IntBuffer status = getLE4IntBuffer();
         int value = CounterJNI.getCounter(m_counter, status);
@@ -336,6 +337,7 @@ public class Counter extends CounterBase implements PIDSource {
      * effect the running state of the counter, just sets the current value to
      * zero.
      */
+    @Override
     public void reset(){
         IntBuffer status = getLE4IntBuffer();
         CounterJNI.resetCounter(m_counter, status);
@@ -351,6 +353,7 @@ public class Counter extends CounterBase implements PIDSource {
      * @param maxPeriod The maximum period where the counted device is considered
      * moving in seconds.
      */
+    @Override
     public void setMaxPeriod(double maxPeriod){
         IntBuffer status = getLE4IntBuffer();
         CounterJNI.setCounterMaxPeriod(m_counter, maxPeriod, status);
@@ -388,6 +391,7 @@ public class Counter extends CounterBase implements PIDSource {
      * @return Returns true if the most recent counter period exceeds the
      * MaxPeriod value set by SetMaxPeriod.
      */
+    @Override
     public boolean getStopped(){
         IntBuffer status = getLE4IntBuffer();
         boolean value = CounterJNI.getCounterStopped(m_counter, status) != 0;
@@ -400,6 +404,7 @@ public class Counter extends CounterBase implements PIDSource {
      *
      * @return The last direction the counter value changed.
      */
+    @Override
     public boolean getDirection(){
         IntBuffer status = getLE4IntBuffer();
         boolean value = CounterJNI.getCounterDirection(m_counter, status) != 0;
@@ -427,6 +432,7 @@ public class Counter extends CounterBase implements PIDSource {
      *
      * @return The period of the last two pulses in units of seconds.
      */
+    @Override
     public double getPeriod(){
         IntBuffer status = getLE4IntBuffer();
         double value = CounterJNI.getCounterPeriod(m_counter, status);
@@ -506,6 +512,7 @@ public class Counter extends CounterBase implements PIDSource {
     /**
      * {@inheritDoc}
      */
+    @Override
     public double pidGet(){
         switch(m_pidSType){
         case DISTANCE:

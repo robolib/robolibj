@@ -37,6 +37,7 @@ public interface Trigger {
     public default void runWhenActive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
+            @Override
             public void execute() {
                 if(get()){
                     if(!pressed){
@@ -53,6 +54,7 @@ public interface Trigger {
     public default void runWhileActive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
+            @Override
             public void execute() {
                 if(get()){
                     command.start();
@@ -68,6 +70,7 @@ public interface Trigger {
     public default void runWhenInactive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
+            @Override
             public void execute() {
                 if(get()){
                     pressed = true;
@@ -82,6 +85,7 @@ public interface Trigger {
     public default void runWhileInactive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
+            @Override
             public void execute() {
                 if(get()){
                     if(!pressed){
@@ -99,6 +103,7 @@ public interface Trigger {
     public default void toggleWhenActive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
+            @Override
             public void execute() {
                 if(get()){
                     if(!pressed){
@@ -117,6 +122,7 @@ public interface Trigger {
     public default void cancelWhenActive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
+            @Override
             public void execute() {
                 if(get()){
                     if(!pressed){

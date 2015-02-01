@@ -20,11 +20,13 @@ public class CanTalonSRX extends CtreCanNode {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  protected void finalize() {
+  @Override
+protected void finalize() {
     delete();
   }
 
-  public synchronized void delete() {
+  @Override
+public synchronized void delete() {
     if (swigCPtr != 0) {
       if (swigCMemOwn) {
         swigCMemOwn = false;
@@ -446,6 +448,7 @@ public class CanTalonSRX extends CtreCanNode {
       return swigValue;
     }
 
+    @Override
     public String toString() {
       return swigName;
     }

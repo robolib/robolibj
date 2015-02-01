@@ -59,6 +59,7 @@ public abstract class DisabledMode extends RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected final void modeRun(){
         NetworkCommunications.ObserveUserProgramDisabled();
         run();

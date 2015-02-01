@@ -60,6 +60,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
     /**
      * {@inheritDoc}
      */
+    @Override
     public void free(){
         super.free();
         m_accumulatorOffset = 0;
@@ -390,6 +391,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      *
      * @return the average voltage
      */
+    @Override
     public double pidGet(){
         return getAverageVoltage();
     }
@@ -397,6 +399,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
     /**
      * Live Window code, only does anything if live window is activated.
      */
+    @Override
     public String getSmartDashboardType() {
         return "Analog Input";
     }
@@ -404,6 +407,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
@@ -412,6 +416,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable() {
         if (m_table != null) {
             m_table.putNumber("Value", getAverageVoltage());
@@ -421,6 +426,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -430,6 +436,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      * LiveWindow.
      * {@inheritDoc}
      */
+    @Override
     public void startLiveWindowMode() {
     }
 
@@ -438,6 +445,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      * LiveWindow.
      * {@inheritDoc}
      */
+    @Override
     public void stopLiveWindowMode() {
     }
     

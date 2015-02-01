@@ -62,6 +62,7 @@ public class NetTableController extends GenericHID {
         /**
          * {@inheritDoc}
          */
+        @Override
         public double get(){
             double out = m_table.getNumber("axis-" + m_channel, 0.00) * m_invert;
             return (Math.abs(out) <= m_deadBand ? 0 : out);
@@ -70,6 +71,7 @@ public class NetTableController extends GenericHID {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setInverted(boolean inverted){
             m_invert = inverted ? -1 : 1;
         }
@@ -77,6 +79,7 @@ public class NetTableController extends GenericHID {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setDeadband(double value){
             m_deadBand = value;
         }
@@ -106,6 +109,7 @@ public class NetTableController extends GenericHID {
         /**
          * {@inheritDoc}
          */
+        @Override
         public boolean get() {
             return m_table.getBoolean("button-" + m_channel, false) & !m_invert;
         }
@@ -146,6 +150,7 @@ public class NetTableController extends GenericHID {
      * @return a {@link NetTableAxis} instance of the requested Axis
      * @see NetTableAxis
      */
+    @Override
     public HIDAxis getAxis(int axis) {
         checkAxis(axis);
         return m_axes[axis - 1];
@@ -156,6 +161,7 @@ public class NetTableController extends GenericHID {
      * @return a {@link NetTableButton} instance of the requested Button
      * @see NetTableButton
      */
+    @Override
     public HIDButton getButton(int btn) {
         checkButton(btn);
         return m_btns[btn - 1];

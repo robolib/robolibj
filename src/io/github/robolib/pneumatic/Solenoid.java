@@ -61,6 +61,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void set(Value value){
         switch(value){
         case OFF:
@@ -81,6 +82,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Value get(){
         return get(m_port) ? Value.ON : Value.OFF;
     }
@@ -105,6 +107,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     /*
      * Live Window code, only does anything if live window is activated.
      */
+    @Override
     public String getSmartDashboardType() {
         return "Solenoid";
     }
@@ -112,6 +115,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
@@ -120,6 +124,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -127,6 +132,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable() {
         if (m_table != null) {
             m_table.putBoolean("Value", getRaw());
@@ -136,8 +142,10 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void startLiveWindowMode() {
         m_table_listener = new ITableListener() {
+            @Override
             public void valueChanged(ITable itable, String key, Object value, boolean bln) {
                 set(((Boolean) value).booleanValue());
             }
@@ -148,6 +156,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stopLiveWindowMode() {
         set(false);
         m_table.removeTableListener(m_table_listener);

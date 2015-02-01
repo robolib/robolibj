@@ -19,9 +19,9 @@ public class NetworkCommunications extends JNIWrapper {
 		public static final int kTargetClass_Unknown = 0x00;
 		public static final int kTargetClass_FRC1 = 0x10;
 		public static final int kTargetClass_FRC2 = 0x20;
-		public static final int kTargetClass_FRC2_Analog = (int)NetworkCommunications.tTargetClass.kTargetClass_FRC2 | (int)NetworkCommunications.tModuleType.kModuleType_Analog;
-		public static final int kTargetClass_FRC2_Digital = (int)NetworkCommunications.tTargetClass.kTargetClass_FRC2 | (int)NetworkCommunications.tModuleType.kModuleType_Digital;
-		public static final int kTargetClass_FRC2_Solenoid = (int)NetworkCommunications.tTargetClass.kTargetClass_FRC2 | (int)NetworkCommunications.tModuleType.kModuleType_Solenoid;
+		public static final int kTargetClass_FRC2_Analog = NetworkCommunications.tTargetClass.kTargetClass_FRC2 | NetworkCommunications.tModuleType.kModuleType_Analog;
+		public static final int kTargetClass_FRC2_Digital = NetworkCommunications.tTargetClass.kTargetClass_FRC2 | NetworkCommunications.tModuleType.kModuleType_Digital;
+		public static final int kTargetClass_FRC2_Solenoid = NetworkCommunications.tTargetClass.kTargetClass_FRC2 | NetworkCommunications.tModuleType.kModuleType_Solenoid;
 		public static final int kTargetClass_FamilyMask = 0xF0;
 		public static final int kTargetClass_ModuleMask = 0x0F;
 	};

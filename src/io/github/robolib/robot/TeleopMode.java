@@ -54,6 +54,7 @@ public abstract class TeleopMode extends RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected final void modeRun(){
         NetworkCommunications.ObserveUserProgramTeleop();;
         run();

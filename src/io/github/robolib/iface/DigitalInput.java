@@ -33,6 +33,7 @@ public class DigitalInput extends DigitalIO implements Trigger {
         super(channel, Direction.IN);
     }
     
+    @Override
     public boolean get(){
         IntBuffer status = getLE4IntBuffer();
         boolean value = DIOJNI.getDIO(m_port, status) != 0;

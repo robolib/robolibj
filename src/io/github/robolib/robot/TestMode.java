@@ -55,6 +55,7 @@ public abstract class TestMode extends RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected final void modeInit(){
         LiveWindow.setEnabled(true);
         init();
@@ -63,6 +64,7 @@ public abstract class TestMode extends RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected final void modeRun(){
         NetworkCommunications.ObserveUserProgramTest();
         run();
@@ -71,6 +73,7 @@ public abstract class TestMode extends RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected final void modeEnd(){
         LiveWindow.setEnabled(false);
         end();

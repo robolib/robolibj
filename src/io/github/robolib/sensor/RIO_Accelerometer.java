@@ -54,6 +54,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setAccelRange(AccelRange range){
         AccelerometerJNI.setAccelerometerActive(false);
         
@@ -69,6 +70,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public AccelRange getAccelRange(){
         return m_range;
     }
@@ -78,6 +80,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the X axis in g-forces
      */
+    @Override
     public double getAccelerationX() {
         return AccelerometerJNI.getAccelerometerX();
     }
@@ -87,6 +90,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the Y axis in g-forces
      */
+    @Override
     public double getAccelerationY() {
         return AccelerometerJNI.getAccelerometerY();
     }
@@ -96,6 +100,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the Z axis in g-forces
      */
+    @Override
     public double getAccelerationZ() {
         return AccelerometerJNI.getAccelerometerZ();
     }
@@ -104,6 +109,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
@@ -112,6 +118,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable(){
         return m_table;
     }
@@ -119,6 +126,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getSmartDashboardType(){
         return "Internal3AxisAccelerometer";
     }
@@ -126,6 +134,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable() {
         if (m_table != null) {
             m_table.putNumber("X", getAccelerationX());
@@ -137,6 +146,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void startLiveWindowMode() {
 
     }
@@ -144,6 +154,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stopLiveWindowMode() {
 
     }
