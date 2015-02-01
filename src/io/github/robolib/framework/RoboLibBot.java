@@ -507,6 +507,7 @@ public class RoboLibBot {
     public static final RobotMode getRobotMode(){
         if(!m_modes.containsKey(m_currentMode)){
             return new RobotMode(){
+                @Override
                 public void init(){
                     throw new RobotException("No Robot CounterMode");
                 }

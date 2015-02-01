@@ -593,6 +593,7 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
@@ -601,6 +602,7 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -608,6 +610,7 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable() {
         if(m_table != null){
             m_table.putNumber("X Heading", getHeadingXDeg());
@@ -619,6 +622,7 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getSmartDashboardType() {
         return "3-Axis Compass";
     }
@@ -626,10 +630,12 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void startLiveWindowMode() {}
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stopLiveWindowMode() {}
 }

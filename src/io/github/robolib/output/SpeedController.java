@@ -67,6 +67,7 @@ public interface SpeedController extends MotorSafety, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public default void pidWrite(double value){
         setSpeed(value);
     }
@@ -74,6 +75,7 @@ public interface SpeedController extends MotorSafety, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public default void stopMotor(){       
         setSpeed(0.0);
     }

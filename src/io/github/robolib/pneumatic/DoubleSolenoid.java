@@ -58,6 +58,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void set(Value value) {
         switch(value){
         case OFF:
@@ -82,6 +83,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Value get() {
         boolean forward = get(m_forwardPort);
         boolean reverse = get(m_reversePort);
@@ -123,6 +125,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     /*
      * Live Window code, only does anything if live window is activated.
      */
+    @Override
     public String getSmartDashboardType() {
         return "Double Solenoid";
     }
@@ -130,6 +133,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
@@ -138,6 +142,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -145,6 +150,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable() {
         if (m_table != null) {
             m_table.putString("Value", (get() == Value.FORWARD ? "Forward" : (get() == Value.REVERSE ? "Reverse" : "Off")));
@@ -154,9 +160,11 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void startLiveWindowMode() {
         set(Value.OFF);
         m_table_listener = new ITableListener() {
+            @Override
             public void valueChanged(ITable itable, String key, Object value, boolean bln) {
                 if (value.toString().equalsIgnoreCase("Reverse"))
                     set(Value.REVERSE);
@@ -172,6 +180,7 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stopLiveWindowMode() {
         set(Value.OFF);
         m_table.removeTableListener(m_table_listener);

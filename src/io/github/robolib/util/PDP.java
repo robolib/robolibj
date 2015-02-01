@@ -222,6 +222,7 @@ public class PDP implements Sendable {
     /*
      * Live Window code, only does anything if live window is activated.
      */
+    @Override
     public String getSmartDashboardType() {
         return "Power Distribution Panel";
     }
@@ -229,6 +230,7 @@ public class PDP implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable) {
         m_table = subtable;
     }
@@ -236,6 +238,7 @@ public class PDP implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -243,6 +246,7 @@ public class PDP implements Sendable {
     /**
      * Update the table for this object with the latest values.
      */
+    @Override
     public void updateTable() {
         m_updateChannels.forEach(i -> m_table.putString(m_chanNames[i],
                 StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A")));

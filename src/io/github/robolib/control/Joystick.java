@@ -80,6 +80,7 @@ public class Joystick extends GenericHID {
         /**
          * {@inheritDoc}
          */
+        @Override
         public double get(){
             double out = getStickAxis(m_port, m_channel) * m_invert;
             return (Math.abs(out) >= m_deadBand ? out : 0.0);
@@ -88,6 +89,7 @@ public class Joystick extends GenericHID {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setInverted(boolean inverted){
             m_invert = inverted ? -1 : 1;
         }
@@ -95,6 +97,7 @@ public class Joystick extends GenericHID {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setDeadband(double value){
             m_deadBand = value;
         }
@@ -120,6 +123,7 @@ public class Joystick extends GenericHID {
         /**
          * {@inheritDoc}
          */
+        @Override
         public boolean get() {
             return getStickButton(m_port, m_channel);
         }
@@ -289,6 +293,7 @@ public class Joystick extends GenericHID {
      * @return a {@link JoystickAxis} instance of the requested Axis
      * @see JoystickAxis
      */
+    @Override
     public HIDAxis getAxis(int axis) {
         checkAxis(axis);
         return m_axes[axis];
@@ -299,6 +304,7 @@ public class Joystick extends GenericHID {
      * @return a {@link JoystickButton} instance of the requested Button
      * @see JoystickButton
      */
+    @Override
     public HIDButton getButton(int btn) {
         checkButton(btn);
         return m_btns[btn];
@@ -307,6 +313,7 @@ public class Joystick extends GenericHID {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getPOV(int pov){
         return getStickPOV(m_port, pov);
     }

@@ -37,18 +37,21 @@ public class C_Delay extends Command {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void initialize() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void execute() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected boolean isFinished() {
         return isTimedOut();
     }
@@ -56,12 +59,14 @@ public class C_Delay extends Command {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void end() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void interrupted() {
     }
 }

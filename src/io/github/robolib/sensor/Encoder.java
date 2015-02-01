@@ -374,6 +374,7 @@ public class Encoder extends CounterBase implements PIDSource {
      * @return Current count from the Encoder adjusted for the 1x, 2x, or 4x
      *         scale factor.
      */
+    @Override
     public int get(){
         return (int)(getRaw() * decodingScaleFactor());
     }
@@ -382,6 +383,7 @@ public class Encoder extends CounterBase implements PIDSource {
      * Reset the Encoder distance to zero. Resets the current count to zero on
      * the encoder.
      */
+    @Override
     public void reset(){
         if(m_counter != null){
             m_counter.reset();
@@ -399,6 +401,7 @@ public class Encoder extends CounterBase implements PIDSource {
      *
      * @return Period in seconds of the most recent pulse.
      */
+    @Override
     public double getPeriod(){
         double measuredPeriod;
         if(m_counter != null){
@@ -422,6 +425,7 @@ public class Encoder extends CounterBase implements PIDSource {
      * @param maxPeriod The maximum time between rising and falling edges before the
      * FPGA will report the device stopped. This is expressed in seconds.
      */
+    @Override
     public void setMaxPeriod(double maxPeriod){
         if(m_counter != null){
             m_counter.setMaxPeriod(maxPeriod * decodingScaleFactor());
@@ -440,6 +444,7 @@ public class Encoder extends CounterBase implements PIDSource {
      *
      * @return True if the encoder is considered stopped.
      */
+    @Override
     public boolean getStopped(){
         if(m_counter != null){
             return m_counter.getStopped();
@@ -456,6 +461,7 @@ public class Encoder extends CounterBase implements PIDSource {
      *
      * @return The last direction the encoder value changed.
      */
+    @Override
     public boolean getDirection(){
         if(m_counter != null){
             return m_counter.getDirection();
@@ -605,6 +611,7 @@ public class Encoder extends CounterBase implements PIDSource {
     /**
      * {@inheritDoc}
      */
+    @Override
     public double pidGet(){
         switch(m_pidSType){
         case DISTANCE:

@@ -32,6 +32,7 @@ public class NullController implements SpeedController {
      * Do absolutely nothing
      * @return 0
      */
+    @Override
     public double get() {
         return 0;
     }
@@ -39,16 +40,19 @@ public class NullController implements SpeedController {
     /**
      * Do absolutely nothing
      */
+    @Override
     public void setSpeed(double speed) {}
 
     /**
      * Do absolutely nothing
      */
+    @Override
     public void setInverted(boolean inverted) {}
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public MotorSafetyHelper getSafetyHelper() {
         return m_safetyHelper;
     }
@@ -57,6 +61,7 @@ public class NullController implements SpeedController {
      * Return "Null"
      * @return "Null"
      */
+    @Override
     public String getDescription() {
         return "Null";
     }

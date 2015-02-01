@@ -913,6 +913,7 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
         return AccelRange.values()[buffer[0]];
     }
     
+    @Override
     public AccelRange getAccelRange(){
         return getFullScaleAccelRange();
     }
@@ -925,6 +926,7 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
         writeBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, (byte)range.ordinal());
     }
     
+    @Override
     public void setAccelRange(AccelRange range){
         setFullScaleAccelRange(range);
     }
@@ -2526,6 +2528,7 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
      * @see getMotion6()
      * @see MPU6050_RA_ACCEL_XOUT_H
      */
+    @Override
     public double getAccelerationX() {
         short[] buffer = new short[1];
         readWord(MPU6050_RA_ACCEL_XOUT_H, buffer);
@@ -2537,6 +2540,7 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
      * @see getMotion6()
      * @see MPU6050_RA_ACCEL_YOUT_H
      */
+    @Override
     public double getAccelerationY() {
         short[] buffer = new short[1];
         readWord(MPU6050_RA_ACCEL_YOUT_H, buffer);
@@ -2548,6 +2552,7 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
      * @see getMotion6()
      * @see MPU6050_RA_ACCEL_ZOUT_H
      */
+    @Override
     public double getAccelerationZ() {
         short[] buffer = new short[1];
         readWord(MPU6050_RA_ACCEL_ZOUT_H, buffer);
@@ -2745,7 +2750,7 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
     public int getExternalSensorDWord(int position) {
         byte[] buffer = new byte[4];
         readBytes(MPU6050_RA_EXT_SENS_DATA_00 + position, buffer,  4);
-        return (((int)buffer[0]) << 24) | (((int)buffer[1]) << 16) | (((short)buffer[2]) << 8) | buffer[3];
+        return ((buffer[0]) << 24) | ((buffer[1]) << 16) | ((buffer[2]) << 8) | buffer[3];
     }
 
     // MOT_DETECT_STATUS register
@@ -4510,10 +4515,10 @@ public class MPU6050 extends I2C implements IAccelerometer, IGyro{
         short[] qI = new short[4];
         byte status = dmpGetQuaternion(qI, packet);
         if (status == 0) {
-            q.w = (double)qI[0] / 16384.00;
-            q.x = (double)qI[1] / 16384.00;
-            q.y = (double)qI[2] / 16384.00;
-            q.z = (double)qI[3] / 16384.00;
+            q.w = qI[0] / 16384.00;
+            q.x = qI[1] / 16384.00;
+            q.y = qI[2] / 16384.00;
+            q.z = qI[3] / 16384.00;
             return 0;
         }
         return status; // int16 return value, indicates error if this line is reached

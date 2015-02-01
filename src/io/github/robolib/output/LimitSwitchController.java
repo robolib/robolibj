@@ -48,6 +48,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public double get() {
         return m_motor.get();
     }
@@ -55,6 +56,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void set(double speed, byte syncGroup) {
         speed = speed > 0 && !m_switchSystem.canForward() ? 0.00 : speed;
         speed = speed < 0 && !m_switchSystem.canReverse() ? 0.00 : speed;
@@ -64,6 +66,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void set(double speed) {
         if(speed > 0)
         speed = speed > 0 && !m_switchSystem.canForward() ? 0.00 : speed;
@@ -74,10 +77,12 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setSpeed(double speed) {
         set(speed);
     }
     
+    @Override
     public void setInverted(boolean inverted){
         m_motor.setInverted(inverted);
     }
@@ -112,6 +117,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void pidWrite(double output) {
         m_motor.pidWrite(output);
     }
@@ -119,6 +125,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public MotorSafetyHelper getSafetyHelper() {
         return m_safetyHelper;
     }
@@ -126,6 +133,7 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getDescription() {
         return "LimitSwitchController";
     }

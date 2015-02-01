@@ -102,6 +102,7 @@ public class PWMController extends PWM implements SpeedController{
     /**
      * {@inheritDoc}
      */
+    @Override
     public MotorSafetyHelper getSafetyHelper() {
         return m_safetyHelper;
     }
@@ -109,6 +110,7 @@ public class PWMController extends PWM implements SpeedController{
     /**
      * {@inheritDoc}
      */
+    @Override
     public double get() {
         return getSpeed();
     }
@@ -116,6 +118,7 @@ public class PWMController extends PWM implements SpeedController{
     /**
      * {@inheritDoc}
      */
+    @Override
     public double getSpeed(){
     	return super.getSpeed() * m_inverted;
     }
@@ -123,6 +126,7 @@ public class PWMController extends PWM implements SpeedController{
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setSpeed(double speed){
         super.setSpeed(speed * m_inverted);
         m_safetyHelper.feed();
@@ -131,6 +135,7 @@ public class PWMController extends PWM implements SpeedController{
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setInverted(boolean inverted){
         m_inverted = (byte)(inverted ? -1 : 1);
     }
@@ -138,6 +143,7 @@ public class PWMController extends PWM implements SpeedController{
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stopMotor() {
         setRaw(kPWMDisabled);
     }
@@ -145,6 +151,7 @@ public class PWMController extends PWM implements SpeedController{
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getDescription() {
         return m_description;
     }

@@ -247,6 +247,7 @@ public class Scheduler implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getSmartDashboardType() {
         return "Scheduler";
     }
@@ -254,6 +255,7 @@ public class Scheduler implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable subtable){
         m_table = subtable;
         commands = new StringArray();
@@ -268,6 +270,7 @@ public class Scheduler implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable() {
         return m_table;
     }
@@ -275,6 +278,7 @@ public class Scheduler implements Sendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable(){
         if(m_table != null){
             m_table.retrieveValue("Cancel", toCancel);

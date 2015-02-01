@@ -173,7 +173,7 @@ public abstract class GenericHID {
      * @param btn the btn
      */
     protected void addButton(final HIDButton btn){
-        m_btns = (HIDButton[]) Arrays.copyOf(m_btns, m_numBtns + 1);
+        m_btns = Arrays.copyOf(m_btns, m_numBtns + 1);
         m_btns[m_btns.length - 1] = btn;
         m_numBtns = m_btns.length;
     }
@@ -187,6 +187,7 @@ public abstract class GenericHID {
      */
     protected void addAxisButton(final int channel, final double posThresh, final double negThresh){
         addButton(new HIDButton(){           
+            @Override
             public boolean get() {
                 double axis = getRawAxis(channel);
                 return axis >= posThresh || axis <= negThresh;

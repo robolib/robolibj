@@ -26,6 +26,7 @@ public interface HIDButton extends ButtonTrigger {
      * Get the Value of the Button.
      * @return the value of the Button.
      */
+    @Override
     public boolean get();
 
 }

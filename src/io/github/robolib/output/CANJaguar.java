@@ -320,7 +320,8 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	 *
 	 * @return The most recently set outputValue set point.
 	 */
-	public double get() {
+	@Override
+    public double get() {
 		return m_value * m_inverted;
 	}
 
@@ -337,7 +338,8 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	 * @param outputValue The set-point to sent to the motor controller.
 	 * @param syncGroup The update group to add this set() to, pending UpdateSyncGroup().  If 0, update immediately.
 	 */
-	public void set(double outputValue, byte syncGroup) {
+	@Override
+    public void set(double outputValue, byte syncGroup) {
 		outputValue = outputValue * m_inverted;
 		int messageID;
 		byte[] data = new byte[8];
@@ -402,13 +404,15 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	 * @param value
 	 *            The set-point to sent to the motor controller.
 	 */
-	public void set(double value) {
+	@Override
+    public void set(double value) {
 		set(value, (byte)0);
 	}
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setSpeed(double speed) {
         set(speed);
     }
@@ -416,7 +420,8 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setInverted(boolean inverted) {
+	@Override
+    public void setInverted(boolean inverted) {
 		m_inverted = (byte)(inverted ? -1 : 1);		
 	}
 
@@ -868,7 +873,8 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	/**
 	 * {@inheritDoc}
 	 */
-	public void pidWrite(double output) {
+	@Override
+    public void pidWrite(double output) {
 		if (m_controlMode == ControlMode.PercentVbus) {
 			set(output);
 		} else {
@@ -2056,29 +2062,33 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 		return (int)(a * 65536.0) == (int)(b * 65536.0);
 	}
 	
-	public MotorSafetyHelper getSafetyHelper(){
+	@Override
+    public MotorSafetyHelper getSafetyHelper(){
 	    return m_safetyHelper;
 	}
 
-	public String getDescription() {
+	@Override
+    public String getDescription() {
 		return "CANJaguar ID " + m_deviceNumber;
 	}
 
 	public int getDeviceID() {
-		return (int)m_deviceNumber;
+		return m_deviceNumber;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void stopMotor() {
+	@Override
+    public void stopMotor() {
 		disableControl();
 	}
 
 	/*
 	 * Live Window code, only does anything if live window is activated.
 	 */
-	public String getSmartDashboardType() {
+	@Override
+    public String getSmartDashboardType() {
 		return "Speed Controller";
 	}
 
@@ -2086,7 +2096,8 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	/**
 	 * {@inheritDoc}
 	 */
-	public void initTable(ITable subtable) {
+	@Override
+    public void initTable(ITable subtable) {
 		m_table = subtable;
 		updateTable();
 	}
@@ -2094,7 +2105,8 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateTable() {
+	@Override
+    public void updateTable() {
 		if (m_table != null) {
 			m_table.putNumber("Value", get());
 		}
@@ -2103,14 +2115,16 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	/**
 	 * {@inheritDoc}
 	 */
-	public ITable getTable() {
+	@Override
+    public ITable getTable() {
 		return m_table;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void startLiveWindowMode() {
+	@Override
+    public void startLiveWindowMode() {
 		set(0); // Stop for safety
 		m_table_listener = (ITable itable, String key,
 		                    Object value, boolean bln) -> set(((Double) value).doubleValue());
@@ -2121,7 +2135,8 @@ public class CANJaguar implements MotorSafety, PIDOutput, SpeedController, LiveW
 	/**
 	 * {@inheritDoc}
 	 */
-	public void stopLiveWindowMode() {
+	@Override
+    public void stopLiveWindowMode() {
 		set(0); // Stop for safety
 		// TODO: Broken, should only remove the listener from "Value" only.
 		m_table.removeTableListener(m_table_listener);

@@ -76,6 +76,7 @@ public class LimitSwitch implements StandardSwitch {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean state() {
         return m_type.getValue(m_limitSwitch.get());
     }
@@ -83,6 +84,7 @@ public class LimitSwitch implements StandardSwitch {
     /**
      * {@inheritDoc}
      */
+    @Override
     public SwitchType getType() {
         return m_type;
     }

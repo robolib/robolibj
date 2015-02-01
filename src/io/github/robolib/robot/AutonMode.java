@@ -55,6 +55,7 @@ public abstract class AutonMode extends RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected final void modeRun(){
         NetworkCommunications.ObserveUserProgramAutonomous();
         run();
