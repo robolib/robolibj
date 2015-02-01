@@ -43,7 +43,7 @@ public final class DriverStation {
     private boolean m_newControlData;
     private final ByteBuffer m_packetDataAvailableMutex;
     private final ByteBuffer m_packetDataAvailableSem;
-    private static final ILogger m_log = Logger.get(DriverStation.class);
+    private final ILogger m_log;
 
     private static DriverStation m_instance = null;
     
@@ -55,6 +55,7 @@ public final class DriverStation {
      * 
      */
     private DriverStation(){
+        m_log = Logger.get(DriverStation.class);
         m_log.info("Interface initializing");
         m_dataSem = new Object();
         m_packetDataAvailableMutex = HALUtil.initializeMutexNormal();
@@ -64,6 +65,7 @@ public final class DriverStation {
         //WOO lookie here. Lambda functions ^_^
         m_thread = new Thread(() -> commTask(), "DriverStation");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
+        m_thread.setDaemon(true);
         
     }
     
@@ -74,18 +76,20 @@ public final class DriverStation {
         m_log.info("Communications thread started.");
         byte safetyCounter = 0;
         byte tableCounter = 0;
+        ByteBuffer countBuffer = ByteBuffer.allocateDirect(1);
         synchronized(m_dataSem){
             m_dataSem.notifyAll();
         }
         while (m_thread_keepAlive){
             HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
             synchronized(this){
+                
                 for(byte stick = 0; stick < Joystick.kNumJoysticks; stick++){
-                    ByteBuffer countBuffer = ByteBuffer.allocateDirect(1);
                     short axes[] = NetworkCommunications.HALGetJoystickAxes(stick);
                     short povs[] = NetworkCommunications.HALGetJoystickPOVs(stick);
                     int btns = NetworkCommunications.HALGetJoystickButtons(stick, countBuffer);
                     Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());
+                    countBuffer.clear();
                 }
                 
                 m_newControlData = true;

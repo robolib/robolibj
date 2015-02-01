@@ -18,7 +18,6 @@ package io.github.robolib.output;
 import io.github.robolib.input.limitswitch.LimitSwitchSystem;
 import io.github.robolib.pid.PIDOutput;
 
-// TODO: Auto-generated Javadoc
 /**
  * A SpeedController limited by Limit Switches.
  *
@@ -32,6 +31,8 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
     /** The m_switch system. */
     private final LimitSwitchSystem m_switchSystem;
     
+    private final MotorSafetyHelper m_safetyHelper;
+    
     /**
      * Instantiates a new limit switch controller.
      *
@@ -39,8 +40,9 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
      * @param switchSystem the switch system
      */
     public LimitSwitchController(SpeedController motor, LimitSwitchSystem switchSystem){
-        this.m_motor = motor;
-        this.m_switchSystem = switchSystem;
+        m_motor = motor;
+        m_switchSystem = switchSystem;
+        m_safetyHelper = new MotorSafetyHelper(this);
     }
 
     /**
@@ -112,5 +114,19 @@ public class LimitSwitchController implements SpeedController, PIDOutput {
      */
     public void pidWrite(double output) {
         m_motor.pidWrite(output);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public MotorSafetyHelper getSafetyHelper() {
+        return m_safetyHelper;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getDescription() {
+        return "LimitSwitchController";
     }
 }

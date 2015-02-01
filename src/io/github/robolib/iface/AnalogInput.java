@@ -41,10 +41,10 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
         public long count;
     }
     
-    private static final int kAccumulatorSlot = 1;
-    private static final int[] kAccumulatorChannels = { 0, 1 };
+    private static final int ACCUMULATOR_SLOT = 1;
+    private static final int[] ACCUMULATOR_CHANNELS = { 0, 1 };
 
-    private ITable m_table;
+    protected ITable m_table;
 
     private long m_accumulatorOffset;
     
@@ -224,9 +224,9 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
         if(isAccumulatorChannel()){
             throw new ResourceAllocationException(
                     "Accumulators or only available on slot"
-                            + kAccumulatorSlot + " on channels "
-                            + kAccumulatorChannels[0] + ","
-                            + kAccumulatorChannels[1]);
+                            + ACCUMULATOR_SLOT + " on channels "
+                            + ACCUMULATOR_CHANNELS[0] + ","
+                            + ACCUMULATOR_CHANNELS[1]);
         }
         m_accumulatorOffset = 0;
         IntBuffer status = getLE4IntBuffer();
@@ -349,7 +349,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      */
     public boolean isAccumulatorChannel(){
         int chNum = m_channel.ordinal();
-        for(int i : kAccumulatorChannels){
+        for(int i : ACCUMULATOR_CHANNELS){
             if(i == chNum) return true;
         }
         

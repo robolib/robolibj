@@ -55,23 +55,14 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      * {@inheritDoc}
      */
     public void setAccelRange(AccelRange range){
-        m_range = range;
         AccelerometerJNI.setAccelerometerActive(false);
         
-        switch(range) {
-        case k2G:
-            AccelerometerJNI.setAccelerometerRange(0);
-            break;
-        case k4G:
-            AccelerometerJNI.setAccelerometerRange(1);
-            break;
-        case k8G:
-            AccelerometerJNI.setAccelerometerRange(2);
-            break;
-        case k16G:
+        if(range == AccelRange.k16G){
             throw new RuntimeException("16G range not supported (use k2G, k4G, or k8G)");
         }
-        
+        AccelerometerJNI.setAccelerometerRange(range.ordinal());
+        m_range = range;
+
         AccelerometerJNI.setAccelerometerActive(true);
     }
     
@@ -79,7 +70,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      * {@inheritDoc}
      */
     public AccelRange getAccelRange(){
-        return m_range;        
+        return m_range;
     }
     
     /**
