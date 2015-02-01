@@ -21,7 +21,6 @@ import java.util.Arrays;
 
 import io.github.robolib.iface.I2C;
 import io.github.robolib.sensor.IAccelerometer;
-import io.github.robolib.sensor.IGyro;
 import io.github.robolib.util.Timer;
 import io.github.robolib.util.log.Logger;
 
@@ -36,7 +35,7 @@ import io.github.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  */
 @SuppressWarnings("unused")
-public class MPU6050 extends I2C implements IAccelerometer, IGyro{
+public class MPU6050 extends I2C implements IAccelerometer {
 
     /** address pin low (GND), default for InvenSense evaluation board */
     private static final byte MPU6050_ADDRESS_AD0_LOW = 0x68;

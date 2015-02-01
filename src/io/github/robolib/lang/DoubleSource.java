@@ -13,8 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
+package io.github.robolib.lang;
+
 /**
+ * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-package io.github.robolib.exception;
+public interface DoubleSource {
+    
+    double get();
+
+}

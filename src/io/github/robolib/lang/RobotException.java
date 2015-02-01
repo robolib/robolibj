@@ -13,21 +13,28 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.exception;
+package io.github.robolib.lang;
 
 /**
- * Exception indicating that the Jaguar CAN Driver layer refused to send a
- * restricted message ID to the CAN bus.
+ * An exception for use with robot code.
+ * 
+ * throw this exception when something goes wrong with the robot that does
+ * not fall under any other exception type.
  *
  * @author noriah Reuland <vix@noriah.dev>
+ * @since 0.1.0
  */
-public class CANMessageNotAllowedException extends RuntimeException {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2755736457012620920L;
+public final class RobotException extends RuntimeException {
 
-    public CANMessageNotAllowedException(String msg) {
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 3748667178724340857L;
+
+    /**
+     * Instantiates a new robot exception.
+     *
+     * @param msg the msg
+     */
+    public RobotException(String msg){
         super(msg);
     }
 }

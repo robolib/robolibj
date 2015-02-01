@@ -21,10 +21,11 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PWMJNI;
+import io.github.robolib.lang.DoubleSink;
+import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.log.Logger;
@@ -37,7 +38,7 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWM extends Interface implements LiveWindowSendable {
+public class PWM extends Interface implements LiveWindowSendable, DoubleSink {
 
     /**
      * The PWM Channel enum.
@@ -477,6 +478,10 @@ public class PWM extends Interface implements LiveWindowSendable {
         return value;
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void set(double value){
         setSpeed(value);
     }

@@ -13,12 +13,8 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensor;
-
 /**
- * 
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface IPotentiometer {
-
-}
+package io.github.robolib.lang;

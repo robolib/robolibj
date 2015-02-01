@@ -21,6 +21,7 @@ import java.nio.IntBuffer;
 
 import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
+import io.github.robolib.lang.DoubleSink;
 import io.github.robolib.livewindow.LiveWindowSendable;
 
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -29,12 +30,21 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogOutput extends AnalogIO implements LiveWindowSendable {
+public class AnalogOutput extends AnalogIO implements LiveWindowSendable, DoubleSink {
     
     private ITable m_table;
     
     public AnalogOutput(AnalogChannel channel){
         super(channel, Direction.OUT);
+    }
+    
+    /**
+     * Set the voltage of this Analog Output
+     * @param voltage the voltage to set
+     */
+    @Override
+    public void set(double voltage){
+        setVoltage(voltage);
     }
     
     public void setVoltage(double voltage){

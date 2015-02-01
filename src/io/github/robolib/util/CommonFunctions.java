@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import io.github.robolib.exception.ChannelIndexException;
+import io.github.robolib.lang.ChannelIndexException;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

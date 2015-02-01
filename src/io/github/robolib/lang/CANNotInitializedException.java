@@ -13,18 +13,20 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.exception;
+package io.github.robolib.lang;
 
 /**
+ * Exception indicating that the CAN driver layer has not been initialized.
+ * This happens when an entry-point is called before a CAN driver plugin
+ * has been installed.
  * 
- *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class CANMessageNotFoundException extends RuntimeException {
+public class CANNotInitializedException extends RuntimeException {
 
     /**
      * 
      */
-    private static final long serialVersionUID = -8233681586441184325L;
+    private static final long serialVersionUID = 7943821576920330903L;
 
 }

@@ -18,7 +18,7 @@ package io.github.robolib.iface;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.robolib.exception.ResourceAllocationException;
+import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.log.Logger;
 
 /**

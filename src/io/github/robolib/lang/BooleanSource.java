@@ -13,15 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util;
+package io.github.robolib.lang;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface DoubleSource {
+public interface BooleanSource {
     
-    double get();
+    boolean get();
 
 }

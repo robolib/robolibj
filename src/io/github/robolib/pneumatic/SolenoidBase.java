@@ -20,9 +20,9 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.SolenoidJNI;
+import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.log.Logger;
 
 

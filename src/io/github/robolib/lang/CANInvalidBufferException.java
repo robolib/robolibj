@@ -13,24 +13,20 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.exception;
+package io.github.robolib.lang;
 
 /**
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ * Exception indicating that a CAN driver library entry-point
+ * was passed an invalid buffer.  Typically, this is due to a
+ * buffer being too small to include the needed safety token.
  *
+ * @author noriah Reuland <vix@noriah.dev>
  */
-public class ResourceAllocationException extends RuntimeException {
+public class CANInvalidBufferException extends RuntimeException {
 
-
-    private static final long serialVersionUID = -6451386153566418315L;
-    
     /**
-     * Instantiates a new robot exception.
-     *
-     * @param msg the msg
+     * 
      */
-    public ResourceAllocationException(String msg){
-        super(msg);
-    }
+    private static final long serialVersionUID = -4584380779021379374L;
+
 }

@@ -13,28 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.exception;
+package io.github.robolib.lang;
 
 /**
- * An exception for use with robot code.
- * 
- * throw this exception when something goes wrong with the robot that does
- * not fall under any other exception type.
+ * An interface for a class that takes a Boolean
  *
  * @author noriah Reuland <vix@noriah.dev>
- * @since 0.1.0
  */
-public final class RobotException extends RuntimeException {
-
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 3748667178724340857L;
-
+public interface BooleanSink {
+    
     /**
-     * Instantiates a new robot exception.
-     *
-     * @param msg the msg
+     * Set the value of this BooleanSink
+     * @param value boolean
      */
-    public RobotException(String msg){
-        super(msg);
-    }
+    void set(boolean value);
+
 }

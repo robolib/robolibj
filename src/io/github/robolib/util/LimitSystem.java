@@ -15,6 +15,8 @@
 
 package io.github.robolib.util;
 
+import io.github.robolib.lang.BooleanSource;
+
 
 /**
  * The Limit Switch System Interface.

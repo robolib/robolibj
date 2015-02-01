@@ -13,20 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.exception;
+package io.github.robolib.lang;
 
 /**
- * Exception indicating that the CAN driver layer has not been initialized.
- * This happens when an entry-point is called before a CAN driver plugin
- * has been installed.
- * 
+ * An interface for a class that takes a double as a value.
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class CANNotInitializedException extends RuntimeException {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7943821576920330903L;
+public interface DoubleSink {
+    
+    void set(double value);
 
 }

@@ -22,7 +22,7 @@ import java.nio.IntBuffer;
 import io.github.robolib.control.Trigger;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
-import io.github.robolib.util.BooleanSource;
+import io.github.robolib.lang.BooleanSource;
 
 /**
  * 

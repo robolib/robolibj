@@ -26,7 +26,7 @@ import io.github.robolib.util.Timer;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Gyro extends AnalogInput implements IGyro, PIDSource, LiveWindowSendable {
+public class Gyro extends AnalogInput implements PIDSource, LiveWindowSendable {
     
     public static final int OVERSAMPLE_BITS = 10;
     
@@ -106,6 +106,10 @@ public class Gyro extends AnalogInput implements IGyro, PIDSource, LiveWindowSen
         getAccumulatorOutput(m_results);
         return (m_results.value - (long)(m_results.count * m_offset)) *
                 1e-9 * getLSBWeight() * (1 << getAverageBits()) / (getGlobalSampleRate() * m_VperDperS);
+    }
+    
+    public double get(){
+        return getAngle();
     }
     
     /**

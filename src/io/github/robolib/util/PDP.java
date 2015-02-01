@@ -20,8 +20,8 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.robolib.exception.ResourceAllocationException;
 import io.github.robolib.hal.PDPJNI;
+import io.github.robolib.lang.ResourceAllocationException;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

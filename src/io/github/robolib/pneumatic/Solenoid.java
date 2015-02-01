@@ -17,6 +17,7 @@ package io.github.robolib.pneumatic;
 
 import java.nio.ByteBuffer;
 
+import io.github.robolib.lang.BooleanSink;
 import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 
@@ -28,7 +29,7 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Solenoid extends SolenoidBase implements LiveWindowSendable {
+public class Solenoid extends SolenoidBase implements LiveWindowSendable, BooleanSink {
     
     private ByteBuffer m_port;
     private SolenoidChannel m_channel;

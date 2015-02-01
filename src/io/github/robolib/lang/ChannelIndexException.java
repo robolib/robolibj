@@ -13,16 +13,21 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.sensor;
+package io.github.robolib.lang;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface IGyro {
+public class ChannelIndexException extends RuntimeException {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6862051294773080694L;
     
-//    double getRotationX();
-    
-//    double getRotationY();
+    public ChannelIndexException(String msg){
+        super(msg);
+    }
 
 }

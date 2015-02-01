@@ -13,15 +13,18 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util;
+package io.github.robolib.lang;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface BooleanSource {
-    
-    boolean get();
+public class CANMessageNotFoundException extends RuntimeException {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8233681586441184325L;
 
 }

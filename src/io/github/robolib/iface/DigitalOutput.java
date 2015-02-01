@@ -23,12 +23,13 @@ import java.nio.IntBuffer;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PWMJNI;
+import io.github.robolib.lang.BooleanSink;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DigitalOutput extends DigitalIO {
+public class DigitalOutput extends DigitalIO implements BooleanSink {
     
     ByteBuffer m_pwmGenerator;
     
@@ -36,6 +37,11 @@ public class DigitalOutput extends DigitalIO {
         super(channel, Direction.OUT);
     }
     
+    /**
+     * Set the value of this DigitalOutput
+     * @param value the value true = High, false = Low
+     */
+    @Override
     public void set(boolean value){
         IntBuffer status = getLE4IntBuffer();
         DIOJNI.setDIO(m_port, (short)(value?1:0), status);
