@@ -22,7 +22,7 @@ import io.github.robolib.pid.PIDOutput;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface SpeedController extends PIDOutput {
+public interface SpeedController extends MotorSafety, PIDOutput {
     
     /**
      * Common interface for getting the current set speed of a speed controller.
@@ -63,4 +63,18 @@ public interface SpeedController extends PIDOutput {
      * @param inverted true to invert the values sent to the motor.
      */
     void setInverted(boolean inverted);
+    
+    /**
+     * {@inheritDoc}
+     */
+    public default void pidWrite(double value){
+        setSpeed(value);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public default void stopMotor(){       
+        setSpeed(0.0);
+    }
 }

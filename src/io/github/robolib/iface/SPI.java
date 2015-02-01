@@ -17,6 +17,7 @@ package io.github.robolib.iface;
 
 import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.communication.UsageReporting;
@@ -38,8 +39,10 @@ public class SPI extends Interface {
     };
     
 //    private static int m_devices = 0;
-    
+    private int m_bitOrder;
     private byte m_port;
+    private int m_clockPolarity;
+    private int m_dataOnTrailing;
 //    private int m_bitOrder;
 //    private int m_clockPolarity;
 //    private int m_dataOnTrailing;
@@ -70,5 +73,89 @@ public class SPI extends Interface {
     public void free(){
         SPIJNI.spiClose(m_port);
     }
+    
+    /**
+     * 
+     * @param hz The clock rate in Hertz
+     */
+    public final void setClockRate(int hz){
+        SPIJNI.spiSetSpeed(m_port, hz);
+    }
+    
+    public final void setMSBFirst(){
+        m_bitOrder = 1;
+        SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
+    }
+    
+    public final void setLSBFirst(){
+        m_bitOrder = 0;
+        SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
+    }
+    
+    public final void setClockActiveLow(){
+        m_clockPolarity = 1;
+        SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
+    }
+    
+    public final void setClockActiveHight(){
+        m_clockPolarity = 0;
+        SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
+    }
+    
+    public final void setSampleDataOnFalling(){
+        m_dataOnTrailing = 1;
+        SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
+    }
+    
+    public final void setSampleDataOnRising(){
+        m_dataOnTrailing = 0;
+        SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
+    }
+    
+    public final void setChipSelectActiveHigh(){
+        IntBuffer status = getLE4IntBuffer();
+        SPIJNI.spiSetChipSelectActiveHigh(m_port, status);
+        HALUtil.checkStatus(status);
+    }
+    
+    public final void setChipSelectActiveLow(){
+        IntBuffer status = getLE4IntBuffer();
+        SPIJNI.spiSetChipSelectActiveLow(m_port, status);
+        HALUtil.checkStatus(status);
+    }
+    
+    public int write(byte[] data, int size){
+        int retVal = 0;
+        ByteBuffer dB = ByteBuffer.allocateDirect(size);
+        dB.put(data);
+        retVal = SPIJNI.spiWrite(m_port, dB, (byte) size);
+        return retVal;
+    }
+    
+    public int read(Boolean initiate, byte[] data, int size){
+        int retVal = 0;
+        ByteBuffer dRB = ByteBuffer.allocateDirect(size);
+        
+        
+        if(initiate){
+            ByteBuffer dSB = ByteBuffer.allocateDirect(size);
+            retVal = SPIJNI.spiTransaction(m_port, dSB, dRB, (byte) size);
+        }else{
+            retVal = SPIJNI.spiRead(m_port, dRB, (byte) size);
+        }
+        dRB.get(data);
+        return retVal;
+    }
+    
+    public int transaction(byte[] dataSend, byte[] dataGet, int size){
+        int retVal = 0;
+        ByteBuffer dSB = ByteBuffer.allocateDirect(size);
+        dSB.put(dataSend);
+        ByteBuffer dRB = ByteBuffer.allocateDirect(size);
+        retVal = SPIJNI.spiTransaction(m_port, dSB, dRB, (byte) size);
+        dRB.get(dataGet);
+        return retVal;
+    }
+    
 
 }

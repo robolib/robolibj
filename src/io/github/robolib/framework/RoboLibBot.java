@@ -20,14 +20,21 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.EnumMap;
 import java.util.jar.Manifest;
 
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.exception.RobotException;
 import io.github.robolib.livewindow.LiveWindow;
 import io.github.robolib.pneumatic.Compressor;
-//import io.github.robolib.robot.GameMode;
+import io.github.robolib.robot.AutonMode;
+import io.github.robolib.robot.DisabledMode;
+import io.github.robolib.robot.GameMode;
+import io.github.robolib.robot.TeleopMode;
+import io.github.robolib.robot.TestMode;
+import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.PDP;
 import io.github.robolib.util.RoboRIO;
 import io.github.robolib.util.TableSender;
@@ -51,6 +58,9 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * The constructor must call the Super class with either no arguments, 
  * or two strings representing the Name of the robot and the version of
  * the code.
+ * 
+ * Handles the Switching of the Game mode and the Execution of the mode.
+ * This controls what GameMode the robot should run.
  *
  * @author noriah Reuland <vix@noriah.dev>
  * @since 0.1.0
@@ -66,7 +76,21 @@ public class RoboLibBot {
     /** The Constant PATCH_VERSION. */
     public static final int PATCH_VERSION = 2;
     
-//    private static final int 
+    /** The Constant NETTABLE_CURRENT_MODE. */
+    private static final String NETTABLE_CURRENT_MODE = "mode";
+    
+    /** The Constant NETTABLE_CURRENT_MODE_STRING. */
+    private static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
+    
+    /** The m_current mode. */
+    private static GameMode m_currentMode;
+    
+    /** The m_modes. */
+    private static EnumMap<GameMode, RobotMode> m_modes;
+
+    //private final RobotMode m_modes[];
+    
+    private static volatile boolean m_thread_keepAlive;
 
     /** The m_name. */
     protected String m_name;
@@ -76,8 +100,6 @@ public class RoboLibBot {
     
     /** The m_log. */
     protected ILogger m_log;
-    
-    private static final Object m_sem = new Object();
     
     /** The m_run. */
 //    private static boolean m_run = true;
@@ -110,7 +132,7 @@ public class RoboLibBot {
     protected RoboLibBot(String name, String version){
         m_name = name;
         m_version = version;
-        m_log = Logger.get(this.getClass(), "@" + m_name);
+        m_log = Logger.get(this.getClass());
     }
 
     /**
@@ -132,7 +154,7 @@ public class RoboLibBot {
     /**
      * Enable Debug Messages.
      */
-    protected void enableDebug(){
+    protected void enableDebugStatements(){
         enableDebug(true);
     }
 
@@ -184,19 +206,12 @@ public class RoboLibBot {
 //        m_run = false;
         m_log.fatal(msg, e);
     }
-    
-    public static void wake(){
-        synchronized(m_sem){
-            m_sem.notifyAll();
-        }
-    }
-    
+
     /**
      * Kill the robot.
      */
     public static void die(){
-//        m_run = false;
-        wake();
+        m_thread_keepAlive = false;
     }
     
     /**
@@ -225,16 +240,43 @@ public class RoboLibBot {
      * This is called to start the robot. It should never exit.
      * If it does exit, it will first throw several exceptions to kill the robot.
      * We don't want an out of control robot.
+     * 
+     * Initializes the Game Mode Switcher.
+     * This method must be called when ready to start the robot.
+     * 
+     * Checks each Mode to see if there is code to run, if not, a Default class
+     * will be added.
+     * 
+     * Main task for the Game Manager
+     * 
+     * <p>This method does three main things.</p>
+     * <p>Checks to see whether we need to switch RobotMode or not</p>
+     * <p>If needed, switch the current game mode. This will first call the end()
+     * Method of the current {@link RobotMode}, then set the current {@link GameMode},
+     * call the System Garbace Collector, and then call the new RobotMode init() method.</p>
+     * <p>Finally, Runs the Current RobotMode. Catches any Throwable objects that may be thrown.
+     * Any caught Throwable Object is treated as fatal and will kill the RoboLibBot.
+     * They are treated as fatal because any uncaught Throwables can only be 
+     * RuntimeExceptions or Errors, which are Fatal</p>
      *
      * @param args the arguments
+     * @see DisabledMode
+     * @see TestMode
+     * @see AutonMode
+     * @see TeleopMode
      */
     public static void main(String args[]) {
         NetworkCommunications.NetworkCommunicationReserve();
-        ILogger log = Logger.get(RoboLibBot.class, "@Framework");
+        ILogger log = Logger.get(RoboLibBot.class);
+        
+        m_currentMode = GameMode.NONE;
+        m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
         
         NetworkTable.setServerMode();
         NetworkTable.getTable("");
         NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
+
+        log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
 
         m_table = NetworkTable.getTable("Robot");
 
@@ -247,7 +289,6 @@ public class RoboLibBot {
             log.fatal("Failure creating framework", t);
         }
         
-        log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         
         String robotName = "";
         InputStream is = RoboLibBot.class.getResourceAsStream("/META-INF/MANIFEST.MF");
@@ -301,35 +342,85 @@ public class RoboLibBot {
         UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
         LiveWindow.setEnabled(false);
 
-        GameManager gameManager = GameManager.getInstance();
         log.info("Initializing Robot Modes");
-        gameManager.init();
 
-        DriverStation ds = DriverStation.getInstance();
-        ds.startThread();
+        if(!m_modes.containsKey(GameMode.DISABLED)){
+            log.debug("No Disabled Robot Mode Defined");
+            log.debug("Creating Empty Disabled Mode");
+            new DisabledMode(){};
+        }
         
-        ds.waitForData();
+        if(!m_modes.containsKey(GameMode.TEST)){
+            log.debug("No Test Robot Mode Defined");
+            log.debug("Creating Empty Test Mode");
+            new TestMode(){};
+        }
         
+        if(!m_modes.containsKey(GameMode.AUTON)){
+            log.debug("No Autonomous Robot Mode Defined");
+            log.debug("Creating Empty Autonomous Mode");
+            new AutonMode(){};
+        }
         
-        
-        log.info("Starting Main Loop");
-        gameManager.startThread();
-        
-        log.info(robot.m_name + ", Version " + robot.m_version + " Running");
-        
+        if(!m_modes.containsKey(GameMode.TELEOP)){
+            log.debug("No Teleop Robot Mode Defined");
+            log.debug("Creating Empty Teleop Mode");
+            new TeleopMode(){};
+        }
+        m_currentMode = GameMode.DISABLED;
+        getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
+        getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, getRobotMode().getName());
+
         NetworkCommunications.ObserveUserProgramStarting();
         
+        DriverStation ds = DriverStation.getInstance();
+        ds.startThread();
+
+        log.info(robot.m_name + ", Version " + robot.m_version + " Running");
         
-        log.debug("Main Thread dropping to sleep.");
-        synchronized (m_sem) {
-            try {
-                m_sem.wait(0);
-            } catch (InterruptedException e) {
+        log.info("Starting Main Loop");
+
+        RobotMode rMode;
+        GameMode gMode;
+        try{
+            while(m_thread_keepAlive){
+                ds.waitForData();
+                rMode = getRobotMode();
+                gMode = DriverStation.getGameMode();
+                
+                if(m_currentMode != gMode){
+                    log.info("Switching to " + gMode.getName());
+
+                    try{
+                        rMode.modeEnd();
+                    }catch(Throwable e){
+                        Logger.get(rMode).fatal("Fatal error in RobotMode end method", e);
+                    }
+                    
+                    m_currentMode = gMode;
+                    rMode = getRobotMode();
+                    RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, gMode.ordinal());
+                    RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, rMode.getName());
+                    System.gc();
+                    
+                    try{
+                        rMode.modeInit();
+                    }catch(Throwable e){
+                        Logger.get(rMode).fatal("Fatal error in RobotMode init method", e);
+                    }
+                }
+                
+                if(ds.isNewControlData()){
+                    rMode.run();
+                    Scheduler.getInstance().run();
+                }
             }
+        }catch(Throwable t){
+            log.fatal("Error in Main Loop. Something should have caught this!!!", t);
+        }finally{
+            log.fatal("ROBOTS DON'T QUIT!!!", "Exited Main Loop");
+            System.exit(0);
         }
-        System.exit(0);
-            
-        
     }
     
     /**
@@ -337,7 +428,7 @@ public class RoboLibBot {
      *
      * @param file the file
      */
-    private static void checkVersionFile(File file){
+    private static final void checkVersionFile(File file){
         
         if(!file.exists()){
             writeVersionFile(file);
@@ -362,7 +453,7 @@ public class RoboLibBot {
      *
      * @param file the file
      */
-    private static void writeVersionFile(File file){
+    private static final void writeVersionFile(File file){
         FileOutputStream output = null;
         try {
             file.createNewFile();
@@ -385,6 +476,100 @@ public class RoboLibBot {
      * Free the resources for a RoboLibBot class.
      */
     public void free() {
+    }
+    
+    public static void registerAutonomous(AutonMode aMode, String name){
+        
+    }
+    
+    /**
+     * Add the a {@link RobotMode} to the ModeSwitcher this will overwrite any previous
+     * mode that has the same {@link GameMode}.
+     * @param gMode the {@link GameMode} that this RobotMode will be run at
+     * @param rMode the {@link RobotMode} to add
+     * @see GameMode
+     * @see RobotMode
+     */
+    protected static final void set(GameMode gMode, RobotMode rMode){
+        if(!getGameMode().equals(gMode)){
+            m_modes.put(gMode, rMode);
+        }
+    }
+    
+    /**
+     * Gets the current {@link RobotMode}.
+     * 
+     * If there is no current Mode, then something went wrong,
+     * and an error mode is returned that will cause the robot to quit.
+     * 
+     * @return the current {@link RobotMode}
+     */
+    public static final RobotMode getRobotMode(){
+        if(!m_modes.containsKey(m_currentMode)){
+            return new RobotMode(){
+                public void init(){
+                    throw new RobotException("No Robot CounterMode");
+                }
+            };
+        }
+        return m_modes.get(m_currentMode);
+    }
+    
+    /**
+     * Gets the current {@link GameMode}.
+     * 
+     * @return the current {@link GameMode} 
+     */
+    public static final GameMode getGameMode(){
+        return m_currentMode;
+    }
+    
+    /**
+     * Get the {@link RobotMode} for the given {@link GameMode}.
+     *
+     * @param mode the mode
+     * @return {@link RobotMode}
+     */
+    public static final RobotMode getRobotMode(GameMode mode){
+        if(!m_modes.containsKey(mode))
+            return new RobotMode(){};
+
+        return m_modes.get(mode);
+    }
+
+    /**
+     * Do we have a {@link RobotMode} for this {@link GameMode}.
+     *
+     * @param mode the mode
+     * @return boolean do we have it?
+     */
+    public static final boolean hasMode(GameMode mode){
+        return m_modes.containsKey(mode);
+    }
+    
+    /**
+     * An approxamation of the time left in the current period
+     * 
+     * @return Time remaining in current match period (auto or teleop) in seconds 
+     */
+    public static final double getMatchTime() {
+        return NetworkCommunications.HALGetMatchTime();
+    }
+    
+    public static final Alliance getAlliance(){
+        int sID = NetworkCommunications.HALGetAllianceStation();
+        if(!MathUtils.inBounds(sID, 0, 5)){
+            return Alliance.NONE;
+        }
+        return Alliance.values()[sID / 3];
+    }
+    
+    public static final StationID getStation(){
+        int sID = NetworkCommunications.HALGetAllianceStation();
+        if(!MathUtils.inBounds(sID, 0, 5)){
+            return StationID.NONE;
+        }
+        return StationID.values()[sID];
     }
 
     /**
@@ -410,7 +595,7 @@ public class RoboLibBot {
      *
      * @return True if the Robot is currently disabled by the field controls.
      */
-    public static boolean isDisabled() {
+    public static final boolean isDisabled() {
         return DriverStation.isDisabled();
     }
 
@@ -419,7 +604,7 @@ public class RoboLibBot {
      *
      * @return True if the Robot is currently enabled by the field controls.
      */
-    public static boolean isEnabled() {
+    public static final boolean isEnabled() {
         return DriverStation.isEnabled();
     }
 
@@ -429,7 +614,7 @@ public class RoboLibBot {
      * @return True if the robot is currently operating Autonomously as
      * determined by the field controls.
      */
-    public static boolean isAutonomous() {
+    public static final boolean isAutonomous() {
         return DriverStation.isAutonomous();
     }
 
@@ -439,7 +624,7 @@ public class RoboLibBot {
      * @return True if the robot is currently operating in Test mode as
      * determined by the driver station.
      */
-    public static boolean isTest() {
+    public static final boolean isTest() {
         return DriverStation.isTest();
     }
     
@@ -448,7 +633,7 @@ public class RoboLibBot {
      * 
      * @return True if the robot is currently emergency stopped.
      */
-    public static boolean isEStopped(){
+    public static final boolean isEStopped(){
         return DriverStation.isEStopped();
     }
 
@@ -458,7 +643,7 @@ public class RoboLibBot {
      * @return True if the robot is currently operating in Tele-Op mode as
      * determined by the field controls.
      */
-    public static boolean isOperatorControl() {
+    public static final boolean isOperatorControl() {
         return DriverStation.isOperatorControl();
     }
     
@@ -467,7 +652,7 @@ public class RoboLibBot {
      *
      * @return Is the system active (i.e. PWM motor outputs, etc. enabled)?
      */
-    public static boolean isSysActive() {
+    public static final boolean isSysActive() {
         return DriverStation.isSysActive();
     }
     
@@ -476,8 +661,24 @@ public class RoboLibBot {
      * 
      * @return True if the system is browned out
      */
-    public static boolean isBrownedOut() {
+    public static final boolean isBrownedOut() {
         return DriverStation.isBrownedOut();
+    }
+    
+    public static enum Alliance {
+        RED,
+        BLUE,
+        NONE;
+    }
+    
+    public static enum StationID {
+        RED1,
+        RED2,
+        RED3,
+        BLUE1,
+        BLUE2,
+        BLUE3,
+        NONE;
     }
 
 }

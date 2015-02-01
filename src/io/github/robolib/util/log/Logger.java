@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.robolib.framework.DriverStation;
-import io.github.robolib.framework.GameManager;
+import io.github.robolib.framework.RoboLibBot;
 import io.github.robolib.util.RoboRIO;
 
 /**
@@ -173,6 +173,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void registerOutput(LogOutput out){
         if(!m_outs.contains(out) && (!out.equals(TERM_OUT) || !out.equals(TERM_ERR)))
             m_outs.add(out);
@@ -186,6 +187,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void enableDebug(boolean enable){
         m_debugEnabled = enable;
     }
@@ -209,7 +211,7 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendMsg(LogLevel l, String s){
-        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + GameManager.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + RoboLibBot.getRobotMode().getName() + "> " + m_label + ": " + s;
         TERM_OUT.sendMsg(sout);
         m_outs.forEach(lo -> lo.sendMsg(sout));
     }
@@ -221,7 +223,7 @@ public final class Logger extends ILogger {
      * @param s the String to log
      */
     private void sendErrMsg(LogLevel l, String s){
-        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + GameManager.getInstance().getRobotMode().getName() + "> " + m_label + ": " + s;
+        String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + RoboLibBot.getRobotMode().getName() + "> " + m_label + ": " + s;
         DriverStation.reportError(sout + "\n");
         TERM_ERR.sendMsg(sout);
         m_outs.forEach(lo -> lo.sendMsg(sout));
@@ -230,6 +232,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void log(LogLevel lvl, String s){
         if(lvl.ordinal() < LogLevel.WARN.ordinal()){
             sendMsg(lvl, s);
@@ -247,6 +250,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void info(String s){
         sendMsg(LogLevel.INFO, s);
     }
@@ -254,6 +258,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void debug(String s){
         if(m_debugEnabled)
             sendMsg(LogLevel.DEBUG, s);
@@ -262,6 +267,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void warn(String s){
         sendErrMsg(LogLevel.WARN, s);
     }
@@ -269,6 +275,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void error(String s, Object o){
         sendErrMsg(LogLevel.ERROR, s);
         if(o != null){
@@ -287,6 +294,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void severe(String s, Object o){
         sendErrMsg(LogLevel.SEVERE, s);
         if(o != null){
@@ -305,6 +313,7 @@ public final class Logger extends ILogger {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void fatal(String s, Object o){
         sendErrMsg(LogLevel.FATAL, s);
         if(o != null){

@@ -24,7 +24,7 @@ import io.github.robolib.util.PDP.PowerChannel;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWMController extends PWM implements SpeedController, MotorSafety{
+public class PWMController extends PWM implements SpeedController{
     
     protected MotorSafetyHelper m_safetyHelper;
     
@@ -97,13 +97,6 @@ public class PWMController extends PWM implements SpeedController, MotorSafety{
         if(pwChannel != null){
             PDP.claimChannel(pwChannel, desc);
         }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void pidWrite(double output) {
-        set(output);
     }
 
     /**

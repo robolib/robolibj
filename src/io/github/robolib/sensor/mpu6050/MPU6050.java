@@ -26,7 +26,12 @@ import io.github.robolib.util.Timer;
 import io.github.robolib.util.log.Logger;
 
 /**
+ * MPU6050 Accelerometer/Gyroscope class.
  * 
+ * Converted from C++ to Java
+ * Original file part of i2cdevlib project
+ * https://github.com/jrowberg/i2cdevlib/blob/master/Arduino/MPU6050/MPU6050.cpp
+ *
  * @author Jeff Rowberg <jeff@rowberg.net>
  * @author noriah Reuland <vix@noriah.dev>
  */
