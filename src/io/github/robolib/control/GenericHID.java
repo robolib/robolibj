@@ -127,7 +127,7 @@ public abstract class GenericHID {
     /**
      * 
      * @param pov
-     * @return
+     * @return the pov value
      */
     public int getPOV(int pov) {
         return 0;

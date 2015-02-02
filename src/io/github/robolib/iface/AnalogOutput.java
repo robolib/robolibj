@@ -36,7 +36,7 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Double
     private ITable m_table;
     
     /**
-     * Construct an analog output on a specified {@link AnalogChannel}
+     * Construct an analog output on a specified AnalogChannel
      * channel.
      *
      * @param channel The channel to represent.

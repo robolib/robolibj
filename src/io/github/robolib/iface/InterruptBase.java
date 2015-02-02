@@ -49,7 +49,7 @@ public abstract class InterruptBase extends Interface {
     /**
      * Construct a new interrupt
      * 
-     * @param iType the {@link InterfaceType} of this Interrupt
+     * @param iType the InterfaceType of this Interrupt
      */
     protected InterruptBase(InterfaceType iType) {
         super(iType);
@@ -152,13 +152,10 @@ public abstract class InterruptBase extends Interface {
         m_interrupt = null;
         m_allocated--;
     }
-    
     /**
      * In synchronous mode, wait for the defined interrupt to occur.
      *
      * @param timeout Timeout in seconds
-     * @param ignorePrevious If true, ignore interrupts that happened
-     * before waitForInterrupt was called.
      */
     public void waitForInterrupt(double timeout){
         waitForInterrupt(timeout, true);
@@ -168,6 +165,8 @@ public abstract class InterruptBase extends Interface {
      * In synchronous mode, wait for the defined interrupt to occur.
      *
      * @param timeout Timeout in seconds
+     * @param ignorePrevious If true, ignore interrupts that happened
+     * before waitForInterrupt was called.
      */
     public void waitForInterrupt(double timeout, boolean ignorePrevious){
         validate();

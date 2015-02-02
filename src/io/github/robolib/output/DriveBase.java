@@ -301,7 +301,7 @@ public class DriveBase implements MotorSafety {
      * This input is inverted to match the forward == -1.0 that joysticks produce. [-1.0..1.0]
      * @param rotation The rate of rotation for the robot that is completely independent of
      * the translation. [-1.0..1.0]
-     * @param gyroAngle The current angle reading from the gyro.  Use this to implement field-oriented controls.
+     * @param gyro The current angle reading from the gyro.  Use this to implement field-oriented controls.
      */
     public void mecanum(double x, double y, double rotation, double gyro){
         double[] rotated = rotateVector(x, y, gyro);
@@ -322,7 +322,7 @@ public class DriveBase implements MotorSafety {
      * This input is inverted to match the forward == -1.0 that joysticks produce. [-1.0..1.0]
      * @param rotation The rate of rotation for the robot that is completely independent of
      * the translation. [-1.0..1.0]
-     * @param gyroAngle The current angle reading from the gyro.  Use this to implement field-oriented controls.
+     * @param gyro The current angle reading from the gyro.  Use this to implement field-oriented controls.
      * @param squared If set, decreases the sensitivity at low speeds
      */
     public void mecanum(double x, double y, double rotation, double gyro, boolean squared){

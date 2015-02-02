@@ -242,7 +242,7 @@ public class Relay extends Interface {
      *
      * Valid inputs are FORWARD, REVERSE, and BOTH
      *
-     * @param direction The direction for the relay to operate in
+     * @param dir The direction for the relay to operate in
      */
     public void setDirection(RelayDirection dir){
         set(RelayValue.OFF);

@@ -635,7 +635,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     
     /**
      * Default constructor, uses default I2C address.
-     * @see MPU6050_DEFAULT_ADDRESS
+     * @param port the I2C port on the RIO
+     * @see #MPU6050_DEFAULT_ADDRESS
      */
     public MPU6050(Port port){
         this(port, MPU6050_DEFAULT_ADDRESS);
@@ -643,10 +644,11 @@ public class MPU6050 extends I2C implements IAccelerometer {
 
     /**
      * Specific address constructor.
-     * @param address I2C address
-     * @see MPU6050_DEFAULT_ADDRESS
-     * @see MPU6050_ADDRESS_AD0_LOW
-     * @see MPU6050_ADDRESS_AD0_HIGH
+     * @param port the I2C port on the RIO
+     * @param addr I2C address
+     * @see #MPU6050_DEFAULT_ADDRESS
+     * @see #MPU6050_ADDRESS_AD0_LOW
+     * @see #MPU6050_ADDRESS_AD0_HIGH
      */
 
     public MPU6050(Port port, byte addr){
@@ -727,7 +729,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * of the MPU-6000/MPU-6050 Product Specification document.
      *
      * @return Current sample rate
-     * @see MPU6050_RA_SMPLRT_DIV
+     * @see #MPU6050_RA_SMPLRT_DIV
      */
     public byte getRate() {
         byte[] buffer = new byte[1];
@@ -737,8 +739,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set gyroscope sample rate divider.
      * @param rate New sample rate divider
-     * @see getRate()
-     * @see MPU6050_RA_SMPLRT_DIV
+     * @see #getRate()
+     * @see #MPU6050_RA_SMPLRT_DIV
      */
     public void setRate(byte rate) {
         writeByte(MPU6050_RA_SMPLRT_DIV, rate);
@@ -768,8 +770,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set external FSYNC configuration.
-     * @see getExternalFrameSync()
-     * @see MPU6050_RA_CONFIG
+     * @see #getExternalFrameSync()
+     * @see #MPU6050_RA_CONFIG
      * @see EXTFrameSyncBitLocation
      * @param sync New FSYNC configuration value
      */
@@ -789,10 +791,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 
      *
      * @return DLFP configuration
-     * @see MPU6050_RA_CONFIG
-     * @see MPU6050_CFG_DLPF_CFG_BIT
-     * @see MPU6050_CFG_DLPF_CFG_LENGTH
-     * @see DLP
+     * @see #MPU6050_RA_CONFIG
+     * @see #MPU6050_CFG_DLPF_CFG_BIT
+     * @see #MPU6050_CFG_DLPF_CFG_LENGTH
+     * @see DLPFilterMode
      */
     public DLPFilterMode getDLPFMode() {
         byte[] buffer = new byte[1];
@@ -802,11 +804,11 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set digital low-pass filter configuration.
      * @param mode New DLFP configuration setting
-     * @see getDLPFBandwidth()
-     * @see MPU6050_DLPF_BW_256
-     * @see MPU6050_RA_CONFIG
-     * @see MPU6050_CFG_DLPF_CFG_BIT
-     * @see MPU6050_CFG_DLPF_CFG_LENGTH
+     * @see #getDLPFMode()
+     * @see DLPFilterMode#BW_256Hz
+     * @see #MPU6050_RA_CONFIG
+     * @see #MPU6050_CFG_DLPF_CFG_BIT
+     * @see #MPU6050_CFG_DLPF_CFG_LENGTH
      * @see DLPFilterMode
      */
     public void setDLPFMode(DLPFilterMode mode) {
@@ -820,10 +822,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * The FS_SEL parameter allows setting the full-scale range of the gyro sensors.
      *
      * @return Current full-scale gyroscope range setting
-     * @see MPU6050_GYRO_FS_250
-     * @see MPU6050_RA_GYRO_CONFIG
-     * @see MPU6050_GCONFIG_FS_SEL_BIT
-     * @see MPU6050_GCONFIG_FS_SEL_LENGTH
+     * @see GyroRange#FS_250
+     * @see #MPU6050_RA_GYRO_CONFIG
+     * @see #MPU6050_GCONFIG_FS_SEL_BIT
+     * @see #MPU6050_GCONFIG_FS_SEL_LENGTH
      */
     public GyroRange getFullScaleGyroRange() {
         byte[] buffer = new byte[1];
@@ -833,11 +835,11 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set full-scale gyroscope range.
      * @param range New full-scale gyroscope range value
-     * @see getFullScaleRange()
+     * @see #getFullScaleGyroRange()
      * @see GyroRange
-     * @see MPU6050_RA_GYRO_CONFIG
-     * @see MPU6050_GCONFIG_FS_SEL_BIT
-     * @see MPU6050_GCONFIG_FS_SEL_LENGTH
+     * @see #MPU6050_RA_GYRO_CONFIG
+     * @see #MPU6050_GCONFIG_FS_SEL_BIT
+     * @see #MPU6050_GCONFIG_FS_SEL_LENGTH
      */
     public void setFullScaleGyroRange(GyroRange range) {
         writeBits(MPU6050_RA_GYRO_CONFIG, MPU6050_GCONFIG_FS_SEL_BIT, MPU6050_GCONFIG_FS_SEL_LENGTH, (byte)range.ordinal());
@@ -848,7 +850,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get self-test enabled setting for accelerometer X axis.
      * @return Self-test enabled value
-     * @see MPU6050_RA_ACCEL_CONFIG
+     * @see #MPU6050_RA_ACCEL_CONFIG
      */
     public boolean getAccelXSelfTest() {
         byte[] buffer = new byte[1];
@@ -858,7 +860,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get self-test enabled setting for accelerometer X axis.
      * @param enabled Self-test enabled value
-     * @see MPU6050_RA_ACCEL_CONFIG
+     * @see #MPU6050_RA_ACCEL_CONFIG
      */
     public void setAccelXSelfTest(boolean enabled) {
         writeBit(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_XA_ST_BIT, enabled);
@@ -866,7 +868,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get self-test enabled value for accelerometer Y axis.
      * @return Self-test enabled value
-     * @see MPU6050_RA_ACCEL_CONFIG
+     * @see #MPU6050_RA_ACCEL_CONFIG
      */
     public boolean getAccelYSelfTest() {
         byte[] buffer = new byte[1];
@@ -876,7 +878,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get self-test enabled value for accelerometer Y axis.
      * @param enabled Self-test enabled value
-     * @see MPU6050_RA_ACCEL_CONFIG
+     * @see #MPU6050_RA_ACCEL_CONFIG
      */
     public void setAccelYSelfTest(boolean enabled) {
         writeBit(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_YA_ST_BIT, enabled);
@@ -884,7 +886,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get self-test enabled value for accelerometer Z axis.
      * @return Self-test enabled value
-     * @see MPU6050_RA_ACCEL_CONFIG
+     * @see #MPU6050_RA_ACCEL_CONFIG
      */
     public boolean getAccelZSelfTest() {
         byte[] buffer = new byte[1];
@@ -894,7 +896,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set self-test enabled value for accelerometer Z axis.
      * @param enabled Self-test enabled value
-     * @see MPU6050_RA_ACCEL_CONFIG
+     * @see #MPU6050_RA_ACCEL_CONFIG
      */
     public void setAccelZSelfTest(boolean enabled) {
         writeBit(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_ZA_ST_BIT, enabled);
@@ -912,10 +914,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * </pre>
      *
      * @return Current full-scale accelerometer range setting
-     * @see MPU6050_RA_ACCEL_CONFIG
-     * @see MPU6050_ACONFIG_AFS_SEL_BIT
-     * @see MPU6050_ACONFIG_AFS_SEL_LENGTH
-     * @see AccelRange
+     * @see #MPU6050_RA_ACCEL_CONFIG
+     * @see #MPU6050_ACONFIG_AFS_SEL_BIT
+     * @see #MPU6050_ACONFIG_AFS_SEL_LENGTH
      */
     public AccelRange getFullScaleAccelRange() {
         byte[] buffer = new byte[1];
@@ -930,7 +931,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set full-scale accelerometer range.
      * @param range New full-scale accelerometer range setting
-     * @see getFullScaleAccelRange()
+     * @see #getFullScaleAccelRange()
      */
     public void setFullScaleAccelRange(AccelRange range) {
         writeBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, (byte)range.ordinal());
@@ -948,9 +949,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * MPU-6050 Product Specification document).
      *
      * @return Current high-pass filter configuration
-     * @see MPU6050_DHPF_RESET
-     * @see MPU6050_RA_ACCEL_CONFIG
+     * @see #MPU6050_RA_ACCEL_CONFIG
      * @see DHPFilterMode
+     * @see DHPFilterMode#RESET
      */
     public DHPFilterMode getDHPFMode() {
         byte[] buffer = new byte[1];
@@ -960,10 +961,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set the high-pass filter configuration.
      * @param bandwidth New high-pass filter configuration
-     * @see setDHPFMode()
-     * @see MPU6050_DHPF_RESET
-     * @see MPU6050_RA_ACCEL_CONFIG
+     * @see #setDHPFMode(DHPFilterMode)
+     * @see #MPU6050_RA_ACCEL_CONFIG
      * @see DHPFilterMode
+     * @see DHPFilterMode#RESET
      */
     public void setDHPFMode(DHPFilterMode bandwidth) {
         writeBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_ACCEL_HPF_BIT, MPU6050_ACONFIG_ACCEL_HPF_LENGTH, (byte)bandwidth.ordinal());
@@ -985,7 +986,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 58 of this document.
      *
      * @return Current free-fall acceleration threshold value (LSB = 2mg)
-     * @see MPU6050_RA_FF_THR
+     * @see #MPU6050_RA_FF_THR
      */
     public byte getFreefallDetectionThreshold() {
         byte[] buffer = new byte[1];
@@ -995,8 +996,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get free-fall event acceleration threshold.
      * @param threshold New free-fall acceleration threshold value (LSB = 2mg)
-     * @see getFreefallDetectionThreshold()
-     * @see MPU6050_RA_FF_THR
+     * @see #getFreefallDetectionThreshold()
+     * @see #MPU6050_RA_FF_THR
      */
     public void setFreefallDetectionThreshold(byte threshold) {
         writeByte(MPU6050_RA_FF_THR, threshold);
@@ -1020,7 +1021,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * and 58 of this document.
      *
      * @return Current free-fall duration threshold value (LSB = 1ms)
-     * @see MPU6050_RA_FF_DUR
+     * @see #MPU6050_RA_FF_DUR
      */
     public byte getFreefallDetectionDuration() {
         byte[] buffer = new byte[1];
@@ -1030,8 +1031,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get free-fall event duration threshold.
      * @param duration New free-fall duration threshold value (LSB = 1ms)
-     * @see getFreefallDetectionDuration()
-     * @see MPU6050_RA_FF_DUR
+     * @see #getFreefallDetectionDuration()
+     * @see #MPU6050_RA_FF_DUR
      */
     public void setFreefallDetectionDuration(byte duration) {
         writeByte(MPU6050_RA_FF_DUR, duration);
@@ -1057,7 +1058,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 58 of this document.
      *
      * @return Current motion detection acceleration threshold value (LSB = 2mg)
-     * @see MPU6050_RA_MOT_THR
+     * @see #MPU6050_RA_MOT_THR
      */
     public byte getMotionDetectionThreshold() {
         byte[] buffer = new byte[1];
@@ -1067,8 +1068,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set free-fall event acceleration threshold.
      * @param threshold New motion detection acceleration threshold value (LSB = 2mg)
-     * @see getMotionDetectionThreshold()
-     * @see MPU6050_RA_MOT_THR
+     * @see #getMotionDetectionThreshold()
+     * @see #MPU6050_RA_MOT_THR
      */
     public void setMotionDetectionThreshold(byte threshold) {
         writeByte(MPU6050_RA_MOT_THR, threshold);
@@ -1090,7 +1091,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * MPU-6000/MPU-6050 Product Specification document.
      *
      * @return Current motion detection duration threshold value (LSB = 1ms)
-     * @see MPU6050_RA_MOT_DUR
+     * @see #MPU6050_RA_MOT_DUR
      */
     public byte getMotionDetectionDuration() {
         byte[] buffer = new byte[1];
@@ -1100,8 +1101,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set motion detection event duration threshold.
      * @param duration New motion detection duration threshold value (LSB = 1ms)
-     * @see getMotionDetectionDuration()
-     * @see MPU6050_RA_MOT_DUR
+     * @see #getMotionDetectionDuration()
+     * @see #MPU6050_RA_MOT_DUR
      */
     public void setMotionDetectionDuration(byte duration) {
         writeByte(MPU6050_RA_MOT_DUR, duration);
@@ -1133,7 +1134,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * and 58 of this document.
      *
      * @return Current zero motion detection acceleration threshold value (LSB = 2mg)
-     * @see MPU6050_RA_ZRMOT_THR
+     * @see #MPU6050_RA_ZRMOT_THR
      */
     public byte getZeroMotionDetectionThreshold() {
         byte[] buffer = new byte[1];
@@ -1143,8 +1144,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set zero motion detection event acceleration threshold.
      * @param threshold New zero motion detection acceleration threshold value (LSB = 2mg)
-     * @see getZeroMotionDetectionThreshold()
-     * @see MPU6050_RA_ZRMOT_THR
+     * @see #getZeroMotionDetectionThreshold()
+     * @see #MPU6050_RA_ZRMOT_THR
      */
     public void setZeroMotionDetectionThreshold(byte threshold) {
         writeByte(MPU6050_RA_ZRMOT_THR, threshold);
@@ -1167,7 +1168,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * and 58 of this document.
      *
      * @return Current zero motion detection duration threshold value (LSB = 64ms)
-     * @see MPU6050_RA_ZRMOT_DUR
+     * @see #MPU6050_RA_ZRMOT_DUR
      */
     public byte getZeroMotionDetectionDuration() {
         byte[] buffer = new byte[1];
@@ -1177,8 +1178,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set zero motion detection event duration threshold.
      * @param duration New zero motion detection duration threshold value (LSB = 1ms)
-     * @see getZeroMotionDetectionDuration()
-     * @see MPU6050_RA_ZRMOT_DUR
+     * @see #getZeroMotionDetectionDuration()
+     * @see #MPU6050_RA_ZRMOT_DUR
      */
     public void setZeroMotionDetectionDuration(byte duration) {
         writeByte(MPU6050_RA_ZRMOT_DUR, duration);
@@ -1191,7 +1192,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables TEMP_OUT_H and TEMP_OUT_L (Registers 65 and
      * 66) to be written into the FIFO buffer.
      * @return Current temperature FIFO enabled value
-     * @see MPU6050_RA_FIFO_EN
+     * @see #MPU6050_RA_FIFO_EN
      */
     public boolean getTempFIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1201,8 +1202,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set temperature FIFO enabled value.
      * @param enabled New temperature FIFO enabled value
-     * @see getTempFIFOEnabled()
-     * @see MPU6050_RA_FIFO_EN
+     * @see #getTempFIFOEnabled()
+     * @see #MPU6050_RA_FIFO_EN
      */
     public void setTempFIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_FIFO_EN, MPU6050_TEMP_FIFO_EN_BIT, enabled);
@@ -1212,7 +1213,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables GYRO_XOUT_H and GYRO_XOUT_L (Registers 67 and
      * 68) to be written into the FIFO buffer.
      * @return Current gyroscope X-axis FIFO enabled value
-     * @see MPU6050_RA_FIFO_EN
+     * @see #MPU6050_RA_FIFO_EN
      */
     public boolean getXGyroFIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1222,8 +1223,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set gyroscope X-axis FIFO enabled value.
      * @param enabled New gyroscope X-axis FIFO enabled value
-     * @see getXGyroFIFOEnabled()
-     * @see MPU6050_RA_FIFO_EN
+     * @see #getXGyroFIFOEnabled()
+     * @see #MPU6050_RA_FIFO_EN
      */
     public void setXGyroFIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT, enabled);
@@ -1233,7 +1234,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables GYRO_YOUT_H and GYRO_YOUT_L (Registers 69 and
      * 70) to be written into the FIFO buffer.
      * @return Current gyroscope Y-axis FIFO enabled value
-     * @see MPU6050_RA_FIFO_EN
+     * @see #MPU6050_RA_FIFO_EN
      */
     public boolean getYGyroFIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1243,8 +1244,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set gyroscope Y-axis FIFO enabled value.
      * @param enabled New gyroscope Y-axis FIFO enabled value
-     * @see getYGyroFIFOEnabled()
-     * @see MPU6050_RA_FIFO_EN
+     * @see #getYGyroFIFOEnabled()
+     * @see #MPU6050_RA_FIFO_EN
      */
     public void setYGyroFIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_FIFO_EN, MPU6050_YG_FIFO_EN_BIT, enabled);
@@ -1254,7 +1255,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables GYRO_ZOUT_H and GYRO_ZOUT_L (Registers 71 and
      * 72) to be written into the FIFO buffer.
      * @return Current gyroscope Z-axis FIFO enabled value
-     * @see MPU6050_RA_FIFO_EN
+     * @see #MPU6050_RA_FIFO_EN
      */
     public boolean getZGyroFIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1264,8 +1265,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set gyroscope Z-axis FIFO enabled value.
      * @param enabled New gyroscope Z-axis FIFO enabled value
-     * @see getZGyroFIFOEnabled()
-     * @see MPU6050_RA_FIFO_EN
+     * @see #getZGyroFIFOEnabled()
+     * @see #MPU6050_RA_FIFO_EN
      */
     public void setZGyroFIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_FIFO_EN, MPU6050_ZG_FIFO_EN_BIT, enabled);
@@ -1276,7 +1277,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * ACCEL_YOUT_L, ACCEL_ZOUT_H, and ACCEL_ZOUT_L (Registers 59 to 64) to be
      * written into the FIFO buffer.
      * @return Current accelerometer FIFO enabled value
-     * @see MPU6050_RA_FIFO_EN
+     * @see #MPU6050_RA_FIFO_EN
      */
     public boolean getAccelFIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1286,8 +1287,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set accelerometer FIFO enabled value.
      * @param enabled New accelerometer FIFO enabled value
-     * @see getAccelFIFOEnabled()
-     * @see MPU6050_RA_FIFO_EN
+     * @see #getAccelFIFOEnabled()
+     * @see #MPU6050_RA_FIFO_EN
      */
     public void setAccelFIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_FIFO_EN, MPU6050_ACCEL_FIFO_EN_BIT, enabled);
@@ -1297,7 +1298,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables EXT_SENS_DATA registers (Registers 73 to 96)
      * associated with Slave 2 to be written into the FIFO buffer.
      * @return Current Slave 2 FIFO enabled value
-     * @see MPU6050_RA_FIFO_EN
+     * @see #MPU6050_RA_FIFO_EN
      */
     public boolean getSlave2FIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1307,8 +1308,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Slave 2 FIFO enabled value.
      * @param enabled New Slave 2 FIFO enabled value
-     * @see getSlave2FIFOEnabled()
-     * @see MPU6050_RA_FIFO_EN
+     * @see #getSlave2FIFOEnabled()
+     * @see #MPU6050_RA_FIFO_EN
      */
     public void setSlave2FIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_FIFO_EN, MPU6050_SLV2_FIFO_EN_BIT, enabled);
@@ -1318,7 +1319,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables EXT_SENS_DATA registers (Registers 73 to 96)
      * associated with Slave 1 to be written into the FIFO buffer.
      * @return Current Slave 1 FIFO enabled value
-     * @see MPU6050_RA_FIFO_EN
+     * @see #MPU6050_RA_FIFO_EN
      */
     public boolean getSlave1FIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1328,8 +1329,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Slave 1 FIFO enabled value.
      * @param enabled New Slave 1 FIFO enabled value
-     * @see getSlave1FIFOEnabled()
-     * @see MPU6050_RA_FIFO_EN
+     * @see #getSlave1FIFOEnabled()
+     * @see #MPU6050_RA_FIFO_EN
      */
     public void setSlave1FIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_FIFO_EN, MPU6050_SLV1_FIFO_EN_BIT, enabled);
@@ -1339,7 +1340,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables EXT_SENS_DATA registers (Registers 73 to 96)
      * associated with Slave 0 to be written into the FIFO buffer.
      * @return Current Slave 0 FIFO enabled value
-     * @see MPU6050_RA_FIFO_EN
+     * @see #MPU6050_RA_FIFO_EN
      */
     public boolean getSlave0FIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1349,8 +1350,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Slave 0 FIFO enabled value.
      * @param enabled New Slave 0 FIFO enabled value
-     * @see getSlave0FIFOEnabled()
-     * @see MPU6050_RA_FIFO_EN
+     * @see #getSlave0FIFOEnabled()
+     * @see #MPU6050_RA_FIFO_EN
      */
     public void setSlave0FIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_FIFO_EN, MPU6050_SLV0_FIFO_EN_BIT, enabled);
@@ -1372,7 +1373,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * detect when the bus is available.
      *
      * @return Current multi-master enabled value
-     * @see MPU6050_RA_I2C_MST_CTRL
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public boolean getMultiMasterEnabled() {
         byte[] buffer = new byte[1];
@@ -1382,8 +1383,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set multi-master enabled value.
      * @param enabled New multi-master enabled value
-     * @see getMultiMasterEnabled()
-     * @see MPU6050_RA_I2C_MST_CTRL
+     * @see #getMultiMasterEnabled()
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public void setMultiMasterEnabled(boolean enabled) {
         writeBit(MPU6050_RA_I2C_MST_CTRL, MPU6050_MULT_MST_EN_BIT, enabled);
@@ -1398,7 +1399,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * interrupt is triggered.
      *
      * @return Current wait-for-external-sensor-data enabled value
-     * @see MPU6050_RA_I2C_MST_CTRL
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public boolean getWaitForExternalSensorEnabled() {
         byte[] buffer = new byte[1];
@@ -1408,8 +1409,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set wait-for-external-sensor-data enabled value.
      * @param enabled New wait-for-external-sensor-data enabled value
-     * @see getWaitForExternalSensorEnabled()
-     * @see MPU6050_RA_I2C_MST_CTRL
+     * @see #getWaitForExternalSensorEnabled()
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public void setWaitForExternalSensorEnabled(boolean enabled) {
         writeBit(MPU6050_RA_I2C_MST_CTRL, MPU6050_WAIT_FOR_ES_BIT, enabled);
@@ -1419,7 +1420,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables EXT_SENS_DATA registers (Registers 73 to 96)
      * associated with Slave 3 to be written into the FIFO buffer.
      * @return Current Slave 3 FIFO enabled value
-     * @see MPU6050_RA_MST_CTRL
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public boolean getSlave3FIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -1429,8 +1430,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Slave 3 FIFO enabled value.
      * @param enabled New Slave 3 FIFO enabled value
-     * @see getSlave3FIFOEnabled()
-     * @see MPU6050_RA_MST_CTRL
+     * @see #getSlave3FIFOEnabled()
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public void setSlave3FIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_I2C_MST_CTRL, MPU6050_SLV_3_FIFO_EN_BIT, enabled);
@@ -1444,7 +1445,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * the stop followed by a start of the successive write will be always used.
      *
      * @return Current slave read/write transition enabled value
-     * @see MPU6050_RA_I2C_MST_CTRL
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public boolean getSlaveReadWriteTransitionEnabled() {
         byte[] buffer = new byte[1];
@@ -1454,8 +1455,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set slave read/write transition enabled value.
      * @param enabled New slave read/write transition enabled value
-     * @see getSlaveReadWriteTransitionEnabled()
-     * @see MPU6050_RA_I2C_MST_CTRL
+     * @see #getSlaveReadWriteTransitionEnabled()
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public void setSlaveReadWriteTransitionEnabled(boolean enabled) {
         writeBit(MPU6050_RA_I2C_MST_CTRL, MPU6050_I2C_MST_P_NSR_BIT, enabled);
@@ -1467,7 +1468,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * MPU-60X0 internal 8MHz clock. It sets the I2C master clock speed.     * 
      *
      * @return Current I2C master clock speed
-     * @see MPU6050_RA_I2C_MST_CTRL
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public ClockSpeed getMasterClockSpeed() {
         byte[] buffer = new byte[1];
@@ -1476,8 +1477,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set I2C master clock speed.
-     * @reparam speed Current I2C master clock speed
-     * @see MPU6050_RA_I2C_MST_CTRL
+     * @param speed Current I2C master clock speed
+     * @see #MPU6050_RA_I2C_MST_CTRL
      */
     public void setMasterClockSpeed(ClockSpeed speed) {
         writeBits(MPU6050_RA_I2C_MST_CTRL, MPU6050_I2C_MST_CLK_BIT, MPU6050_I2C_MST_CLK_LENGTH, (byte)speed.ordinal());
@@ -1525,7 +1526,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      *
      * @param num Slave number (0-3)
      * @return Current address for specified slave
-     * @see MPU6050_RA_I2C_SLV0_ADDR
+     * @see #MPU6050_RA_I2C_SLV0_ADDR
      */
     public byte getSlaveAddress(byte num) {
         if (num > 3) return 0;
@@ -1537,8 +1538,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Set the I2C address of the specified slave (0-3).
      * @param num Slave number (0-3)
      * @param address New address for specified slave
-     * @see getSlaveAddress()
-     * @see MPU6050_RA_I2C_SLV0_ADDR
+     * @see #getSlaveAddress(byte)
+     * @see #MPU6050_RA_I2C_SLV0_ADDR
      */
     public void setSlaveAddress(byte num, byte address) {
         if (num > 3) return;
@@ -1554,7 +1555,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      *
      * @param num Slave number (0-3)
      * @return Current active register for specified slave
-     * @see MPU6050_RA_I2C_SLV0_REG
+     * @see #MPU6050_RA_I2C_SLV0_REG
      */
     public byte getSlaveRegister(byte num) {
         if (num > 3) return 0;
@@ -1566,8 +1567,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Set the active internal register for the specified slave (0-3).
      * @param num Slave number (0-3)
      * @param reg New active register for specified slave
-     * @see getSlaveRegister()
-     * @see MPU6050_RA_I2C_SLV0_REG
+     * @see #getSlaveRegister(byte)
+     * @see #MPU6050_RA_I2C_SLV0_REG
      */
     public void setSlaveRegister(byte num, byte reg) {
         if (num > 3) return;
@@ -1579,7 +1580,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * cleared to 0, this bit disables Slave 0 from data transfer operations.
      * @param num Slave number (0-3)
      * @return Current enabled value for specified slave
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public boolean getSlaveEnabled(byte num) {
         if (num > 3) return false;
@@ -1591,8 +1592,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Set the enabled value for the specified slave (0-3).
      * @param num Slave number (0-3)
      * @param enabled New enabled value for specified slave
-     * @see getSlaveEnabled()
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #getSlaveEnabled(byte)
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public void setSlaveEnabled(byte num, boolean enabled) {
         if (num > 3) return;
@@ -1608,7 +1609,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      *
      * @param num Slave number (0-3)
      * @return Current word pair byte-swapping enabled value for specified slave
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public boolean getSlaveWordByteSwap(byte num) {
         if (num > 3) return false;
@@ -1620,8 +1621,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Set word pair byte-swapping enabled for the specified slave (0-3).
      * @param num Slave number (0-3)
      * @param enabled New word pair byte-swapping enabled value for specified slave
-     * @see getSlaveWordByteSwap()
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #getSlaveWordByteSwap(byte)
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public void setSlaveWordByteSwap(byte num, boolean enabled) {
         if (num > 3) return;
@@ -1636,7 +1637,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      *
      * @param num Slave number (0-3)
      * @return Current write mode for specified slave (0 = register address + data, 1 = data only)
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public boolean getSlaveWriteMode(byte num) {
         if (num > 3) return false;
@@ -1648,8 +1649,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Set write mode for the specified slave (0-3).
      * @param num Slave number (0-3)
      * @param mode New write mode for specified slave (0 = register address + data, 1 = data only)
-     * @see getSlaveWriteMode()
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #getSlaveWriteMode(byte)
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public void setSlaveWriteMode(byte num, boolean mode) {
         if (num > 3) return;
@@ -1665,7 +1666,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      *
      * @param num Slave number (0-3)
      * @return Current word pair grouping order offset for specified slave
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public boolean getSlaveWordGroupOffset(byte num) {
         if (num > 3) return false;
@@ -1677,8 +1678,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Set word pair grouping order offset for the specified slave (0-3).
      * @param num Slave number (0-3)
      * @param enabled New word pair grouping order offset for specified slave
-     * @see getSlaveWordGroupOffset()
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #getSlaveWordGroupOffset(byte)
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public void setSlaveWordGroupOffset(byte num, boolean enabled) {
         if (num > 3) return;
@@ -1690,7 +1691,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * bit to 0 is equivalent to disabling the register by writing 0 to I2C_SLV0_EN.
      * @param num Slave number (0-3)
      * @return Number of bytes to read for specified slave
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public byte getSlaveDataLength(byte num) {
         if (num > 3) return 0;
@@ -1702,8 +1703,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Set number of bytes to read for the specified slave (0-3).
      * @param num Slave number (0-3)
      * @param length Number of bytes to read for specified slave
-     * @see getSlaveDataLength()
-     * @see MPU6050_RA_I2C_SLV0_CTRL
+     * @see #getSlaveDataLength(byte)
+     * @see #MPU6050_RA_I2C_SLV0_CTRL
      */
     public void setSlaveDataLength(byte num, byte length) {
         if (num > 3) return;
@@ -1719,8 +1720,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * bits (6-0) are the 7-bit device address of the slave device.
      *
      * @return Current address for Slave 4
-     * @see getSlaveAddress()
-     * @see MPU6050_RA_I2C_SLV4_ADDR
+     * @see #getSlaveAddress(byte)
+     * @see #MPU6050_RA_I2C_SLV4_ADDR
      */
     public byte getSlave4Address() {
         byte[] buffer = new byte[1];
@@ -1730,8 +1731,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set the I2C address of Slave 4.
      * @param address New address for Slave 4
-     * @see getSlave4Address()
-     * @see MPU6050_RA_I2C_SLV4_ADDR
+     * @see #getSlave4Address()
+     * @see #MPU6050_RA_I2C_SLV4_ADDR
      */
     public void setSlave4Address(byte address) {
         writeByte(MPU6050_RA_I2C_SLV4_ADDR, address);
@@ -1742,7 +1743,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * register address is stored in this MPU register.
      *
      * @return Current active register for Slave 4
-     * @see MPU6050_RA_I2C_SLV4_REG
+     * @see #MPU6050_RA_I2C_SLV4_REG
      */
     public byte getSlave4Register() {
         byte[] buffer = new byte[1];
@@ -1752,8 +1753,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set the active internal register for Slave 4.
      * @param reg New active register for Slave 4
-     * @see getSlave4Register()
-     * @see MPU6050_RA_I2C_SLV4_REG
+     * @see #getSlave4Register()
+     * @see #MPU6050_RA_I2C_SLV4_REG
      */
     public void setSlave4Register(byte reg) {
         writeByte(MPU6050_RA_I2C_SLV4_REG, reg);
@@ -1763,7 +1764,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This register stores the data to be written into the Slave 4. If I2C_SLV4_RW
      * is set 1 (set to read), this register has no effect.
      * @param data New byte to write to Slave 4
-     * @see MPU6050_RA_I2C_SLV4_DO
+     * @see #MPU6050_RA_I2C_SLV4_DO
      */
     public void setSlave4OutputByte(byte data) {
         writeByte(MPU6050_RA_I2C_SLV4_DO, data);
@@ -1773,7 +1774,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When set to 1, this bit enables Slave 4 for data transfer operations. When
      * cleared to 0, this bit disables Slave 4 from data transfer operations.
      * @return Current enabled value for Slave 4
-     * @see MPU6050_RA_I2C_SLV4_CTRL
+     * @see #MPU6050_RA_I2C_SLV4_CTRL
      */
     public boolean getSlave4Enabled() {
         byte[] buffer = new byte[1];
@@ -1783,8 +1784,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set the enabled value for Slave 4.
      * @param enabled New enabled value for Slave 4
-     * @see getSlave4Enabled()
-     * @see MPU6050_RA_I2C_SLV4_CTRL
+     * @see #getSlave4Enabled()
+     * @see #MPU6050_RA_I2C_SLV4_CTRL
      */
     public void setSlave4Enabled(boolean enabled) {
         writeBit(MPU6050_RA_I2C_SLV4_CTRL, MPU6050_I2C_SLV4_EN_BIT, enabled);
@@ -1797,7 +1798,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * The interrupt status can be observed in Register 54.
      *
      * @return Current enabled value for Slave 4 transaction interrupts.
-     * @see MPU6050_RA_I2C_SLV4_CTRL
+     * @see #MPU6050_RA_I2C_SLV4_CTRL
      */
     public boolean getSlave4InterruptEnabled() {
         byte[] buffer = new byte[1];
@@ -1807,8 +1808,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set the enabled value for Slave 4 transaction interrupts.
      * @param enabled New enabled value for Slave 4 transaction interrupts.
-     * @see getSlave4InterruptEnabled()
-     * @see MPU6050_RA_I2C_SLV4_CTRL
+     * @see #getSlave4InterruptEnabled()
+     * @see #MPU6050_RA_I2C_SLV4_CTRL
      */
     public void setSlave4InterruptEnabled(boolean enabled) {
         writeBit(MPU6050_RA_I2C_SLV4_CTRL, MPU6050_I2C_SLV4_INT_EN_BIT, enabled);
@@ -1821,7 +1822,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Slave device to/from which the ensuing data transaction will take place.
      *
      * @return Current write mode for Slave 4 (0 = register address + data, 1 = data only)
-     * @see MPU6050_RA_I2C_SLV4_CTRL
+     * @see #MPU6050_RA_I2C_SLV4_CTRL
      */
     public boolean getSlave4WriteMode() {
         byte[] buffer = new byte[1];
@@ -1831,8 +1832,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set write mode for the Slave 4.
      * @param mode New write mode for Slave 4 (0 = register address + data, 1 = data only)
-     * @see getSlave4WriteMode()
-     * @see MPU6050_RA_I2C_SLV4_CTRL
+     * @see #getSlave4WriteMode()
+     * @see #MPU6050_RA_I2C_SLV4_CTRL
      */
     public void setSlave4WriteMode(boolean mode) {
         writeBit(MPU6050_RA_I2C_SLV4_CTRL, MPU6050_I2C_SLV4_REG_DIS_BIT, mode);
@@ -1851,7 +1852,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * further information regarding the Sample Rate, please refer to register 25.
      *
      * @return Current Slave 4 master delay value
-     * @see MPU6050_RA_I2C_SLV4_CTRL
+     * @see #MPU6050_RA_I2C_SLV4_CTRL
      */
     public byte getSlave4MasterDelay() {
         byte[] buffer = new byte[1];
@@ -1861,8 +1862,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Slave 4 master delay value.
      * @param delay New Slave 4 master delay value
-     * @see getSlave4MasterDelay()
-     * @see MPU6050_RA_I2C_SLV4_CTRL
+     * @see #getSlave4MasterDelay()
+     * @see #MPU6050_RA_I2C_SLV4_CTRL
      */
     public void setSlave4MasterDelay(byte delay) {
         writeBits(MPU6050_RA_I2C_SLV4_CTRL, MPU6050_I2C_SLV4_MST_DLY_BIT, MPU6050_I2C_SLV4_MST_DLY_LENGTH, delay);
@@ -1872,7 +1873,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This register stores the data read from Slave 4. This field is populated
      * after a read transaction.
      * @return Last available byte read from to Slave 4
-     * @see MPU6050_RA_I2C_SLV4_DI
+     * @see #MPU6050_RA_I2C_SLV4_DI
      */
     public byte getSlate4InputByte() {
         byte[] buffer = new byte[1];
@@ -1890,7 +1891,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * bit will cause an interrupt if FSYNC_INT_EN is asserted in INT_PIN_CFG
      * (Register 55).
      * @return FSYNC interrupt status
-     * @see MPU6050_RA_I2C_MST_STATUS
+     * @see #MPU6050_RA_I2C_MST_STATUS
      */
     public boolean getPassthroughStatus() {
         byte[] buffer = new byte[1];
@@ -1904,7 +1905,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * (Register 56) is asserted and if the SLV_4_DONE_INT bit is asserted in the
      * I2C_SLV4_CTRL register (Register 52).
      * @return Slave 4 transaction done status
-     * @see MPU6050_RA_I2C_MST_STATUS
+     * @see #MPU6050_RA_I2C_MST_STATUS
      */
     public boolean getSlave4IsDone() {
         byte[] buffer = new byte[1];
@@ -1917,7 +1918,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * the auxiliary I2C bus (an error condition). This triggers an interrupt if the
      * I2C_MST_INT_EN bit in the INT_ENABLE register (Register 56) is asserted.
      * @return Master arbitration lost status
-     * @see MPU6050_RA_I2C_MST_STATUS
+     * @see #MPU6050_RA_I2C_MST_STATUS
      */
     public boolean getLostArbitration() {
         byte[] buffer = new byte[1];
@@ -1930,7 +1931,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * transaction with Slave 4. This triggers an interrupt if the I2C_MST_INT_EN
      * bit in the INT_ENABLE register (Register 56) is asserted.
      * @return Slave 4 NACK interrupt status
-     * @see MPU6050_RA_I2C_MST_STATUS
+     * @see #MPU6050_RA_I2C_MST_STATUS
      */
     public boolean getSlave4Nack() {
         byte[] buffer = new byte[1];
@@ -1943,7 +1944,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * transaction with Slave 3. This triggers an interrupt if the I2C_MST_INT_EN
      * bit in the INT_ENABLE register (Register 56) is asserted.
      * @return Slave 3 NACK interrupt status
-     * @see MPU6050_RA_I2C_MST_STATUS
+     * @see #MPU6050_RA_I2C_MST_STATUS
      */
     public boolean getSlave3Nack() {
         byte[] buffer = new byte[1];
@@ -1956,7 +1957,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * transaction with Slave 2. This triggers an interrupt if the I2C_MST_INT_EN
      * bit in the INT_ENABLE register (Register 56) is asserted.
      * @return Slave 2 NACK interrupt status
-     * @see MPU6050_RA_I2C_MST_STATUS
+     * @see #MPU6050_RA_I2C_MST_STATUS
      */
     public boolean getSlave2Nack() {
         byte[] buffer = new byte[1];
@@ -1969,7 +1970,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * transaction with Slave 1. This triggers an interrupt if the I2C_MST_INT_EN
      * bit in the INT_ENABLE register (Register 56) is asserted.
      * @return Slave 1 NACK interrupt status
-     * @see MPU6050_RA_I2C_MST_STATUS
+     * @see #MPU6050_RA_I2C_MST_STATUS
      */
     public boolean getSlave1Nack() {
         byte[] buffer = new byte[1];
@@ -1982,7 +1983,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * transaction with Slave 0. This triggers an interrupt if the I2C_MST_INT_EN
      * bit in the INT_ENABLE register (Register 56) is asserted.
      * @return Slave 0 NACK interrupt status
-     * @see MPU6050_RA_I2C_MST_STATUS
+     * @see #MPU6050_RA_I2C_MST_STATUS
      */
     public boolean getSlave0Nack() {
         byte[] buffer = new byte[1];
@@ -1996,8 +1997,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get interrupt logic level mode.
      * Will be set 0 for active-high, 1 for active-low.
      * @return Current interrupt mode (0=active-high, 1=active-low)
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_INT_LEVEL_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_INT_LEVEL_BIT
      */
     public boolean getInterruptMode() {
         byte[] buffer = new byte[1];
@@ -2007,9 +2008,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set interrupt logic level mode.
      * @param mode New interrupt mode (0=active-high, 1=active-low)
-     * @see getInterruptMode()
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_INT_LEVEL_BIT
+     * @see #getInterruptMode()
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_INT_LEVEL_BIT
      */
     public void setInterruptMode(boolean mode) {
        writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_INT_LEVEL_BIT, mode);
@@ -2018,8 +2019,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get interrupt drive mode.
      * Will be set 0 for push-pull, 1 for open-drain.
      * @return Current interrupt drive mode (0=push-pull, 1=open-drain)
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_INT_OPEN_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_INT_OPEN_BIT
      */
     public boolean getInterruptDrive() {
         byte[] buffer = new byte[1];
@@ -2029,9 +2030,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set interrupt drive mode.
      * @param drive New interrupt drive mode (0=push-pull, 1=open-drain)
-     * @see getInterruptDrive()
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_INT_OPEN_BIT
+     * @see #getInterruptDrive()
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_INT_OPEN_BIT
      */
     public void setInterruptDrive(boolean drive) {
         writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_INT_OPEN_BIT, drive);
@@ -2040,8 +2041,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get interrupt latch mode.
      * Will be set 0 for 50us-pulse, 1 for latch-until-int-cleared.
      * @return Current latch mode (0=50us-pulse, 1=latch-until-int-cleared)
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_LATCH_INT_EN_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_LATCH_INT_EN_BIT
      */
     public boolean getInterruptLatch() {
         byte[] buffer = new byte[1];
@@ -2051,9 +2052,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set interrupt latch mode.
      * @param latch New latch mode (0=50us-pulse, 1=latch-until-int-cleared)
-     * @see getInterruptLatch()
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_LATCH_INT_EN_BIT
+     * @see #getInterruptLatch()
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_LATCH_INT_EN_BIT
      */
     public void setInterruptLatch(boolean latch) {
         writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_LATCH_INT_EN_BIT, latch);
@@ -2062,8 +2063,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get interrupt latch clear mode.
      * Will be set 0 for status-read-only, 1 for any-register-read.
      * @return Current latch clear mode (0=status-read-only, 1=any-register-read)
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_INT_RD_CLEAR_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_INT_RD_CLEAR_BIT
      */
     public boolean getInterruptLatchClear() {
         byte[] buffer = new byte[1];
@@ -2073,9 +2074,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set interrupt latch clear mode.
      * @param clear New latch clear mode (0=status-read-only, 1=any-register-read)
-     * @see getInterruptLatchClear()
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_INT_RD_CLEAR_BIT
+     * @see #getInterruptLatchClear()
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_INT_RD_CLEAR_BIT
      */
     public void setInterruptLatchClear(boolean clear) {
         writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_INT_RD_CLEAR_BIT, clear);
@@ -2083,9 +2084,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get FSYNC interrupt logic level mode.
      * @return Current FSYNC interrupt mode (0=active-high, 1=active-low)
-     * @see getFSyncInterruptMode()
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_FSYNC_INT_LEVEL_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_FSYNC_INT_LEVEL_BIT
      */
     public boolean getFSyncInterruptLevel() {
         byte[] buffer = new byte[1];
@@ -2094,10 +2094,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set FSYNC interrupt logic level mode.
-     * @param mode New FSYNC interrupt mode (0=active-high, 1=active-low)
-     * @see getFSyncInterruptMode()
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_FSYNC_INT_LEVEL_BIT
+     * @param level New FSYNC interrupt mode (0=active-high, 1=active-low)
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_FSYNC_INT_LEVEL_BIT
      */
     public void setFSyncInterruptLevel(boolean level) {
         writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_FSYNC_INT_LEVEL_BIT, level);
@@ -2106,8 +2105,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get FSYNC pin interrupt enabled setting.
      * Will be set 0 for disabled, 1 for enabled.
      * @return Current interrupt enabled setting
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_FSYNC_INT_EN_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_FSYNC_INT_EN_BIT
      */
     public boolean getFSyncInterruptEnabled() {
         byte[] buffer = new byte[1];
@@ -2117,9 +2116,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set FSYNC pin interrupt enabled setting.
      * @param enabled New FSYNC pin interrupt enabled setting
-     * @see getFSyncInterruptEnabled()
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_FSYNC_INT_EN_BIT
+     * @see #getFSyncInterruptEnabled()
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_FSYNC_INT_EN_BIT
      */
     public void setFSyncInterruptEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_FSYNC_INT_EN_BIT, enabled);
@@ -2133,8 +2132,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * bus of the MPU-60X0 regardless of the state of I2C_MST_EN (Register 106
      * bit[5]).
      * @return Current I2C bypass enabled status
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_I2C_BYPASS_EN_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_I2C_BYPASS_EN_BIT
      */
     public boolean getI2CBypassEnabled() {
         byte[] buffer = new byte[1];
@@ -2150,8 +2149,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * bus of the MPU-60X0 regardless of the state of I2C_MST_EN (Register 106
      * bit[5]).
      * @param enabled New I2C bypass enabled status
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_I2C_BYPASS_EN_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_I2C_BYPASS_EN_BIT
      */
     public void setI2CBypassEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_I2C_BYPASS_EN_BIT, enabled);
@@ -2163,8 +2162,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * further information regarding CLKOUT, please refer to the MPU-60X0 Product
      * Specification document.
      * @return Current reference clock output enabled status
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_CLKOUT_EN_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_CLKOUT_EN_BIT
      */
     public boolean getClockOutputEnabled() {
         byte[] buffer = new byte[1];
@@ -2178,8 +2177,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * further information regarding CLKOUT, please refer to the MPU-60X0 Product
      * Specification document.
      * @param enabled New reference clock output enabled status
-     * @see MPU6050_RA_INT_PIN_CFG
-     * @see MPU6050_INTCFG_CLKOUT_EN_BIT
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTCFG_CLKOUT_EN_BIT
      */
     public void setClockOutputEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_CLKOUT_EN_BIT, enabled);
@@ -2192,8 +2191,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Full register byte for all interrupts, for quick reading. Each bit will be
      * set 0 for disabled, 1 for enabled.
      * @return Current interrupt enabled status
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_FF_BIT
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_FF_BIT
      **/
     public byte getIntEnabled() {
         byte[] buffer = new byte[1];
@@ -2205,9 +2204,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Full register byte for all interrupts, for quick reading. Each bit should be
      * set 0 for disabled, 1 for enabled.
      * @param enabled New interrupt enabled status
-     * @see getIntFreefallEnabled()
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_FF_BIT
+     * @see #getIntFreefallEnabled()
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_FF_BIT
      **/
     public void setIntEnabled(byte enabled) {
         writeByte(MPU6050_RA_INT_ENABLE, enabled);
@@ -2216,8 +2215,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get Free Fall interrupt enabled status.
      * Will be set 0 for disabled, 1 for enabled.
      * @return Current interrupt enabled status
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_FF_BIT
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_FF_BIT
      **/
     public boolean getIntFreefallEnabled() {
         byte[] buffer = new byte[1];
@@ -2227,9 +2226,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Free Fall interrupt enabled status.
      * @param enabled New interrupt enabled status
-     * @see getIntFreefallEnabled()
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_FF_BIT
+     * @see #getIntFreefallEnabled()
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_FF_BIT
      **/
     public void setIntFreefallEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_FF_BIT, enabled);
@@ -2238,8 +2237,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get Motion Detection interrupt enabled status.
      * Will be set 0 for disabled, 1 for enabled.
      * @return Current interrupt enabled status
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_MOT_BIT
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_MOT_BIT
      **/
     public boolean getIntMotionEnabled() {
         byte[] buffer = new byte[1];
@@ -2249,9 +2248,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Motion Detection interrupt enabled status.
      * @param enabled New interrupt enabled status
-     * @see getIntMotionEnabled()
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_MOT_BIT
+     * @see #getIntMotionEnabled()
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_MOT_BIT
      **/
     public void setIntMotionEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_MOT_BIT, enabled);
@@ -2260,8 +2259,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get Zero Motion Detection interrupt enabled status.
      * Will be set 0 for disabled, 1 for enabled.
      * @return Current interrupt enabled status
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_ZMOT_BIT
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_ZMOT_BIT
      **/
     public boolean getIntZeroMotionEnabled() {
         byte[] buffer = new byte[1];
@@ -2271,9 +2270,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Zero Motion Detection interrupt enabled status.
      * @param enabled New interrupt enabled status
-     * @see getIntZeroMotionEnabled()
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_ZMOT_BIT
+     * @see #getIntZeroMotionEnabled()
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_ZMOT_BIT
      **/
     public void setIntZeroMotionEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_ZMOT_BIT, enabled);
@@ -2282,8 +2281,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get FIFO Buffer Overflow interrupt enabled status.
      * Will be set 0 for disabled, 1 for enabled.
      * @return Current interrupt enabled status
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_FIFO_OFLOW_BIT
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_FIFO_OFLOW_BIT
      **/
     public boolean getIntFIFOBufferOverflowEnabled() {
         byte[] buffer = new byte[1];
@@ -2293,9 +2292,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set FIFO Buffer Overflow interrupt enabled status.
      * @param enabled New interrupt enabled status
-     * @see getIntFIFOBufferOverflowEnabled()
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_FIFO_OFLOW_BIT
+     * @see #getIntFIFOBufferOverflowEnabled()
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_FIFO_OFLOW_BIT
      **/
     public void setIntFIFOBufferOverflowEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_FIFO_OFLOW_BIT, enabled);
@@ -2305,8 +2304,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This enables any of the I2C Master interrupt sources to generate an
      * interrupt. Will be set 0 for disabled, 1 for enabled.
      * @return Current interrupt enabled status
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_I2C_MST_INT_BIT
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_I2C_MST_INT_BIT
      **/
     public boolean getIntI2CMasterEnabled() {
         byte[] buffer = new byte[1];
@@ -2316,9 +2315,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set I2C Master interrupt enabled status.
      * @param enabled New interrupt enabled status
-     * @see getIntI2CMasterEnabled()
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_I2C_MST_INT_BIT
+     * @see #getIntI2CMasterEnabled()
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_I2C_MST_INT_BIT
      **/
     public void setIntI2CMasterEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_I2C_MST_INT_BIT, enabled);
@@ -2328,8 +2327,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This event occurs each time a write operation to all of the sensor registers
      * has been completed. Will be set 0 for disabled, 1 for enabled.
      * @return Current interrupt enabled status
-     * @see MPU6050_RA_INT_ENABLE
-     * @see MPU6050_INTERRUPT_DATA_RDY_BIT
+     * @see #MPU6050_RA_INT_ENABLE
+     * @see #MPU6050_INTERRUPT_DATA_RDY_BIT
      */
     public boolean getIntDataReadyEnabled() {
         byte[] buffer = new byte[1];
@@ -2339,9 +2338,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Data Ready interrupt enabled status.
      * @param enabled New interrupt enabled status
-     * @see getIntDataReadyEnabled()
-     * @see MPU6050_RA_INT_CFG
-     * @see MPU6050_INTERRUPT_DATA_RDY_BIT
+     * @see #getIntDataReadyEnabled()
+     * @see #MPU6050_RA_INT_PIN_CFG
+     * @see #MPU6050_INTERRUPT_DATA_RDY_BIT
      */
     public void setIntDataReadyEnabled(boolean enabled) {
         writeBit(MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_DATA_RDY_BIT, enabled);
@@ -2355,7 +2354,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * for getting multiple INT statuses, since each single bit read clears
      * all of them because it has to read the whole byte.
      * @return Current interrupt status
-     * @see MPU6050_RA_INT_STATUS
+     * @see #MPU6050_RA_INT_STATUS
      */
     public byte getIntStatus() {
         byte[] buffer = new byte[1];
@@ -2367,8 +2366,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This bit automatically sets to 1 when a Free Fall interrupt has been
      * generated. The bit clears to 0 after the register has been read.
      * @return Current interrupt status
-     * @see MPU6050_RA_INT_STATUS
-     * @see MPU6050_INTERRUPT_FF_BIT
+     * @see #MPU6050_RA_INT_STATUS
+     * @see #MPU6050_INTERRUPT_FF_BIT
      */
     public boolean getIntFreefallStatus() {
         byte[] buffer = new byte[1];
@@ -2380,8 +2379,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This bit automatically sets to 1 when a Motion Detection interrupt has been
      * generated. The bit clears to 0 after the register has been read.
      * @return Current interrupt status
-     * @see MPU6050_RA_INT_STATUS
-     * @see MPU6050_INTERRUPT_MOT_BIT
+     * @see #MPU6050_RA_INT_STATUS
+     * @see #MPU6050_INTERRUPT_MOT_BIT
      */
     public boolean getIntMotionStatus() {
         byte[] buffer = new byte[1];
@@ -2393,8 +2392,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This bit automatically sets to 1 when a Zero Motion Detection interrupt has
      * been generated. The bit clears to 0 after the register has been read.
      * @return Current interrupt status
-     * @see MPU6050_RA_INT_STATUS
-     * @see MPU6050_INTERRUPT_ZMOT_BIT
+     * @see #MPU6050_RA_INT_STATUS
+     * @see #MPU6050_INTERRUPT_ZMOT_BIT
      */
     public boolean getIntZeroMotionStatus() {
         byte[] buffer = new byte[1];
@@ -2406,8 +2405,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This bit automatically sets to 1 when a Free Fall interrupt has been
      * generated. The bit clears to 0 after the register has been read.
      * @return Current interrupt status
-     * @see MPU6050_RA_INT_STATUS
-     * @see MPU6050_INTERRUPT_FIFO_OFLOW_BIT
+     * @see #MPU6050_RA_INT_STATUS
+     * @see #MPU6050_INTERRUPT_FIFO_OFLOW_BIT
      */
     public boolean getIntFIFOBufferOverflowStatus() {
         byte[] buffer = new byte[1];
@@ -2420,8 +2419,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * generated. For a list of I2C Master interrupts, please refer to Register 54.
      * The bit clears to 0 after the register has been read.
      * @return Current interrupt status
-     * @see MPU6050_RA_INT_STATUS
-     * @see MPU6050_INTERRUPT_I2C_MST_INT_BIT
+     * @see #MPU6050_RA_INT_STATUS
+     * @see #MPU6050_INTERRUPT_I2C_MST_INT_BIT
      */
     public boolean getIntI2CMasterStatus() {
         byte[] buffer = new byte[1];
@@ -2433,8 +2432,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * This bit automatically sets to 1 when a Data Ready interrupt has been
      * generated. The bit clears to 0 after the register has been read.
      * @return Current interrupt status
-     * @see MPU6050_RA_INT_STATUS
-     * @see MPU6050_INTERRUPT_DATA_RDY_BIT
+     * @see #MPU6050_RA_INT_STATUS
+     * @see #MPU6050_INTERRUPT_DATA_RDY_BIT
      */
     public boolean getIntDataReadyStatus() {
         byte[] buffer = new byte[1];
@@ -2453,10 +2452,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * X-axis value</li><li>4 - gyroscope Y-axis value</li><li>5 - gyroscope Z-axis
      * value</li><li>6 - magnetometer X-axis value</li><li>7 - magnetometer Y-axis
      * value</li><li>8 - magnetometer Z-axis value</li></ul>
-     * @see getMotion6()
-     * @see getAcceleration()
-     * @see getRotation()
-     * @see MPU6050_RA_ACCEL_XOUT_H
+     * @see #getMotion6()
+     * @see #getAcceleration()
+     * @see #getRotation()
+     * @see #MPU6050_RA_ACCEL_XOUT_H
      */
     public short[] getMotion9() {
 //        short[] a = getMotion6();
@@ -2470,9 +2469,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Y-axis value</li><li>2 - accelerometer Z-axis value</li><li>3 - gyroscope
      * X-axis value</li><li>4 - gyroscope Y-axis value</li><li>5 - gyroscope Z-axis
      * value</li></ul>
-     * @see getAcceleration()
-     * @see getRotation()
-     * @see MPU6050_RA_ACCEL_XOUT_H
+     * @see #getAcceleration()
+     * @see #getRotation()
+     * @see #MPU6050_RA_ACCEL_XOUT_H
      */
     public short[] getMotion6() {
         short[] buffer = new short[7];
@@ -2521,7 +2520,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * @return an array of {@code short} values containing the accel values.
      * <ul><li>0 - accelerometer X-axis value</li><li>1 - accelerometer
      * Y-axis value</li><li>2 - accelerometer Z-axis value</li></ul>
-     * @see MPU6050_RA_GYRO_XOUT_H
+     * @see #MPU6050_RA_GYRO_XOUT_H
      */
     public double[] getAcceleration() {
         short[] buffer = new short[3];
@@ -2535,8 +2534,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get X-axis accelerometer reading.
      * @return X-axis acceleration measurement in 16-bit 2's complement format
-     * @see getMotion6()
-     * @see MPU6050_RA_ACCEL_XOUT_H
+     * @see #getMotion6()
+     * @see #MPU6050_RA_ACCEL_XOUT_H
      */
     public double getAccelerationX() {
         short[] buffer = new short[1];
@@ -2546,8 +2545,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get Y-axis accelerometer reading.
      * @return Y-axis acceleration measurement in 16-bit 2's complement format
-     * @see getMotion6()
-     * @see MPU6050_RA_ACCEL_YOUT_H
+     * @see #getMotion6()
+     * @see #MPU6050_RA_ACCEL_YOUT_H
      */
     public double getAccelerationY() {
         short[] buffer = new short[1];
@@ -2557,8 +2556,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get Z-axis accelerometer reading.
      * @return Z-axis acceleration measurement in 16-bit 2's complement format
-     * @see getMotion6()
-     * @see MPU6050_RA_ACCEL_ZOUT_H
+     * @see #getMotion6()
+     * @see #MPU6050_RA_ACCEL_ZOUT_H
      */
     public double getAccelerationZ() {
         short[] buffer = new short[1];
@@ -2571,7 +2570,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get current internal temperature.
      * @return Temperature reading in 16-bit 2's complement format
-     * @see MPU6050_RA_TEMP_OUT_H
+     * @see #MPU6050_RA_TEMP_OUT_H
      */
     public double getTemperature() {
         short[] buffer = new short[1];
@@ -2609,8 +2608,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * </pre>
      *
      * @return an array of shorts containing x, y, and z rotation values.
-     * @see getMotion6()
-     * @see MPU6050_RA_GYRO_XOUT_H
+     * @see #getMotion6()
+     * @see #MPU6050_RA_GYRO_XOUT_H
      */
     public double[] getRotation() {
         short[] buffer = new short[3];
@@ -2624,8 +2623,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get X-axis gyroscope reading.
      * @return X-axis rotation measurement in 16-bit 2's complement format
-     * @see getMotion6()
-     * @see MPU6050_RA_GYRO_XOUT_H
+     * @see #getMotion6()
+     * @see #MPU6050_RA_GYRO_XOUT_H
      */
     public short getRotationX() {
         byte[] buffer = new byte[2];
@@ -2635,8 +2634,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get Y-axis gyroscope reading.
      * @return Y-axis rotation measurement in 16-bit 2's complement format
-     * @see getMotion6()
-     * @see MPU6050_RA_GYRO_YOUT_H
+     * @see #getMotion6()
+     * @see #MPU6050_RA_GYRO_YOUT_H
      */
     public short getRotationY() {
         byte[] buffer = new byte[2];
@@ -2646,8 +2645,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get Z-axis gyroscope reading.
      * @return Z-axis rotation measurement in 16-bit 2's complement format
-     * @see getMotion6()
-     * @see MPU6050_RA_GYRO_ZOUT_H
+     * @see #getMotion6()
+     * @see #MPU6050_RA_GYRO_ZOUT_H
      */
     public short getRotationZ() {
         byte[] buffer = new byte[2];
@@ -2741,7 +2740,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Read word (2 bytes) from external sensor data registers.
      * @param position Starting position (0-21)
      * @return Word read from register
-     * @see getExternalSensorByte()
+     * @see #getExternalSensorByte(int)
      */
     public short getExternalSensorWord(int position) {
         byte[] buffer = new byte[2];
@@ -2752,7 +2751,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Read double word (4 bytes) from external sensor data registers.
      * @param position Starting position (0-20)
      * @return Double word read from registers
-     * @see getExternalSensorByte()
+     * @see #getExternalSensorByte(int)
      */
     public int getExternalSensorDWord(int position) {
         byte[] buffer = new byte[4];
@@ -2765,8 +2764,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get X-axis negative motion detection interrupt status.
      * @return Motion detection status
-     * @see MPU6050_RA_MOT_DETECT_STATUS
-     * @see MPU6050_MOTION_MOT_XNEG_BIT
+     * @see #MPU6050_RA_MOT_DETECT_STATUS
+     * @see #MPU6050_MOTION_MOT_XNEG_BIT
      */
     public boolean getXNegMotionDetected() {
         byte[] buffer = new byte[1];
@@ -2776,8 +2775,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get X-axis positive motion detection interrupt status.
      * @return Motion detection status
-     * @see MPU6050_RA_MOT_DETECT_STATUS
-     * @see MPU6050_MOTION_MOT_XPOS_BIT
+     * @see #MPU6050_RA_MOT_DETECT_STATUS
+     * @see #MPU6050_MOTION_MOT_XPOS_BIT
      */
     public boolean getXPosMotionDetected() {
         byte[] buffer = new byte[1];
@@ -2787,8 +2786,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get Y-axis negative motion detection interrupt status.
      * @return Motion detection status
-     * @see MPU6050_RA_MOT_DETECT_STATUS
-     * @see MPU6050_MOTION_MOT_YNEG_BIT
+     * @see #MPU6050_RA_MOT_DETECT_STATUS
+     * @see #MPU6050_MOTION_MOT_YNEG_BIT
      */
     public boolean getYNegMotionDetected() {
         byte[] buffer = new byte[1];
@@ -2798,8 +2797,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get Y-axis positive motion detection interrupt status.
      * @return Motion detection status
-     * @see MPU6050_RA_MOT_DETECT_STATUS
-     * @see MPU6050_MOTION_MOT_YPOS_BIT
+     * @see #MPU6050_RA_MOT_DETECT_STATUS
+     * @see #MPU6050_MOTION_MOT_YPOS_BIT
      */
     public boolean getYPosMotionDetected() {
         byte[] buffer = new byte[1];
@@ -2809,8 +2808,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get Z-axis negative motion detection interrupt status.
      * @return Motion detection status
-     * @see MPU6050_RA_MOT_DETECT_STATUS
-     * @see MPU6050_MOTION_MOT_ZNEG_BIT
+     * @see #MPU6050_RA_MOT_DETECT_STATUS
+     * @see #MPU6050_MOTION_MOT_ZNEG_BIT
      */
     public boolean getZNegMotionDetected() {
         byte[] buffer = new byte[1];
@@ -2820,8 +2819,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get Z-axis positive motion detection interrupt status.
      * @return Motion detection status
-     * @see MPU6050_RA_MOT_DETECT_STATUS
-     * @see MPU6050_MOTION_MOT_ZPOS_BIT
+     * @see #MPU6050_RA_MOT_DETECT_STATUS
+     * @see #MPU6050_MOTION_MOT_ZPOS_BIT
      */
     public boolean getZPosMotionDetected() {
         byte[] buffer = new byte[1];
@@ -2831,8 +2830,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Get zero motion detection interrupt status.
      * @return Motion detection status
-     * @see MPU6050_RA_MOT_DETECT_STATUS
-     * @see MPU6050_MOTION_MOT_ZRMOT_BIT
+     * @see #MPU6050_RA_MOT_DETECT_STATUS
+     * @see #MPU6050_MOTION_MOT_ZRMOT_BIT
      */
     public boolean getZeroMotionDetected() {
         byte[] buffer = new byte[1];
@@ -2849,7 +2848,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * refer to Registers 37 to 39 and immediately following.
      * @param num Slave number (0-3)
      * @param data Byte to write
-     * @see MPU6050_RA_I2C_SLV0_DO
+     * @see #MPU6050_RA_I2C_SLV0_DO
      */
     public void setSlaveOutputByte(byte num, byte data) {
         if (num > 3) return;
@@ -2864,8 +2863,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * shadowing. When DELAY_ES_SHADOW is set to 1, shadowing of external
      * sensor data is delayed until all data has been received.
      * @return Current external data shadow delay enabled status.
-     * @see MPU6050_RA_I2C_MST_DELAY_CTRL
-     * @see MPU6050_DELAYCTRL_DELAY_ES_SHADOW_BIT
+     * @see #MPU6050_RA_I2C_MST_DELAY_CTRL
+     * @see #MPU6050_DELAYCTRL_DELAY_ES_SHADOW_BIT
      */
     public boolean getExternalShadowDelayEnabled() {
         byte[] buffer = new byte[1];
@@ -2875,9 +2874,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set external data shadow delay enabled status.
      * @param enabled New external data shadow delay enabled status.
-     * @see getExternalShadowDelayEnabled()
-     * @see MPU6050_RA_I2C_MST_DELAY_CTRL
-     * @see MPU6050_DELAYCTRL_DELAY_ES_SHADOW_BIT
+     * @see #getExternalShadowDelayEnabled()
+     * @see #MPU6050_RA_I2C_MST_DELAY_CTRL
+     * @see #MPU6050_DELAYCTRL_DELAY_ES_SHADOW_BIT
      */
     public void setExternalShadowDelayEnabled(boolean enabled) {
         writeBit(MPU6050_RA_I2C_MST_DELAY_CTRL, MPU6050_DELAYCTRL_DELAY_ES_SHADOW_BIT, enabled);
@@ -2898,8 +2897,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      *
      * @param num Slave number (0-4)
      * @return Current slave delay enabled status.
-     * @see MPU6050_RA_I2C_MST_DELAY_CTRL
-     * @see MPU6050_DELAYCTRL_I2C_SLV0_DLY_EN_BIT
+     * @see #MPU6050_RA_I2C_MST_DELAY_CTRL
+     * @see #MPU6050_DELAYCTRL_I2C_SLV0_DLY_EN_BIT
      */
     public boolean getSlaveDelayEnabled(byte num) {
         byte[] buffer = new byte[1];
@@ -2912,8 +2911,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Set slave delay enabled status.
      * @param num Slave number (0-4)
      * @param enabled New slave delay enabled status.
-     * @see MPU6050_RA_I2C_MST_DELAY_CTRL
-     * @see MPU6050_DELAYCTRL_I2C_SLV0_DLY_EN_BIT
+     * @see #MPU6050_RA_I2C_MST_DELAY_CTRL
+     * @see #MPU6050_DELAYCTRL_I2C_SLV0_DLY_EN_BIT
      */
     public void setSlaveDelayEnabled(byte num, boolean enabled) {
         writeBit(MPU6050_RA_I2C_MST_DELAY_CTRL, num, enabled);
@@ -2925,8 +2924,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Reset gyroscope signal path.
      * The reset will revert the signal path analog to digital converters and
      * filters to their power up configurations.
-     * @see MPU6050_RA_SIGNAL_PATH_RESET
-     * @see MPU6050_PATHRESET_GYRO_RESET_BIT
+     * @see #MPU6050_RA_SIGNAL_PATH_RESET
+     * @see #MPU6050_PATHRESET_GYRO_RESET_BIT
      */
     public void resetGyroscopePath() {
         writeBit(MPU6050_RA_SIGNAL_PATH_RESET, MPU6050_PATHRESET_GYRO_RESET_BIT, true);
@@ -2935,8 +2934,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Reset accelerometer signal path.
      * The reset will revert the signal path analog to digital converters and
      * filters to their power up configurations.
-     * @see MPU6050_RA_SIGNAL_PATH_RESET
-     * @see MPU6050_PATHRESET_ACCEL_RESET_BIT
+     * @see #MPU6050_RA_SIGNAL_PATH_RESET
+     * @see #MPU6050_PATHRESET_ACCEL_RESET_BIT
      */
     public void resetAccelerometerPath() {
         writeBit(MPU6050_RA_SIGNAL_PATH_RESET, MPU6050_PATHRESET_ACCEL_RESET_BIT, true);
@@ -2945,8 +2944,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Reset temperature sensor signal path.
      * The reset will revert the signal path analog to digital converters and
      * filters to their power up configurations.
-     * @see MPU6050_RA_SIGNAL_PATH_RESET
-     * @see MPU6050_PATHRESET_TEMP_RESET_BIT
+     * @see #MPU6050_RA_SIGNAL_PATH_RESET
+     * @see #MPU6050_PATHRESET_TEMP_RESET_BIT
      */
     public void resetTemperaturePath() {
         writeBit(MPU6050_RA_SIGNAL_PATH_RESET, MPU6050_PATHRESET_TEMP_RESET_BIT, true);
@@ -2966,8 +2965,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * to Section 8 of the MPU-6000/MPU-6050 Product Specification document for
      * further information regarding the detection modules.
      * @return Current accelerometer power-on delay
-     * @see MPU6050_RA_MOT_DETECT_CTRL
-     * @see MPU6050_DETECT_ACCEL_ON_DELAY_BIT
+     * @see #MPU6050_RA_MOT_DETECT_CTRL
+     * @see #MPU6050_DETECT_ACCEL_ON_DELAY_BIT
      */
     public byte getAccelerometerPowerOnDelay() {
         byte[] buffer = new byte[1];
@@ -2977,9 +2976,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set accelerometer power-on delay.
      * @param delay New accelerometer power-on delay (0-3)
-     * @see getAccelerometerPowerOnDelay()
-     * @see MPU6050_RA_MOT_DETECT_CTRL
-     * @see MPU6050_DETECT_ACCEL_ON_DELAY_BIT
+     * @see #getAccelerometerPowerOnDelay()
+     * @see #MPU6050_RA_MOT_DETECT_CTRL
+     * @see #MPU6050_DETECT_ACCEL_ON_DELAY_BIT
      */
     public void setAccelerometerPowerOnDelay(byte delay) {
         writeBits(MPU6050_RA_MOT_DETECT_CTRL, MPU6050_DETECT_ACCEL_ON_DELAY_BIT, MPU6050_DETECT_ACCEL_ON_DELAY_LENGTH, delay);
@@ -3008,8 +3007,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * please refer to Registers 29 to 32.
      *
      * @return Current decrement configuration
-     * @see MPU6050_RA_MOT_DETECT_CTRL
-     * @see MPU6050_DETECT_FF_COUNT_BIT
+     * @see #MPU6050_RA_MOT_DETECT_CTRL
+     * @see #MPU6050_DETECT_FF_COUNT_BIT
      */
     public byte getFreefallDetectionCounterDecrement() {
         byte[] buffer = new byte[1];
@@ -3019,9 +3018,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Free Fall detection counter decrement configuration.
      * @param decrement New decrement configuration value
-     * @see getFreefallDetectionCounterDecrement()
-     * @see MPU6050_RA_MOT_DETECT_CTRL
-     * @see MPU6050_DETECT_FF_COUNT_BIT
+     * @see #getFreefallDetectionCounterDecrement()
+     * @see #MPU6050_RA_MOT_DETECT_CTRL
+     * @see #MPU6050_DETECT_FF_COUNT_BIT
      */
     public void setFreefallDetectionCounterDecrement(byte decrement) {
         writeBits(MPU6050_RA_MOT_DETECT_CTRL, MPU6050_DETECT_FF_COUNT_BIT, MPU6050_DETECT_FF_COUNT_LENGTH, decrement);
@@ -3058,9 +3057,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Motion detection counter decrement configuration.
      * @param decrement New decrement configuration value
-     * @see getMotionDetectionCounterDecrement()
-     * @see MPU6050_RA_MOT_DETECT_CTRL
-     * @see MPU6050_DETECT_MOT_COUNT_BIT
+     * @see #getMotionDetectionCounterDecrement()
+     * @see #MPU6050_RA_MOT_DETECT_CTRL
+     * @see #MPU6050_DETECT_MOT_COUNT_BIT
      */
     public void setMotionDetectionCounterDecrement(byte decrement) {
         writeBits(MPU6050_RA_MOT_DETECT_CTRL, MPU6050_DETECT_MOT_COUNT_BIT, MPU6050_DETECT_MOT_COUNT_LENGTH, decrement);
@@ -3074,8 +3073,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * cannot be written to or read from while disabled. The FIFO buffer's state
      * does not change unless the MPU-60X0 is power cycled.
      * @return Current FIFO enabled status
-     * @see MPU6050_RA_USER_CTRL
-     * @see MPU6050_USERCTRL_FIFO_EN_BIT
+     * @see #MPU6050_RA_USER_CTRL
+     * @see #MPU6050_USERCTRL_FIFO_EN_BIT
      */
     public boolean getFIFOEnabled() {
         byte[] buffer = new byte[1];
@@ -3085,9 +3084,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set FIFO enabled status.
      * @param enabled New FIFO enabled status
-     * @see getFIFOEnabled()
-     * @see MPU6050_RA_USER_CTRL
-     * @see MPU6050_USERCTRL_FIFO_EN_BIT
+     * @see #getFIFOEnabled()
+     * @see #MPU6050_RA_USER_CTRL
+     * @see #MPU6050_USERCTRL_FIFO_EN_BIT
      */
     public void setFIFOEnabled(boolean enabled) {
         writeBit(MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_FIFO_EN_BIT, enabled);
@@ -3101,8 +3100,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * enabling Bypass Mode. For further information regarding Bypass Mode, please
      * refer to Register 55.
      * @return Current I2C Master Mode enabled status
-     * @see MPU6050_RA_USER_CTRL
-     * @see MPU6050_USERCTRL_I2C_MST_EN_BIT
+     * @see #MPU6050_RA_USER_CTRL
+     * @see #MPU6050_USERCTRL_I2C_MST_EN_BIT
      */
     public boolean getI2CMasterModeEnabled() {
         byte[] buffer = new byte[1];
@@ -3112,9 +3111,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set I2C Master Mode enabled status.
      * @param enabled New I2C Master Mode enabled status
-     * @see getI2CMasterModeEnabled()
-     * @see MPU6050_RA_USER_CTRL
-     * @see MPU6050_USERCTRL_I2C_MST_EN_BIT
+     * @see #getI2CMasterModeEnabled()
+     * @see #MPU6050_RA_USER_CTRL
+     * @see #MPU6050_USERCTRL_I2C_MST_EN_BIT
      */
     public void setI2CMasterModeEnabled(boolean enabled) {
         writeBit(MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_I2C_MST_EN_BIT, enabled);
@@ -3131,8 +3130,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Reset the FIFO.
      * This bit resets the FIFO buffer when set to 1 while FIFO_EN equals 0. This
      * bit automatically clears to 0 after the reset has been triggered.
-     * @see MPU6050_RA_USER_CTRL
-     * @see MPU6050_USERCTRL_FIFO_RESET_BIT
+     * @see #MPU6050_RA_USER_CTRL
+     * @see #MPU6050_USERCTRL_FIFO_RESET_BIT
      */
     public void resetFIFO() {
         writeBit(MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_FIFO_RESET_BIT, true);
@@ -3141,8 +3140,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Reset the I2C Master.
      * This bit resets the I2C Master when set to 1 while I2C_MST_EN equals 0.
      * This bit automatically clears to 0 after the reset has been triggered.
-     * @see MPU6050_RA_USER_CTRL
-     * @see MPU6050_USERCTRL_I2C_MST_RESET_BIT
+     * @see #MPU6050_RA_USER_CTRL
+     * @see #MPU6050_USERCTRL_I2C_MST_RESET_BIT
      */
     public void resetI2CMaster() {
         writeBit(MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_I2C_MST_RESET_BIT, true);
@@ -3157,8 +3156,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * When resetting only the signal path (and not the sensor registers), please
      * use Register 104, SIGNAL_PATH_RESET.
      *
-     * @see MPU6050_RA_USER_CTRL
-     * @see MPU6050_USERCTRL_SIG_COND_RESET_BIT
+     * @see #MPU6050_RA_USER_CTRL
+     * @see #MPU6050_USERCTRL_SIG_COND_RESET_BIT
      */
     public void resetSensors() {
         writeBit(MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_SIG_COND_RESET_BIT, true);
@@ -3169,8 +3168,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Trigger a full device reset.
      * A small delay of ~50ms may be desirable after triggering a reset.
-     * @see MPU6050_RA_PWR_MGMT_1
-     * @see MPU6050_PWR1_DEVICE_RESET_BIT
+     * @see #MPU6050_RA_PWR_MGMT_1
+     * @see #MPU6050_PWR1_DEVICE_RESET_BIT
      */
     public void reset() {
         writeBit(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_DEVICE_RESET_BIT, true);
@@ -3184,8 +3183,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * selections for each of the gyros should be used if any gyro axis is not used
      * by the application.
      * @return Current sleep mode enabled status
-     * @see MPU6050_RA_PWR_MGMT_1
-     * @see MPU6050_PWR1_SLEEP_BIT
+     * @see #MPU6050_RA_PWR_MGMT_1
+     * @see #MPU6050_PWR1_SLEEP_BIT
      */
     public boolean getSleepEnabled() {
         byte[] buffer = new byte[1];
@@ -3195,9 +3194,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set sleep mode status.
      * @param enabled New sleep mode enabled status
-     * @see getSleepEnabled()
-     * @see MPU6050_RA_PWR_MGMT_1
-     * @see MPU6050_PWR1_SLEEP_BIT
+     * @see #getSleepEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_1
+     * @see #MPU6050_PWR1_SLEEP_BIT
      */
     public void setSleepEnabled(boolean enabled) {
         writeBit(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, enabled);
@@ -3208,8 +3207,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * between sleep mode and waking up to take a single sample of data from active
      * sensors at a rate determined by LP_WAKE_CTRL (register 108).
      * @return Current sleep mode enabled status
-     * @see MPU6050_RA_PWR_MGMT_1
-     * @see MPU6050_PWR1_CYCLE_BIT
+     * @see #MPU6050_RA_PWR_MGMT_1
+     * @see #MPU6050_PWR1_CYCLE_BIT
      */
     public boolean getWakeCycleEnabled() {
         byte[] buffer = new byte[1];
@@ -3219,9 +3218,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set wake cycle enabled status.
      * @param enabled New sleep mode enabled status
-     * @see getWakeCycleEnabled()
-     * @see MPU6050_RA_PWR_MGMT_1
-     * @see MPU6050_PWR1_CYCLE_BIT
+     * @see #getWakeCycleEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_1
+     * @see #MPU6050_PWR1_CYCLE_BIT
      */
     public void setWakeCycleEnabled(boolean enabled) {
         writeBit(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CYCLE_BIT, enabled);
@@ -3235,8 +3234,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * values to indicate whether the sensor is enabled or disabled, respectively.
      *
      * @return Current temperature sensor enabled status
-     * @see MPU6050_RA_PWR_MGMT_1
-     * @see MPU6050_PWR1_TEMP_DIS_BIT
+     * @see #MPU6050_RA_PWR_MGMT_1
+     * @see #MPU6050_PWR1_TEMP_DIS_BIT
      */
     public boolean getTempSensorEnabled() {
         byte[] buffer = new byte[1];
@@ -3250,9 +3249,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * values to indicate whether the sensor is enabled or disabled, respectively.
      *
      * @param enabled New temperature sensor enabled status
-     * @see getTempSensorEnabled()
-     * @see MPU6050_RA_PWR_MGMT_1
-     * @see MPU6050_PWR1_TEMP_DIS_BIT
+     * @see #getTempSensorEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_1
+     * @see #MPU6050_PWR1_TEMP_DIS_BIT
      */
     public void setTempSensorEnabled(boolean enabled) {
         // 1 is actually disabled here
@@ -3262,8 +3261,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get clock source setting.
      * @return Current clock source setting
      * @see GyroClockSource
-     * @see MPU6050_PWR1_CLKSEL_BIT
-     * @see MPU6050_PWR1_CLKSEL_LENGTH
+     * @see #MPU6050_PWR1_CLKSEL_BIT
+     * @see #MPU6050_PWR1_CLKSEL_LENGTH
      */
     public GyroClockSource getClockSource() {
         byte[] buffer = new byte[1];
@@ -3282,10 +3281,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * the gyroscopes (or an external clock source) as the clock reference for
      * improved stability.
      * @param source New clock source setting
-     * @see getClockSource()
+     * @see #getClockSource()
      * @see GyroClockSource
-     * @see MPU6050_PWR1_CLKSEL_BIT
-     * @see MPU6050_PWR1_CLKSEL_LENGTH
+     * @see #MPU6050_PWR1_CLKSEL_BIT
+     * @see #MPU6050_PWR1_CLKSEL_LENGTH
      */
     public void setClockSource(GyroClockSource source) {
         writeBits(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CLKSEL_BIT, MPU6050_PWR1_CLKSEL_LENGTH, (byte)source.ordinal());
@@ -3315,7 +3314,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Register 107.
      *
      * @return Current wake frequency
-     * @see MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_RA_PWR_MGMT_2
      */
     public byte getWakeFrequency() {
         byte[] buffer = new byte[1];
@@ -3325,7 +3324,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set wake frequency in Accel-Only Low Power Mode.
      * @param frequency New wake frequency
-     * @see MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_RA_PWR_MGMT_2
      */
     public void setWakeFrequency(byte frequency) {
         writeBits(MPU6050_RA_PWR_MGMT_2, MPU6050_PWR2_LP_WAKE_CTRL_BIT, MPU6050_PWR2_LP_WAKE_CTRL_LENGTH, frequency);
@@ -3335,8 +3334,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get X-axis accelerometer standby enabled status.
      * If enabled, the X-axis will not gather or report data (or use power).
      * @return Current X-axis standby enabled status
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_XA_BIT
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_XA_BIT
      */
     public boolean getStandbyXAccelEnabled() {
         byte[] buffer = new byte[1];
@@ -3345,10 +3344,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set X-axis accelerometer standby enabled status.
-     * @param New X-axis standby enabled status
-     * @see getStandbyXAccelEnabled()
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_XA_BIT
+     * @param enabled New X-axis standby enabled status
+     * @see #getStandbyXAccelEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_XA_BIT
      */
     public void setStandbyXAccelEnabled(boolean enabled) {
         writeBit(MPU6050_RA_PWR_MGMT_2, MPU6050_PWR2_STBY_XA_BIT, enabled);
@@ -3357,8 +3356,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get Y-axis accelerometer standby enabled status.
      * If enabled, the Y-axis will not gather or report data (or use power).
      * @return Current Y-axis standby enabled status
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_YA_BIT
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_YA_BIT
      */
     public boolean getStandbyYAccelEnabled() {
         byte[] buffer = new byte[1];
@@ -3367,10 +3366,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set Y-axis accelerometer standby enabled status.
-     * @param New Y-axis standby enabled status
-     * @see getStandbyYAccelEnabled()
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_YA_BIT
+     * @param enabled New Y-axis standby enabled status
+     * @see #getStandbyYAccelEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_YA_BIT
      */
     public void setStandbyYAccelEnabled(boolean enabled) {
         writeBit(MPU6050_RA_PWR_MGMT_2, MPU6050_PWR2_STBY_YA_BIT, enabled);
@@ -3379,8 +3378,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get Z-axis accelerometer standby enabled status.
      * If enabled, the Z-axis will not gather or report data (or use power).
      * @return Current Z-axis standby enabled status
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_ZA_BIT
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_ZA_BIT
      */
     public boolean getStandbyZAccelEnabled() {
         byte[] buffer = new byte[1];
@@ -3389,10 +3388,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set Z-axis accelerometer standby enabled status.
-     * @param New Z-axis standby enabled status
-     * @see getStandbyZAccelEnabled()
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_ZA_BIT
+     * @param enabled New Z-axis standby enabled status
+     * @see #getStandbyZAccelEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_ZA_BIT
      */
     public void setStandbyZAccelEnabled(boolean enabled) {
         writeBit(MPU6050_RA_PWR_MGMT_2, MPU6050_PWR2_STBY_ZA_BIT, enabled);
@@ -3403,8 +3402,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * If enabled, the X-axis will not gather or report data (or use power).
      * 
      * @return Current X-axis standby enabled status
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_XG_BIT
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_XG_BIT
      */
     public boolean getStandbyXGyroEnabled() {
         byte[] buffer = new byte[1];
@@ -3414,10 +3413,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set X-axis gyroscope standby enabled status.
      * 
-     * @param New X-axis standby enabled status
-     * @see getStandbyXGyroEnabled()
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_XG_BIT
+     * @param enabled New X-axis standby enabled status
+     * @see #getStandbyXGyroEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_XG_BIT
      */
     public void setStandbyXGyroEnabled(boolean enabled) {
         writeBit(MPU6050_RA_PWR_MGMT_2, MPU6050_PWR2_STBY_XG_BIT, enabled);
@@ -3428,8 +3427,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * If enabled, the Y-axis will not gather or report data (or use power).
      * 
      * @return Current Y-axis standby enabled status
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_YG_BIT
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_YG_BIT
      */
     public boolean getStandbyYGyroEnabled() {
         byte[] buffer = new byte[1];
@@ -3439,10 +3438,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Y-axis gyroscope standby enabled status.
      * 
-     * @param New Y-axis standby enabled status
-     * @see getStandbyYGyroEnabled()
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_YG_BIT
+     * @param enabled New Y-axis standby enabled status
+     * @see #getStandbyYGyroEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_YG_BIT
      */
     public void setStandbyYGyroEnabled(boolean enabled) {
         writeBit(MPU6050_RA_PWR_MGMT_2, MPU6050_PWR2_STBY_YG_BIT, enabled);
@@ -3453,8 +3452,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * If enabled, the Z-axis will not gather or report data (or use power).
      * 
      * @return Current Z-axis standby enabled status
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_ZG_BIT
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_ZG_BIT
      */
     public boolean getStandbyZGyroEnabled() {
         byte[] buffer = new byte[1];
@@ -3464,10 +3463,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
     /**
      * Set Z-axis gyroscope standby enabled status.
      * 
-     * @param New Z-axis standby enabled status
-     * @see getStandbyZGyroEnabled()
-     * @see MPU6050_RA_PWR_MGMT_2
-     * @see MPU6050_PWR2_STBY_ZG_BIT
+     * @param enabled New Z-axis standby enabled status
+     * @see #getStandbyZGyroEnabled()
+     * @see #MPU6050_RA_PWR_MGMT_2
+     * @see #MPU6050_PWR2_STBY_ZG_BIT
      */
     public void setStandbyZGyroEnabled(boolean enabled) {
         writeBit(MPU6050_RA_PWR_MGMT_2, MPU6050_PWR2_STBY_ZG_BIT, enabled);
@@ -3529,8 +3528,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Write byte to FIFO buffer.
-     * @see getFIFOByte()
-     * @see MPU6050_RA_FIFO_R_W
+     * @see #getFIFOByte()
+     * @see #MPU6050_RA_FIFO_R_W
      */
     public void setFIFOByte(byte data) {
         writeByte(MPU6050_RA_FIFO_R_W, data);
@@ -3542,9 +3541,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Get Device ID.
      * This register is used to verify the identity of the device (0b110100, 0x34).
      * @return Device ID (6 bits only! should be 0x34)
-     * @see MPU6050_RA_WHO_AM_I
-     * @see MPU6050_WHO_AM_I_BIT
-     * @see MPU6050_WHO_AM_I_LENGTH
+     * @see #MPU6050_RA_WHO_AM_I
+     * @see #MPU6050_WHO_AM_I_BIT
+     * @see #MPU6050_WHO_AM_I_LENGTH
      */
     public byte getDeviceID() {
         byte[] buffer = new byte[1];
@@ -3556,10 +3555,10 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Write a new ID into the WHO_AM_I register (no idea why this should ever be
      * necessary though).
      * @param id New device ID to set.
-     * @see getDeviceID()
-     * @see MPU6050_RA_WHO_AM_I
-     * @see MPU6050_WHO_AM_I_BIT
-     * @see MPU6050_WHO_AM_I_LENGTH
+     * @see #getDeviceID()
+     * @see #MPU6050_RA_WHO_AM_I
+     * @see #MPU6050_WHO_AM_I_BIT
+     * @see #MPU6050_WHO_AM_I_LENGTH
      */
     public void setDeviceID(byte id) {
         writeBits(MPU6050_RA_WHO_AM_I, MPU6050_WHO_AM_I_BIT, MPU6050_WHO_AM_I_LENGTH, id);

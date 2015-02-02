@@ -47,7 +47,7 @@ public class NetworkCommunications extends JNIWrapper {
 	 * @param aiSystemIndex 
 	 * @param channel 
 	 * @param status 
-	 * @return 
+	 * @return ai calibration lsb weight
 	 */
 	public static native int AICalibrationGetLSBWeight(int aiSystemIndex, int channel, Integer status);
 	/**
@@ -56,13 +56,13 @@ public class NetworkCommunications extends JNIWrapper {
 	 * @param aiSystemIndex 
 	 * @param channel 
 	 * @param status 
-	 * @return 
+	 * @return ai calibration offset
 	 */
 	public static native int AICalibrationGetOffset(int aiSystemIndex, int channel, Integer status);
 	/**
 	 * Original signature : <code>tTargetClass getTargetClass()</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\LoadOut.h:25</i>
-	 * @return 
+	 * @return target class
 	 */
 	public static native int getTargetClass();
 	/**
@@ -70,13 +70,13 @@ public class NetworkCommunications extends JNIWrapper {
 	 * <i>native declaration : src\main\include\NetworkCommunication\LoadOut.h:32</i>
 	 * @param moduleType 
 	 * @param moduleNumber 
-	 * @return 
+	 * @return module presence for loadout
 	 */
 	public static native int LoadOutGetModulePresence(int moduleType, byte moduleNumber);
 	/**
 	 * Original signature : <code>uint32_t FRC_NetworkCommunication_nLoadOut_getTargetClass()</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\LoadOut.h:33</i>
-	 * @return 
+	 * @return target class for loadout
 	 */
 	public static native int LoadOutGetTargetClass();
 	/**
@@ -88,7 +88,7 @@ public class NetworkCommunications extends JNIWrapper {
 	 * @param feature a string to be included describing features in use on a specific resource.  Setting the same resource more than once allows you to change the feature string.<br>
 	 * Original signature : <code>uint32_t report(UsageReporting, uint8_t, uint8_t, const char*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\UsageReporting.h:113</i>
-	 * @return int
+	 * @return int report usage
 	 */
 	public static native int report(int resource, byte instanceNumber, byte context, String feature);
 	
@@ -113,7 +113,7 @@ public class NetworkCommunications extends JNIWrapper {
 	 * <i>native declaration : src\main\include\NetworkCommunication\FRCComm.h:138</i>
 	 * @param ioConfig 
 	 * @param wait_ms 
-	 * @return 
+	 * @return io config
 	 */
 	public static native int overrideIOConfig(String ioConfig, int wait_ms);
 	/**

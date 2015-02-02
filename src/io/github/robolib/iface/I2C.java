@@ -56,7 +56,7 @@ public class I2C extends Interface {
      * Constructor.
      *
      * @param port The I2C port the device is connected to.
-     * @param deviceAddress The address of the device on the I2C bus.
+     * @param address The address of the device on the I2C bus.
      */
     public I2C(Port port, int address) {
         super(InterfaceType.I2C);
