@@ -129,7 +129,7 @@ public class Gyro extends AnalogInput implements PIDSource, LiveWindowSendable {
      * calculations to allow the code to work with multiple gyros. This value
      * is typically found in the gyro datasheet.
      *
-     * @param voltsPerDegreePerSecond The sensitivity in Volts/degree/second.
+     * @param voltsPerDegreesPerSecond The sensitivity in Volts/degree/second.
      */
     public void setSensitivity(double voltsPerDegreesPerSecond){
         m_VperDperS = voltsPerDegreesPerSecond;

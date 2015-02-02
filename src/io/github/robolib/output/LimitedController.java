@@ -19,7 +19,7 @@ import io.github.robolib.framework.SafetyManager;
 import io.github.robolib.util.LimitSystem;
 
 /**
- * A SpeedController limited by {@link BooleanSource}(s).
+ * A SpeedController limited by Boolean Sources.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
@@ -37,7 +37,7 @@ public class LimitedController implements SpeedController {
      * Instantiates a new limit switch controller.
      *
      * @param motor the motor
-     * @param switchSystem the switch system
+     * @param system the switch system
      */
     public LimitedController(SpeedController motor, LimitSystem system){
         m_motor = motor;

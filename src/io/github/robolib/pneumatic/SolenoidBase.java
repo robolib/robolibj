@@ -250,7 +250,7 @@ public abstract class SolenoidBase {
     /**
      * 
      * @param port
-     * @return
+     * @return the value of the solenoid
      */
     protected static final boolean get(ByteBuffer port){
         IntBuffer status = getLE4IntBuffer();
@@ -268,7 +268,7 @@ public abstract class SolenoidBase {
     
     /**
      * 
-     * @return
+     * @return get the value of the solenoid
      */
     public abstract Value get();
     

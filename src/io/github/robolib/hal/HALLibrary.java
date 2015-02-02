@@ -112,7 +112,7 @@ public class HALLibrary /* implements Library */ {
 	 * Original signature : <code>MUTEX_ID initializeMutex(uint32_t)</code><br>
 	 * <i>native declaration : AthenaJava\target\native\include\HAL\Semaphore.h:385</i>
 	 * @param flags 
-	 * @return 
+	 * @return mutex
 	 */
 	public static native ByteBuffer initializeMutex(int flags);
 	/**
@@ -126,21 +126,21 @@ public class HALLibrary /* implements Library */ {
 	 * <i>native declaration : AthenaJava\target\native\include\HAL\Semaphore.h:389</i>
 	 * @param sem 
 	 * @param timeout 
-	 * @return 
+	 * @return mutex
 	 */
 	public static native byte takeMutex(ByteBuffer sem, int timeout);
 	/**
 	 * Original signature : <code>double testDouble(double)</code><br>
 	 * <i>native declaration : AthenaJava\target\native\include\HAL\HAL.h:462</i>
 	 * @param param 
-	 * @return 
+	 * @return double
 	 */
 	public static native double testDouble(double param);
 	/**
 	 * Original signature : <code>int32_t testInt32(int32_t)</code><br>
 	 * <i>native declaration : AthenaJava\target\native\include\HAL\HAL.h:464</i>
 	 * @param param 
-	 * @return 
+	 * @return int 
 	 */
 	public static native int testInt32(int param);
 	/**

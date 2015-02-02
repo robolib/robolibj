@@ -19,6 +19,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.livewindow.LiveWindowSendable;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
@@ -27,7 +28,7 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PIDController {
+public class PIDController implements LiveWindowSendable {
 	
     /**
      * Interface for representing the error and tolerance
@@ -413,6 +414,7 @@ public class PIDController {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getSmartDashboardType() {
         return "PIDController";
     }
@@ -440,6 +442,7 @@ public class PIDController {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTable(ITable table) {
         if(m_table!=null)
             m_table.removeTableListener(m_listener);
@@ -458,6 +461,7 @@ public class PIDController {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ITable getTable(){
         return m_table;
     }
@@ -465,5 +469,18 @@ public class PIDController {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateTable(){}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void startLiveWindowMode() {}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stopLiveWindowMode() {}
 }

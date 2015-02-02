@@ -469,8 +469,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      * value is true, then the averaged value is selected for the analog
      * trigger, otherwise the immediate value is used.
      *
-     * @param useAveragedValue
-     *            true to use an averaged value, false otherwise
+     * @param useAveraged true to use an averaged value, false otherwise
      */
     public void setAveraged(boolean useAveraged){
         validateTrigger();
@@ -485,8 +484,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      * help with 360 degree pot applications for the period where the pot
      * crosses through zero.
      *
-     * @param useFilteredValue
-     *            true to use a filterd value, false otherwise
+     * @param useFiltered true to use a filterd value, false otherwise
      */
     public void setFiltered(boolean useFiltered){
         validateTrigger();
