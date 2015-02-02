@@ -60,7 +60,7 @@ public class Victor extends PWMController {
      */
     public Victor(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.027, 1.525, 1.507, 1.49, 1.026, PeriodMultiplier.k2X);
-        UsageReporting.report(UsageReporting.kResourceType_Victor, channel.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_Victor, channel.ordinal());
     }
 
 }

@@ -16,12 +16,16 @@
 package io.github.robolib.lang;
 
 /**
- * 
+ * Interface for an object that provides a double value
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface DoubleSource {
     
+    /**
+     * Get the value of this double source
+     * @return the value of this double source.
+     */
     double get();
 
 }

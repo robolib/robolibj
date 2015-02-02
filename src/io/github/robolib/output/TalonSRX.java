@@ -57,7 +57,7 @@ public class TalonSRX extends PWMController {
      */
     public TalonSRX(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.004, 1.52, 1.50, 1.48, 0.997, PeriodMultiplier.k1X);
-        UsageReporting.report(UsageReporting.kResourceType_Talon, channel.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_Talon, channel.ordinal());
     }
     
 }

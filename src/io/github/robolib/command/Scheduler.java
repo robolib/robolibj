@@ -81,7 +81,7 @@ public class Scheduler implements Sendable {
      * Instantiates a new scheduler.
      */
     private Scheduler(){
-        UsageReporting.report(UsageReporting.kResourceType_Compressor, UsageReporting.kCommand_Scheduler);
+        UsageReporting.report(UsageReporting.ResourceType_Compressor, UsageReporting.Command_Scheduler);
         m_log = Logger.get(Scheduler.class);
         initTable(RoboLibBot.getRobotTable().getSubTable("Scheduler"));
     }

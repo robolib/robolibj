@@ -31,6 +31,8 @@ public class Joystick extends GenericHID {
     
     /**
      * The Enum JSID.
+     * 
+     * @author Austin Reuland <amreuland@gmail.com>
      */
     public static enum JSID{
         
@@ -56,6 +58,8 @@ public class Joystick extends GenericHID {
     
     /**
      * The Class JoystickAxis.
+     * 
+     * @author Austin Reuland <amreuland@gmail.com>
      */
     private class JoystickAxis implements HIDAxis {
 
@@ -105,6 +109,8 @@ public class Joystick extends GenericHID {
 
     /**
      * The Class JoystickButton.
+     * 
+     * @author Austin Reuland <amreuland@gmail.com>
      */
     private class JoystickButton implements HIDButton {
         
@@ -285,7 +291,7 @@ public class Joystick extends GenericHID {
         for(int i = 0; i < numBtns; i++){
             m_btns[i] = new JoystickButton(i);
         }
-        UsageReporting.report(UsageReporting.kResourceType_Joystick, port.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_Joystick, port.ordinal());
     }
 
     /**
@@ -326,6 +332,11 @@ public class Joystick extends GenericHID {
         return m_port;
     }
     
+    /**
+     * Rumble control enum
+     *
+     * @author Austin Reuland <amreuland@gmail.com>
+     */
     public static enum RumbleSide{
         LEFT,
         RIGHT,

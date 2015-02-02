@@ -16,12 +16,16 @@
 package io.github.robolib.lang;
 
 /**
- * 
+ * Interface for an object that provides a boolean value
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface BooleanSource {
     
+    /**
+     * Get the value of this boolean source
+     * @return value of the source
+     */
     boolean get();
 
 }

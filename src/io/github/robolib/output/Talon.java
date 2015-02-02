@@ -57,7 +57,7 @@ public class Talon extends PWMController {
      */
     public Talon(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.037, 1.539, 1.513, 1.487, 0.989, PeriodMultiplier.k1X);
-        UsageReporting.report(UsageReporting.kResourceType_Talon, channel.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_Talon, channel.ordinal());
     }
 
 }

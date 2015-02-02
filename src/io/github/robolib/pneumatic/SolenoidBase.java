@@ -35,6 +35,8 @@ public abstract class SolenoidBase {
     
     /**
      * The Enum Channel.
+     * 
+     * @author Austin Reuland <amreuland@gmail.com>
      */
     public static enum SolenoidChannel{
         

@@ -27,6 +27,21 @@ import io.github.robolib.util.log.Logger;
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public abstract class Interface {
+    
+    /**
+     * Enum representation of interfaces.
+     * 
+     * @author Austin Reuland <amreuland@gmail.com>
+     */
+    protected static enum InterfaceType {
+        ANALOG,
+        DIGITALIO,
+        I2C,
+        PWM,
+        RELAY,
+        SERIAL,
+        SPI;
+    }
 
     /** The maximum number of digital channels. */
     public static final int kMaxDigitalChannels = 26;

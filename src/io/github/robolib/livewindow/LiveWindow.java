@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public class LiveWindow {
-
+    
     private static Vector<LiveWindowSendable> m_sensors = new Vector<LiveWindowSendable>();
     
     private static Hashtable<LiveWindowSendable, LWComponent> m_components = new Hashtable<LiveWindowSendable, LWComponent>();
@@ -109,6 +109,11 @@ public class LiveWindow {
     }
 }
 
+/**
+ * Class for each live window senable before it is processed
+ *
+ * @author Austin Reuland <amreuland@gmail.com>
+ */
 class LWComponent {
     
     String m_subsystem;

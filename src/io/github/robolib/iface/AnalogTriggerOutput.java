@@ -15,19 +15,22 @@
 
 package io.github.robolib.iface;
 
+import io.github.robolib.lang.BooleanSource;
+
 /**
  * 
- * @author Austin Reuland <amreuland@gmail.com>
  *
+ * @author Austin Reuland <amreuland@gmail.com>
  */
-public enum InterfaceType {
+public abstract class AnalogTriggerOutput extends DigitalIO implements BooleanSource {
     
-    ANALOG,
-    DIGITALIO,
-    I2C,
-    PWM,
-    RELAY,
-    SERIAL,
-    SPI;
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAnalogTrigger() {
+        return true;
+    }
 
 }

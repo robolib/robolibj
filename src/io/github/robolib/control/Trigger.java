@@ -24,6 +24,11 @@ import io.github.robolib.command.Scheduler;
  */
 public interface Trigger {
     
+    /**
+     * Button Scheduler Control class
+     *
+     * @author Austin Reuland <amreuland@gmail.com>
+     */
     public abstract class ButtonScheduler{
         
         protected ButtonScheduler(){

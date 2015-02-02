@@ -58,7 +58,7 @@ public class Jaguar extends PWMController {
      */
     public Jaguar(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.31, 1.55, 1.507, 1.454, 0.697, PeriodMultiplier.k1X);
-        UsageReporting.report(UsageReporting.kResourceType_Jaguar, channel.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_Jaguar, channel.ordinal());
     }
     
 }

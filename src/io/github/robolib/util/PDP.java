@@ -34,6 +34,8 @@ public class PDP implements Sendable {
     
     /**
      * The Enum PowerChannel.
+     * 
+     * @author Austin Reuland <amreuland@gmail.com>
      */
     public static enum PowerChannel {
         

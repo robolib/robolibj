@@ -37,6 +37,8 @@ public class NetTableController extends GenericHID {
     
     /**
      * The Class NetTableAxis.
+     * 
+     * @author Austin Reuland <amreuland@gmail.com>
      */
     public class NetTableAxis implements HIDAxis {
 
@@ -87,6 +89,8 @@ public class NetTableController extends GenericHID {
     
     /**
      * The Class NetTableButton.
+     * 
+     * @author Austin Reuland <amreuland@gmail.com>
      */
     public class NetTableButton implements HIDButton {
         
