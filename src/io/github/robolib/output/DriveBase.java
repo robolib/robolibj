@@ -27,6 +27,11 @@ import io.github.robolib.util.MathUtils;
  */
 public class DriveBase implements MotorSafety {
     
+    /**
+     * Enum representation of each motor
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum MotorType {
         FRONT_LEFT,
         FRONT_RIGHT,

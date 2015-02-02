@@ -27,6 +27,7 @@ import io.github.robolib.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
+ * Analog output class.
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
@@ -34,6 +35,12 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Double
     
     private ITable m_table;
     
+    /**
+     * Construct an analog output on a specified {@link AnalogChannel}
+     * channel.
+     *
+     * @param channel The channel to represent.
+     */
     public AnalogOutput(AnalogChannel channel){
         super(channel, Direction.OUT);
     }
@@ -42,7 +49,6 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Double
      * Set the voltage of this Analog Output
      * @param voltage the voltage to set
      */
-    @Override
     public void set(double voltage){
         setVoltage(voltage);
     }
@@ -51,6 +57,10 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Double
         IntBuffer status = getLE4IntBuffer();
         AnalogJNI.setAnalogOutput(m_port, voltage, status);
         HALUtil.checkStatus(status);
+    }
+    
+    public double get(){
+        return getVoltage();
     }
     
     public double getVoltage(){

@@ -35,6 +35,8 @@ public abstract class SolenoidBase {
     
     /**
      * The Enum Channel.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum SolenoidChannel{
         

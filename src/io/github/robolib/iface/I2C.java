@@ -27,11 +27,17 @@ import io.github.robolib.util.MathUtils;
 
 
 /**
- * I2C Interface class.
+ * I2C bus interface class.
+ * 
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class I2C extends Interface {
 
+    /**
+     * Enum representation of I2C ports on the RIO
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum Port {
         ONBOARD,
         MXP;
@@ -43,12 +49,14 @@ public class I2C extends Interface {
     
     protected byte m_port;
     protected byte m_address;
-    private static boolean m_portInitialized[] = new boolean[2];
+    private static final boolean m_portInitialized[] = new boolean[2];
     
     
     /**
-     * @param port
-     * @param address
+     * Constructor.
+     *
+     * @param port The I2C port the device is connected to.
+     * @param deviceAddress The address of the device on the I2C bus.
      */
     public I2C(Port port, int address) {
         super(InterfaceType.I2C);
@@ -67,8 +75,15 @@ public class I2C extends Interface {
             m_portInitialized[port.ordinal()] = true;
         }
         
-        UsageReporting.report(UsageReporting.kResourceType_I2C, address);
+        UsageReporting.report(UsageReporting.ResourceType_I2C, address);
 
+    }
+    
+    /**
+     * Destructor.
+     */
+    public void free(){
+        
     }
     
     /**
@@ -259,6 +274,13 @@ public class I2C extends Interface {
         return a; 
     }
     
+    /**
+     * Read a single bit from an 8-bit device register.
+     *
+     * @param reg Register regAddr to read from
+     * @param bit Bit position to read (0-7)
+     * @return the value of the bit as a boolean
+     */
     public synchronized boolean readBit(int reg, int bit){
         byte[] a = new byte[1];
         readBit(reg, bit, a);

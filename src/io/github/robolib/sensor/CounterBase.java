@@ -36,16 +36,39 @@ public abstract class CounterBase {
         return m_index;
     }
     
+    /**
+     * Get the count
+     * @return the count
+     */
     public abstract int get();
     
+    /**
+     * Reset the count to zero
+     */
     public abstract void reset();
     
+    /**
+     * Get the time between the last two edges counted
+     * @return the time beteween the last two ticks in seconds
+     */
     public abstract double getPeriod();
     
+    /**
+     * Set the maximum time between edges to be considered stalled
+     * @param max the maximum period in seconds
+     */
     public abstract void setMaxPeriod(double max);
     
+    /**
+     * Determine if the counter is not moving
+     * @return true if the counter has not changed for the max period
+     */
     public abstract boolean getStopped();
     
+    /**
+     * Determine which direction the counter is going
+     * @return true for one direction, false for the other
+     */
     public abstract boolean getDirection();
     
 }

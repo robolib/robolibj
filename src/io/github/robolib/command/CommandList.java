@@ -23,12 +23,14 @@ import java.util.Iterator;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class CommandList implements Iterable<Command> {
+public final class CommandList implements Iterable<Command> {
     
     /**
      * The Class ListElement.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
-    class ListElement{
+    private final class ListElement{
         
         /** The last. */
         ListElement last;
@@ -63,7 +65,7 @@ public class CommandList implements Iterable<Command> {
     /**
      * Instantiates a new command list.
      */
-    CommandList(){}
+    protected CommandList(){}
     
     /**
      * Adds the.

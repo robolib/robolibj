@@ -36,6 +36,8 @@ public abstract class DigitalIO extends InterruptBase {
 
     /**
      * The Enum Channel.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum DigitalChannel{
 
@@ -140,6 +142,8 @@ public abstract class DigitalIO extends InterruptBase {
 
     /**
      * The Enum Direction.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum Direction{
 
@@ -174,16 +178,23 @@ public abstract class DigitalIO extends InterruptBase {
 
         m_channel = channel;
         
-        int isIn = dir.equals(Direction.IN) ? 1 : 0;
+        byte isIn = (byte) (dir.equals(Direction.IN) ? 1 : 0);
         
         IntBuffer status = getLE4IntBuffer();
         
         m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte)channel.ordinal()), status);
         HALUtil.checkStatus(status);
-        DIOJNI.allocateDIO(m_port, (byte) isIn, status);
+        DIOJNI.allocateDIO(m_port, isIn, status);
         HALUtil.checkStatus(status);
         
-        UsageReporting.report(UsageReporting.kResourceType_DigitalOutput - isIn, channel.ordinal());
+        UsageReporting.report((byte) (UsageReporting.ResourceType_DigitalOutput - isIn), channel.ordinal());
+    }
+    
+    /**
+     * Constructor for use with analog trigger output. NOTHING ELSE!!!
+     */
+    protected DigitalIO(){
+        super(InterfaceType.ANALOG);
     }
 
     /**
@@ -253,6 +264,14 @@ public abstract class DigitalIO extends InterruptBase {
     @Override
     public int getChannelNumber(){
         return m_channel.ordinal();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public byte getModuleNumber(){
+        return 0;
     }
 
     /**

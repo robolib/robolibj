@@ -60,6 +60,8 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
      * These bits define the measurement flow of the device,
      * specifically whether or not to incorporate an applied
      * bias into the measurement.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum MeasurementMode {
         /**
@@ -95,6 +97,8 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
      * Data Output Rate Bits
      * These bits set the rate at which data is written to
      * all three data output registers.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum OutputRate {
         /** 0.75Hz */
@@ -124,6 +128,8 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
     /**
      * Select number of samples averaged (1 to 8) per measurement output.
      * 00 = 1(Default); 01 = 2; 10 = 4; 11 = 8
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum Averaging {
         /** 1 Sample (Default) */
@@ -148,6 +154,8 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
      * Gain Configuration Bits
      * These bits configure the gain for the device.
      * The gain configuration is common for all channels.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum Gain {
         /** +/- 0.88 Ga / 1370 Gain LSb/Gauss */
@@ -179,6 +187,8 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
     /**
      * Mode Select Bits.
      * These bits select the operation mode of this device.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */    
     public static enum OperatingMode {
         /**
@@ -258,6 +268,11 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
     /** Identification Register C */
     public static final byte HMC_REG_IDC = (byte)0x0C;
     
+    /**
+     * Enum representation of each of the three Axes.
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum Axis{
         X(0),
         Z(2),

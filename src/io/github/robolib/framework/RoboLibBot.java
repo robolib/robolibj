@@ -316,7 +316,7 @@ public class RoboLibBot {
         
         log.info("Starting " + robot.m_name);
 
-        UsageReporting.report(UsageReporting.kResourceType_Language, UsageReporting.kLanguage_Java);
+        UsageReporting.report(UsageReporting.ResourceType_Language, UsageReporting.Language_Java);
         
             
         log.info("Initializing Robot Network Table and Data");
@@ -339,7 +339,7 @@ public class RoboLibBot {
         }
 
         checkVersionFile(new File("/tmp/frc_versions/FRC_Lib_Version.ini"));
-        UsageReporting.report(UsageReporting.kResourceType_Framework, UsageReporting.kFramework_Iterative);
+        UsageReporting.report(UsageReporting.ResourceType_Framework, UsageReporting.Framework_Iterative);
         LiveWindow.setEnabled(false);
 
         log.info("Initializing Robot Modes");
@@ -666,12 +666,22 @@ public class RoboLibBot {
         return DriverStation.isBrownedOut();
     }
     
+    /**
+     * Enum representation of Alliance
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum Alliance {
         RED,
         BLUE,
         NONE;
     }
     
+    /**
+     * Enum representation of alliance station location
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum StationID {
         RED1,
         RED2,

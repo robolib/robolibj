@@ -29,11 +29,24 @@ import io.github.robolib.util.log.Logger;
 
 
 /**
+ * Class for VEX Robotics Spike style relay outputs. Relays are intended to be
+ * connected to Spikes or similar relays. The relay channels controls a pair of
+ * pins that are either both off, one on, the other on, or both on. This
+ * translates into two Spike outputs at 0v, one at 12v and one at 0v, one at 0v
+ * and the other at 12v, or two Spike outputs at 12V. This allows off, full
+ * forward, or full reverse control of motors without variable speed. It also
+ * allows the two channels (forward and reverse) to be used independently for
+ * something that does not care about voltage polarity (like a solenoid).
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class Relay extends Interface {
     
+    /**
+     * Enum representation of Relay channels on the RIO
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum RelayChannel {
         Channel0,
         Channel1,
@@ -41,18 +54,32 @@ public class Relay extends Interface {
         Channel3;
     }
     
-    public static enum Value {
+    /**
+     * Set the state of the relay
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
+    public static enum RelayValue {
         OFF,
         FORWARD,
         REVERSE,
         ON;
     }
     
-    public static enum Direction {
-        NONE,
-        FORWARD,
-        REVERSE,
-        BOTH;
+    /**
+     * Set the direction the relay can go in
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
+    public static enum RelayDirection {
+        FORWARD(1),
+        REVERSE(2),
+        BOTH(3);
+        public byte value;
+
+        private RelayDirection(int val) {
+            value = (byte)val;
+        }
     }
     
     private static final byte kRelayOn = (byte) 1;
@@ -68,35 +95,39 @@ public class Relay extends Interface {
     private RelayChannel m_channel;
     
     /** The Direction this Relay is allowed to operate in */
-    private Direction m_direction;
+    private RelayDirection m_direction;
     
     /** Keep track of already used channels. */
     private static boolean m_usedChannels[] = new boolean[kMaxRelayChannels];
     
     /**
-     * 
-     * @param channel
+     * Relay constructor given a channel, allowing both directions.
+     *
+     * @param channel The {@link RelayChannel} for this relay.
      */
     public Relay(RelayChannel channel) {
-        this(channel, Direction.BOTH, "Relay Ch" + channel.ordinal());
+        this(channel, RelayDirection.BOTH, "Relay Ch" + channel.ordinal());
     }
     
     /**
-     * 
-     * @param channel
-     * @param dir
+     * Relay constructor given a channel.
+     *
+     * @param channel The {@link RelayChannel} for this relay.
+     * @param dir The direction that the Relay object will control.
      */
-    public Relay(RelayChannel channel, Direction dir){
+    public Relay(RelayChannel channel, RelayDirection dir){
         this(channel, dir, "Relay Ch" + channel.ordinal());
     }
 
     /**
-     * 
-     * @param channel
-     * @param dir
-     * @param desc
+     * Relay constructor given a channel.
+     *
+     * @param channel The {@link RelayChannel} for this relay.
+     * @param dir The direction that the Relay object will control.
+     * @param desc Description of this relay for debugging, dash-board, 
+     * and power monitoring purposes
      */
-    public Relay(RelayChannel channel, Direction dir, String desc){
+    public Relay(RelayChannel channel, RelayDirection dir, String desc){
         super(InterfaceType.RELAY);
         m_description = desc;
         m_direction = dir;
@@ -110,9 +141,9 @@ public class Relay extends Interface {
         IntBuffer status = getLE4IntBuffer();
         m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte)channel.ordinal()), status);
         HALUtil.checkStatus(status);
-        set(Value.OFF);
+        set(RelayValue.OFF);
         
-        UsageReporting.report(UsageReporting.kResourceType_Relay, channel.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_Relay, channel.ordinal());
         
     }
     
@@ -127,7 +158,7 @@ public class Relay extends Interface {
         }
         
         IntBuffer status = getLE4IntBuffer();
-        set(Value.OFF);
+        set(RelayValue.OFF);
         DIOJNI.freeDIO(m_port, status);
         HALUtil.checkStatus(status);
     }
@@ -137,14 +168,25 @@ public class Relay extends Interface {
      * @param value
      */
     public void set(boolean value){
-        set(value?Value.ON:Value.OFF);
+        set(value?RelayValue.ON:RelayValue.OFF);
     }
     
     /**
-     * 
-     * @param value
+     * Set the relay state.
+     *
+     * Valid values depend on which directions of the relay are controlled by
+     * the object.
+     *
+     * When set to {@link RelayDirection#BOTH}, the relay can be set to any of the four
+     * states: 0v-0v, 12v-0v, 0v-12v, 12v-12v
+     *
+     * When set to FORWARD or REVERSE, you can specify the constant
+     * for the direction or you can simply specify OFF and ON. Using
+     * only OFF and ON is recommended.
+     *
+     * @param value The state to set the relay.
      */
-    public void set(Value value){
+    public void set(RelayValue value){
         IntBuffer status = getLE4IntBuffer();
         switch(value){
         case OFF:
@@ -153,22 +195,22 @@ public class Relay extends Interface {
             break;
         case FORWARD:
             RelayJNI.setRelayReverse(m_port, kRelayOff, status);
-            if(m_direction == Direction.REVERSE)
+            if(m_direction == RelayDirection.REVERSE)
                 Logger.get(Relay.class).warn("Relay '" + m_description + "' configured for REVERSE. cannot go FORWARD.");
             else
                 RelayJNI.setRelayForward(m_port, kRelayOn, status);
             break;
         case REVERSE:
             RelayJNI.setRelayForward(m_port, kRelayOff, status);
-            if(m_direction == Direction.FORWARD)
+            if(m_direction == RelayDirection.FORWARD)
                 Logger.get(Relay.class).warn("Relay '" + m_description + "' configured for FORWARD. cannot go REVERSE.");
             else
                 RelayJNI.setRelayReverse(m_port, kRelayOn, status);
             break;
         case ON:
-            if((m_direction.ordinal() & 1) != 0)
+            if((m_direction.value & 1) != 0)
                 RelayJNI.setRelayForward(m_port, kRelayOn, status);
-            if((m_direction.ordinal() & 2) != 0)
+            if((m_direction.value & 2) != 0)
                 RelayJNI.setRelayReverse(m_port, kRelayOn, status);
             break;
         }
@@ -176,22 +218,34 @@ public class Relay extends Interface {
     }
     
     /**
-     * 
-     * @return
+     * Get the Relay State
+     *
+     * Gets the current state of the relay.
+     *
+     * When set to FORWARD or REVERSE, value is returned as ON/OFF
+     * not FORWARD/REVERSE (per the recommendation in Set)
+     *
+     * @return The current state of the relay as a {@link RelayValue}
      */
-    public Value get(){
+    public RelayValue get(){
         IntBuffer status = getLE4IntBuffer();
         int forward = RelayJNI.getRelayForward(m_port, status);
         int reverse = RelayJNI.getRelayReverse(m_port, status) << 1;
-        return Value.values()[(forward | reverse)];
+        return RelayValue.values()[(forward | reverse)];
     }
     
     /**
-     * 
-     * @param dir
+     * Set the Relay Direction
+     *
+     * Changes which values the relay can be set to depending on which direction
+     * is used
+     *
+     * Valid inputs are FORWARD, REVERSE, and BOTH
+     *
+     * @param direction The direction for the relay to operate in
      */
-    public void setDirection(Direction dir){
-        set(Value.OFF);
+    public void setDirection(RelayDirection dir){
+        set(RelayValue.OFF);
         m_direction = dir;
     }
     

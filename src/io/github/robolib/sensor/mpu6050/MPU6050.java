@@ -189,6 +189,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 6            | ACCEL_YOUT_L[0]
      * 7            | ACCEL_ZOUT_L[0]
      * </pre>
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum EXTFrameSyncBitLocation {
         /** Input disabled */
@@ -236,6 +238,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 6        | 5Hz       | 19.0ms | 5Hz       | 18.6ms | 1kHz
      * 7        |   -- Reserved --   |   -- Reserved --   | Reserved
      * </pre>
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum DLPFilterMode {
         /** Bandwidth 256Hz */
@@ -273,6 +277,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 3 = +/- 2000 degrees/sec
      * </pre>
      *
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum GyroRange {
         /** +/- 250 degrees/sec */
@@ -329,6 +334,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 4         | On          | 0.63Hz
      * 7         | Hold        | None
      * </pre>
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum DHPFilterMode {
         /** Cut-off Frequency: None  */
@@ -407,6 +414,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 14          | 381kHz                 | 21
      * 15          | 364kHz                 | 22
      * </pre>
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum ClockSpeed {
         
@@ -574,6 +583,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 6       | Reserved
      * 7       | Stops the clock and keeps the timing generator in reset
      * </pre>
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum GyroClockSource {
         /** Internal oscillator */
@@ -2527,7 +2538,6 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * @see getMotion6()
      * @see MPU6050_RA_ACCEL_XOUT_H
      */
-    @Override
     public double getAccelerationX() {
         short[] buffer = new short[1];
         readWord(MPU6050_RA_ACCEL_XOUT_H, buffer);
@@ -2539,7 +2549,6 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * @see getMotion6()
      * @see MPU6050_RA_ACCEL_YOUT_H
      */
-    @Override
     public double getAccelerationY() {
         short[] buffer = new short[1];
         readWord(MPU6050_RA_ACCEL_YOUT_H, buffer);
@@ -2551,7 +2560,6 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * @see getMotion6()
      * @see MPU6050_RA_ACCEL_ZOUT_H
      */
-    @Override
     public double getAccelerationZ() {
         short[] buffer = new short[1];
         readWord(MPU6050_RA_ACCEL_ZOUT_H, buffer);

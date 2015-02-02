@@ -36,8 +36,10 @@ public class CommandGroup extends Command {
     
     /**
      * The Class CommandEntry.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
-    class CommandEntry {
+    private final class CommandEntry {
         
         /** The m_command. */
         Command m_command;
@@ -346,7 +348,7 @@ public class CommandGroup extends Command {
             if(!m_commands.get(m_currentCommandIndex).m_command.isInterruptible()) return false;
         }
         
-        if(m_children.stream().anyMatch(ce -> ce.m_command.isInterruptible() == false)) return false;
+        if(m_children.stream().anyMatch(ce -> !ce.m_command.isInterruptible())) return false;
         
         return true;
     }

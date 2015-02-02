@@ -42,6 +42,8 @@ public class PWM extends Interface implements LiveWindowSendable, DoubleSink {
 
     /**
      * The PWM Channel enum.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum PWMChannel{
 
@@ -127,6 +129,8 @@ public class PWM extends Interface implements LiveWindowSendable, DoubleSink {
 
     /**
      * The PeriodMultiplier enumeration
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum PeriodMultiplier {
 
@@ -167,7 +171,7 @@ public class PWM extends Interface implements LiveWindowSendable, DoubleSink {
     public static final int kSystemClockTicksPerMicrosecond = 40;
 
     /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
+    private static final boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
 
     /** Should we be destroying the deadband? Only used by setBounds() */
     private boolean m_eliminateDeadband = false;
@@ -247,7 +251,7 @@ public class PWM extends Interface implements LiveWindowSendable, DoubleSink {
 
         m_eliminateDeadband = false;
 
-        UsageReporting.report(UsageReporting.kResourceType_PWM, channel.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_PWM, channel.ordinal());
 
     }
     

@@ -45,11 +45,22 @@ import io.github.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class Encoder extends CounterBase implements PIDSource {
+    
+    /**
+     * The different types of indexing available
+     * 
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum IndexingType{
-        kResetWhileHigh,
-        kResetWhileLow,
-        kResetOnRisingEdge,
-        kResetOnFallingEdge;
+        /** Reset when the signal is high */
+        RESET_WHILE_HIGH,
+        /** Reset when the signal is low */
+        RESET_WHILE_LOW,
+        /** Reset on fising edge */
+        RESET_EDGE_RISING,
+        /** Reset on falling edge */
+        RESET_EDGE_FALLING;
     }
     
     /** The a source */
@@ -295,8 +306,10 @@ public class Encoder extends CounterBase implements PIDSource {
             IntBuffer status = getLE4IntBuffer();
             IntBuffer index = getLE4IntBuffer();
             m_encoder = EncoderJNI.initializeEncoder(
-                    (byte)0, m_aSource.getChannelNumber(), (byte)0,
-                    (byte)0, m_bSource.getChannelNumber(), (byte)0,
+                    m_aSource.getModuleNumber(), m_aSource.getChannelNumber(),
+                    (byte)(m_aSource.isAnalogTrigger()?1:0),
+                    m_bSource.getModuleNumber(), m_bSource.getChannelNumber(),
+                    (byte)(m_bSource.isAnalogTrigger()?1:0),
                     (byte)(reverseDirection?1:0), index, status);
             HALUtil.checkStatus(status);
             m_index = index.get(0);
@@ -312,7 +325,7 @@ public class Encoder extends CounterBase implements PIDSource {
         m_distancePerPulse = 1.0;
         m_pidSType = PIDSourceType.DISTANCE;
         
-        UsageReporting.report(UsageReporting.kResourceType_Encoder, m_index, eType.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_Encoder, m_index, eType.ordinal());
     }
     
     /**
@@ -651,7 +664,10 @@ public class Encoder extends CounterBase implements PIDSource {
         else
             edgeSensitive = true;
         
-        EncoderJNI.setEncoderIndexSource(m_encoder, source.getChannelNumber(), false, activeHigh, edgeSensitive, status);
+        EncoderJNI.setEncoderIndexSource(
+                m_encoder,
+                source.getChannelNumber(), source.isAnalogTrigger(),
+                activeHigh, edgeSensitive, status);
         
         HALUtil.checkStatus(status);
     }
@@ -663,7 +679,7 @@ public class Encoder extends CounterBase implements PIDSource {
      * @param channel A {@link DigitalChannel} to set as the encoder index
      */
     public void setIndexSource(DigitalChannel channel){
-        setIndexSource(new DigitalInput(channel), IndexingType.kResetOnRisingEdge);
+        setIndexSource(new DigitalInput(channel), IndexingType.RESET_EDGE_RISING);
         m_allocatedI = true;
     }
     
@@ -674,7 +690,7 @@ public class Encoder extends CounterBase implements PIDSource {
      * @param source A digital source to set as the encoder index
      */
     public void setIndexSource(DigitalIO source){
-        setIndexSource(source, IndexingType.kResetOnRisingEdge);
+        setIndexSource(source, IndexingType.RESET_EDGE_RISING);
     }
 
 }

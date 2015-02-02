@@ -21,6 +21,11 @@ package io.github.robolib.pid;
  */
 public interface PIDSource {
     
+    /**
+     * PID Source types
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum PIDSourceType {
         DISTANCE,
         RATE,

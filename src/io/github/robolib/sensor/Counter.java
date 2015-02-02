@@ -35,6 +35,11 @@ import io.github.robolib.util.MathUtils;
  */
 public class Counter extends CounterBase implements PIDSource {
     
+    /**
+     * Modes for the counter to count in?
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum CounterMode{
         kTwoPulse,
         kSemiperiod,
@@ -42,6 +47,12 @@ public class Counter extends CounterBase implements PIDSource {
         kExternalDirection;
     }
     
+    /**
+     * The two different source types.
+     * Up Source or Down Source
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum SourceType{
         UP,
         DOWN;
@@ -78,7 +89,7 @@ public class Counter extends CounterBase implements PIDSource {
 
         setMaxPeriod(0.5);
         
-        UsageReporting.report(UsageReporting.kResourceType_Counter, m_index, 0);
+        UsageReporting.report(UsageReporting.ResourceType_Counter, m_index, 0);
         
     }
     
@@ -194,7 +205,7 @@ public class Counter extends CounterBase implements PIDSource {
                 m_allocatedUpSource = false;
             }
             m_upSource = source;
-            CounterJNI.setCounterUpSource(m_counter, source.getChannelNumber(), (byte)0, status);
+            CounterJNI.setCounterUpSource(m_counter, source.getChannelNumber(), (byte)(source.isAnalogTrigger()?1:0), status);
             break;
         case DOWN:
             if(m_downSource != null && m_allocatedDownSource){
@@ -202,7 +213,7 @@ public class Counter extends CounterBase implements PIDSource {
                 m_allocatedDownSource = false;
             }
             m_downSource = source;
-            CounterJNI.setCounterDownSource(m_counter, source.getChannelNumber(), (byte)0, status);
+            CounterJNI.setCounterDownSource(m_counter, source.getChannelNumber(), (byte)(source.isAnalogTrigger()?1:0), status);
             break;
         }
         HALUtil.checkStatus(status);

@@ -28,13 +28,15 @@ import io.github.robolib.lang.BooleanSource;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DigitalInput extends DigitalIO implements Trigger, BooleanSource {
+public class DigitalInput extends DigitalIO implements Trigger,  BooleanSource {
     
     public DigitalInput(DigitalChannel channel){
         super(channel, Direction.IN);
     }
     
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public boolean get(){
         IntBuffer status = getLE4IntBuffer();
         boolean value = DIOJNI.getDIO(m_port, status) != 0;

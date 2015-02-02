@@ -24,21 +24,41 @@ import java.nio.IntBuffer;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.SerialPortJNI;
+import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.log.Logger;
 
 /**
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ * Driver for the RS-232 serial port on the RoboRIO.
  *
+ * The current implementation uses the VISA formatted I/O mode.  This means that
+ *   all traffic goes through the formatted buffers.  This allows the intermingled
+ *   use of print(), readString(), and the raw buffer accessors read() and write().
+ *
+ * More information can be found in the NI-VISA User Manual here:
+ *   http://www.ni.com/pdf/manuals/370423a.pdf
+ * and the NI-VISA Programmer's Reference Manual here:
+ *   http://www.ni.com/pdf/manuals/370132c.pdf
+ *   
+ * @author noriah Reuland <vix@noriah.dev>
  */
 public class Serial extends Interface {
 
+    /**
+     * Valid ports for the serial port.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum Port {
         kOnboard,
         kMXP,
         kUSB;
     }
     
+    /**
+     * Represents the parity to use for serial communications
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum Parity {
         NONE,
         ODD,
@@ -47,6 +67,11 @@ public class Serial extends Interface {
         SPACE;
     }
     
+    /**
+     * Represents what type of flow control to use for serial communication
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum FlowControl{
         NONE(0),
         XONXOFF(1),
@@ -58,6 +83,11 @@ public class Serial extends Interface {
         }
     }
     
+    /**
+     * Represents the number of stop bits to use for Serial Communication
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum StopBits{
         ONE(10),
         ONEPOINTFIVE(15),
@@ -69,6 +99,11 @@ public class Serial extends Interface {
         }
     }
     
+    /**
+     * Represents which type of buffer mode to use when writing to a serial port
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum BufferMode{
         FLUSH_ON_ACCESS(1),
         FLUSH_WHEN_FULL(2);
@@ -77,6 +112,8 @@ public class Serial extends Interface {
             value = (byte) val;
         }
     }
+    
+    private static final boolean[] m_allocated = new boolean[3];
     
     private byte m_port;
 
@@ -92,10 +129,16 @@ public class Serial extends Interface {
      */
     public Serial(Port port, final int baudRate, final int dataBits, Parity parity, StopBits stopBits) {
         super(InterfaceType.SERIAL);
-        if(port.equals(Port.kMXP)){
+        
+        if(m_allocated[port.ordinal()])
+            throw new ResourceAllocationException("Cannot allocate serial port '" + port.name() + "', already in use.");
+        
+        if(port == Port.kMXP){
             allocateMXPPin(14);
             allocateMXPPin(10);
         }
+        
+        m_allocated[port.ordinal()] = true;
         
         m_port = (byte)port.ordinal();
         
@@ -121,7 +164,7 @@ public class Serial extends Interface {
         disableTermination();
         
         
-        UsageReporting.report(UsageReporting.kResourceType_SerialPort, port.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_SerialPort, port.ordinal());
     }
     
     /**

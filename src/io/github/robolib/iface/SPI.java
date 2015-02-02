@@ -23,13 +23,19 @@ import java.nio.IntBuffer;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.SPIJNI;
+import io.github.robolib.lang.ResourceAllocationException;
 
 /**
- * SPI Interface class.
+ * SPI bus interface class.
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class SPI extends Interface {
 
+    /**
+     * Valid SPI ports on the RIO
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum Port {
         kOnboardCS0,
         kOnboardCS1,
@@ -38,26 +44,32 @@ public class SPI extends Interface {
         kMXP;
     };
     
-//    private static int m_devices = 0;
     private int m_bitOrder;
     private byte m_port;
     private int m_clockPolarity;
     private int m_dataOnTrailing;
-//    private int m_bitOrder;
-//    private int m_clockPolarity;
-//    private int m_dataOnTrailing;
+    
+    private static final boolean[] m_allocated = new boolean[5];
     
     /**
-     * @param port 
+     * Constructor
+     *
+     * @param port the physical SPI port
      */
     public SPI(Port port) {
         super(InterfaceType.SPI);
-        if(port.equals(Port.kMXP)){
+        
+        if(m_allocated[port.ordinal()])
+            throw new ResourceAllocationException("Cannot allocate spi port '" + port.name() + "', already in use.");
+
+        if(port == Port.kMXP){
             allocateMXPPin(19);
             allocateMXPPin(21);
             allocateMXPPin(23);
             allocateMXPPin(25);
         }
+        
+        m_allocated[port.ordinal()] = true;
         
         IntBuffer status = getLE4IntBuffer();
         
@@ -67,63 +79,109 @@ public class SPI extends Interface {
         SPIJNI.spiInitialize(m_port, status);
         HALUtil.checkStatus(status);        
         
-        UsageReporting.report(UsageReporting.kResourceType_SPI, port.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_SPI, port.ordinal());
     }
     
+    /**
+     * Free the resources used by this object
+     */
     public void free(){
         SPIJNI.spiClose(m_port);
     }
     
     /**
-     * 
-     * @param hz The clock rate in Hertz
+     * Configure the rate of the generated clock signal.
+     * The default value is 500,000 Hz.
+     * The maximum value is 4,000,000 Hz.
+     *
+     * @param hz The clock rate in Hertz.
      */
     public final void setClockRate(int hz){
         SPIJNI.spiSetSpeed(m_port, hz);
     }
     
+    /**
+     * Configure the order that bits are sent and received on the wire
+     * to be most significant bit first.
+     */
     public final void setMSBFirst(){
         m_bitOrder = 1;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
     
+    /**
+     * Configure the order that bits are sent and received on the wire
+     * to be least significant bit first.
+     */
     public final void setLSBFirst(){
         m_bitOrder = 0;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
     
+    /**
+     * Configure the clock output line to be active low.
+     * This is sometimes called clock polarity high or clock idle high.
+     */
     public final void setClockActiveLow(){
         m_clockPolarity = 1;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
     
+    /**
+     * Configure the clock output line to be active high.
+     * This is sometimes called clock polarity low or clock idle low.
+     */
     public final void setClockActiveHight(){
         m_clockPolarity = 0;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
     
+    /**
+     * Configure that the data is stable on the falling edge and the data
+     * changes on the rising edge.
+     */
     public final void setSampleDataOnFalling(){
         m_dataOnTrailing = 1;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
     
+    /**
+     * Configure that the data is stable on the rising edge and the data
+     * changes on the falling edge.
+     */
     public final void setSampleDataOnRising(){
         m_dataOnTrailing = 0;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
     
+    /**
+     * Configure the chip select line to be active high.
+     */
     public final void setChipSelectActiveHigh(){
         IntBuffer status = getLE4IntBuffer();
         SPIJNI.spiSetChipSelectActiveHigh(m_port, status);
         HALUtil.checkStatus(status);
     }
     
+    /**
+     * Configure the chip select line to be active low.
+     */
     public final void setChipSelectActiveLow(){
         IntBuffer status = getLE4IntBuffer();
         SPIJNI.spiSetChipSelectActiveLow(m_port, status);
         HALUtil.checkStatus(status);
     }
     
+    /**
+     * Write data to the slave device.  Blocks until there is space in the
+     * output FIFO.
+     *
+     * If not running in output only mode, also saves the data received
+     * on the MISO input during the transfer into the receive FIFO.
+     * 
+     * @param data the data to write
+     * @param size the number of bytes to send
+     */
     public int write(byte[] data, int size){
         int retVal = 0;
         ByteBuffer dB = ByteBuffer.allocateDirect(size);
@@ -132,6 +190,21 @@ public class SPI extends Interface {
         return retVal;
     }
     
+    /**
+     * Read a word from the receive FIFO.
+     *
+     * Waits for the current transfer to complete if the receive FIFO is empty.
+     *
+     * If the receive FIFO is empty, there is no active transfer, and initiate
+     * is false, errors.
+     *
+     * @param initiate If true, this function pushes "0" into the
+     *                 transmit buffer and initiates a transfer.
+     *                 If false, this function assumes that data is
+     *                 already in the receive FIFO from a previous write.
+     * @param data the buffer to read into
+     * @param size the number of bytes to read
+     */
     public int read(Boolean initiate, byte[] data, int size){
         int retVal = 0;
         ByteBuffer dRB = ByteBuffer.allocateDirect(size);
@@ -147,6 +220,13 @@ public class SPI extends Interface {
         return retVal;
     }
     
+    /**
+     * Perform a simultaneous read/write transaction with the device
+     *
+     * @param dataSend The data to be written out to the device
+     * @param dataGet Buffer to receive data from the device
+     * @param size The length of the transaction, in bytes
+     */
     public int transaction(byte[] dataSend, byte[] dataGet, int size){
         int retVal = 0;
         ByteBuffer dSB = ByteBuffer.allocateDirect(size);

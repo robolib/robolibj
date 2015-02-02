@@ -78,7 +78,7 @@ public class Gyro extends AnalogInput implements PIDSource, LiveWindowSendable {
         
         setPIDSourceType(PIDSourceType.ANGLE);
         
-        UsageReporting.report(UsageReporting.kResourceType_Gyro, channel.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_Gyro, channel.ordinal());
     }
     
     /**

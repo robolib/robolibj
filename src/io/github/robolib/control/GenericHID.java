@@ -197,6 +197,8 @@ public abstract class GenericHID {
 
     /**
      * The Class InvalidAxisException.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     private class InvalidAxisException extends RuntimeException {
         
@@ -227,6 +229,8 @@ public abstract class GenericHID {
 
     /**
      * The Class InvalidButtonException.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     private class InvalidButtonException extends RuntimeException {
 

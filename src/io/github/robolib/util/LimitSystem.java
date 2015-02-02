@@ -25,6 +25,11 @@ import io.github.robolib.lang.BooleanSource;
  */
 public class LimitSystem {
 
+    /**
+     * Type of limit system
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum SystemType {
         /** System limited at a front limit. */
         SINGLE_FORWARD,

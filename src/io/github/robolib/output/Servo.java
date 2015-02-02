@@ -35,11 +35,15 @@ public class Servo extends PWM {
         setBounds(2.4, 0, 0, 0, 0.6);
         setPeriodMultiplier(PeriodMultiplier.k4X);
         
-        UsageReporting.report(UsageReporting.kResourceType_Servo, getChannelNumber());
+        UsageReporting.report(UsageReporting.ResourceType_Servo, getChannelNumber());
     }
     
     /**
-     * {@inheritDoc}
+     * Set the servo position.
+     *
+     * Servo values range from 0.0 to 1.0 corresponding to the range of full left to full right.
+     *
+     * @param value Position from 0.0 to 1.0.
      */
     @Override
     public void set(double value){
@@ -47,14 +51,28 @@ public class Servo extends PWM {
     }
     
     /**
-     * {@inheritDoc}
+     * Get the servo position.
+     *
+     * Servo values range from 0.0 to 1.0 corresponding to the range of full left to full right.
+     *
+     * @return Position from 0.0 to 1.0.
      */
     @Override
     public double get(){
         return getPosition();
     }
     
-    
+    /**
+     * Set the servo angle.
+     *
+     * Assume that the servo angle is linear with respect to the PWM value (big assumption, need to test).
+     *
+     * Servo angles that are out of the supported range of the servo simply "saturate" in that direction
+     * In other words, if the servo has a range of (X degrees to Y degrees) than angles of less than X
+     * result in an angle of X being set and angles of more than Y degrees result in an angle of Y being set.
+     *
+     * @param degrees The angle in degrees to set the servo.
+     */
     public void setAngle(double degrees){
         if (degrees < kMinServoAngle) {
             degrees = kMinServoAngle;
@@ -65,6 +83,12 @@ public class Servo extends PWM {
         setPosition(((degrees - kMinServoAngle)) / getServoAngleRange());
     }
     
+    /**
+     * Get the servo angle.
+     *
+     * Assume that the servo angle is linear with respect to the PWM value (big assumption, need to test).
+     * @return The angle in degrees to which the servo is set.
+     */
     public double getAngle() {
         return getPosition() * getServoAngleRange() + kMinServoAngle;
     }

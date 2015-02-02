@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.lang.DoubleSource;
@@ -37,6 +38,23 @@ import edu.wpi.first.wpilibj.tables.ITable;
  */
 public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendable, DoubleSource {
     
+    /**
+     * Analog Trigger Type Enum
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
+    public static enum AnalogTriggerType {
+        IN_WINDOW,
+        STATE,
+        RISING_PULSE,
+        FALLING_PULSE;
+    }
+    
+    /**
+     * Accumulator class 
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public class AccumulatorResult {
         public long value;
         public long count;
@@ -48,6 +66,10 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
     protected ITable m_table;
 
     private long m_accumulatorOffset;
+    
+    private ByteBuffer m_triggerPort;
+    private int m_triggerIndex;
+    
     
     /**
      * Construct an analog channel.
@@ -63,6 +85,11 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      */
     @Override
     public void free(){
+        if(m_triggerPort != null){
+            IntBuffer status = getLE4IntBuffer();
+            AnalogJNI.cleanAnalogTrigger(m_triggerPort, status);
+            HALUtil.checkStatus(status);
+        }
         super.free();
         m_accumulatorOffset = 0;
     }
@@ -135,7 +162,6 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
     /**
      * {@inheritDoc}
      */
-    @Override
     public double get(){
         return getAverageVoltage();
     }
@@ -335,8 +361,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      * This function reads the value and count from the FPGA atomically. This
      * can be used for averaging.
      *
-     * @param result
-     *          AccumulatorResult object to store the results in.
+     * @param result AccumulatorResult object to store the results in.
      */
     public void getAccumulatorOutput(AccumulatorResult result){
         if(result == null) throw new IllegalArgumentException("Result cannot be NULL!");
@@ -395,6 +420,154 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
         return value;
     }
     
+    public void initTrigger(){
+        IntBuffer status = getLE4IntBuffer();
+        IntBuffer index = getLE4IntBuffer();
+        m_triggerPort = AnalogJNI.initializeAnalogTrigger(m_portPointer, index, status);
+        HALUtil.checkStatus(status);
+        m_triggerIndex = index.get(0);
+        UsageReporting.report(UsageReporting.ResourceType_AnalogTrigger, m_channel.ordinal());
+    }
+    
+    /**
+     * Set the upper and lower limits of the analog trigger. The limits are
+     * given in ADC codes. If oversampling is used, the units must be scaled
+     * appropriately.
+     *
+     * @param lower the lower raw limit
+     * @param upper the upper raw limit
+     */
+    public void setLimitsRaw(final int lower, final int upper){
+        validateTrigger();
+        if(lower > upper)
+            throw new IllegalArgumentException("Lower bound is greater than upper");
+        
+        IntBuffer status = getLE4IntBuffer();
+        AnalogJNI.setAnalogTriggerLimitsRaw(m_triggerPort, lower, upper, status);
+        HALUtil.checkStatus(status);
+    }
+    
+    /**
+     * Set the upper and lower limits of the analog trigger. The limits are
+     * given as floating point voltage values.
+     *
+     * @param lower the lower voltage limit
+     * @param upper the upper voltage limit
+     */
+    public void setLimitsVoltage(final double lower, final double upper){
+        validateTrigger();
+        if(lower > upper)
+            throw new IllegalArgumentException("Lower bound is greater than upper");
+            
+        IntBuffer status = getLE4IntBuffer();
+        AnalogJNI.setAnalogTriggerLimitsVoltage(m_triggerPort, lower, upper, status);
+        HALUtil.checkStatus(status);
+    }
+    
+    /**
+     * Configure the analog trigger to use the averaged vs. raw values. If the
+     * value is true, then the averaged value is selected for the analog
+     * trigger, otherwise the immediate value is used.
+     *
+     * @param useAveragedValue
+     *            true to use an averaged value, false otherwise
+     */
+    public void setAveraged(boolean useAveraged){
+        validateTrigger();
+        IntBuffer status = getLE4IntBuffer();
+        AnalogJNI.setAnalogTriggerAveraged(m_triggerPort, (byte)(useAveraged?1:0), status);
+        HALUtil.checkStatus(status);
+    }
+    
+    /**
+     * Configure the analog trigger to use a filtered value. The analog trigger
+     * will operate with a 3 point average rejection filter. This is designed to
+     * help with 360 degree pot applications for the period where the pot
+     * crosses through zero.
+     *
+     * @param useFilteredValue
+     *            true to use a filterd value, false otherwise
+     */
+    public void setFiltered(boolean useFiltered){
+        validateTrigger();
+        IntBuffer status = getLE4IntBuffer();
+        AnalogJNI.setAnalogTriggerFiltered(m_triggerPort, (byte)(useFiltered?1:0), status);
+        HALUtil.checkStatus(status);
+    }
+    
+    /**
+     * Return the index of the analog trigger. This is the FPGA index of this
+     * analog trigger instance.
+     *
+     * @return The index of the analog trigger.
+     */
+    public int getTriggerIndex(){
+        validateTrigger();
+        return m_triggerIndex;
+    }
+    
+    /**
+     * Return the InWindow output of the analog trigger. True if the analog
+     * input is between the upper and lower limits.
+     *
+     * @return The InWindow output of the analog trigger.
+     */
+    public boolean getInWindow(){
+        validateTrigger();
+        IntBuffer status = getLE4IntBuffer();
+        byte value = AnalogJNI.getAnalogTriggerInWindow(m_triggerPort, status);
+        HALUtil.checkStatus(status);
+        return value != 0;
+    }
+    
+    /**
+     * Return the TriggerState output of the analog trigger. True if above upper
+     * limit. False if below lower limit. If in Hysteresis, maintain previous
+     * state.
+     *
+     * @return The TriggerState output of the analog trigger.
+     */
+    public boolean getTriggerState(){
+        IntBuffer status = getLE4IntBuffer();
+        byte value = AnalogJNI.getAnalogTriggerTriggerState(m_triggerPort, status);
+        HALUtil.checkStatus(status);
+        return value != 0;
+    }
+    
+    /**
+     * Creates an AnalogTriggerOutput object. Gets an output object that can be
+     * used for routing. Caller is responsible for deleting the
+     * AnalogTriggerOutput object.
+     *
+     * @param type An enum of the type of output object to create.
+     * @return A new AnalogTriggerOutput object.
+     */
+    public AnalogTriggerOutput createTriggerOutput(final AnalogTriggerType type){
+        return new AnalogTriggerOutput(){
+            public int getChannelNumber(){
+                return (m_triggerIndex << 2) + type.ordinal();
+            }
+            public byte getModuleNumber(){
+                return (byte)(m_triggerIndex >> 2);
+            }
+            @Override
+            public boolean get() {
+                IntBuffer status = getLE4IntBuffer();
+                byte value = AnalogJNI.getAnalogTriggerOutput(m_triggerPort, type.ordinal(), status);
+                HALUtil.checkStatus(status);
+                return value != 0;
+            }
+        };
+    }
+    
+    /**
+     * validate that the trigger pointer is not null
+     */
+    private void validateTrigger(){
+        if(m_triggerPort == null)
+            throw new IllegalStateException("Trigger not initialized. Call \"initTrigger()\" first.");
+    }
+    
     /**
      * Get the average voltage for use with PIDController
      *
@@ -446,8 +619,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      * {@inheritDoc}
      */
     @Override
-    public void startLiveWindowMode() {
-    }
+    public void startLiveWindowMode() {}
 
     /**
      * Analog Channels don't have to do anything special when exiting the
@@ -455,8 +627,7 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      * {@inheritDoc}
      */
     @Override
-    public void stopLiveWindowMode() {
-    }
+    public void stopLiveWindowMode() {}
     
 
 }

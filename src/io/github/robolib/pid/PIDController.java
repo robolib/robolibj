@@ -29,10 +29,21 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  */
 public class PIDController {
 	
+    /**
+     * Interface for representing the error and tolerance
+     * of the PID
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
 	public interface Tolerance {
 		public boolean onTarget();
 	}
 	
+	/**
+	 * The task each PIDController runs
+	 *
+	 * @author noriah Reuland <vix@noriah.dev>
+	 */
 	private class PIDTask extends TimerTask {
 	    private PIDController m_controller;
 	    public PIDTask(PIDController controller){
@@ -86,7 +97,7 @@ public class PIDController {
 	    
 	    m_controlLoop.schedule(new PIDTask(this), 0L, (long) (period * 1000));
 	    
-	    UsageReporting.report(UsageReporting.kResourceType_PIDController, ++m_instances);
+	    UsageReporting.report(UsageReporting.ResourceType_PIDController, ++m_instances);
 	    m_tolerance = () -> {
 	        throw new RuntimeException("No tolerance value set when using PIDController.onTarget()");
 	    };

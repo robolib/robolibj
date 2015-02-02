@@ -24,6 +24,13 @@ import io.github.robolib.iface.DigitalInput;
  */
 public class LimitSwitch extends DigitalInput {
     
+    /**
+     * The type of switch this is
+     * Normally open is a switch that is normally false when not pushed
+     * Normally closed is a switch that is normally true when not pushed
+     *
+     * @author noriah Reuland <vix@noriah.dev>
+     */
     public static enum SwitchType {
         
         /** Normally Open Switch. */

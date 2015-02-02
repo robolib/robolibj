@@ -34,6 +34,8 @@ public class AnalogIO extends Interface {
 
     /**
      * The Enum Channel.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum AnalogChannel {
         
@@ -64,6 +66,8 @@ public class AnalogIO extends Interface {
     
     /**
      * The Enum Direction.
+     * 
+     * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum Direction{
         
@@ -82,6 +86,7 @@ public class AnalogIO extends Interface {
     
     
     protected ByteBuffer m_port;
+    protected ByteBuffer m_portPointer;
     protected AnalogChannel m_channel;
      
     /**
@@ -93,7 +98,7 @@ public class AnalogIO extends Interface {
     protected AnalogIO(AnalogChannel channel, Direction dir) {
         super(InterfaceType.ANALOG);
         
-        ByteBuffer port = AnalogJNI.getPort((byte) channel.ordinal());
+        ByteBuffer m_portPointer = AnalogJNI.getPort((byte) channel.ordinal());
         IntBuffer status = getLE4IntBuffer();
 
         switch(dir){
@@ -103,7 +108,7 @@ public class AnalogIO extends Interface {
                 throw new ResourceAllocationException("AnalogIO Input channel '" + channel.name() + "' already in use.");
             
             m_usedInChannels[channel.ordinal()] = true;
-            m_port = AnalogJNI.initializeAnalogInputPort(port, status);
+            m_port = AnalogJNI.initializeAnalogInputPort(m_portPointer, status);
         break;
         case OUT:
             checkAnalogOutputChannel(channel.ordinal());
@@ -111,18 +116,18 @@ public class AnalogIO extends Interface {
                 throw new ResourceAllocationException("AnalogIO Output channel '" + channel.name() + "' already in use.");
             
             m_usedOutChannels[channel.ordinal()] = true;
-            m_port = AnalogJNI.initializeAnalogOutputPort(port, status);
+            m_port = AnalogJNI.initializeAnalogOutputPort(m_portPointer, status);
             
         break;
         }
         
         HALUtil.checkStatus(status);
         
-        UsageReporting.report(UsageReporting.kResourceType_AnalogChannel, channel.ordinal());
+        UsageReporting.report(UsageReporting.ResourceType_AnalogChannel, channel.ordinal());
     }
     
     /**
-     * Channel destructor.
+     * Release the resources used by this object
      */
     public void free(){
         m_channel = null;

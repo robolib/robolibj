@@ -48,7 +48,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      */
     public RIO_Accelerometer(AccelRange range){
         setAccelRange(range);
-        UsageReporting.report(UsageReporting.kResourceType_Accelerometer, 0, 0, "Built-in accelerometer");
+        UsageReporting.report(UsageReporting.ResourceType_Accelerometer, 0, 0, "Built-in accelerometer");
     }
     
     /**
@@ -80,7 +80,6 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the X axis in g-forces
      */
-    @Override
     public double getAccelerationX() {
         return AccelerometerJNI.getAccelerometerX();
     }
@@ -90,7 +89,6 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the Y axis in g-forces
      */
-    @Override
     public double getAccelerationY() {
         return AccelerometerJNI.getAccelerometerY();
     }
@@ -100,7 +98,6 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the Z axis in g-forces
      */
-    @Override
     public double getAccelerationZ() {
         return AccelerometerJNI.getAccelerometerZ();
     }
