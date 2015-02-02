@@ -24,7 +24,7 @@ import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PWMJNI;
-import io.github.robolib.lang.DoubleSink;
+import io.github.robolib.identifier.NumberSink;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.util.MathUtils;
@@ -38,7 +38,7 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWM extends Interface implements LiveWindowSendable, DoubleSink {
+public class PWM extends Interface implements LiveWindowSendable, NumberSink {
 
     /**
      * The PWM Channel enum.
@@ -427,9 +427,9 @@ public class PWM extends Interface implements LiveWindowSendable, DoubleSink {
         if(speed == 0.0){
             raw = m_boundsCenter;
         }else if(speed > 0.0){
-            raw = (int) (speed * (m_scaleFactorPositive) + (m_boundsPositiveMin) + 0.5);
+            raw = (int) (speed * m_scaleFactorPositive + m_boundsPositiveMin + 0.5);
         }else{
-            raw = (int) (speed * (m_scaleFactorNegative) + (m_boundsNegativeMax) + 0.5);
+            raw = (int) (speed * m_scaleFactorNegative + m_boundsNegativeMax + 0.5);
         }
 
         setRaw(raw);
@@ -483,13 +483,20 @@ public class PWM extends Interface implements LiveWindowSendable, DoubleSink {
     }
     
     /**
-     * {@inheritDoc}
+     * Sets the speed.
+     *
+     * @param speed the new speed
      */
     @Override
     public void set(double value){
         setSpeed(value);
     }
     
+    /**
+     * Gets the speed.
+     *
+     * @return the speed
+     */
     public double get(){
         return getSpeed();
     }

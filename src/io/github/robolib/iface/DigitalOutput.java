@@ -23,7 +23,7 @@ import java.nio.IntBuffer;
 import io.github.robolib.hal.DIOJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PWMJNI;
-import io.github.robolib.lang.BooleanSink;
+import io.github.robolib.identifier.BooleanSink;
 
 /**
  * 

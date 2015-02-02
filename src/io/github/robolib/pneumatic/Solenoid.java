@@ -17,7 +17,7 @@ package io.github.robolib.pneumatic;
 
 import java.nio.ByteBuffer;
 
-import io.github.robolib.lang.BooleanSink;
+import io.github.robolib.identifier.BooleanSink;
 import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 

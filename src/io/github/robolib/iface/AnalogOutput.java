@@ -21,7 +21,7 @@ import java.nio.IntBuffer;
 
 import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
-import io.github.robolib.lang.DoubleSink;
+import io.github.robolib.identifier.NumberSink;
 import io.github.robolib.livewindow.LiveWindowSendable;
 
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogOutput extends AnalogIO implements LiveWindowSendable, DoubleSink {
+public class AnalogOutput extends AnalogIO implements LiveWindowSendable, NumberSink {
     
     private ITable m_table;
     

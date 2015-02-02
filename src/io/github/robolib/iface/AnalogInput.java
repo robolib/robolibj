@@ -24,7 +24,7 @@ import java.nio.IntBuffer;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
-import io.github.robolib.lang.DoubleSource;
+import io.github.robolib.identifier.NumberSource;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.pid.PIDSource;
@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendable, DoubleSource {
+public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendable, NumberSource {
     
     /**
      * Analog Trigger Type Enum

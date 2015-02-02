@@ -13,19 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.lang;
+package io.github.robolib.identifier;
 
 /**
- * Interface for an object that provides a boolean value
+ * An interface for a class that takes a Boolean
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface BooleanSource {
+public interface BooleanSink {
     
     /**
-     * Get the value of this boolean source
-     * @return value of the source
+     * Set the value of this BooleanSink
+     * @param value boolean
      */
-    boolean get();
+    void set(boolean value);
 
 }

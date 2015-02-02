@@ -15,12 +15,14 @@
 
 package io.github.robolib.control;
 
+import io.github.robolib.identifier.NumberSource;
+
 /**
  * A class representation of a Joystick Axis.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface HIDAxis {
+public interface HIDAxis extends NumberSource {
     
     /**
      * Get the Value of the Axis.

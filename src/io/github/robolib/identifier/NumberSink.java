@@ -13,19 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.lang;
+package io.github.robolib.identifier;
 
 /**
- * An interface for a class that takes a Boolean
+ * An interface for a class that takes a double as a value.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface BooleanSink {
+public interface NumberSink {
     
     /**
-     * Set the value of this BooleanSink
-     * @param value boolean
+     * Set the value of this sink    
+     * @param value new value
      */
-    void set(boolean value);
+    void set(double value);
 
 }

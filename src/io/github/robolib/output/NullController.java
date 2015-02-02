@@ -21,12 +21,6 @@ package io.github.robolib.output;
  * @author noriah Reuland <vix@noriah.dev>
  */
 public class NullController implements SpeedController {
-
-    private final MotorSafetyHelper m_safetyHelper;
-    
-    public NullController(){
-        m_safetyHelper = new NullSafetyHelper(this);
-    }
     
     /**
      * Do absolutely nothing
@@ -48,22 +42,5 @@ public class NullController implements SpeedController {
      */
     @Override
     public void setInverted(boolean inverted) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public MotorSafetyHelper getSafetyHelper() {
-        return m_safetyHelper;
-    }
-
-    /**
-     * Return "Null"
-     * @return "Null"
-     */
-    @Override
-    public String getDescription() {
-        return "Null";
-    }
 
 }

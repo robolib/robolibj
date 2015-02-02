@@ -13,22 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.control;
-
-import io.github.robolib.identifier.BooleanSource;
+package io.github.robolib.command;
 
 /**
- * A class representation of a Joystick Button.
+ * Represents an object that can be scheduled in the scheduler.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface HIDButton extends ButtonTrigger, BooleanSource {
+public interface Schedulable {
     
-    /**
-     * Get the Value of the Button.
-     * @return the value of the Button.
-     */
-    @Override
-    public boolean get();
+    void execute();
 
 }

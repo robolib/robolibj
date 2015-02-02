@@ -24,7 +24,7 @@ import io.github.robolib.util.PDP.PowerChannel;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWMController extends PWM implements SpeedController{
+public class PWMController extends PWM implements SpeedController, MotorSafety {
     
     protected MotorSafetyHelper m_safetyHelper;
     

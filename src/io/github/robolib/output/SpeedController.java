@@ -22,7 +22,7 @@ import io.github.robolib.pid.PIDOutput;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface SpeedController extends MotorSafety, PIDOutput {
+public interface SpeedController extends PIDOutput {
     
     /**
      * Common interface for getting the current set speed of a speed controller.
@@ -80,12 +80,5 @@ public interface SpeedController extends MotorSafety, PIDOutput {
     public default void pidWrite(double value){
         set(value);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public default void stopMotor(){       
-        set(0.0);
-    }
+
 }

@@ -23,7 +23,7 @@ import io.github.robolib.util.LimitSystem;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class LimitedController implements SpeedController {
+public class LimitedController implements SpeedController, MotorSafety {
     
     /** The m_motor. */
     private final SpeedController m_motor;
@@ -63,6 +63,9 @@ public class LimitedController implements SpeedController {
         m_motor.set(speed);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setInverted(boolean inverted){
         m_motor.setInverted(inverted);
@@ -101,6 +104,14 @@ public class LimitedController implements SpeedController {
     @Override
     public MotorSafetyHelper getSafetyHelper() {
         return m_safetyHelper;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stopMotor(){       
+        set(0.0);
     }
 
     /**
