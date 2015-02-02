@@ -371,6 +371,9 @@ public class RoboLibBot {
         getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
         getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, getRobotMode().getName());
 
+        PDP.resetFaults();
+        Compressor.clearCompressorStickyFaults();
+        
         NetworkCommunications.ObserveUserProgramStarting();
         
         DriverStation ds = DriverStation.getInstance();
