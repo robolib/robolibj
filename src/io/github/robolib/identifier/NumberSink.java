@@ -13,15 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.lang;
+package io.github.robolib.identifier;
 
 /**
  * An interface for a class that takes a double as a value.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface DoubleSink {
+public interface NumberSink {
     
+    /**
+     * Set the value of this sink    
+     * @param value new value
+     */
     void set(double value);
 
 }

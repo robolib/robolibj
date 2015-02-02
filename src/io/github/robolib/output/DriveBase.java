@@ -16,6 +16,7 @@
 package io.github.robolib.output;
 
 import java.util.Arrays;
+import java.util.function.BiConsumer;
 
 import io.github.robolib.framework.SafetyManager;
 import io.github.robolib.iface.PWM.PWMChannel;
@@ -110,11 +111,6 @@ public class DriveBase implements MotorSafety {
         m_rearLeftMotor = rearLeft;
         m_rearRightMotor = rearRight;
         
-        m_frontLeftMotor.setSafetyEnabled(false);
-        m_frontRightMotor.setSafetyEnabled(false);
-        m_rearLeftMotor.setSafetyEnabled(false);
-        m_rearRightMotor.setSafetyEnabled(false);
-        
         m_frontRightMotor.setInverted(true);
         m_rearRightMotor.setInverted(true);
         
@@ -155,6 +151,10 @@ public class DriveBase implements MotorSafety {
         case REAR_RIGHT:
             m_rearRightMotor.setInverted(false & inverted);
         }
+    }
+    
+    public <T extends Object> void bind(T o, BiConsumer<DriveBase, T> q){
+        
     }
     
     /**

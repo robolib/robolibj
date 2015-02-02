@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.lang;
+package io.github.robolib.identifier;
 
 /**
  * An interface for a class that takes a Boolean

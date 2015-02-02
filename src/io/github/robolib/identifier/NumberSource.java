@@ -13,31 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.control;
-
-import io.github.robolib.identifier.NumberSource;
+package io.github.robolib.identifier;
 
 /**
- * A class representation of a Joystick Axis.
+ * Interface for an object that provides a double value
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface HIDAxis extends NumberSource {
+public interface NumberSource {
     
     /**
-     * Get the Value of the Axis.
-     * @return the value of the Axis.
+     * Get the value of this double source
+     * @return the value of this double source.
      */
-    public double get();
-    
-    /**
-     * Invert the Axis.
-     */
-    public void setInverted(boolean inverted);
-    
-    /**
-     * Set the Deadband of the Axis.
-     * @param deadband the deadband value of the axis.
-     */
-    public void setDeadband(double deadband);
+    double get();
+
 }

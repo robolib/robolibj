@@ -15,7 +15,7 @@
 
 package io.github.robolib.iface;
 
-import io.github.robolib.lang.BooleanSource;
+import io.github.robolib.identifier.BooleanSource;
 
 /**
  * 

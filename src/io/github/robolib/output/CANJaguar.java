@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  *
  * @author Thomas Clark
  */
-public class CANJaguar implements SpeedController, LiveWindowSendable {
+public class CANJaguar implements SpeedController, MotorSafety, LiveWindowSendable {
 
 
     public static final int kMaxMessageDataSize = 8;

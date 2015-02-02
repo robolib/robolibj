@@ -13,19 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.lang;
+package io.github.robolib.command;
 
 /**
- * Interface for an object that provides a double value
+ * Represents an object that can be scheduled in the scheduler.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface DoubleSource {
+public interface Schedulable {
     
-    /**
-     * Get the value of this double source
-     * @return the value of this double source.
-     */
-    double get();
+    void execute();
 
 }
