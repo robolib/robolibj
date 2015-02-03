@@ -17,8 +17,8 @@ package io.github.robolib.control;
 
 import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.module.RoboRIO;
 import io.github.robolib.util.MathUtils;
-import io.github.robolib.util.RoboRIO;
 import io.github.robolib.util.log.Logger;
 
 /**
@@ -61,13 +61,13 @@ public class Joystick extends GenericHID {
      * 
      * @author noriah Reuland <vix@noriah.dev>
      */
-    private class JoystickAxis implements HIDAxis {
+    protected class JoystickAxis implements HIDAxis {
 
         /** The m_invert. */
-        private int m_invert = 1;
+        private boolean m_inverted = false;
         
         /** The m_dead band. */
-        private double m_deadBand = 0.0;
+        private double m_deadband = 0.0;
         
         /** The m_channel. */
         private final int m_channel;        
@@ -86,8 +86,9 @@ public class Joystick extends GenericHID {
          */
         @Override
         public double get(){
-            double out = getStickAxis(m_port, m_channel) * m_invert;
-            return (Math.abs(out) >= m_deadBand ? out : 0.0);
+            double out = getStickAxis(m_port, m_channel);
+            out = (Math.abs(out) >= m_deadband ? out : 0.0);
+            return m_inverted ? -out : out;
         }
 
         /**
@@ -95,7 +96,7 @@ public class Joystick extends GenericHID {
          */
         @Override
         public void setInverted(boolean inverted){
-            m_invert = inverted ? -1 : 1;
+            m_inverted = inverted;
         }
 
         /**
@@ -103,7 +104,7 @@ public class Joystick extends GenericHID {
          */
         @Override
         public void setDeadband(double value){
-            m_deadBand = value;
+            m_deadband = value;
         }
     }
 
@@ -112,7 +113,7 @@ public class Joystick extends GenericHID {
      * 
      * @author noriah Reuland <vix@noriah.dev>
      */
-    private class JoystickButton implements HIDButton {
+    protected class JoystickButton implements HIDButton {
         
         /** The m_channel. */
         private final int m_channel;
@@ -292,28 +293,6 @@ public class Joystick extends GenericHID {
             m_btns[i] = new JoystickButton(i);
         }
         UsageReporting.report(UsageReporting.ResourceType_Joystick, port.ordinal());
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return a {@link JoystickAxis} instance of the requested Axis
-     * @see JoystickAxis
-     */
-    @Override
-    public HIDAxis getAxis(int axis) {
-        checkAxis(axis);
-        return m_axes[axis];
-    }
-    
-    /**
-     * {@inheritDoc}
-     * @return a {@link JoystickButton} instance of the requested Button
-     * @see JoystickButton
-     */
-    @Override
-    public HIDButton getButton(int btn) {
-        checkButton(btn);
-        return m_btns[btn];
     }
     
     /**

@@ -22,32 +22,92 @@ package io.github.robolib.util;
  */
 public class MathUtils {
     
+    /**
+     * 
+     */
     public static final double PI_180 = Math.PI / 180.0;
     
+    /**
+     * 
+     * @param value
+     * @param min
+     * @param max
+     * @return
+     */
     public static double clamp(double value, double min, double max){
         return Math.max(Math.min(value, max), min);
     }
     
+    /**
+     * 
+     * @param value
+     * @param min
+     * @param max
+     * @return
+     */
     public static float clamp(float value, float min, float max){
         return Math.max(Math.min(value, max), min);
     }
     
+    /**
+     * 
+     * @param value
+     * @param min
+     * @param max
+     * @return
+     */
     public static int clamp(int value, int min, int max){
         return Math.max(Math.min(value, max), min);
     }
     
+    /**
+     * 
+     * @param value
+     * @param min
+     * @param max
+     * @return
+     */
     public static boolean inBounds(double value, double min, double max){
         return (min <= value) && (value <= max);
     }
     
+    /**
+     * 
+     * @param value
+     * @param min
+     * @param max
+     * @return
+     */
     public static boolean inBounds(float value, float min, float max){
         return (min <= value) && (value <= max);
     }
     
+    /**
+     * 
+     * @param value
+     * @param min
+     * @param max
+     * @return
+     */
     public static boolean inBounds(int value, int min, int max){
         return (min <= value) && (value <= max);
     }
     
+    /**
+     * 
+     * @param a
+     * @param b
+     * @return
+     */
+    public static double pythagorize(double a, double b){
+        return Math.sqrt(a * a + b * b);
+    }
+    
+    /**
+     * 
+     * @param value
+     * @return
+     */
     public static double squareSign(double value){
         if(value < 0){
             return -(value * value);

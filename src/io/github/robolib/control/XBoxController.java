@@ -15,6 +15,8 @@
 
 package io.github.robolib.control;
 
+import io.github.robolib.util.MathUtils;
+
 
 /**
  * A better Joystick implementation for the XBox Controller.
@@ -40,6 +42,12 @@ public class XBoxController extends Joystick {
     
     /** Right Y Axis ID. */
     public static final int AXIS_Y_RIGHT = 5;
+    
+    /** Magnitude Left Stick Axis ID. */
+    public static final int AXIS_MAG_LEFT = 6;
+    
+    /** Magnitude Right Stick Axis ID. */
+    public static final int AXIS_MAG_RIGHT = 7;
     
     /** Hat X Axis ID. */
     public static final int POV_HAT = 0;
@@ -97,10 +105,11 @@ public class XBoxController extends Joystick {
      * @param port The Joystick Number this XBoxController is on.
      */
     public XBoxController(final JSID port){
-        super(port, 6, 10);
+        super(port, 8, 10);
         setAxisInverted(AXIS_Y_LEFT);
         setAxisInverted(AXIS_Y_RIGHT);
-        //invertAxis(AXIS_TRIGGERS);
+        setAxis(AXIS_MAG_LEFT, new MagAxis(AXIS_X_LEFT, AXIS_Y_LEFT));
+        setAxis(AXIS_MAG_RIGHT, new MagAxis(AXIS_X_RIGHT, AXIS_Y_RIGHT));
     }
     
     /**
@@ -108,154 +117,154 @@ public class XBoxController extends Joystick {
      *
      * @return the left X axis
      */
-    public HIDAxis getAxis_LeftX(){return getAxis(AXIS_X_LEFT);}
+    public HIDAxis getAxisLeftX(){return getAxis(AXIS_X_LEFT);}
     
     /**
      * Get the Left Y Axis.
      *
      * @return the right Y axis
      */
-    public HIDAxis getAxis_LeftY(){return getAxis(AXIS_Y_LEFT);}
+    public HIDAxis getAxisLeftY(){return getAxis(AXIS_Y_LEFT);}
     
     /**
      * Get the Left Trigger Axis.
      *
      * @return the trigger axis
      */
-    public HIDAxis getAxis_LeftTrigger(){return getAxis(AXIS_TRIGGER_LEFT);}
+    public HIDAxis getAxisLeftTrigger(){return getAxis(AXIS_TRIGGER_LEFT);}
     
     /**
      * Get the Right Trigger Axis.
      *
      * @return the trigger axis
      */
-    public HIDAxis getAxis_RightTrigger(){return getAxis(AXIS_TRIGGER_RIGHT);}
+    public HIDAxis getAxisRightTrigger(){return getAxis(AXIS_TRIGGER_RIGHT);}
 
     /**
      * Get the Right X Axis.
      *
      * @return the right x axis
      */
-    public HIDAxis getAxis_RightX(){return getAxis(AXIS_X_RIGHT);}
+    public HIDAxis getAxisRightX(){return getAxis(AXIS_X_RIGHT);}
     
     /**
      * Get the Right Y Axis.
      *
      * @return the right Y axis
      */
-    public HIDAxis getAxis_RightY(){return getAxis(AXIS_Y_RIGHT);}
+    public HIDAxis getAxisRightY(){return getAxis(AXIS_Y_RIGHT);}
     
     /**
      * Get the A Button.
      *
      * @return the A button
      */
-    public HIDButton getButton_A(){return getButton(BTN_A);}
+    public HIDButton getButtonA(){return getButton(BTN_A);}
     
     /**
      * Get the B Button.
      *
      * @return the B button
      */
-    public HIDButton getButton_B(){return getButton(BTN_B);}
+    public HIDButton getButtonB(){return getButton(BTN_B);}
     
     /**
      * Get the X Button.
      *
      * @return the X button
      */
-    public HIDButton getButton_X(){return getButton(BTN_X);}
+    public HIDButton getButtonX(){return getButton(BTN_X);}
 
     /**
      * Get the Y Button.
      *
      * @return the Y button
      */
-    public HIDButton getButton_Y(){return getButton(BTN_Y);}
+    public HIDButton getButtonY(){return getButton(BTN_Y);}
     
     /**
      * Get the Left Shoulder Button.
      *
      * @return the Left Shoulder button
      */
-    public HIDButton getButton_LeftShoulder(){return getButton(BTN_SHOULDER_LEFT);}
+    public HIDButton getButtonLeftShoulder(){return getButton(BTN_SHOULDER_LEFT);}
     
     /**
      * Get the Right Shoulder Button.
      *
      * @return the Right Shoulder button
      */
-    public HIDButton getButton_RightShoulder(){return getButton(BTN_SHOULDER_RIGHT);}
+    public HIDButton getButtonRightShoulder(){return getButton(BTN_SHOULDER_RIGHT);}
     
     /**
      * Get the Start Button.
      *
      * @return the Start button
      */
-    public HIDButton getButton_Start(){return getButton(BTN_START);}
+    public HIDButton getButtonStart(){return getButton(BTN_START);}
     
     /**
      * Get the Select Button.
      *
      * @return the Select button
      */
-    public HIDButton getButton_Select(){return getButton(BTN_SELECT);}
+    public HIDButton getButtonSelect(){return getButton(BTN_SELECT);}
     
     /**
      * Get the Left Stick Button.
      *
      * @return the Left Stick button
      */
-    public HIDButton getButton_LeftStick(){return getButton(BTN_STICK_LEFT);}
+    public HIDButton getButtonLeftStick(){return getButton(BTN_STICK_LEFT);}
     
     /**
      * Get the Right Stick Button.
      *
      * @return the Right Stick button
      */
-    public HIDButton getButton_RightStick(){return getButton(BTN_STICK_RIGHT);}
+    public HIDButton getButtonRightStick(){return getButton(BTN_STICK_RIGHT);}
 
     /**
      * Get the Left X Axis value.
      *
      * @return the left X axis value
      */
-    public double getRawAxis_LeftX(){return getRawAxis(AXIS_X_LEFT);}
+    public double getAxisLeftXValue(){return getRawAxis(AXIS_X_LEFT);}
     
     /**
      * Get the Left Y Axis value.
      *
      * @return the right Y axis value
      */
-    public double getRawAxis_LeftY(){return getRawAxis(AXIS_Y_LEFT);}
+    public double getAxisLeftYValue(){return getRawAxis(AXIS_Y_LEFT);}
     
     /**
      * Get the Left Trigger Axis value.
      *
      * @return the trigger axis value
      */
-    public double getRawAxis_LeftTrigger(){return getRawAxis(AXIS_TRIGGER_LEFT);}
+    public double getAxisLeftTriggerValue(){return getRawAxis(AXIS_TRIGGER_LEFT);}
     
     /**
      * Get the Right Trigger Axis value.
      *
      * @return the trigger axis value
      */
-    public double getRawAxis_RightTrigger(){return getRawAxis(AXIS_TRIGGER_RIGHT);}
+    public double getAxisRightTriggerValue(){return getRawAxis(AXIS_TRIGGER_RIGHT);}
 
     /**
      * Get the Right X Axis value.
      *
      * @return the right x axis value
      */
-    public double getRawAxis_RightX(){return getRawAxis(AXIS_X_RIGHT);}
+    public double getAxisRightXValue(){return getRawAxis(AXIS_X_RIGHT);}
     
     /**
      * Get the Right Y Axis value.
      *
      * @return the right Y axis value
      */
-    public double getRawAxis_RightY(){return getRawAxis(AXIS_Y_RIGHT);}
+    public double getAxisRightYValue(){return getRawAxis(AXIS_Y_RIGHT);}
 
     /**
      * Get the D-Pad/Hat POV Vale.
@@ -269,70 +278,70 @@ public class XBoxController extends Joystick {
      *
      * @return the A button value
      */
-    public boolean getRawButton_A(){return getRawButton(BTN_A);}
+    public boolean getButtonAValue(){return getRawButton(BTN_A);}
     
     /**
      * Get the B Button value.
      *
      * @return the B button value
      */
-    public boolean getRawButton_B(){return getRawButton(BTN_B);}
+    public boolean getButtonBValue(){return getRawButton(BTN_B);}
     
     /**
      * Get the X Button value.
      *
      * @return the X button value
      */
-    public boolean getRawButton_X(){return getRawButton(BTN_X);}
+    public boolean getButtonXValue(){return getRawButton(BTN_X);}
 
     /**
      * Get the Y Button value.
      *
      * @return the Y button value
      */
-    public boolean getRawButton_Y(){return getRawButton(BTN_Y);}
+    public boolean getButtonYValue(){return getRawButton(BTN_Y);}
     
     /**
      * Get the Left Shoulder Button value.
      *
      * @return the Left Shoulder button value
      */
-    public boolean getRawButton_LeftShoulder(){return getRawButton(BTN_SHOULDER_LEFT);}
+    public boolean getButtonLeftShoulderValue(){return getRawButton(BTN_SHOULDER_LEFT);}
     
     /**
      * Get the Right Shoulder Button value.
      *
      * @return the Right Shoulder button value
      */
-    public boolean getRawButton_RightShoulder(){return getRawButton(BTN_SHOULDER_RIGHT);}
+    public boolean getButtonRightShoulderValue(){return getRawButton(BTN_SHOULDER_RIGHT);}
     
     /**
      * Get the Start Button value.
      *
      * @return the Start button value
      */
-    public boolean getRawButton_Start(){return getRawButton(BTN_START);}
+    public boolean getButtonStartValue(){return getRawButton(BTN_START);}
     
     /**
      * Get the Select Button value.
      *
      * @return the Select button value
      */
-    public boolean getRawButton_Select(){return getRawButton(BTN_SELECT);}
+    public boolean getButtonSelectValue(){return getRawButton(BTN_SELECT);}
     
     /**
      * Get the Left Stick Button value.
      *
      * @return the Left Stick button value
      */
-    public boolean getRawButton_LeftStick(){return getRawButton(BTN_STICK_LEFT);}
+    public boolean getButtonLeftStickValue(){return getRawButton(BTN_STICK_LEFT);}
     
     /**
      * Get the Right Stick Button value.
      *
      * @return the Right Stick button value
      */
-    public boolean getRawButton_RightStick(){return getRawButton(BTN_STICK_RIGHT);}
+    public boolean getButtonRightStickValue(){return getRawButton(BTN_STICK_RIGHT);}
     
     /**
      * Get the magnitude of the direction vector formed by the left stick's
@@ -341,7 +350,7 @@ public class XBoxController extends Joystick {
      * @return The magnitude of the direction vector of the left stick
      */
     public double getLeftMagnitude() {
-        return Math.sqrt(Math.pow(getRawAxis_RightX(), 2) + Math.pow(getRawAxis_LeftY(), 2));
+        return Math.sqrt(Math.pow(getAxisRightXValue(), 2) + Math.pow(getAxisLeftYValue(), 2));
     }
 
     /**
@@ -351,7 +360,7 @@ public class XBoxController extends Joystick {
      * @return The direction of the vector in radians of the left stick
      */
     public double getLeftDirectionRadians() {
-        return Math.atan2(getRawAxis_LeftX(), getRawAxis_LeftY());
+        return Math.atan2(getAxisLeftXValue(), getAxisLeftYValue());
     }
 
     /**
@@ -374,7 +383,7 @@ public class XBoxController extends Joystick {
      * @return The magnitude of the direction vector of the right stick
      */
     public double getRightMagnitude() {
-        return Math.sqrt(Math.pow(getRawAxis_RightX(), 2) + Math.pow(getRawAxis_RightY(), 2));
+        return Math.sqrt(Math.pow(getAxisRightXValue(), 2) + Math.pow(getAxisRightYValue(), 2));
     }
 
     /**
@@ -384,7 +393,7 @@ public class XBoxController extends Joystick {
      * @return The direction of the vector in radians of the right stick
      */
     public double getRightDirectionRadians() {
-        return Math.atan2(getRawAxis_RightX(), getRawAxis_RightY());
+        return Math.atan2(getAxisRightXValue(), getAxisRightYValue());
     }
 
     /**
@@ -398,6 +407,41 @@ public class XBoxController extends Joystick {
      */
     public double getRightDirectionDegrees() {
         return Math.toDegrees(getRightDirectionRadians());
+    }
+    
+    private class MagAxis implements HIDAxis {
+        
+        private int m_a1, m_a2;
+        private double m_deadband;
+        
+        MagAxis(int axis1, int axis2){
+            m_a1 = axis1;
+            m_a2 = axis2;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public double get(){
+            double out = MathUtils.pythagorize(getRawAxis(m_a1), getRawAxis(m_a2));
+            return (Math.abs(out) >= m_deadband ? out : 0.0);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setInverted(boolean inverted){}
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setDeadband(double value){
+            m_deadband = value;
+        }
+        
     }
 
 }

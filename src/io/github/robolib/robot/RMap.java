@@ -20,15 +20,15 @@ import java.util.Map;
 
 import io.github.robolib.iface.AnalogIO;
 import io.github.robolib.iface.DigitalIO;
-import io.github.robolib.output.Jaguar;
-import io.github.robolib.output.SpeedController;
-import io.github.robolib.output.Talon;
-import io.github.robolib.output.TalonSRX;
-import io.github.robolib.output.Victor;
-import io.github.robolib.output.VictorSP;
-import io.github.robolib.pneumatic.DoubleSolenoid;
-import io.github.robolib.pneumatic.Solenoid;
-import io.github.robolib.pneumatic.SolenoidBase;
+import io.github.robolib.module.actuator.DoubleSolenoid;
+import io.github.robolib.module.actuator.Solenoid;
+import io.github.robolib.module.actuator.SolenoidBase;
+import io.github.robolib.module.controller.Jaguar;
+import io.github.robolib.module.controller.SpeedController;
+import io.github.robolib.module.controller.Talon;
+import io.github.robolib.module.controller.TalonSRX;
+import io.github.robolib.module.controller.Victor;
+import io.github.robolib.module.controller.VictorSP;
 import io.github.robolib.util.ConstantRunner;
 import io.github.robolib.util.log.Logger;
 

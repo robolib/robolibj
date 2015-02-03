@@ -17,10 +17,10 @@ package io.github.robolib.command;
 
 import java.util.Vector;
 
+import io.github.robolib.RoboLibBot;
 import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.control.Trigger.ButtonScheduler;
-import io.github.robolib.framework.RoboLibBot;
-import io.github.robolib.util.Sendable;
+import io.github.robolib.identifier.Sendable;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 

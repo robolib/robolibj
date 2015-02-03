@@ -50,6 +50,10 @@ public class CommonFunctions {
         }
     }
     
+    /**
+     * Get an IntBuffer of size 4 with Little Endian Byte Order
+     * @return an IntBuffer of size 4 with Little Endian byte order
+     */
     public static IntBuffer getLE4IntBuffer(){
         ByteBuffer status = ByteBuffer.allocateDirect(4);
         status.order(ByteOrder.LITTLE_ENDIAN);
@@ -65,6 +69,7 @@ public class CommonFunctions {
             throw t;
         }
     }
+    
     
     public static ITable getTable(ITable table, String path){
         String[] a = path.split("/");
