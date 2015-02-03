@@ -15,7 +15,7 @@
 
 package io.github.robolib.command;
 
-import io.github.robolib.framework.RoboLibBot;
+import io.github.robolib.RoboLibBot;
 
 /**
  * 

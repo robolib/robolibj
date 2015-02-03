@@ -61,7 +61,34 @@ public abstract class GenericHID {
      * @return a {@link HIDAxis} instance of the requested Axis
      * @see HIDAxis
      */
-    public abstract HIDAxis getAxis(int axis);
+    public HIDAxis getAxis(int axis) {
+        checkAxis(axis);
+        return m_axes[axis];
+    }
+    
+    /**
+     * Set a Joystick {@link HIDAxis}.
+     * 
+     * Returns an {@link HIDAxis} instance of the requested Axis.
+     * 
+     * @param index the axis to set
+     * @param axis the new {@link HIDAxis}
+     * @see HIDAxis
+     */
+    public void setAxis(int index, HIDAxis axis){
+        checkButton(index);
+        m_axes[index] = axis;
+    }
+    
+    /**
+     * Get a Joystick {@link HIDAxis}.
+     * 
+     * Sets the id to a {@link HIDAxis} instance of the requested Axis.
+     * 
+     * @param axis the axis to get
+     * @return a {@link HIDAxis} instance of the requested Axis
+     * @see HIDAxis
+     */
 
     /**
      * Invert a Joystick {@link HIDAxis}.
@@ -100,11 +127,28 @@ public abstract class GenericHID {
      * 
      * Returns a {@link HIDButton} instance of the requested Button.
      * 
-     * @param btn the button to get
+     * @param button the button to get
      * @return a {@link HIDButton} instance of the requested Button
      * @see HIDButton
      */
-    public abstract HIDButton getButton(int btn);
+    public HIDButton getButton(int button) {
+        checkButton(button);
+        return m_btns[button];
+    }
+    
+    /**
+     * Set a Joystick {@link HIDButton}.
+     * 
+     * Sets the id to a {@link HIDButton} instance of the requested Button.
+     * 
+     * @param index the button to get
+     * @param button the new {@link HIDButton}
+     * @see HIDButton
+     */
+    public void setButton(int index, HIDButton button){
+        checkButton(index);
+        m_btns[index] = button;
+    }
 
     /**
      * Get the raw axis
@@ -170,11 +214,11 @@ public abstract class GenericHID {
     /**
      * Adds the button.
      *
-     * @param btn the btn
+     * @param button the btn
      */
-    protected void addButton(final HIDButton btn){
+    protected void addButton(final HIDButton button){
         m_btns = Arrays.copyOf(m_btns, m_numBtns + 1);
-        m_btns[m_btns.length - 1] = btn;
+        m_btns[m_btns.length - 1] = button;
         m_numBtns = m_btns.length;
     }
     
@@ -240,22 +284,22 @@ public abstract class GenericHID {
 		/**
 		 * Instantiates a new invalid button exception.
 		 *
-		 * @param btn the btn
+		 * @param button the btn
 		 */
-		public InvalidButtonException(int btn){
-            super("Button " + btn + " is Invalid, Min 1 Max " + m_numBtns);
+		public InvalidButtonException(int button){
+            super("Button " + button + " is Invalid, Min 1 Max " + m_numBtns);
         }
     }
     
     /**
      * Check if the button requested exists.
      *
-     * @param btn the button being checked.
+     * @param button the button being checked.
      * @see HIDButton
      */
-    protected void checkButton(int btn){
-        if(0 > btn || m_numBtns < btn){
-            throw new InvalidButtonException(btn);
+    protected void checkButton(int button){
+        if(0 > button || m_numBtns < button){
+            throw new InvalidButtonException(button);
         }
     }
 }

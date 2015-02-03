@@ -26,8 +26,8 @@ import io.github.robolib.hal.HALUtil;
 import io.github.robolib.hal.PWMJNI;
 import io.github.robolib.identifier.NumberSink;
 import io.github.robolib.lang.ResourceAllocationException;
-import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.util.MathUtils;
+import io.github.robolib.util.livewindow.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.tables.ITable;

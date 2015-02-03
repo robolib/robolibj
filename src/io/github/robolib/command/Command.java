@@ -15,11 +15,11 @@
 
 package io.github.robolib.command;
 
-import static io.github.robolib.util.RoboRIO.getFPGATimestamp;
+import static io.github.robolib.module.RoboRIO.getFPGATimestamp;
 
 import java.util.Vector;
 
-import io.github.robolib.framework.DriverStation;
+import io.github.robolib.DriverStation;
 
 // TODO: Auto-generated Javadoc
 /**

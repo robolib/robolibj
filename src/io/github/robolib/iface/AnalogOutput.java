@@ -22,7 +22,7 @@ import java.nio.IntBuffer;
 import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.identifier.NumberSink;
-import io.github.robolib.livewindow.LiveWindowSendable;
+import io.github.robolib.util.livewindow.LiveWindowSendable;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

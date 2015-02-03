@@ -15,7 +15,7 @@
 
 package io.github.robolib.robot;
 
-import io.github.robolib.framework.DriverStation;
+import io.github.robolib.DriverStation;
 
 /**
  * 

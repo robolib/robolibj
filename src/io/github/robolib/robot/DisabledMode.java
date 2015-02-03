@@ -15,8 +15,8 @@
 
 package io.github.robolib.robot;
 
+import io.github.robolib.RobotMode;
 import io.github.robolib.communication.NetworkCommunications;
-import io.github.robolib.framework.RobotMode;
 
 
 /**

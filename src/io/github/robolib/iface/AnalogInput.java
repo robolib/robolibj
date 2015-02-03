@@ -26,9 +26,9 @@ import io.github.robolib.hal.AnalogJNI;
 import io.github.robolib.hal.HALUtil;
 import io.github.robolib.identifier.NumberSource;
 import io.github.robolib.lang.ResourceAllocationException;
-import io.github.robolib.livewindow.LiveWindowSendable;
 import io.github.robolib.pid.PIDSource;
 import io.github.robolib.util.Timer;
+import io.github.robolib.util.livewindow.LiveWindowSendable;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.robolib.framework.DriverStation;
-import io.github.robolib.framework.RoboLibBot;
-import io.github.robolib.util.RoboRIO;
+import io.github.robolib.DriverStation;
+import io.github.robolib.RoboLibBot;
+import io.github.robolib.module.RoboRIO;
 
 /**
  * A Logging class for the robot.

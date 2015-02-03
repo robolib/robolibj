@@ -19,7 +19,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.livewindow.LiveWindowSendable;
+import io.github.robolib.util.livewindow.LiveWindowSendable;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
@@ -78,13 +78,13 @@ public class PIDController implements LiveWindowSendable {
 	private double m_result= 0.0;
 //	private double m_period = kDefaultPeriod;
 	PIDSource m_source;
-	PIDOutput m_output;
+	PIDSink m_output;
 	Timer m_controlLoop;
 //	private boolean m_freed = false;
 //	private boolean m_usingPercentTolerance;
 	
 	public PIDController(double P, double I, double D, double F,
-	        PIDSource source, PIDOutput output, double period){
+	        PIDSource source, PIDSink output, double period){
 	    m_controlLoop = new java.util.Timer();
 	    
 	    m_P = P;
@@ -139,7 +139,7 @@ public class PIDController implements LiveWindowSendable {
         if (enabled) {
           double input;
             double result;
-            PIDOutput pidOutput = null;
+            PIDSink pidOutput = null;
             synchronized (this){
               input = pidInput.pidGet();
             }

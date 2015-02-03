@@ -17,7 +17,8 @@ package io.github.robolib.util;
 
 import java.util.Vector;
 
-import io.github.robolib.framework.RoboLibBot;
+import io.github.robolib.RoboLibBot;
+import io.github.robolib.identifier.Sendable;
 
 /**
  * 
