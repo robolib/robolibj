@@ -16,12 +16,16 @@
 package io.github.robolib.identifier;
 
 /**
- * 
+ * General interface for an object that can return a rate.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public interface RateSource {
 
+    /**
+     * Returns the current rate of the source.
+     * @return current rate of sensor
+     */
     double getRate();
     
 }

@@ -20,14 +20,14 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.hal.DIOJNI;
-import io.github.robolib.hal.HALUtil;
-import io.github.robolib.hal.PWMJNI;
+import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.identifier.NumberSink;
+import io.github.robolib.jni.DIOJNI;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.PWMJNI;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.MathUtils;
-import io.github.robolib.util.livewindow.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -242,7 +242,8 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
         HALUtil.checkStatus(status);
 
         if(!PWMJNI.allocatePWMChannel(m_port,  status)){
-            throw new ResourceAllocationException("Cannot create '" + desc + "', PWM channel '" + getChannelName() + "' already in use.");
+            throw new ResourceAllocationException("Cannot create '" + desc + "', PWM channel '"
+                    + getChannelName() + "' already in use.");
         }
         HALUtil.checkStatus(status);
 
@@ -297,7 +298,8 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
         if(m_usedChannels[channel.ordinal()] == false){
             m_usedChannels[channel.ordinal()] = true;
         }else{
-            throw new ResourceAllocationException("Cannot create '" + m_description + "', PWM channel '" + getChannelName() + "' already in use.");
+            throw new ResourceAllocationException("Cannot create '" + m_description + "', PWM channel '"
+                    + getChannelName() + "' already in use.");
         }
     }
 
@@ -315,7 +317,8 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
             m_usedChannels[channel.ordinal()] = false;
             return true;
         }else{
-            Logger.get(PWM.class).error("PWM Channel '" + getChannelName() + "' was not allocated. How did you get here?");
+            Logger.get(PWM.class).error("PWM Channel '" + getChannelName()
+                        + "' was not allocated. How did you get here?");
             return false;
         }
     }
@@ -357,12 +360,15 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @param min The minimum PWM pulse in ms
      */
     public void setBounds(double max, double deadMax, double center, double deadMin, double min){
-        double loopTime = DIOJNI.getLoopTiming(getLE4IntBuffer())/(kSystemClockTicksPerMicrosecond*1e3);
+        double loopTime = DIOJNI.getLoopTiming(getLE4IntBuffer())/
+                (kSystemClockTicksPerMicrosecond*1e3);
         m_boundsPositiveMax = (int) ((max - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
         m_boundsNegativeMin = (int) ((min - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
         m_boundsCenter = (int) ((center - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
-        m_boundsPositiveMinDeadband = (int) ((deadMax - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
-        m_boundsNegativeMaxDeadband = (int) ((deadMin - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
+        m_boundsPositiveMinDeadband = (int) ((deadMax - kDefaultPWMCenter)/
+                loopTime + kDefaultPWMStepsDown - 1);
+        m_boundsNegativeMaxDeadband = (int) ((deadMin - kDefaultPWMCenter)/
+                loopTime + kDefaultPWMStepsDown - 1);
 
         eliminateDeadband(m_eliminateDeadband);
     }

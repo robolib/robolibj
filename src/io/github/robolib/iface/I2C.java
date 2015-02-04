@@ -20,9 +20,9 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.hal.HALUtil;
-import io.github.robolib.hal.I2CJNI;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.I2CJNI;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.util.MathUtils;
 
 

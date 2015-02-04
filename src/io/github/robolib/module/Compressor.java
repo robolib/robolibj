@@ -21,9 +21,9 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.RoboLibBot;
-import io.github.robolib.hal.CompressorJNI;
-import io.github.robolib.hal.HALUtil;
 import io.github.robolib.identifier.Sendable;
+import io.github.robolib.jni.CompressorJNI;
+import io.github.robolib.jni.HALUtil;
 import io.github.robolib.util.StringUtils;
 
 import edu.wpi.first.wpilibj.tables.ITable;

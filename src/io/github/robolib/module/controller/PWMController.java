@@ -28,7 +28,7 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
     
     protected MotorSafetyHelper m_safetyHelper;
     
-    private byte m_inverted = 1;
+    private boolean m_inverted = false;
     
     /**
      * Instantiates a new PWM motor controller.
@@ -111,16 +111,8 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public double get() {
-        return getSpeed();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public double getSpeed(){
-    	return super.getSpeed() * m_inverted;
+    	return (m_inverted ? -super.getSpeed() : super.getSpeed());
     }
     
     /**
@@ -128,7 +120,7 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
      */
     @Override
     public void setSpeed(double speed){
-        super.setSpeed(speed * m_inverted);
+        super.setSpeed(m_inverted ? -speed : speed);
         m_safetyHelper.feed();
     }
     
@@ -137,7 +129,7 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
      */
     @Override
     public void setInverted(boolean inverted){
-        m_inverted = (byte)(inverted ? -1 : 1);
+        m_inverted = inverted;
     }
 
     /**

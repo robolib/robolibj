@@ -24,8 +24,8 @@ import java.util.EnumMap;
 import java.util.jar.Manifest;
 
 import io.github.robolib.command.Scheduler;
-import io.github.robolib.communication.NetworkCommunications;
-import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.jni.NetworkCommunications;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.RobotException;
 import io.github.robolib.module.Compressor;
 import io.github.robolib.module.PDP;
@@ -37,7 +37,6 @@ import io.github.robolib.robot.TeleopMode;
 import io.github.robolib.robot.TestMode;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.TableSender;
-import io.github.robolib.util.livewindow.LiveWindow;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 

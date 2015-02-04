@@ -16,7 +16,7 @@
 package io.github.robolib.module.controller;
 
 import io.github.robolib.SafetyManager;
-import io.github.robolib.util.LimitSystem;
+import io.github.robolib.module.LimitSystem;
 
 /**
  * A SpeedController limited by Boolean Sources.
@@ -49,18 +49,18 @@ public class LimitedController implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public double get() {
-        return m_motor.get();
+    public double getSpeed() {
+        return m_motor.getSpeed();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void set(double speed) {
+    public void setSpeed(double speed) {
         speed = speed > 0 && !m_system.canForward() ? 0.00 : speed;
         speed = speed < 0 && !m_system.canReverse() ? 0.00 : speed;
-        m_motor.set(speed);
+        m_motor.setSpeed(speed);
     }
     
     /**
@@ -111,7 +111,7 @@ public class LimitedController implements SpeedController, MotorSafety {
      */
     @Override
     public void stopMotor(){       
-        set(0.0);
+        m_motor.stopMotor();
     }
 
     /**

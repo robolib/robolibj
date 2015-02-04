@@ -442,8 +442,8 @@ public class DriveBase implements MotorSafety {
      * @param speed The speed to send to the left side of the robot.
      */
     public void setLeftMotors(double speed){
-        m_frontLeftMotor.set(speed, m_syncGroup);
-        m_rearLeftMotor.set(speed, m_syncGroup);
+        m_frontLeftMotor.setSpeed(speed);
+        m_rearLeftMotor.setSpeed(speed);
         m_safetyHelper.feed();
     }
     
@@ -454,8 +454,8 @@ public class DriveBase implements MotorSafety {
      * @param speed The speed to send to the right side of the robot.
      */
     public void setRightMotors(double speed){
-        m_frontRightMotor.set(speed, m_syncGroup);
-        m_rearRightMotor.set(speed, m_syncGroup);
+        m_frontRightMotor.setSpeed(speed);
+        m_rearRightMotor.setSpeed(speed);
         m_safetyHelper.feed();
     }
     
@@ -466,11 +466,7 @@ public class DriveBase implements MotorSafety {
      * @param speed The speed to send to all the motors.
      */
     public void setMotors(double speed){
-        m_frontLeftMotor.set(speed, m_syncGroup);
-        m_rearLeftMotor.set(speed, m_syncGroup);
-        m_frontRightMotor.set(speed, m_syncGroup);
-        m_rearRightMotor.set(speed, m_syncGroup);
-        m_safetyHelper.feed();
+        setMotors(speed, speed, speed, speed);
     }
     
     /**
@@ -481,11 +477,7 @@ public class DriveBase implements MotorSafety {
      * @param right The speed to send to the right side of the robot.
      */
     public void setMotors(double left, double right){
-        m_frontLeftMotor.set(left, m_syncGroup);
-        m_rearLeftMotor.set(left, m_syncGroup);
-        m_frontRightMotor.set(right, m_syncGroup);
-        m_rearRightMotor.set(right, m_syncGroup);
-        m_safetyHelper.feed();
+        setMotors(left, left, right, right);
     }
     
     /**
@@ -497,10 +489,10 @@ public class DriveBase implements MotorSafety {
      * @param rearRight The speed to send to the rear right motor.
      */
     public void setMotors(double frontLeft, double frontRight, double rearLeft, double rearRight){
-        m_frontLeftMotor.set(frontLeft, m_syncGroup);
-        m_frontRightMotor.set(frontRight, m_syncGroup);
-        m_rearLeftMotor.set(rearLeft, m_syncGroup);
-        m_rearRightMotor.set(rearRight, m_syncGroup);
+        m_frontLeftMotor.setSpeed(frontLeft);
+        m_frontRightMotor.setSpeed(frontRight);
+        m_rearLeftMotor.setSpeed(rearLeft);
+        m_rearRightMotor.setSpeed(rearRight);
         m_safetyHelper.feed();
     }
     
@@ -511,10 +503,10 @@ public class DriveBase implements MotorSafety {
      * m_wheelSpeeds array.
      */
     protected void setMotors(){
-        m_frontLeftMotor.set(m_wheelSpeeds[0], m_syncGroup);
-        m_frontRightMotor.set(m_wheelSpeeds[1], m_syncGroup);
-        m_rearLeftMotor.set(m_wheelSpeeds[2], m_syncGroup);
-        m_rearRightMotor.set(m_wheelSpeeds[3], m_syncGroup);
+        m_frontLeftMotor.setSpeed(m_wheelSpeeds[0]);
+        m_frontRightMotor.setSpeed(m_wheelSpeeds[1]);
+        m_rearLeftMotor.setSpeed(m_wheelSpeeds[2]);
+        m_rearRightMotor.setSpeed(m_wheelSpeeds[3]);
         m_safetyHelper.feed();
     }
     
@@ -531,10 +523,10 @@ public class DriveBase implements MotorSafety {
      */
     @Override
     public void stopMotor() {
-        m_frontLeftMotor.set(0.0);
-        m_frontRightMotor.set(0.0);
-        m_rearLeftMotor.set(0.0);
-        m_rearRightMotor.set(0.0);
+        m_frontLeftMotor.stopMotor();
+        m_frontRightMotor.stopMotor();
+        m_rearLeftMotor.stopMotor();
+        m_rearRightMotor.stopMotor();
         
         // m_safetyHelper.feed();
     }

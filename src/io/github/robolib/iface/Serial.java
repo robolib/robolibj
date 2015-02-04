@@ -21,9 +21,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.hal.HALUtil;
-import io.github.robolib.hal.SerialPortJNI;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.SerialPortJNI;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.log.Logger;
 

@@ -5,12 +5,13 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.hal.CANJNI;
-import io.github.robolib.hal.CANUtil;
+import io.github.robolib.identifier.LiveWindowSendable;
+import io.github.robolib.identifier.RateSource;
+import io.github.robolib.jni.CANJNI;
+import io.github.robolib.jni.CANUtil;
 import io.github.robolib.lang.CANMessageNotFoundException;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.Timer;
-import io.github.robolib.util.livewindow.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -21,7 +22,8 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  *
  * @author Thomas Clark
  */
-public class CANJaguar implements SpeedController, MotorSafety, LiveWindowSendable {
+public class CANJaguar implements SpeedController, MotorSafety,
+        RateSource, LiveWindowSendable {
 
 
     public static final int kMaxMessageDataSize = 8;
@@ -318,9 +320,26 @@ public class CANJaguar implements SpeedController, MotorSafety, LiveWindowSendab
      *
      * @return The most recently set outputValue set point.
      */
-    @Override
     public double get() {
         return m_value * m_inverted;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * Get the recently set outputValue set point.
+     *
+     * The scale and the units depend on the mode the Jaguar is in.<br>
+     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM Jaguar).<br>
+     * In voltage mode, the outputValue is in volts.<br>
+     * In current mode, the outputValue is in amps.<br>
+     * In speed mode, the outputValue is in rotations/minute.<br>
+     * In position mode, the outputValue is in rotations.<br>
+     *
+     * @return The most recently set outputValue set point.
+     */
+    @Override
+    public double getSpeed() {
+        return get();
     }
 
     /**
@@ -401,13 +420,23 @@ public class CANJaguar implements SpeedController, MotorSafety, LiveWindowSendab
      * @param value
      *            The set-point to sent to the motor controller.
      */
-    @Override
     public void set(double value) {
         set(value, (byte)0);
     }
 
     /**
      * {@inheritDoc}
+     * Sets the output set-point value.
+     *
+     * The scale and the units depend on the mode the Jaguar is in.<br>
+     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM Jaguar).<br>
+     * In voltage mode, the outputValue is in volts. <br>
+     * In current mode, the outputValue is in amps. <br>
+     * In speed mode, the outputValue is in rotations/minute.<br>
+     * In position mode, the outputValue is in rotations.
+     *
+     * @param value
+     *            The set-point to sent to the motor controller.
      */
     @Override
     public void setSpeed(double speed) {
@@ -1472,11 +1501,12 @@ public class CANJaguar implements SpeedController, MotorSafety, LiveWindowSendab
     }
 
     /**
-     * Get the speed of the encoder.
+     * Get the speed of the encoder in RPM.
      *
      * @return The speed of the motor in RPM based on the configured feedback.
      */
-    public double getSpeed() {
+    @Override
+    public double getRate() {
         updatePeriodicStatus();
 
         return m_speed;

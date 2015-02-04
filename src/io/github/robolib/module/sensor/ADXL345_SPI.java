@@ -18,8 +18,8 @@ package io.github.robolib.module.sensor;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import io.github.robolib.communication.UsageReporting;
 import io.github.robolib.iface.SPI;
+import io.github.robolib.jni.UsageReporting;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

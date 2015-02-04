@@ -19,10 +19,10 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 
 import java.nio.IntBuffer;
 
-import io.github.robolib.hal.AnalogJNI;
-import io.github.robolib.hal.HALUtil;
+import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.identifier.NumberSink;
-import io.github.robolib.util.livewindow.LiveWindowSendable;
+import io.github.robolib.jni.AnalogJNI;
+import io.github.robolib.jni.HALUtil;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.controller;
 
-import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.module.PDP.PowerChannel;
 
 /**

@@ -23,8 +23,7 @@ import io.github.robolib.identifier.BooleanSource;
  * @author Austin Reuland <amreuland@gmail.com>
  */
 public abstract class AnalogTriggerOutput extends DigitalIO implements BooleanSource {
-    
-    
+
     /**
      * {@inheritDoc}
      */
