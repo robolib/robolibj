@@ -70,7 +70,7 @@ public class LimitSystem {
      */
     public boolean canForward(){
         if(m_systemType == SystemType.SINGLE_REVERSE) return true;
-        return !m_frontLimit.get();
+        return !m_frontLimit.getState();
     }
     
     /**
@@ -80,7 +80,7 @@ public class LimitSystem {
      */ 
     public boolean canReverse(){
         if(m_systemType == SystemType.SINGLE_FORWARD) return true;
-        return !m_backLimit.get();
+        return !m_backLimit.getState();
     }
     
 }

@@ -165,7 +165,7 @@ public abstract class GenericHID {
      * @return true if the button is pressed
      */
     public final boolean getRawButton(int channel) {
-        return getButton(channel).get();
+        return getButton(channel).getState();
     }
 
     /**
@@ -232,7 +232,7 @@ public abstract class GenericHID {
     protected void addAxisButton(final int channel, final double posThresh, final double negThresh){
         addButton(new HIDButton(){           
             @Override
-            public boolean get() {
+            public boolean getState() {
                 double axis = getRawAxis(channel);
                 return axis >= posThresh || axis <= negThresh;
             }

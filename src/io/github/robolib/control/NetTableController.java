@@ -114,7 +114,7 @@ public class NetTableController extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public boolean get() {
+        public boolean getState() {
             return m_table.getBoolean("button-" + m_channel, false) & !m_invert;
         }
     }

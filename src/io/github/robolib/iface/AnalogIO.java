@@ -63,7 +63,6 @@ public class AnalogIO extends Interface {
         /**  AnalogIO Channel 7, Channel 4 on MXP. */
         Channel7;
     }
-    
     /**
      * The Enum Direction.
      * 
@@ -79,10 +78,10 @@ public class AnalogIO extends Interface {
     }
     
     /** Keep track of already used channels. */
-    private static boolean m_usedInChannels[] = new boolean[kMaxAnalogInputChannels];
+    private static boolean m_usedInChannels[] = new boolean[MAX_ANALOG_IN_CHANNELS];
     
     /** The m_used out channels. */
-    private static boolean m_usedOutChannels[] = new boolean[kMaxAnalogOutputChannels];
+    private static boolean m_usedOutChannels[] = new boolean[MAX_ANALOG_OUT_CHANNELS];
     
     
     protected ByteBuffer m_port;

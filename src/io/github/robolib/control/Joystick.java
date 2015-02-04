@@ -131,7 +131,7 @@ public class Joystick extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public boolean get() {
+        public boolean getState() {
             return getStickButton(m_port, m_channel);
         }
     }

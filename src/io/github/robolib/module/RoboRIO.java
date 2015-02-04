@@ -87,10 +87,7 @@ public class RoboRIO implements Sendable {
     }
     
     public static ButtonTrigger getUserButtonAsButton(){
-        return m_userButton == null ? m_userButton = new ButtonTrigger(){
-            @Override
-            public boolean get(){return getUserButton();}
-            } : m_userButton;
+        return m_userButton == null ? (m_userButton = () -> getUserButton()) : m_userButton;
     }
     
     /**

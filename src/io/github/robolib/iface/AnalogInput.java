@@ -548,7 +548,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
                 return (byte)(m_triggerIndex >> 2);
             }
             @Override
-            public boolean get() {
+            public boolean getState() {
                 IntBuffer status = getLE4IntBuffer();
                 byte value = AnalogJNI.getAnalogTriggerOutput(m_triggerPort, type.ordinal(), status);
                 HALUtil.checkStatus(status);

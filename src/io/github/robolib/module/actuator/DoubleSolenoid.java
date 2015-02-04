@@ -62,19 +62,19 @@ public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     public void set(Value value) {
         switch(value){
         case OFF:
-            set(m_forwardPort, kSolenoidOff);
-            set(m_reversePort, kSolenoidOff);
+            set(m_forwardPort, SOLENOID_OFF);
+            set(m_reversePort, SOLENOID_OFF);
             break;
         case ON:
             Logger.get(SolenoidBase.class, "Solenoid").warn("Double Solenoid cant be 'ON'");
             break;
         case FORWARD:
-            set(m_forwardPort, kSolenoidOn);
-            set(m_reversePort, kSolenoidOff);
+            set(m_forwardPort, SOLENOID_ON);
+            set(m_reversePort, SOLENOID_OFF);
             break;
         case REVERSE:
-            set(m_forwardPort, kSolenoidOff);
-            set(m_forwardPort, kSolenoidOn);
+            set(m_forwardPort, SOLENOID_OFF);
+            set(m_forwardPort, SOLENOID_ON);
             break;
         }
         

@@ -114,10 +114,10 @@ public abstract class SolenoidBase {
     private static ByteBuffer m_modulePorts[] = new ByteBuffer[2];
     
     /** The Constant kSolenoidOff. */
-    protected static final byte kSolenoidOff = (byte)0x00;
+    protected static final byte SOLENOID_OFF = (byte)0x00;
     
     /** The Constant kSolenoidOn. */
-    protected static final byte kSolenoidOn = (byte)0xFF;
+    protected static final byte SOLENOID_ON = (byte)0xFF;
     
     
     /**
@@ -256,7 +256,7 @@ public abstract class SolenoidBase {
         IntBuffer status = getLE4IntBuffer();
         byte out = SolenoidJNI.getSolenoid(port, status);
         HALUtil.checkStatus(status);
-        return out == kSolenoidOn;
+        return out == SOLENOID_ON;
     }
     
     /**

@@ -26,6 +26,6 @@ public interface BooleanSource {
      * Get the value of this boolean source
      * @return value of the source
      */
-    boolean get();
+    boolean getState();
 
 }

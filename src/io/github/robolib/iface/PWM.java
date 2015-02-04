@@ -113,7 +113,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
         /**
          * Instantiates a new channel.
          */
-        private PWMChannel(){
+        PWMChannel(){
             m_mxpPin = 0;
         }
 
@@ -122,11 +122,11 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
          *
          * @param mxpPin the mxp pin
          */
-        private PWMChannel(int mxpPin){
+        PWMChannel(int mxpPin){
             m_mxpPin = mxpPin;
         }
     }
-
+    
     /**
      * The PeriodMultiplier enumeration
      * 
@@ -171,7 +171,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     public static final int kSystemClockTicksPerMicrosecond = 40;
 
     /** Keep track of already used channels. */
-    private static final boolean m_usedChannels[] = new boolean[kMaxPWMChannels];
+    private static final boolean m_usedChannels[] = new boolean[MAX_PWM_CHANNELS];
 
     /** Should we be destroying the deadband? Only used by setBounds() */
     private boolean m_eliminateDeadband = false;

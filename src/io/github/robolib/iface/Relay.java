@@ -98,7 +98,7 @@ public class Relay extends Interface {
     private RelayDirection m_direction;
     
     /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[kMaxRelayChannels];
+    private static boolean m_usedChannels[] = new boolean[MAX_RELAY_CHANNELS];
     
     /**
      * Relay constructor given a channel, allowing both directions.

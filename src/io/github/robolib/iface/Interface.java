@@ -44,19 +44,19 @@ public abstract class Interface {
     }
 
     /** The maximum number of digital channels. */
-    public static final int kMaxDigitalChannels = 26;
+    public static final int MAX_DIGITAL_CHANNELS = 26;
 
     /** The maximum number of analog input channels. */
-    public static final int kMaxAnalogInputChannels = 8;
+    public static final int MAX_ANALOG_IN_CHANNELS = 8;
 
     /** The maximum number of analog output channels. */
-    public static final int kMaxAnalogOutputChannels = 2;
+    public static final int MAX_ANALOG_OUT_CHANNELS = 2;
 
     /** The maximum number of pwm channels. */
-    public static final int kMaxPWMChannels = 20;
+    public static final int MAX_PWM_CHANNELS = 20;
 
     /** The maximum number of relay channels. */
-    public static final int kMaxRelayChannels = 4;
+    public static final int MAX_RELAY_CHANNELS = 4;
 
     /**
      * Check the given digital channel for validity
@@ -64,7 +64,7 @@ public abstract class Interface {
      * @param channel the channel to check
      */
     protected static void checkDigitalChannel(final int channel){
-        if(channel < 0 || channel > kMaxDigitalChannels){
+        if(channel < 0 || channel > MAX_DIGITAL_CHANNELS){
             throw new IndexOutOfBoundsException("Bad Digital Channel");
         }
     }
@@ -75,7 +75,7 @@ public abstract class Interface {
      * @param channel the channel to check
      */
     protected static void checkAnalogInputChannel(final int channel){
-        if(channel < 0 || channel > kMaxAnalogInputChannels){
+        if(channel < 0 || channel > MAX_ANALOG_IN_CHANNELS){
             throw new IndexOutOfBoundsException("Bad AnalogIO Input Channel");
         }
     }
@@ -86,7 +86,7 @@ public abstract class Interface {
      * @param channel the channel to check
      */
     protected static void checkAnalogOutputChannel(final int channel){
-        if(channel < 0 || channel > kMaxAnalogOutputChannels){
+        if(channel < 0 || channel > MAX_ANALOG_OUT_CHANNELS){
             throw new IndexOutOfBoundsException("Bad AnalogIO Output Channel");
         }
     }
@@ -97,7 +97,7 @@ public abstract class Interface {
      * @param channel the channel to check
      */
     protected static void checkPWMChannel(final int channel){
-        if(channel < 0 || channel > kMaxPWMChannels){
+        if(channel < 0 || channel > MAX_PWM_CHANNELS){
             throw new IndexOutOfBoundsException("Bad PWM Channel");
         }
     }
@@ -108,7 +108,7 @@ public abstract class Interface {
      * @param channel the channel to check
      */
     protected static void checkRelayChannel(final int channel){
-        if(channel < 0 || channel > kMaxRelayChannels){
+        if(channel < 0 || channel > MAX_RELAY_CHANNELS){
             throw new IndexOutOfBoundsException("Bad Relay Channel");
         }
     }
