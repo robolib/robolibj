@@ -43,4 +43,12 @@ public class DigitalInput extends DigitalIO implements Trigger,  BooleanSource {
         HALUtil.checkStatus(status);
         return value;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getState(){
+        return get();
+    }
 }

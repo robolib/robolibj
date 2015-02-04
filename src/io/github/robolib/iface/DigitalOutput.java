@@ -48,6 +48,14 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
     }
     
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setState(boolean value){
+        set(value);
+    }
+    
+    /**
      * Generate a single pulse. Write a pulse to the specified digital output
      * channel. There can only be a single pulse going at any time.
      *

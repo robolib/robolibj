@@ -18,6 +18,7 @@ package io.github.robolib.module.actuator;
 import java.nio.ByteBuffer;
 
 import io.github.robolib.identifier.BooleanSink;
+import io.github.robolib.identifier.BooleanSource;
 import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 
@@ -29,7 +30,8 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Solenoid extends SolenoidBase implements LiveWindowSendable, BooleanSink {
+public class Solenoid extends SolenoidBase implements LiveWindowSendable, BooleanSink,
+        BooleanSource {
     
     private ByteBuffer m_port;
     private SolenoidChannel m_channel;
@@ -55,8 +57,8 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable, Boolea
      * Set the solenoid with a boolean value.
      * @param value on or off
      */
-    public void set(boolean value){
-        set(m_port, value?kSolenoidOn:kSolenoidOff);
+    public void setState(boolean value){
+        set(m_port, value?SOLENOID_ON:SOLENOID_OFF);
     }
     
     /**
@@ -66,10 +68,10 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable, Boolea
     public void set(Value value){
         switch(value){
         case OFF:
-            set(m_port, kSolenoidOff);
+            set(m_port, SOLENOID_OFF);
             break;
         case ON:
-            set(m_port, kSolenoidOn);
+            set(m_port, SOLENOID_ON);
             break;
         case FORWARD:
             Logger.get(SolenoidBase.class, "Solenoid").warn("Single solenoid cannot go Forward!");
@@ -88,7 +90,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable, Boolea
         return get(m_port) ? Value.ON : Value.OFF;
     }
     
-    public boolean getRaw(){
+    public boolean getState(){
         return get(m_port);
     }
     
@@ -136,7 +138,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable, Boolea
     @Override
     public void updateTable() {
         if (m_table != null) {
-            m_table.putBoolean("Value", getRaw());
+            m_table.putBoolean("Value", getState());
         }
     }
     
@@ -148,7 +150,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable, Boolea
         m_table_listener = new ITableListener() {
             @Override
             public void valueChanged(ITable itable, String key, Object value, boolean bln) {
-                set(((Boolean) value).booleanValue());
+                setState(((Boolean) value).booleanValue());
             }
         };
         m_table.addTableListener("Value", m_table_listener, true);
@@ -159,7 +161,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable, Boolea
      */
     @Override
     public void stopLiveWindowMode() {
-        set(false);
+        setState(false);
         m_table.removeTableListener(m_table_listener);
     }
 

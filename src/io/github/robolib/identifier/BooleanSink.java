@@ -26,6 +26,6 @@ public interface BooleanSink {
      * Set the value of this BooleanSink
      * @param value boolean
      */
-    void set(boolean value);
+    void setState(boolean value);
 
 }

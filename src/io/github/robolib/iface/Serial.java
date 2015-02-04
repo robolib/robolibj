@@ -49,9 +49,9 @@ public class Serial extends Interface {
      * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum Port {
-        kOnboard,
-        kMXP,
-        kUSB;
+        ONBOARD,
+        MXP,
+        USB;
     }
     
     /**
@@ -133,7 +133,7 @@ public class Serial extends Interface {
         if(m_allocated[port.ordinal()])
             throw new ResourceAllocationException("Cannot allocate serial port '" + port.name() + "', already in use.");
         
-        if(port == Port.kMXP){
+        if(port == Port.MXP){
             allocateMXPPin(14);
             allocateMXPPin(10);
         }

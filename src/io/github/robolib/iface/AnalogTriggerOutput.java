@@ -31,5 +31,5 @@ public abstract class AnalogTriggerOutput extends DigitalIO implements BooleanSo
     public boolean isAnalogTrigger() {
         return true;
     }
-
+    
 }

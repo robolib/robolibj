@@ -17,12 +17,13 @@ package io.github.robolib.control;
 
 import io.github.robolib.command.Command;
 import io.github.robolib.command.Scheduler;
+import io.github.robolib.identifier.BooleanSource;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface Trigger {
+public interface Trigger extends BooleanSource {
     
     /**
      * Button Scheduler Control class
@@ -36,15 +37,13 @@ public interface Trigger {
         }
         public abstract void execute();
     }
-
-    public boolean get();
     
     public default void runWhenActive(final Command command){
         new ButtonScheduler(){
             boolean pressed = false;
             @Override
             public void execute() {
-                if(get()){
+                if(getState()){
                     if(!pressed){
                         pressed = true;
                         command.start();
@@ -61,7 +60,7 @@ public interface Trigger {
             boolean pressed = false;
             @Override
             public void execute() {
-                if(get()){
+                if(getState()){
                     command.start();
                     pressed = true;
                 }else if(pressed){
@@ -77,7 +76,7 @@ public interface Trigger {
             boolean pressed = false;
             @Override
             public void execute() {
-                if(get()){
+                if(getState()){
                     pressed = true;
                 }else if(pressed){
                     command.start();
@@ -92,7 +91,7 @@ public interface Trigger {
             boolean pressed = false;
             @Override
             public void execute() {
-                if(get()){
+                if(getState()){
                     if(!pressed){
                         command.cancel();
                         pressed = true;
@@ -110,7 +109,7 @@ public interface Trigger {
             boolean pressed = false;
             @Override
             public void execute() {
-                if(get()){
+                if(getState()){
                     if(!pressed){
                         if(command.isRunning())
                             command.cancel();
@@ -129,7 +128,7 @@ public interface Trigger {
             boolean pressed = false;
             @Override
             public void execute() {
-                if(get()){
+                if(getState()){
                     if(!pressed){
                         command.cancel();
                         pressed = true;

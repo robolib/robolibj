@@ -33,7 +33,7 @@ import io.github.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  */
 public abstract class DigitalIO extends InterruptBase {
-
+ 
     /**
      * The Enum Channel.
      * 
@@ -138,8 +138,7 @@ public abstract class DigitalIO extends InterruptBase {
             m_mxpPin = mxpPin;
         }
     }
-
-
+    
     /**
      * The Enum Direction.
      * 
@@ -155,7 +154,7 @@ public abstract class DigitalIO extends InterruptBase {
     }
 
     /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[kMaxDigitalChannels];
+    private static boolean m_usedChannels[] = new boolean[MAX_DIGITAL_CHANNELS];
 
     /** The The RoboRIO port identifier. */
     protected ByteBuffer m_port;

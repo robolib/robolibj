@@ -37,11 +37,11 @@ public class SPI extends Interface {
      * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum Port {
-        kOnboardCS0,
-        kOnboardCS1,
-        kOnboardCS2,
-        kOnboardCS3,
-        kMXP;
+        ONBOARD_CS0,
+        ONBOARD_CS1,
+        ONBOARD_CS2,
+        ONBOARD_CS3,
+        MXP;
     };
     
     private int m_bitOrder;
@@ -62,7 +62,7 @@ public class SPI extends Interface {
         if(m_allocated[port.ordinal()])
             throw new ResourceAllocationException("Cannot allocate spi port '" + port.name() + "', already in use.");
 
-        if(port == Port.kMXP){
+        if(port == Port.MXP){
             allocateMXPPin(19);
             allocateMXPPin(21);
             allocateMXPPin(23);
