@@ -15,18 +15,21 @@
 
 package io.github.robolib.module.sensor;
 
-import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.identifier.AngleSource;
+import io.github.robolib.identifier.LiveWindowSendable;
+import io.github.robolib.identifier.PIDSource;
+import io.github.robolib.identifier.RateSource;
 import io.github.robolib.iface.AnalogInput;
-import io.github.robolib.pid.PIDSource;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.util.Timer;
-import io.github.robolib.util.livewindow.LiveWindowSendable;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Gyro extends AnalogInput implements PIDSource, LiveWindowSendable {
+public class Gyro extends AnalogInput implements PIDSource, LiveWindowSendable, 
+        AngleSource, RateSource {
     
     public static final int OVERSAMPLE_BITS = 10;
     

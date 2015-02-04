@@ -155,6 +155,20 @@ public class XBoxController extends Joystick {
     public HIDAxis getAxisRightY(){return getAxis(AXIS_Y_RIGHT);}
     
     /**
+     * Get the Left Stick Magnitude Axis.
+     *
+     * @return the left stick Magnitude axis.
+     */
+    public HIDAxis getAxisLeftMagnitude(){return getAxis(AXIS_MAG_LEFT);}
+    
+    /**
+     * Get the Right Stick Magnitude Axis.
+     *
+     * @return the right stick Magnitude axis.
+     */
+    public HIDAxis getAxisRightMagnitude(){return getAxis(AXIS_MAG_RIGHT);}
+    
+    /**
      * Get the A Button.
      *
      * @return the A button
@@ -265,6 +279,20 @@ public class XBoxController extends Joystick {
      * @return the right Y axis value
      */
     public double getAxisRightYValue(){return getRawAxis(AXIS_Y_RIGHT);}
+    
+    /**
+     * Get the Left Stick Magnitude Axis value.
+     *
+     * @return the left stick Magnitude axis value.
+     */
+    public double getAxisLeftValue(){return getRawAxis(AXIS_MAG_LEFT);}
+    
+    /**
+     * Get the Right Stick Magnitude Axis value.
+     *
+     * @return the right stick Magnitude axis value.
+     */
+    public double getAxisRightValue(){return getRawAxis(AXIS_MAG_RIGHT);}
 
     /**
      * Get the D-Pad/Hat POV Vale.
@@ -344,16 +372,6 @@ public class XBoxController extends Joystick {
     public boolean getButtonRightStickValue(){return getRawButton(BTN_STICK_RIGHT);}
     
     /**
-     * Get the magnitude of the direction vector formed by the left stick's
-     * current position relative to its origin
-     *
-     * @return The magnitude of the direction vector of the left stick
-     */
-    public double getLeftMagnitude() {
-        return Math.sqrt(Math.pow(getAxisRightXValue(), 2) + Math.pow(getAxisLeftYValue(), 2));
-    }
-
-    /**
      * Get the direction of the vector formed by the left stick and its origin
      * in radians
      *
@@ -375,17 +393,7 @@ public class XBoxController extends Joystick {
     public double getLeftDirectionDegrees() {
         return Math.toDegrees(getLeftDirectionRadians());
     }
-
-    /**
-     * Get the magnitude of the direction vector formed by the right stick's
-     * current position relative to its origin
-     *
-     * @return The magnitude of the direction vector of the right stick
-     */
-    public double getRightMagnitude() {
-        return Math.sqrt(Math.pow(getAxisRightXValue(), 2) + Math.pow(getAxisRightYValue(), 2));
-    }
-
+    
     /**
      * Get the direction of the vector formed by the right stick and its origin
      * in radians
@@ -429,7 +437,7 @@ public class XBoxController extends Joystick {
         }
 
         /**
-         * {@inheritDoc}
+         * Does Nothing
          */
         @Override
         public void setInverted(boolean inverted){}

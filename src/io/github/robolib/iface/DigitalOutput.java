@@ -20,10 +20,10 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.hal.DIOJNI;
-import io.github.robolib.hal.HALUtil;
-import io.github.robolib.hal.PWMJNI;
 import io.github.robolib.identifier.BooleanSink;
+import io.github.robolib.jni.DIOJNI;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.PWMJNI;
 
 /**
  * 

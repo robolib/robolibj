@@ -20,9 +20,9 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.control.ButtonTrigger;
-import io.github.robolib.hal.HALUtil;
-import io.github.robolib.hal.PowerJNI;
 import io.github.robolib.identifier.Sendable;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.PowerJNI;
 import io.github.robolib.util.StringUtils;
 
 import edu.wpi.first.wpilibj.tables.ITable;

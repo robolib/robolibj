@@ -20,13 +20,15 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.hal.EncoderJNI;
-import io.github.robolib.hal.HALUtil;
+import io.github.robolib.identifier.CounterSource;
+import io.github.robolib.identifier.PIDSource;
+import io.github.robolib.identifier.RateSource;
 import io.github.robolib.iface.DigitalIO;
 import io.github.robolib.iface.DigitalIO.DigitalChannel;
 import io.github.robolib.iface.DigitalInput;
-import io.github.robolib.pid.PIDSource;
+import io.github.robolib.jni.EncoderJNI;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.log.Logger;
 
@@ -44,7 +46,8 @@ import io.github.robolib.util.log.Logger;
  * to be zeroed before use.
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Encoder extends CounterBase implements PIDSource {
+public class Encoder extends CounterBase implements PIDSource, RateSource,
+        CounterSource{
     
     /**
      * The different types of indexing available
@@ -389,6 +392,18 @@ public class Encoder extends CounterBase implements PIDSource {
      */
     @Override
     public int get(){
+        return getCount();
+    }
+    
+    /**
+     * Gets the current count. Returns the current count on the Encoder. This
+     * method compensates for the decoding type.
+     *
+     * @return Current count from the Encoder adjusted for the 1x, 2x, or 4x
+     *         scale factor.
+     */
+    @Override
+    public int getCount(){
         return (int)(getRaw() * decodingScaleFactor());
     }
     

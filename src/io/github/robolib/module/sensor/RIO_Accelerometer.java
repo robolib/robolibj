@@ -15,9 +15,9 @@
 
 package io.github.robolib.module.sensor;
 
-import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.hal.AccelerometerJNI;
-import io.github.robolib.util.livewindow.LiveWindowSendable;
+import io.github.robolib.identifier.LiveWindowSendable;
+import io.github.robolib.jni.AccelerometerJNI;
+import io.github.robolib.jni.UsageReporting;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 

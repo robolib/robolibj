@@ -20,9 +20,9 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.hal.HALUtil;
-import io.github.robolib.hal.InterruptJNI;
 import io.github.robolib.iface.AnalogInput.AnalogTriggerType;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.InterruptJNI;
 import io.github.robolib.lang.ResourceAllocationException;
 
 /**

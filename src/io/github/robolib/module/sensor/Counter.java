@@ -20,20 +20,21 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.hal.CounterJNI;
-import io.github.robolib.hal.HALUtil;
+import io.github.robolib.identifier.CounterSource;
+import io.github.robolib.identifier.PIDSource;
 import io.github.robolib.iface.DigitalIO;
 import io.github.robolib.iface.DigitalIO.DigitalChannel;
 import io.github.robolib.iface.DigitalInput;
-import io.github.robolib.pid.PIDSource;
+import io.github.robolib.jni.CounterJNI;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.util.MathUtils;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Counter extends CounterBase implements PIDSource {
+public class Counter extends CounterBase implements PIDSource, CounterSource {
     
     /**
      * Modes for the counter to count in?
@@ -326,7 +327,7 @@ public class Counter extends CounterBase implements PIDSource {
      * it might have a different value.
      */
     @Override
-    public int get(){
+    public int getCount(){
         IntBuffer status = getLE4IntBuffer();
         int value = CounterJNI.getCounter(m_counter, status);
         HALUtil.checkStatus(status);

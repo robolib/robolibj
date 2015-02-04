@@ -15,8 +15,8 @@
 
 package io.github.robolib.control;
 
-import io.github.robolib.communication.NetworkCommunications;
-import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.jni.NetworkCommunications;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.module.RoboRIO;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.log.Logger;

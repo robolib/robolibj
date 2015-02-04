@@ -15,15 +15,17 @@
 
 package io.github.robolib.module.actuator;
 
-import io.github.robolib.communication.UsageReporting;
+import io.github.robolib.identifier.AngleSink;
+import io.github.robolib.identifier.AngleSource;
 import io.github.robolib.iface.PWM;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.util.MathUtils;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Servo extends PWM {
+public class Servo extends PWM implements AngleSink, AngleSource {
     
     private static final double SERVO_MAX_ANGLE = 180.0;
     private static final double SERVO_MIN_ANGLE = 0.0;

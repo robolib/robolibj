@@ -20,9 +20,9 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.control.Trigger;
-import io.github.robolib.hal.DIOJNI;
-import io.github.robolib.hal.HALUtil;
 import io.github.robolib.identifier.BooleanSource;
+import io.github.robolib.jni.DIOJNI;
+import io.github.robolib.jni.HALUtil;
 
 /**
  * 

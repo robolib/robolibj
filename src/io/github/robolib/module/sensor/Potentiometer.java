@@ -15,6 +15,7 @@
 
 package io.github.robolib.module.sensor;
 
+import io.github.robolib.identifier.AngleSource;
 import io.github.robolib.iface.AnalogInput;
 
 /**
@@ -23,7 +24,7 @@ import io.github.robolib.iface.AnalogInput;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Potentiometer extends AnalogInput {
+public class Potentiometer extends AnalogInput implements AngleSource {
     
     /**
      * Instantiates a new potentiometer.
@@ -36,6 +37,10 @@ public class Potentiometer extends AnalogInput {
         super(channel);
         setAverageBits(avgBits);
         setOversampleBits(ovrBits);
+    }
+    
+    public double getAngle(){
+        return 0.0;
     }
     
     /**

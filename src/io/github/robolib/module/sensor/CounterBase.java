@@ -15,11 +15,13 @@
 
 package io.github.robolib.module.sensor;
 
+import io.github.robolib.identifier.CounterSource;
+
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class CounterBase {
+public abstract class CounterBase implements CounterSource {
     
     /**
      * Possible Encoding types
@@ -42,15 +44,25 @@ public abstract class CounterBase {
     }
     
     /**
-     * Get the count
-     * @return the count
+     * Read the current counter value. Read the value at this instant. It may
+     * still be running, so it reflects the current value. Next time it is read,
+     * it might have a different value.
      */
-    abstract int get();
+    public int get(){
+        return getCount();
+    }
+    
+    /**
+     * Read the current counter value. Read the value at this instant. It may
+     * still be running, so it reflects the current value. Next time it is read,
+     * it might have a different value.
+     */
+    public abstract int getCount();
     
     /**
      * Reset the count to zero
      */
-    abstract void reset();
+    public abstract void reset();
     
     /**
      * Get the time between the last two edges counted

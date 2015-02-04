@@ -15,7 +15,7 @@
 
 package io.github.robolib.iface;
 
-import io.github.robolib.hal.InterruptJNI.InterruptJNIHandlerFunction;
+import io.github.robolib.jni.InterruptJNI.InterruptJNIHandlerFunction;
 
 /**
  * 

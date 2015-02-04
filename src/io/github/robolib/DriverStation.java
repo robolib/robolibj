@@ -20,9 +20,9 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.communication.NetworkCommunications;
 import io.github.robolib.control.Joystick;
-import io.github.robolib.hal.HALUtil;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.NetworkCommunications;
 import io.github.robolib.robot.GameMode;
 import io.github.robolib.util.TableSender;
 import io.github.robolib.util.log.ILogger;

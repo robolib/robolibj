@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.sensor;
 
-import io.github.robolib.util.livewindow.LiveWindowSendable;
+import io.github.robolib.identifier.LiveWindowSendable;
 
 /**
  * 

@@ -21,14 +21,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import io.github.robolib.communication.UsageReporting;
-import io.github.robolib.hal.AnalogJNI;
-import io.github.robolib.hal.HALUtil;
+import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.identifier.NumberSource;
+import io.github.robolib.jni.AnalogJNI;
+import io.github.robolib.jni.HALUtil;
+import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
-import io.github.robolib.pid.PIDSource;
 import io.github.robolib.util.Timer;
-import io.github.robolib.util.livewindow.LiveWindowSendable;
 
 import edu.wpi.first.wpilibj.tables.ITable;
 
@@ -36,7 +35,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendable, NumberSource {
+public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberSource {
     
     /**
      * Analog Trigger Type Enum
@@ -571,10 +570,10 @@ public class AnalogInput extends AnalogIO implements PIDSource, LiveWindowSendab
      *
      * @return the average voltage
      */
-    @Override
-    public double pidGet(){
-        return getAverageVoltage();
-    }
+    //@Override
+    //public double pidGet(){
+    //    return getAverageVoltage();
+    //}
     
     /**
      * Live Window code, only does anything if live window is activated.

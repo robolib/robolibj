@@ -18,7 +18,7 @@ package io.github.robolib.module.actuator;
 import java.nio.ByteBuffer;
 
 import io.github.robolib.identifier.BooleanSink;
-import io.github.robolib.util.livewindow.LiveWindowSendable;
+import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 
 import edu.wpi.first.wpilibj.tables.ITable;

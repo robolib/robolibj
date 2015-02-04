@@ -15,56 +15,52 @@
 
 package io.github.robolib.module.controller;
 
-import io.github.robolib.pid.PIDSink;
+import io.github.robolib.identifier.PIDSink;
+import io.github.robolib.identifier.SpeedSink;
 
 /**
- * The Interface SpeedController.
+ * The Interface SpeedController. A SpeedController is usually a motor
+ * controller connected to a CIM or other FRC legal motors. Most are PWM
+ * controlled, but there are the new ones, such as the TalonSRX, which
+ * run on CAN as well as the old Jaguars with CAN interface.
+ * 
+ * You might think im missing a set(double) here, but this is a <b>Speed
+ * Controller</b>. That means we are setting speed, not just anything.
+ * I have found that being specific in code, when needed, does wonder for
+ * those that don't understand it.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface SpeedController extends PIDSink {
-    
+public interface SpeedController extends PIDSink, SpeedSink {
+        
     /**
-     * Common interface for getting the current set speed of a speed controller.
+     * Common interface for getting the current set speed of a speed
+     * controller.
      *
      * @return The current set speed.  Value is between -1.0 and 1.0.
      */
-    double get();
-    
-    /**
-     * Common interface for getting the current set speed of a speed controller.
-     *
-     * @return The current set speed.  Value is between -1.0 and 1.0.
-     */
-    public default double getSpeed(){
-        return get();
-    }
+    double getSpeed();
 
     /**
      * Common interface for setting the speed of a speed controller.
+     * 
      *
      * @param speed The speed to set.  Value should be between -1.0 and 1.0.
-     * @param syncGroup The update group to add this Set() to, pending UpdateSyncGroup().  If 0, update immediately.
+     * @param syncGroup The update group to add this Set() to, pending
+     * UpdateSyncGroup(). If 0, update immediately.
+     * @deprecated Replaced by {@link #setSpeed(double)}, only here for
+     * CANJaguar compatibility.
      */
     public default void set(double speed, byte syncGroup){
-        set(speed);
+        setSpeed(speed);
     }
-
-    /**
-     * Common interface for setting the speed of a speed controller.
-     *
-     * @param speed The speed to set.  Value should be between -1.0 and 1.0.
-     */
-    void set(double speed);
     
     /**
      * Set the speed of the SpeedController
      * 
      * @param speed the speed to set
      */
-    public default void setSpeed(double speed){
-        set(speed);
-    }
+    void setSpeed(double speed);
     
     /**
      * Set the inverted state of the speed controller.
@@ -74,11 +70,16 @@ public interface SpeedController extends PIDSink {
     void setInverted(boolean inverted);
     
     /**
+     * Stop/Disable the motor.
+     */
+    void stopMotor();
+    
+    /**
      * {@inheritDoc}
      */
     @Override
     public default void pidWrite(double value){
-        set(value);
+        setSpeed(value);
     }
 
 }
