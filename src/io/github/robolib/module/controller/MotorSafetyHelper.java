@@ -15,9 +15,9 @@
 
 package io.github.robolib.module.controller;
 
+import io.github.robolib.RobotState;
 import io.github.robolib.SafetyManager;
 import io.github.robolib.module.RoboRIO;
-import io.github.robolib.robot.RobotState;
 import io.github.robolib.util.log.Logger;
 
 // TODO: Auto-generated Javadoc

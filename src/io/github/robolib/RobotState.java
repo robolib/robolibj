@@ -13,9 +13,8 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.robot;
+package io.github.robolib;
 
-import io.github.robolib.DriverStation;
 
 /**
  * 

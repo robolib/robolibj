@@ -89,7 +89,7 @@ public class RoboLibBot {
 
     //private final RobotMode m_modes[];
     
-    private static volatile boolean m_thread_keepAlive;
+    private static volatile boolean m_thread_keepAlive = true;
 
     /** The m_name. */
     protected String m_name;
