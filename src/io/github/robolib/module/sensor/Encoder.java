@@ -20,7 +20,6 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.identifier.CounterSource;
 import io.github.robolib.identifier.PIDSource;
 import io.github.robolib.identifier.RateSource;
 import io.github.robolib.iface.DigitalIO;
@@ -46,8 +45,7 @@ import io.github.robolib.util.log.Logger;
  * to be zeroed before use.
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Encoder extends CounterBase implements PIDSource, RateSource,
-        CounterSource{
+public class Encoder extends CounterBase implements PIDSource, RateSource {
     
     /**
      * The different types of indexing available

@@ -17,6 +17,7 @@ package io.github.robolib.module.controller;
 
 import io.github.robolib.identifier.PIDSink;
 import io.github.robolib.identifier.SpeedSink;
+import io.github.robolib.identifier.SpeedSource;
 
 /**
  * The Interface SpeedController. A SpeedController is usually a motor
@@ -31,7 +32,7 @@ import io.github.robolib.identifier.SpeedSink;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface SpeedController extends PIDSink, SpeedSink {
+public interface SpeedController extends PIDSink, SpeedSink, SpeedSource {
         
     /**
      * Common interface for getting the current set speed of a speed
@@ -39,6 +40,7 @@ public interface SpeedController extends PIDSink, SpeedSink {
      *
      * @return The current set speed.  Value is between -1.0 and 1.0.
      */
+    @Override
     double getSpeed();
 
     /**
@@ -60,6 +62,7 @@ public interface SpeedController extends PIDSink, SpeedSink {
      * 
      * @param speed the speed to set
      */
+    @Override
     void setSpeed(double speed);
     
     /**

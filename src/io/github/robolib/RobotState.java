@@ -13,45 +13,33 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util;
+package io.github.robolib;
 
-
-//import java.io.DataInputStream;
 
 /**
- * The Class ConstantRunner.
- *
+ * 
  * @author noriah Reuland <vix@noriah.dev>
+ *
  */
-public class ConstantRunner {
+public final class RobotState {
     
-    /** The file location. */
-    //private final String FILE_LOCATION;
-    
-    
-    //NOTE!!!!
-    //We need to write in 8192Byte Chunks
-    
-    
-    /**
-     * Instantiates a new constant runner.
-     *
-     * @param file the file
-     */
-    public ConstantRunner(String file){
-        //FILE_LOCATION = file;
-        
-        
+    public static boolean isEnabled(){
+        return DriverStation.isEnabled();
     }
     
-    
-    /**
-     * Read constants from file.
-     */
-    public static void readConstantsFromFile() {
-        //DataInputStream dataStream;
-        //byte[] buffer = new byte[];
-        //String content = "";
+    public static boolean isDisabled(){
+        return DriverStation.isDisabled();
     }
-
+    
+    public static boolean isAutonomous(){
+        return DriverStation.isAutonomous();
+    }
+    
+    public static boolean isTest(){
+        return DriverStation.isTest();
+    }
+    
+    public static boolean isOperatorControl(){
+        return DriverStation.isOperatorControl();
+    }
 }

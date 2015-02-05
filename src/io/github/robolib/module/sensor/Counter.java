@@ -20,7 +20,6 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.identifier.CounterSource;
 import io.github.robolib.identifier.PIDSource;
 import io.github.robolib.iface.DigitalIO;
 import io.github.robolib.iface.DigitalIO.DigitalChannel;
@@ -34,7 +33,7 @@ import io.github.robolib.util.MathUtils;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Counter extends CounterBase implements PIDSource, CounterSource {
+public class Counter extends CounterBase implements PIDSource {
     
     /**
      * Modes for the counter to count in?
