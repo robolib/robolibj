@@ -19,8 +19,8 @@ import io.github.robolib.identifier.AngleSource;
 import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.identifier.PIDSource;
 import io.github.robolib.identifier.RateSource;
-import io.github.robolib.iface.AnalogInput;
 import io.github.robolib.jni.UsageReporting;
+import io.github.robolib.module.iface.AnalogInput;
 import io.github.robolib.util.Timer;
 
 /**

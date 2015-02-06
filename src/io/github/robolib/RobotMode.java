@@ -108,7 +108,7 @@ public abstract class RobotMode {
     }
     
     /**
-     * CounterMode Specific init code.
+     * GameMode Specific init code.
      * 
      * This calls the {@code init()} method when the mode changes.
      */
@@ -127,7 +127,7 @@ public abstract class RobotMode {
     }
     
     /**
-     * CounterMode Specific run code.
+     * GameMode Specific run code.
      * 
      * This calls the {@code run()} method once every period.
      */
@@ -147,7 +147,7 @@ public abstract class RobotMode {
     }
     
     /**
-     * CounterMode Specific end code.
+     * GameMode Specific end code.
      * 
      * This calls the {@code end()} method when the mode changes.
      */

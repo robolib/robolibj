@@ -15,7 +15,7 @@
 
 package io.github.robolib.module;
 
-import io.github.robolib.iface.I2C;
+import io.github.robolib.module.iface.I2C;
 
 /**
  * 

@@ -11,6 +11,8 @@ import io.github.robolib.jni.CANJNI;
 import io.github.robolib.jni.CANUtil;
 import io.github.robolib.lang.CANMessageNotFoundException;
 import io.github.robolib.lang.ResourceAllocationException;
+import io.github.robolib.module.PDP;
+import io.github.robolib.module.PDP.PowerChannel;
 import io.github.robolib.util.Timer;
 import io.github.robolib.util.log.Logger;
 
@@ -129,6 +131,8 @@ public class CANJaguar implements SpeedController, MotorSafety,
     private double m_voltageRampRate = 0.0;
     private float m_faultTime = 0.0f;
 
+    private String m_description;
+    
     // Which parameters have been verified since they were last set?
     private boolean m_controlModeVerified = true;
     private boolean m_speedRefVerified = true;
@@ -191,9 +195,70 @@ public class CANJaguar implements SpeedController, MotorSafety,
      * @see CANJaguar#setVoltageMode(EncoderTag, int)
      * @see CANJaguar#setVoltageMode(QuadEncoderTag, int)
      */
-    public CANJaguar(int deviceNumber) {
+    public CANJaguar(int deviceNumber){
+        this(deviceNumber, "CANJaguar ID " + deviceNumber, null);
+    }
+    
+    /**
+     * Constructor for the CANJaguar device.<br>
+     * By default the device is configured in Percent mode.
+     * The control mode can be changed by calling one of the control modes listed below.
+     *
+     * @param deviceNumber The address of the Jaguar on the CAN bus.
+     * @param desc The description of this CANJaguar
+     * @see CANJaguar#setCurrentMode(double, double, double)
+     * @see CANJaguar#setCurrentMode(PotentiometerTag, double, double, double)
+     * @see CANJaguar#setCurrentMode(EncoderTag, int, double, double, double)
+     * @see CANJaguar#setCurrentMode(QuadEncoderTag, int, double, double, double)
+     * @see CANJaguar#setPercentMode()
+     * @see CANJaguar#setPercentMode(PotentiometerTag)
+     * @see CANJaguar#setPercentMode(EncoderTag, int)
+     * @see CANJaguar#setPercentMode(QuadEncoderTag, int)
+     * @see CANJaguar#setPositionMode(PotentiometerTag, double, double, double)
+     * @see CANJaguar#setPositionMode(QuadEncoderTag, int, double, double, double)
+     * @see CANJaguar#setSpeedMode(EncoderTag, int, double, double, double)
+     * @see CANJaguar#setSpeedMode(QuadEncoderTag, int, double, double, double)
+     * @see CANJaguar#setVoltageMode()
+     * @see CANJaguar#setVoltageMode(PotentiometerTag)
+     * @see CANJaguar#setVoltageMode(EncoderTag, int)
+     * @see CANJaguar#setVoltageMode(QuadEncoderTag, int)
+     */
+    public CANJaguar(int deviceNumber, String desc){
+        this(deviceNumber, desc, null);
+    }
+    
+    /**
+     * Constructor for the CANJaguar device.<br>
+     * By default the device is configured in Percent mode.
+     * The control mode can be changed by calling one of the control modes listed below.
+     *
+     * @param deviceNumber The address of the Jaguar on the CAN bus.
+     * @param desc The description of this CANJaguar
+     * @param pwChannel the PowerChannel this is running on.
+     * @see CANJaguar#setCurrentMode(double, double, double)
+     * @see CANJaguar#setCurrentMode(PotentiometerTag, double, double, double)
+     * @see CANJaguar#setCurrentMode(EncoderTag, int, double, double, double)
+     * @see CANJaguar#setCurrentMode(QuadEncoderTag, int, double, double, double)
+     * @see CANJaguar#setPercentMode()
+     * @see CANJaguar#setPercentMode(PotentiometerTag)
+     * @see CANJaguar#setPercentMode(EncoderTag, int)
+     * @see CANJaguar#setPercentMode(QuadEncoderTag, int)
+     * @see CANJaguar#setPositionMode(PotentiometerTag, double, double, double)
+     * @see CANJaguar#setPositionMode(QuadEncoderTag, int, double, double, double)
+     * @see CANJaguar#setSpeedMode(EncoderTag, int, double, double, double)
+     * @see CANJaguar#setSpeedMode(QuadEncoderTag, int, double, double, double)
+     * @see CANJaguar#setVoltageMode()
+     * @see CANJaguar#setVoltageMode(PotentiometerTag)
+     * @see CANJaguar#setVoltageMode(EncoderTag, int)
+     * @see CANJaguar#setVoltageMode(QuadEncoderTag, int)
+     */
+    public CANJaguar(int deviceNumber, String desc, PowerChannel pwChannel) {
         if(m_allocated[deviceNumber]) throw new ResourceAllocationException("CAN Jaguar allready allocated");
-
+        
+        m_description = desc;
+        
+        m_allocated[deviceNumber] = true;
+        
         m_deviceNumber = (byte)deviceNumber;
         m_controlMode = ControlMode.PercentVbus;
 
@@ -254,6 +319,10 @@ public class CANJaguar implements SpeedController, MotorSafety,
                 Logger.get(CANJaguar.class).error("Jag" + m_deviceNumber + " firmware " + m_firmwareVersion +  " is not FIRST approved (must be at least version 108 of the FIRST approved firmware)");
             }
             return;
+        }
+        
+        if(pwChannel != null){
+            PDP.claimChannel(pwChannel, desc);
         }
     }
 
@@ -2096,7 +2165,7 @@ public class CANJaguar implements SpeedController, MotorSafety,
 
     @Override
     public String getDescription() {
-        return "CANJaguar ID " + m_deviceNumber;
+        return m_description;
     }
 
     public int getDeviceID() {

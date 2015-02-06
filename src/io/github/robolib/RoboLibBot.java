@@ -26,7 +26,6 @@ import java.util.jar.Manifest;
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
 import io.github.robolib.jni.UsageReporting;
-import io.github.robolib.lang.RobotException;
 import io.github.robolib.module.Compressor;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.RoboRIO;
@@ -82,7 +81,10 @@ public class RoboLibBot {
     private static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
     
     /** The m_current mode. */
-    private static GameMode m_currentMode;
+    private static GameMode m_currentMode = GameMode.NONE;
+    
+    /** The m_current robot mode. */
+    private static RobotMode m_currentRobotMode;
     
     /** The m_modes. */
     private static EnumMap<GameMode, RobotMode> m_modes;
@@ -266,9 +268,8 @@ public class RoboLibBot {
      */
     public static void main(String args[]) {
         NetworkCommunications.NetworkCommunicationReserve();
-        ILogger log = Logger.get(RoboLibBot.class);
+        ILogger log = Logger.get(RoboLibBot.class, "Framework");
         
-        m_currentMode = GameMode.NONE;
         m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
         
         NetworkTable.setServerMode();
@@ -306,14 +307,13 @@ public class RoboLibBot {
         try {
             robot = (RoboLibBot) Class.forName(robotName).newInstance();
         } catch (Throwable t) {
-            log.fatal("Robots don't quit!");
             log.fatal("Could not instantiate robot " + robotName + "!", t);
             System.exit(1);
             return;
         }
         log.debug("Debug statements Enabled");
         
-        log.info("Starting " + robot.m_name);
+        log.info("Starting '" + robot.m_name + "'");
 
         UsageReporting.report(UsageReporting.ResourceType_Language, UsageReporting.Language_Java);
         
@@ -367,8 +367,9 @@ public class RoboLibBot {
             new TeleopMode(){};
         }
         m_currentMode = GameMode.DISABLED;
+        m_currentRobotMode = m_modes.get(m_currentMode);
         getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
-        getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, getRobotMode().getName());
+        getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, getCurrentRobotMode().getName());
 
         PDP.resetFaults();
         Compressor.clearCompressorStickyFaults();
@@ -382,38 +383,36 @@ public class RoboLibBot {
         
         log.info("Starting Main Loop");
 
-        RobotMode rMode;
         GameMode gMode;
         try{
             while(m_thread_keepAlive){
                 ds.waitForData();
-                rMode = getRobotMode();
                 gMode = DriverStation.getGameMode();
                 
                 if(m_currentMode != gMode){
                     log.info("Switching to " + gMode.getName());
 
                     try{
-                        rMode.modeEnd();
+                        m_currentRobotMode.modeEnd();
                     }catch(Throwable e){
-                        Logger.get(rMode).fatal("Fatal error in RobotMode end method", e);
+                        Logger.get(m_currentRobotMode).fatal("Fatal error in RobotMode end method", e);
                     }
                     
                     m_currentMode = gMode;
-                    rMode = getRobotMode();
+                    m_currentRobotMode = m_modes.get(m_currentMode);
                     RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, gMode.ordinal());
-                    RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, rMode.getName());
-                    System.gc();
+                    RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, m_currentRobotMode.getName());
+//                    System.gc();
                     
                     try{
-                        rMode.modeInit();
+                        m_currentRobotMode.modeInit();
                     }catch(Throwable e){
-                        Logger.get(rMode).fatal("Fatal error in RobotMode init method", e);
+                        Logger.get(m_currentRobotMode).fatal("Fatal error in RobotMode init method", e);
                     }
                 }
                 
                 if(ds.isNewControlData()){
-                    rMode.run();
+                    m_currentRobotMode.run();
                     Scheduler.getInstance().run();
                 }
             }
@@ -421,7 +420,7 @@ public class RoboLibBot {
             log.fatal("Error in Main Loop. Something should have caught this!!!", t);
         }finally{
             log.fatal("ROBOTS DON'T QUIT!!!", "Exited Main Loop");
-            System.exit(0);
+            System.exit(1);
         }
     }
     
@@ -506,16 +505,8 @@ public class RoboLibBot {
      * 
      * @return the current {@link RobotMode}
      */
-    public static final RobotMode getRobotMode(){
-        if(!m_modes.containsKey(m_currentMode)){
-            return new RobotMode(){
-                @Override
-                public void init(){
-                    throw new RobotException("No Robot CounterMode");
-                }
-            };
-        }
-        return m_modes.get(m_currentMode);
+    public static final RobotMode getCurrentRobotMode(){
+        return m_currentRobotMode;
     }
     
     /**

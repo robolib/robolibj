@@ -16,7 +16,7 @@
 package io.github.robolib.module.sensor;
 
 import io.github.robolib.identifier.LiveWindowSendable;
-import io.github.robolib.iface.I2C;
+import io.github.robolib.module.iface.I2C;
 import io.github.robolib.util.Timer;
 
 import edu.wpi.first.wpilibj.tables.ITable;

@@ -21,12 +21,12 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.identifier.PIDSource;
-import io.github.robolib.iface.DigitalIO;
-import io.github.robolib.iface.DigitalIO.DigitalChannel;
-import io.github.robolib.iface.DigitalInput;
 import io.github.robolib.jni.CounterJNI;
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.UsageReporting;
+import io.github.robolib.module.iface.DigitalIO;
+import io.github.robolib.module.iface.DigitalInput;
+import io.github.robolib.module.iface.DigitalIO.DigitalChannel;
 import io.github.robolib.util.MathUtils;
 
 /**
