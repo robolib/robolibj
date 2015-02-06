@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.sensor;
 
-import io.github.robolib.iface.DigitalInput;
+import io.github.robolib.module.iface.DigitalInput;
 
 /**
  * Limit Switch Class.

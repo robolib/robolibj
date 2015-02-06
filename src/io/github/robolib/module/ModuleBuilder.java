@@ -13,8 +13,19 @@
  * included in all copies or substantial portions of the Software.
  */
 
+package io.github.robolib.module;
+
+import org.json.JSONArray;
+
 /**
- * Classes that are used to interface with Physics devices.
+ * 
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-package io.github.robolib.iface;
+public interface ModuleBuilder<T> {
+    
+    T createModule(String key, JSONArray arrayData);
+    
+    String[] getStringIdentifiers();
+
+}

@@ -17,8 +17,8 @@ package io.github.robolib.module.actuator;
 
 import io.github.robolib.identifier.AngleSink;
 import io.github.robolib.identifier.AngleSource;
-import io.github.robolib.iface.PWM;
 import io.github.robolib.jni.UsageReporting;
+import io.github.robolib.module.iface.PWM;
 import io.github.robolib.util.MathUtils;
 
 /**

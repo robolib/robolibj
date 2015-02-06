@@ -19,12 +19,12 @@ import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 import io.github.robolib.SafetyManager;
-import io.github.robolib.iface.PWM.PWMChannel;
 import io.github.robolib.module.controller.MotorSafety;
 import io.github.robolib.module.controller.MotorSafetyHelper;
 import io.github.robolib.module.controller.NullController;
 import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.module.controller.Victor;
+import io.github.robolib.module.iface.PWM.PWMChannel;
 import io.github.robolib.util.MathUtils;
 
 /**

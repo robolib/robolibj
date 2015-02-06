@@ -16,7 +16,7 @@
 package io.github.robolib.module.sensor;
 
 import io.github.robolib.identifier.AngleSource;
-import io.github.robolib.iface.AnalogInput;
+import io.github.robolib.module.iface.AnalogInput;
 
 /**
  * Potentiometer Class.

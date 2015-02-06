@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.iface;
+package io.github.robolib.module.iface;
 
 import io.github.robolib.jni.InterruptJNI.InterruptJNIHandlerFunction;
 

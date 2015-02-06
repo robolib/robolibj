@@ -19,7 +19,7 @@ package io.github.robolib.module.sensor.mpu6050;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import io.github.robolib.iface.I2C;
+import io.github.robolib.module.iface.I2C;
 import io.github.robolib.module.sensor.IAccelerometer;
 import io.github.robolib.util.Timer;
 import io.github.robolib.util.log.Logger;
