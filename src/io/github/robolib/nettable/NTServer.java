@@ -23,36 +23,36 @@ import io.github.robolib.util.log.Logger;
  */
 public class NTServer implements NTRunnable, TableListenerManager {
     
-	private final NTWriteManager m_writeManager;
-	private final NTConnectionList m_connectionList;
-	private final NTEntryStore m_entryStore;
-	private final NTEntryTypeManager m_typeManager;
-	private final ServerSocket m_server;
+    private final NTWriteManager m_writeManager;
+    private final NTConnectionList m_connectionList;
+    private final NTEntryStore m_entryStore;
+    private final NTEntryTypeManager m_typeManager;
+    private final ServerSocket m_server;
 
     private final List<ITableListener> m_tableListeners;
 
-	private NTThread m_monitorThread;
+    private NTThread m_monitorThread;
 
-	/**
-	 * Create a NetworkTable Server
-	 * 
-	 * @throws IOException 
-	 */
-	public NTServer() throws IOException {
-		m_entryStore = new NTEntryStore(this);
-		m_tableListeners = new ArrayList<ITableListener>();
-		
-		m_server = new ServerSocket(1735);
-		
-		m_connectionList = new NTConnectionList();
-		m_writeManager = new NTWriteManager(m_connectionList, m_entryStore, Long.MAX_VALUE);
+    /**
+     * Create a NetworkTable Server
+     * 
+     * @throws IOException 
+     */
+    public NTServer() throws IOException {
+        m_entryStore = new NTEntryStore(this);
+        m_tableListeners = new ArrayList<ITableListener>();
+        
+        m_server = new ServerSocket(1735);
+        
+        m_connectionList = new NTConnectionList();
+        m_writeManager = new NTWriteManager(m_connectionList, m_entryStore, Long.MAX_VALUE);
 
-		m_typeManager = new NTEntryTypeManager();
-		m_entryStore.setInOutReceiver(m_writeManager);
-		
-		start();
-		m_writeManager.start();
-	}
+        m_typeManager = new NTEntryTypeManager();
+        m_entryStore.setInOutReceiver(m_writeManager);
+        
+        start();
+        m_writeManager.start();
+    }
 
     /**
      * @return a new SimpleIOStream normally from a server
@@ -62,71 +62,71 @@ public class NTServer implements NTRunnable, TableListenerManager {
             Socket socket = m_server.accept();
             return new NTSocketStream(socket);
     }
-	
-	/**
+    
+    /**
      * close all networking activity related to this node
      */
-	public void close(){
-		try {
-			stop();
-			m_writeManager.stop();
-			m_connectionList.closeAll();
-			Thread.sleep(1000);
-			m_server.close();
-			Thread.sleep(1000);
-		} catch (Exception e) {
-		    Logger.get(this).fatal("Network Tables failure", e);
-		}
-	}
+    public void close(){
+        try {
+            stop();
+            m_writeManager.stop();
+            m_connectionList.closeAll();
+            Thread.sleep(1000);
+            m_server.close();
+            Thread.sleep(1000);
+        } catch (Exception e) {
+            Logger.get(this).fatal("Network Tables failure", e);
+        }
+    }
 
-	/**
-	 * Start the monitor thread
-	 */
-	public void start(){
-		if(m_monitorThread != null)
-			stop();
-		m_monitorThread = NTThread.newBlockingPeriodicThread(this, "Server Incoming Stream Monitor Thread");
-	}
+    /**
+     * Start the monitor thread
+     */
+    public void start(){
+        if(m_monitorThread != null)
+            stop();
+        m_monitorThread = NTThread.newBlockingPeriodicThread(this, "Server Incoming Stream Monitor Thread");
+    }
 
-	/**
-	 * Stop the monitor thread
-	 */
-	public void stop(){
-		if(m_monitorThread!=null)
-			m_monitorThread.stop();
-	}
-	
-	public void run(){
-		NTSocketStream newStream = null;
-		try {
-		    newStream = new NTSocketStream(m_server.accept());
-			if(newStream != null){
-				NTConnectionAdapter connectionAdapter = new NTConnectionAdapter(
-				        newStream,
-				        m_entryStore,
-				        m_connectionList,
-				        m_typeManager);
-				
-				onNewConnection(connectionAdapter);
-			}
-		} catch(IOException e){}
-	}
+    /**
+     * Stop the monitor thread
+     */
+    public void stop(){
+        if(m_monitorThread!=null)
+            m_monitorThread.stop();
+    }
+    
+    public void run(){
+        NTSocketStream newStream = null;
+        try {
+            newStream = new NTSocketStream(m_server.accept());
+            if(newStream != null){
+                NTConnectionAdapter connectionAdapter = new NTConnectionAdapter(
+                        newStream,
+                        m_entryStore,
+                        m_connectionList,
+                        m_typeManager);
+                
+                onNewConnection(connectionAdapter);
+            }
+        } catch(IOException e){}
+    }
 
-	/**
+    /**
      * Called on create of a new connection
      * @param connectionAdapter the server connection adapter
      */
-	public void onNewConnection(NTConnectionAdapter connectionAdapter) {
-		m_connectionList.add(connectionAdapter);
-	}
+    public void onNewConnection(NTConnectionAdapter connectionAdapter) {
+        m_connectionList.add(connectionAdapter);
+    }
 
-	public boolean isConnected() {
-		return true;
-	}
+    public boolean isConnected() {
+        return true;
+    }
 
-	public boolean isServer() {
-		return true;
-	}
+    public boolean isServer() {
+        return true;
+    }
     /**
      * @return the entry store used by this node
      */

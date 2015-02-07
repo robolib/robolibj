@@ -18,33 +18,33 @@ public class NTThread {
         public void run() throws InterruptedException;
     }
     
-	private final Thread m_thread;
-	private boolean run = true;
-	private NTThread(final NTRunnable r, String name){
-		m_thread = new Thread(() -> {
-		    try {
+    private final Thread m_thread;
+    private boolean run = true;
+    private NTThread(final NTRunnable r, String name){
+        m_thread = new Thread(() -> {
+            try {
                 while(run){
                     r.run();
                 }
             } catch (InterruptedException e) {}
-		}, name);
-		m_thread.start();
-	}
-	public void stop() {
-		run = false;
-		m_thread.interrupt();
-	}
-	public boolean isRunning() {
-		return m_thread.isAlive();
-	}
+        }, name);
+        m_thread.start();
+    }
+    public void stop() {
+        run = false;
+        m_thread.interrupt();
+    }
+    public boolean isRunning() {
+        return m_thread.isAlive();
+    }
 
-	/**
+    /**
      * @param r
      * @param name the name of the thread
      * @return a thread that will run the provided runnable repeatedly with the assumption that the runnable will block
      */
-	public static final NTThread newBlockingPeriodicThread(final NTRunnable r, String name) {
-		return new NTThread(r, name);
-	}
+    public static final NTThread newBlockingPeriodicThread(final NTRunnable r, String name) {
+        return new NTThread(r, name);
+    }
 
 }

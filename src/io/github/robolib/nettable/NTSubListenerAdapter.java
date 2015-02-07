@@ -7,26 +7,26 @@ import java.util.Set;
  * An adapter that is used to filter sub table change notifications and make the path relative to the NetworkTable
  */
 public class NTSubListenerAdapter implements ITableListener {
-	
-	private final ITableListener m_targetListener;
-	private final NetworkTable m_targetSource;
-	private final String m_prefix;
-	
-	private final Set<String> m_notifiedTables = new HashSet<String>();
+    
+    private final ITableListener m_targetListener;
+    private final NetworkTable m_targetSource;
+    private final String m_prefix;
+    
+    private final Set<String> m_notifiedTables = new HashSet<String>();
 
-	/**
-	 * Create a new adapter
-	 * @param prefix the prefix of the current table
-	 * @param targetSource the source that events passed to the target listener will appear to come from
-	 * @param targetListener the listener where events are forwarded to
-	 */
-	public NTSubListenerAdapter(String prefix, NetworkTable targetSource, ITableListener targetListener){
-		m_prefix = prefix;
-		m_targetSource = targetSource;
-		m_targetListener = targetListener;
-	}
+    /**
+     * Create a new adapter
+     * @param prefix the prefix of the current table
+     * @param targetSource the source that events passed to the target listener will appear to come from
+     * @param targetListener the listener where events are forwarded to
+     */
+    public NTSubListenerAdapter(String prefix, NetworkTable targetSource, ITableListener targetListener){
+        m_prefix = prefix;
+        m_targetSource = targetSource;
+        m_targetListener = targetListener;
+    }
 
-	public void valueChanged(ITable source, String key, Object value, boolean isNew) {//TODO use string cache
+    public void valueChanged(ITable source, String key, Object value, boolean isNew) {//TODO use string cache
             if(key.startsWith(m_prefix)){
                 String relativeKey = key.substring(m_prefix.length() + 1);
                 int endSubTable = -1;//TODO implement sub table listening better
@@ -44,6 +44,6 @@ public class NTSubListenerAdapter implements ITableListener {
                     }
                 }
             }
-	}
+    }
 
 }
