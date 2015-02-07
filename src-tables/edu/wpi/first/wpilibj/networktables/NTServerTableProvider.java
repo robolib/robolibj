@@ -1,23 +1,24 @@
 package edu.wpi.first.wpilibj.networktables;
 
+import java.io.IOException;
 import java.util.Hashtable;
+
+import edu.wpi.first.wpilibj.networktables.server.NTServer;
 
 /**
  * Provides a {@link NetworkTable} for a given {@link NTNode}
- * 
- * @author Mitchell
- *
  */
-public class NTTableProvider {
-	private final NTNode m_node;
+public class NTServerTableProvider {
+	private final NTServer m_node;
 	private final Hashtable<String, NetworkTable> m_tables = new Hashtable<String, NetworkTable>();
 
 	/**
 	 * Create a new NetworkTableProvider for a given NetworkTableNode
 	 * @param node the node that handles the actual network table 
+	 * @throws IOException 
 	 */
-	public NTTableProvider(NTNode node){
-		m_node = node;
+	public NTServerTableProvider() throws IOException{
+		m_node = new NTServer();
 	}
 	
 	public ITable getRootTable(){
@@ -42,7 +43,7 @@ public class NTTableProvider {
 	/**
 	 * @return the Network Table node that backs the Tables returned by this provider
 	 */
-	public NTNode getNode() {
+	public NTServer getNode() {
 		return m_node;
 	}
 

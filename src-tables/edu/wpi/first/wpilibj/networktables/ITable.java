@@ -2,9 +2,6 @@ package edu.wpi.first.wpilibj.networktables;
 
 /**
  * A table whose values can be read and written to
- * 
- * @author Mitchell
- * 
  */
 public interface ITable {
 

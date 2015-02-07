@@ -2,9 +2,6 @@ package edu.wpi.first.wpilibj.networktables;
 
 /**
  * A listener that listens to changes in values in a {@link ITable}
- * 
- * @author Mitchell
- *
  */
 public interface ITableListener {
     /**

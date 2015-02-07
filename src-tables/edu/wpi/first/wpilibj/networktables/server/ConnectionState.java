@@ -2,9 +2,6 @@ package edu.wpi.first.wpilibj.networktables.server;
 
 /**
  * Represents the state of a connection to the server
- * 
- * @author Mitchell
- *
  */
 public class ConnectionState {
 	/**

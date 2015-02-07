@@ -3,9 +3,6 @@ package edu.wpi.first.wpilibj.networktables;
 
 /**
  * An adapter that is used to filter value change notifications and make the path relative to the NetworkTable
- * 
- * @author Mitchell
- *
  */
 public class NetworkTableListenerAdapter implements ITableListener {
 	

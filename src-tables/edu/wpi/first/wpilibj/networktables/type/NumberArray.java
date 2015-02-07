@@ -2,12 +2,11 @@ package edu.wpi.first.wpilibj.networktables.type;
 
 /**
  *
- * @author Mitchell
  */
 public class NumberArray extends ArrayData{
 
     private static final byte NUMBER_ARRAY_RAW_ID = 0x11;
-    public static final ArrayEntryType TYPE = new ArrayEntryType(NUMBER_ARRAY_RAW_ID, DefaultEntryTypes.DOUBLE, NumberArray.class);
+    public static final ArrayEntryType TYPE = new ArrayEntryType(NUMBER_ARRAY_RAW_ID, NTEntryTypes.DOUBLE, NumberArray.class);
 
 
     public NumberArray(){

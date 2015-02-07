@@ -2,11 +2,8 @@ package edu.wpi.first.wpilibj.networktables;
 
 /**
  * The definitions of all of the protocol message types
- * 
- * @author mwills
- *
  */
-public interface NetworkTableMessageType {
+public interface NTMessageType {
 	/**
 	 * A keep alive message that the client sends
 	 */

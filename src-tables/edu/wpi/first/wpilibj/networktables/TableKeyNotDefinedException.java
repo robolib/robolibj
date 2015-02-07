@@ -1,11 +1,7 @@
 package edu.wpi.first.wpilibj.networktables;
 
-
 /**
  * An exception throw when the lookup a a key-value fails in a {@link ITable}
- * 
- * @author Mitchell
- *
  */
 @SuppressWarnings("deprecation")
 public class TableKeyNotDefinedException extends NetworkTableKeyNotDefined {

@@ -2,9 +2,8 @@ package edu.wpi.first.wpilibj.networktables.type;
 
 /**
  *
- * @author Mitchell
  */
-public abstract class ComplexEntryType extends NetworkTableEntryType{
+public abstract class ComplexEntryType extends NTEntryType{
     
     protected ComplexEntryType(byte id, String name){
             super(id, name);

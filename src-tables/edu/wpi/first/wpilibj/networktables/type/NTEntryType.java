@@ -4,16 +4,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-
-
 /**
  * A class defining the types supported by NetworkTables as well as support for serialization of those types
  * to and from DataStreams 
- * 
- * @author mwills
- *
  */
-public abstract class NetworkTableEntryType {
+public abstract class NTEntryType {
 	
 	/**
 	 * the id of a type
@@ -23,7 +18,7 @@ public abstract class NetworkTableEntryType {
 	 * the name of a type
 	 */
 	public final String name;
-	protected NetworkTableEntryType(byte id, String name){
+	protected NTEntryType(byte id, String name){
 		this.id = id;
 		this.name = name;
 	}
