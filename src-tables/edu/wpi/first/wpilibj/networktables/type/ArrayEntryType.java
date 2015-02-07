@@ -8,13 +8,12 @@ import edu.wpi.first.wpilibj.networktables.TableKeyExistsWithDifferentTypeExcept
 
 /**
  *
- * @author Mitchell
  */
 public class ArrayEntryType extends ComplexEntryType {//TODO allow for array of complex type
-    private final NetworkTableEntryType elementType;
+    private final NTEntryType elementType;
     private final Class<? extends ArrayData> externalArrayType;
 
-    public ArrayEntryType(byte id, NetworkTableEntryType elementType, Class<? extends ArrayData> externalArrayType) {
+    public ArrayEntryType(byte id, NTEntryType elementType, Class<? extends ArrayData> externalArrayType) {
         super(id, "Array of [" + elementType.name + "]");
         if(!ArrayData.class.isAssignableFrom(externalArrayType))
             throw new RuntimeException("External Array Data Type must extend ArrayData");

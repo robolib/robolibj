@@ -4,7 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class DefaultEntryTypes {
+public class NTEntryTypes {
 	private static final byte BOOLEAN_RAW_ID = 0x00;
 	private static final byte DOUBLE_RAW_ID = 0x01;
 	private static final byte STRING_RAW_ID = 0x02;
@@ -12,7 +12,7 @@ public class DefaultEntryTypes {
 	/**
 	 * a boolean entry type
 	 */
-	public static final NetworkTableEntryType BOOLEAN = new NetworkTableEntryType(BOOLEAN_RAW_ID, "Boolean"){
+	public static final NTEntryType BOOLEAN = new NTEntryType(BOOLEAN_RAW_ID, "Boolean"){
 		public void sendValue(Object value, DataOutputStream os) throws IOException {
 			if(value instanceof Boolean)
 				os.writeBoolean(((Boolean) value).booleanValue());
@@ -26,7 +26,7 @@ public class DefaultEntryTypes {
 	/**
 	 * a double floating point type
 	 */
-	public static final NetworkTableEntryType DOUBLE = new NetworkTableEntryType(DOUBLE_RAW_ID, "Double"){
+	public static final NTEntryType DOUBLE = new NTEntryType(DOUBLE_RAW_ID, "Double"){
 		public void sendValue(Object value, DataOutputStream os) throws IOException {
 			if(value instanceof Double)
 				os.writeDouble(((Double) value).doubleValue());
@@ -40,7 +40,7 @@ public class DefaultEntryTypes {
 	/**
 	 * a string type
 	 */
-	public static final NetworkTableEntryType STRING = new NetworkTableEntryType(STRING_RAW_ID, "String"){
+	public static final NTEntryType STRING = new NTEntryType(STRING_RAW_ID, "String"){
 		public void sendValue(Object value, DataOutputStream os) throws IOException {
 			if(value instanceof String)
 				os.writeUTF((String)value);
@@ -52,7 +52,7 @@ public class DefaultEntryTypes {
 		}
 	};
 	
-	public static void registerTypes(NetworkTableEntryTypeManager manager) {
+	public static void registerTypes(NTEntryTypeManager manager) {
 		manager.registerType(BOOLEAN);
 		manager.registerType(DOUBLE);
 		manager.registerType(STRING);

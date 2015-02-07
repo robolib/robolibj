@@ -1,11 +1,7 @@
 package edu.wpi.first.wpilibj.networktables;
 
-
 /**
  * An adapter that is used to filter value change notifications for a specific key
- * 
- * @author Mitchell
- *
  */
 public class NetworkTableKeyListenerAdapter implements ITableListener {
 	

@@ -7,11 +7,8 @@ import edu.wpi.first.wpilibj.networktables.NTTableEntry;
 
 /**
  * A list of connections that the server currently has
- * 
- * @author Mitchell
- *
  */
-public class ServerConnectionList {
+public class ConnectionList {
 	private List<ConnectionAdapter> connections = new ArrayList<ConnectionAdapter>();
 	private final Object connectionsLock = new Object();
 	

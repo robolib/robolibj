@@ -4,9 +4,6 @@ import java.io.IOException;
 
 /**
  * An exception throw when a NetworkTableNode receives a bad message
- * 
- * @author Mitchell
- *
  */
 public class BadMessageException extends IOException {
 	/**

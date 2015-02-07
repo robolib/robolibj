@@ -2,7 +2,6 @@ package edu.wpi.first.wpilibj.networktables.type;
 
 /**
  *
- * @author Mitchell
  */
 public class ArrayData extends ComplexData{
     private Object[] data = new Object[0];

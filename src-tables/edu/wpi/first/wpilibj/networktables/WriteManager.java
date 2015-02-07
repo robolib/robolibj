@@ -4,33 +4,31 @@ package edu.wpi.first.wpilibj.networktables;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import edu.wpi.first.wpilibj.networktables.server.ServerConnectionList;
-import edu.wpi.first.wpilibj.networktables.thread.NTThread;
-import edu.wpi.first.wpilibj.networktables.thread.NTThreadManager;
-import edu.wpi.first.wpilibj.networktables.thread.PeriodicRunnable;
+import io.github.robolib.util.log.Logger;
+
+import edu.wpi.first.wpilibj.networktables.NTThread.NTRunnable;
+import edu.wpi.first.wpilibj.networktables.server.ConnectionList;
 
 /**
- * A write manager is a {@link IncomingEntryReceiver} that buffers transactions and then and then dispatches them to a flushable transaction receiver that is periodically offered all queued transaction and then flushed
- * 
- * @author Mitchell
- *
+ * A write manager is a {@link IncomingEntryReceiver} that buffers transactions and then and then
+ * dispatches them to a flushable transaction receiver that is periodically offered all queued
+ * transaction and then flushed
  */
-public class WriteManager implements OutgoingEntryReceiver, PeriodicRunnable{
+public class WriteManager implements NTRunnable {
 	private final int SLEEP_TIME = 100;
         
 	private final int QUEUE_SIZE = 500;
 	
 	private Object m_transactionsLock = new Object();
 	private NTThread m_thread;
-	private NTThreadManager m_threadManager;
-	private final NetworkTableEntryStore m_entryStore;
+	private final NTEntryStore m_entryStore;
 	
 	private volatile Queue<NTTableEntry> m_incomingAssignmentQueue;
 	private volatile Queue<NTTableEntry> m_incomingUpdateQueue;
 	private volatile Queue<NTTableEntry> m_outgoingAssignmentQueue;
 	private volatile Queue<NTTableEntry> m_outgoingUpdateQueue;
 	
-	private ServerConnectionList m_receiver;
+	private ConnectionList m_receiver;
 	private long m_lastWrite;
 
 	private final long m_keepAliveDelay;
@@ -43,13 +41,11 @@ public class WriteManager implements OutgoingEntryReceiver, PeriodicRunnable{
 	 * @param entryStore
 	 */
 	public WriteManager(
-	        final ServerConnectionList receiver,
-	        final NTThreadManager threadManager,
-	        final NetworkTableEntryStore entryStore,
+	        final ConnectionList receiver,
+	        final NTEntryStore entryStore,
 	        long keepAliveDelay){
 	    
 		m_receiver = receiver;
-		m_threadManager = threadManager;
 		m_entryStore = entryStore;
 		
 		m_incomingAssignmentQueue = new ArrayDeque<NTTableEntry>(QUEUE_SIZE);
@@ -64,41 +60,49 @@ public class WriteManager implements OutgoingEntryReceiver, PeriodicRunnable{
 	 * start the write thread
 	 */
 	public void start(){
-		if(m_thread!=null)
+		if(m_thread != null)
 			stop();
 		m_lastWrite = System.currentTimeMillis();
-		m_thread = m_threadManager.newBlockingPeriodicThread(this, "Write Manager Thread");
+		m_thread = NTThread.newBlockingPeriodicThread(this, "NT Write Manager Thread");
 	}
 	/**
 	 * stop the write thread
 	 */
 	public void stop(){
-		if(m_thread!=null)
+		if(m_thread != null)
 			m_thread.stop();
 	}
 
 
 	public void offerOutgoingAssignment(NTTableEntry entry) {
+	    if(entry.isDirty())
+            return;
+        entry.makeDirty();
 		synchronized(m_transactionsLock){
 			m_incomingAssignmentQueue.add(entry);
 			if(m_incomingAssignmentQueue.size() == QUEUE_SIZE){
 				try {
 					run();
 				} catch (InterruptedException e) {}
-				System.err.println("assignment queue overflowed. decrease the rate at which you create new entries or increase the write buffer size");
+				Logger.get(this).warn("Assignment queue overflowed.");
+				Logger.get(this).warn("Decrease the rate at which you create new entries, or increase the write buffer size.");
 			}
 		}
 	}
 
 
 	public void offerOutgoingUpdate(NTTableEntry entry) {
+	    if(entry.isDirty())
+            return;
+        entry.makeDirty();
 		synchronized(m_transactionsLock){
 			m_incomingUpdateQueue.add(entry);
 			if(m_incomingUpdateQueue.size() == QUEUE_SIZE){
 				try {
 					run();
 				} catch (InterruptedException e) {}
-				System.err.println("update queue overflowed. decrease the rate at which you update entries or increase the write buffer size");
+				Logger.get(this).warn("Update queue overflowed.");
+				Logger.get(this).warn("Decrease the rate at which you update entries, or increase the write buffer size.");
 			}
 		}
 	}
@@ -106,6 +110,7 @@ public class WriteManager implements OutgoingEntryReceiver, PeriodicRunnable{
 	
 	/**
 	 * the periodic method that sends all buffered transactions
+	 * @throws InterruptedException 
 	 */
 	public void run() throws InterruptedException {
 		synchronized(m_transactionsLock){
@@ -150,8 +155,8 @@ public class WriteManager implements OutgoingEntryReceiver, PeriodicRunnable{
         }else if(System.currentTimeMillis()-m_lastWrite>m_keepAliveDelay){
 			m_receiver.ensureAlive();
         }
-		
-		Thread.sleep(SLEEP_TIME);
+	
+        Thread.sleep(SLEEP_TIME);
 	}
 
 }

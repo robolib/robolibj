@@ -6,26 +6,24 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
-import edu.wpi.first.wpilibj.networktables.connection.NetworkTableConnection;
-import edu.wpi.first.wpilibj.networktables.type.NetworkTableEntryType;
+import edu.wpi.first.wpilibj.networktables.connection.NTConnection;
+import edu.wpi.first.wpilibj.networktables.type.NTEntryType;
 
 /**
  * An entry store that handles storing entries and applying transactions
- * 
- * @author mwills
- * @author Fredric
- * 
  */
+public class NTEntryStore {
+	private final Map<Character, NTTableEntry> m_idEntries = new HashMap<Character, NTTableEntry>();
+	private final Hashtable<String, NTTableEntry> m_namedEntries = new Hashtable<String, NTTableEntry>();
+	
+	private final TableListenerManager m_listenerManager;
 
-public class NetworkTableEntryStore implements IncomingEntryReceiver{
-	protected final Map<Character, NTTableEntry> m_idEntries = new HashMap<Character, NTTableEntry>();
-	protected final Hashtable<String, NTTableEntry> m_namedEntries = new Hashtable<String, NTTableEntry>();
+	private WriteManager m_receiverOut;
+    private WriteManager m_receiverIn;
+
+    private char m_nextId = (char)0;
 	
-	protected final TableListenerManager m_listenerManager;
-	
-	
-	private char nextId = (char)0;
-	public NetworkTableEntryStore(TableListenerManager listenerManager){
+	public NTEntryStore(TableListenerManager listenerManager){
 		m_listenerManager = listenerManager;
 	}
 	
@@ -51,7 +49,7 @@ public class NetworkTableEntryStore implements IncomingEntryReceiver{
 	}
 	/**
 	 * Get an entry based on it's name
-	 * @param name the name of the entry to look for
+	 * @param m_name the name of the entry to look for
 	 * @return the entry or null if the entry does not exist
 	 */
 	public Set<String> keys(){
@@ -81,25 +79,20 @@ public class NetworkTableEntryStore implements IncomingEntryReceiver{
 			m_namedEntries.values().forEach(NTTableEntry::clearId);
 		}
 	}
-
-
-	private OutgoingEntryReceiver m_receiverOut;
-	private OutgoingEntryReceiver m_receiverIn;
-	public void setOutgoingReceiver(final OutgoingEntryReceiver receiver){
+	
+	public void setInOutReceiver(final WriteManager receiver){
 		m_receiverOut = receiver;
-	}
-	public void setIncomingReceiver(OutgoingEntryReceiver receiver){
 		m_receiverIn = receiver;
 	}
 	
 	public boolean addEntry(NTTableEntry newEntry){
 		synchronized(this){
-			NTTableEntry entry = m_namedEntries.get(newEntry.name);
+			NTTableEntry entry = m_namedEntries.get(newEntry.m_name);
 
 			if(entry==null){
-				newEntry.setId(nextId++);
+				newEntry.setId(m_nextId++);
 				m_idEntries.put(newEntry.getId(), newEntry);
-				m_namedEntries.put(newEntry.name, newEntry);
+				m_namedEntries.put(newEntry.m_name, newEntry);
 				return true;
 			}
 			return false;
@@ -135,20 +128,20 @@ public class NetworkTableEntryStore implements IncomingEntryReceiver{
     }
 	
 	/**
-         * Stores the given value under the given name and queues it for 
-         * transmission to the server.
-         * 
-         * @param name The name under which to store the given value.
-         * @param type The type of the given value.
-         * @param value The value to store.
-         * @throws TableKeyExistsWithDifferentTypeException Thrown if an 
-         *  entry already exists with the given name and is of a different type.
-         */
-	public void putOutgoing(String name, NetworkTableEntryType type, Object value)
+     * Stores the given value under the given name and queues it for 
+     * transmission to the server.
+     * 
+     * @param name The name under which to store the given value.
+     * @param type The type of the given value.
+     * @param value The value to store.
+     * @throws TableKeyExistsWithDifferentTypeException Thrown if an 
+     *  entry already exists with the given name and is of a different type.
+     */
+	public void putOutgoing(String name, NTEntryType type, Object value)
 	        throws TableKeyExistsWithDifferentTypeException{
 		synchronized(this){
 			NTTableEntry tableEntry = m_namedEntries.get(name);
-			if(tableEntry==null){
+			if(tableEntry == null){
 				//TODO validate type
 				tableEntry = new NTTableEntry(name, type, value);
 				if(addEntry(tableEntry)){
@@ -183,9 +176,9 @@ public class NetworkTableEntryStore implements IncomingEntryReceiver{
 
 	public void offerIncomingAssignment(NTTableEntry entry) {
         synchronized(this){
-            NTTableEntry tableEntry = m_namedEntries.get(entry.name);
+            NTTableEntry tableEntry = m_namedEntries.get(entry.m_name);
             if(addEntry(entry)){
-                if(tableEntry==null)
+                if(tableEntry == null)
                     tableEntry = entry;
                 tableEntry.fireListener(m_listenerManager);
                 m_receiverIn.offerOutgoingAssignment(tableEntry);
@@ -193,7 +186,6 @@ public class NetworkTableEntryStore implements IncomingEntryReceiver{
         }
 	}
 
- 
 	public void offerIncomingUpdate(NTTableEntry entry, char sequenceNumber, Object value) {
         synchronized(this){
             if(updateEntry(entry, sequenceNumber, value)){
@@ -208,7 +200,7 @@ public class NetworkTableEntryStore implements IncomingEntryReceiver{
 	 * @param connection
 	 * @throws IOException
 	 */
-	public void sendServerHello(final NetworkTableConnection connection) throws IOException {
+	public void sendServerHello(final NTConnection connection) throws IOException {
 		synchronized(this){
 			for(NTTableEntry entry : m_namedEntries.values()){
 			    connection.sendEntryAssignment(entry);
@@ -218,7 +210,6 @@ public class NetworkTableEntryStore implements IncomingEntryReceiver{
 		}
 	}
 	
-
 	/**
 	 * Called to say that a listener should notify the listener manager of all of the entries
 	 * @param listener
@@ -227,7 +218,7 @@ public class NetworkTableEntryStore implements IncomingEntryReceiver{
 	public void notifyEntries(final ITable table, final ITableListener listener) {
 		synchronized(this){
 		    m_namedEntries.values().forEach(entry -> listener.valueChanged(
-		            table, entry.name, entry.getValue(), true));
+		            table, entry.m_name, entry.getValue(), true));
 		}
 	}
 

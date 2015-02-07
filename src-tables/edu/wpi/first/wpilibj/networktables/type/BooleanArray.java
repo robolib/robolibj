@@ -2,12 +2,11 @@ package edu.wpi.first.wpilibj.networktables.type;
 
 /**
  *
- * @author Mitchell
  */
 public class BooleanArray extends ArrayData{
 
     private static final byte BOOLEAN_ARRAY_RAW_ID = 0x10;
-    public static final ArrayEntryType TYPE = new ArrayEntryType(BOOLEAN_ARRAY_RAW_ID, DefaultEntryTypes.BOOLEAN, BooleanArray.class);
+    public static final ArrayEntryType TYPE = new ArrayEntryType(BOOLEAN_ARRAY_RAW_ID, NTEntryTypes.BOOLEAN, BooleanArray.class);
 
 
     public BooleanArray(){

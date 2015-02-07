@@ -3,39 +3,31 @@ package edu.wpi.first.wpilibj.networktables.server;
 import java.io.EOFException;
 import java.io.IOException;
 
-import edu.wpi.first.wpilibj.networktables.IncomingEntryReceiver;
+import edu.wpi.first.wpilibj.networktables.NTEntryStore;
 import edu.wpi.first.wpilibj.networktables.NTTableEntry;
-import edu.wpi.first.wpilibj.networktables.NetworkTableEntryStore;
+import edu.wpi.first.wpilibj.networktables.NTThread;
 import edu.wpi.first.wpilibj.networktables.connection.BadMessageException;
-import edu.wpi.first.wpilibj.networktables.connection.ConnectionMonitorThread;
-import edu.wpi.first.wpilibj.networktables.connection.NetworkTableConnection;
-import edu.wpi.first.wpilibj.networktables.stream.SimpleIOStream;
-import edu.wpi.first.wpilibj.networktables.thread.NTThread;
-import edu.wpi.first.wpilibj.networktables.thread.NTThreadManager;
-import edu.wpi.first.wpilibj.networktables.type.NetworkTableEntryTypeManager;
+import edu.wpi.first.wpilibj.networktables.connection.NTConnection;
+import edu.wpi.first.wpilibj.networktables.type.NTEntryTypeManager;
 
 /**
  * Object that adapts messages from a client to the server
- * 
- * @author Mitchell
- *
  */
-public class ConnectionAdapter implements IncomingEntryReceiver {
+public class ConnectionAdapter {
 	
-	private final NetworkTableEntryStore m_entryStore;
-	private final IncomingEntryReceiver m_transactionReceiver;
-	private final ServerConnectionList m_adapterListener;
+	private final NTEntryStore m_entryStore;
+	private final ConnectionList m_adapterListener;
 	/**
 	 * the connection this adapter uses
 	 */
-	public final NetworkTableConnection m_connection;
+	public final NTConnection m_connection;
 	private final NTThread m_readThread;
 	
 	private ConnectionState m_connectionState;
 	
 	private void gotoState(ConnectionState newState){
-		if(m_connectionState!=newState){
-			System.out.println(this+" entered connection state: "+newState);
+		if(m_connectionState != newState){
+			System.out.println(this + " entered connection state: " + newState);
 			m_connectionState = newState;
 		}
 	}
@@ -50,16 +42,25 @@ public class ConnectionAdapter implements IncomingEntryReceiver {
 	 * @param adapterListener
 	 * @param threadManager
 	 */
-	public ConnectionAdapter(final SimpleIOStream stream, final NetworkTableEntryStore entryStore,
-	        final IncomingEntryReceiver transactionReceiver, final ServerConnectionList adapterListener,
-	        final NetworkTableEntryTypeManager typeManager, final NTThreadManager threadManager) {
-		m_connection = new NetworkTableConnection(stream, typeManager);
+	public ConnectionAdapter(
+	        final SocketStream stream,
+	        final NTEntryStore entryStore,
+	        final ConnectionList adapterListener,
+	        final NTEntryTypeManager typeManager) {
+		m_connection = new NTConnection(stream, typeManager);
 		m_entryStore = entryStore;
-		m_transactionReceiver = transactionReceiver;
 		m_adapterListener = adapterListener;
 		
 		gotoState(ConnectionState.GOT_CONNECTION_FROM_CLIENT);
-		m_readThread = threadManager.newBlockingPeriodicThread(new ConnectionMonitorThread(this, m_connection), "Server Connection Reader Thread");
+		m_readThread = NTThread.newBlockingPeriodicThread(() -> {
+		    try{
+	            m_connection.read(this);
+	        } catch(BadMessageException e){
+	            badMessage(e);
+	        } catch(IOException e){
+	            ioException(e);
+	        }
+		}, "Server Connection Reader Thread");
 	}
 	
 	/**
@@ -76,30 +77,27 @@ public class ConnectionAdapter implements IncomingEntryReceiver {
      * @param e
      */
 	public void ioException(IOException e) {
-            if(e instanceof EOFException)
-                gotoState(ConnectionState.CLIENT_DISCONNECTED);
-            else
-                gotoState(new ConnectionState.Error(e));
-            m_adapterListener.close(this, false);
+        if(e instanceof EOFException)
+            gotoState(ConnectionState.CLIENT_DISCONNECTED);
+        else
+            gotoState(new ConnectionState.Error(e));
+        m_adapterListener.close(this, false);
 	}
-	
-	
+
 	/**
 	 * stop the read thread and close the stream
 	 */
 	public void shutdown(boolean closeStream) {
 		m_readThread.stop();
-                if(closeStream)
-		m_connection.close();
+        if(closeStream)
+            m_connection.close();
 	}
 
 	/**
      * Called when the connection receives a keep alive message
      * @throws IOException
      */
-	public void keepAlive() throws IOException {
-		//just let it happen
-	}
+	public void keepAlive() throws IOException {}
 
 	/**
      * Called when the connection receives a client hello message
@@ -107,16 +105,15 @@ public class ConnectionAdapter implements IncomingEntryReceiver {
      * @throws IOException
      */
 	public void clientHello(char protocolRevision) throws IOException {
-		if(m_connectionState!=ConnectionState.GOT_CONNECTION_FROM_CLIENT)
+		if(m_connectionState != ConnectionState.GOT_CONNECTION_FROM_CLIENT)
 			throw new BadMessageException("A server should not receive a client hello after it has already connected/entered an error state");
-                if(protocolRevision!=NetworkTableConnection.PROTOCOL_REVISION){
-                    m_connection.sendProtocolVersionUnsupported();
-                    throw new BadMessageException("Client Connected with bad protocol revision: 0x"+Integer.toHexString(protocolRevision));
-                }
-                else{
-                    m_entryStore.sendServerHello(m_connection);
-                    gotoState(ConnectionState.CONNECTED_TO_CLIENT);
-                }
+        if(protocolRevision != NTConnection.PROTOCOL_REVISION){
+            m_connection.sendProtocolVersionUnsupported();
+            throw new BadMessageException("Client Connected with bad protocol revision: 0x"+Integer.toHexString(protocolRevision));
+        }else{
+            m_entryStore.sendServerHello(m_connection);
+            gotoState(ConnectionState.CONNECTED_TO_CLIENT);
+        }
 	}
 
 	/**
@@ -133,11 +130,11 @@ public class ConnectionAdapter implements IncomingEntryReceiver {
 	}
 
 	public void offerIncomingAssignment(NTTableEntry entry) {
-		m_transactionReceiver.offerIncomingAssignment(entry);
+		m_entryStore.offerIncomingAssignment(entry);
 	}
 
 	public void offerIncomingUpdate(NTTableEntry entry, char sequenceNumber, Object value) {
-		m_transactionReceiver.offerIncomingUpdate(entry, sequenceNumber, value);
+	    m_entryStore.offerIncomingUpdate(entry, sequenceNumber, value);
 	}
 
 	/**
@@ -151,7 +148,7 @@ public class ConnectionAdapter implements IncomingEntryReceiver {
 
 	public void offerOutgoingAssignment(NTTableEntry entry) {
 		try {
-			if(m_connectionState==ConnectionState.CONNECTED_TO_CLIENT)
+			if(m_connectionState == ConnectionState.CONNECTED_TO_CLIENT)
 				m_connection.sendEntryAssignment(entry);
 		} catch (IOException e) {
 			ioException(e);
@@ -159,13 +156,12 @@ public class ConnectionAdapter implements IncomingEntryReceiver {
 	}
 	public void offerOutgoingUpdate(NTTableEntry entry) {
 		try {
-			if(m_connectionState==ConnectionState.CONNECTED_TO_CLIENT)
+			if(m_connectionState == ConnectionState.CONNECTED_TO_CLIENT)
 				m_connection.sendEntryUpdate(entry);
 		} catch (IOException e) {
 			ioException(e);
 		}
 	}
-
 
 	public void flush() {
 		try {
@@ -179,15 +175,14 @@ public class ConnectionAdapter implements IncomingEntryReceiver {
 	 * @return the state of the connection
 	 */
 	public ConnectionState getConnectionState() {
-            return m_connectionState;
+        return m_connectionState;
 	}
 
 	public void ensureAlive() {
-            try {
-                    m_connection.sendKeepAlive();
-            } catch (IOException e) {
-                    ioException(e);
-            }
+        try {
+            m_connection.sendKeepAlive();
+        } catch (IOException e) {
+            ioException(e);
+        }
 	}
-
 }

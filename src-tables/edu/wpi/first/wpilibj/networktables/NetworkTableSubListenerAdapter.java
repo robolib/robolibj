@@ -5,9 +5,6 @@ import java.util.Set;
 
 /**
  * An adapter that is used to filter sub table change notifications and make the path relative to the NetworkTable
- * 
- * @author Mitchell
- *
  */
 public class NetworkTableSubListenerAdapter implements ITableListener {
 	

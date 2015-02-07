@@ -3,16 +3,12 @@ package edu.wpi.first.wpilibj.networktables;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTableEntryStore.TableListenerManager;
-import edu.wpi.first.wpilibj.networktables.connection.NetworkTableConnection;
-import edu.wpi.first.wpilibj.networktables.type.NetworkTableEntryType;
-
+import edu.wpi.first.wpilibj.networktables.NTEntryStore.TableListenerManager;
+import edu.wpi.first.wpilibj.networktables.connection.NTConnection;
+import edu.wpi.first.wpilibj.networktables.type.NTEntryType;
 
 /**
  * An entry in a network table
- * 
- * @author mwills
- *
  */
 public class NTTableEntry {
 	/**
@@ -20,19 +16,19 @@ public class NTTableEntry {
 	 */
 	public static final char UNKNOWN_ID = (char)0xFFFF;
 
-	private char id;
-	private char sequenceNumber;
+	private char m_id;
+	private char m_sequenceNumber;
 	/**
 	 * the name of the entry
 	 */
-	public final String name;
+	public final String m_name;
 	/**
 	 * the type of the entry
 	 */
-	private NetworkTableEntryType type;
-	private Object value;
-	private volatile boolean isNew = true;
-	private volatile boolean isDirty = false;
+	private NTEntryType m_type;
+	private Object m_value;
+	private volatile boolean m_isNew = true;
+	private volatile boolean m_isDirty = false;
 
 	/**
 	 * Create a new entry with the given name, type, value, an unknown id and a sequence number of 0
@@ -40,7 +36,7 @@ public class NTTableEntry {
 	 * @param type
 	 * @param value
 	 */
-	public NTTableEntry(final String name, final NetworkTableEntryType type, final Object value){
+	public NTTableEntry(final String name, final NTEntryType type, final Object value){
 		this(UNKNOWN_ID, name, (char)0, type, value);
 	}
 	/**
@@ -51,31 +47,31 @@ public class NTTableEntry {
 	 * @param type
 	 * @param value
 	 */
-	public NTTableEntry(final char id, final String name, final char sequenceNumber, final NetworkTableEntryType type, final Object value){
-		this.id = id;
-		this.name = name;
-		this.sequenceNumber = sequenceNumber;
-		this.type = type;
-		this.value = value;
+	public NTTableEntry(final char id, final String name, final char sequenceNumber, final NTEntryType type, final Object value){
+		m_id = id;
+		m_name = name;
+		m_sequenceNumber = sequenceNumber;
+		m_type = type;
+		m_value = value;
 	}
 
 	/**
 	 * @return the id of the entry
 	 */
 	public char getId() {
-		return id;
+		return m_id;
 	}
 	/**
 	 * @return the current value of the entry
 	 */
 	public Object getValue(){
-		return value;
+		return m_value;
 	}
 	/**
 	 * @return the type of the entry
 	 */
-	public NetworkTableEntryType getType(){
-		return type;
+	public NTEntryType getType(){
+		return m_type;
 	}
 	private static final char HALF_OF_CHAR = 32768;
 	/**
@@ -85,10 +81,10 @@ public class NTTableEntry {
 	 * @return true if the value was set
 	 */
 	public boolean putValue(final char newSequenceNumber, final Object newValue) {
-		if( (sequenceNumber < newSequenceNumber && newSequenceNumber - sequenceNumber < HALF_OF_CHAR)
-				|| (sequenceNumber > newSequenceNumber && sequenceNumber - newSequenceNumber > HALF_OF_CHAR) ){
-			value = newValue;
-			sequenceNumber = newSequenceNumber;
+		if( (m_sequenceNumber < newSequenceNumber && newSequenceNumber - m_sequenceNumber < HALF_OF_CHAR)
+				|| (m_sequenceNumber > newSequenceNumber && m_sequenceNumber - newSequenceNumber > HALF_OF_CHAR) ){
+			m_value = newValue;
+			m_sequenceNumber = newSequenceNumber;
 			return true;
 		}
 		return false;
@@ -99,8 +95,8 @@ public class NTTableEntry {
 	 * @param newValue
 	 */
 	public void forcePut(final char newSequenceNumber, final Object newValue) {
-		value = newValue;
-		sequenceNumber = newSequenceNumber;
+		m_value = newValue;
+		m_sequenceNumber = newSequenceNumber;
 	}
 	/**
 	 * force a value and new sequence number upon an entry, Will also set the type of the entry
@@ -108,20 +104,20 @@ public class NTTableEntry {
 	 * @param type
 	 * @param newValue
 	 */
-	public void forcePut(final char newSequenceNumber, final NetworkTableEntryType type, final Object newValue) {
-		this.type = type;
+	public void forcePut(final char newSequenceNumber, final NTEntryType type, final Object newValue) {
+		m_type = type;
 		forcePut(newSequenceNumber, newValue);
 	}
 	
 	
 	public void makeDirty() {
-		isDirty = true;
+		m_isDirty = true;
 	}
 	public void makeClean() {
-		isDirty = false;
+		m_isDirty = false;
 	}
 	public boolean isDirty(){
-		return isDirty;
+		return m_isDirty;
 	}
 
 	/**
@@ -130,14 +126,14 @@ public class NTTableEntry {
 	 * @throws IOException
 	 */
 	public void sendValue(final DataOutputStream os) throws IOException{
-		type.sendValue(value, os);
+		m_type.sendValue(m_value, os);
 	}
 
 	/**
 	 * @return the current sequence number of the entry
 	 */
 	public char getSequenceNumber() {
-		return sequenceNumber;
+		return m_sequenceNumber;
 	}
 	/**
 	 * Sets the id of the entry
@@ -145,27 +141,30 @@ public class NTTableEntry {
 	 * @throws IllegalStateException if the entry already has a known id
 	 */
 	public void setId(final char id) throws IllegalStateException{
-		if(this.id!=UNKNOWN_ID)
+		if(this.m_id!=UNKNOWN_ID)
 			throw new IllegalStateException("Cannot set the Id of a table entry that already has a valid id");
-		this.id = id;
+		m_id = id;
 	}
 	/**
 	 * clear the id of the entry to unknown
 	 */
 	public void clearId() {
-		id = UNKNOWN_ID;
+		m_id = UNKNOWN_ID;
 	}
 	
-	public void send(NetworkTableConnection connection) throws IOException {
+	public void send(NTConnection connection) throws IOException {
 		connection.sendEntryAssignment(this);
 	}
 	public void fireListener(TableListenerManager listenerManager) {//TODO determine best way to handle complex data
-		listenerManager.fireTableListeners(name, value, isNew);
-		isNew = false;
+		listenerManager.fireTableListeners(m_name, m_value, m_isNew);
+		m_isNew = false;
 	}
 
 	public String toString(){
-		return "Network Table "+type.name+" entry: "+name+": "+(int)getId()+" - "+(int)getSequenceNumber()+" - "+getValue();
+		return "Network Table " + m_type.name
+		        + " entry: " + m_name + ": "
+		        + (int)getId() + " - " + (int)getSequenceNumber()
+		        + " - " + getValue();
 	}
 
 	

@@ -6,64 +6,20 @@ import java.util.Hashtable;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.networktables.server.NTServer;
-import edu.wpi.first.wpilibj.networktables.stream.SocketServerStreamProvider;
-import edu.wpi.first.wpilibj.networktables.thread.DefaultThreadManager;
-import edu.wpi.first.wpilibj.networktables.type.NetworkTableEntryTypeManager;
 
 /**
- * 
- * @author Fredric
- * @author mwills
- * 
+ *
  */
-
 public class NetworkTable implements ITable {
     
-    static class NetworkTableKeyCache{
-        private final Hashtable<String, String> m_strCache = new Hashtable<String, String>();
-        private final String m_strCachePath;
-
-        public NetworkTableKeyCache(String path) {
-            m_strCachePath = path;
-        }
-        
-        /**
-         * @param input
-         * @return the value for a given input
-         */
-        public String get(final String input){
-            String cachedValue = m_strCache.get(input);
-            if(cachedValue == null)
-                m_strCache.put(input, cachedValue = (m_strCachePath + PATH_SEPARATOR + input));
-            return cachedValue;
-        }
-
-    }
-    class EntryCache {
-        private final Hashtable<String, NTTableEntry> cache = new Hashtable<String, NTTableEntry>();
-//        private final String m_entryCachePath;
-
-        public EntryCache(String path) {
-//            m_entryCachePath = path;
-        }
-        
-        public NTTableEntry get(final String key){
-            NTTableEntry cachedValue = cache.get(key);
-            if(cachedValue == null){
-                cachedValue = m_node.getEntryStore().getEntry(m_absoluteKeyCache.get(key));
-                if(cachedValue != null)
-                    cache.put(key, cachedValue);
-            }
-            return cachedValue;
-        }
-    }
+    
     
 	/**
 	 * The path separator for sub-tables and keys
 	 */
 	public static final char PATH_SEPARATOR = '/';
 	
-	private static NTTableProvider m_staticProvider = null;
+	private static NTServerTableProvider m_staticProvider = null;
 	
 	private synchronized static void checkInit(){
 		if(m_staticProvider != null)
@@ -74,18 +30,14 @@ public class NetworkTable implements ITable {
 	 */
 	public synchronized static void initialize() throws IOException {
 		checkInit();
-		m_staticProvider = new NTTableProvider(
-		        new NTServer(
-		                new SocketServerStreamProvider(1735),
-		                new NetworkTableEntryTypeManager(),
-		                new DefaultThreadManager()));
+		m_staticProvider = new NTServerTableProvider();
 	}
         
 	/**
 	 * set the table provider for static network tables methods
 	 * This must be called before initalize or getTable
 	 */
-	public synchronized static void setTableProvider(NTTableProvider provider) {
+	public synchronized static void setTableProvider(NTServerTableProvider provider) {
 		checkInit();
 		m_staticProvider = provider;
 	}
@@ -111,12 +63,46 @@ public class NetworkTable implements ITable {
 	private final String m_path;
 	private final EntryCache m_entryCache;
 	private final NetworkTableKeyCache m_absoluteKeyCache;
-	private final NTTableProvider m_provider;
-	private final NTNode m_node;
+	private final NTServerTableProvider m_provider;
+	private final NTServer m_node;
+	
+	static class NetworkTableKeyCache{
+        private final Hashtable<String, String> m_strCache = new Hashtable<String, String>();
+        private final String m_strCachePath;
 
-	NetworkTable(String path, NTTableProvider provider) {
+        public NetworkTableKeyCache(String path) {
+            m_strCachePath = path;
+        }
+        
+        /**
+         * @param input
+         * @return the value for a given input
+         */
+        public String get(final String input){
+            String cachedValue = m_strCache.get(input);
+            if(cachedValue == null)
+                m_strCache.put(input, cachedValue = (m_strCachePath + PATH_SEPARATOR + input));
+            return cachedValue;
+        }
+    }
+    
+    private class EntryCache {
+        private final Hashtable<String, NTTableEntry> m_cache = new Hashtable<String, NTTableEntry>();
+        
+        public NTTableEntry get(final String key){
+            NTTableEntry cachedValue = m_cache.get(key);
+            if(cachedValue == null){
+                cachedValue = m_node.getEntryStore().getEntry(m_absoluteKeyCache.get(key));
+                if(cachedValue != null)
+                    m_cache.put(key, cachedValue);
+            }
+            return cachedValue;
+        }
+    }
+
+	NetworkTable(String path, NTServerTableProvider provider) {
 		m_path = path;
-		m_entryCache = new EntryCache(path);
+		m_entryCache = new EntryCache();
 		m_absoluteKeyCache = new NetworkTableKeyCache(path);
 		m_provider = provider;
 		m_node = provider.getNode();
@@ -150,6 +136,7 @@ public class NetworkTable implements ITable {
             adapters.add(adapter);
             m_node.addTableListener(adapter, immediateNotify);
 	}
+	
 	public void addTableListener(String key, ITableListener listener, boolean immediateNotify) {
 	    List<ITableListener> adapters = m_listenerMap.get(listener);
 		if(adapters == null){
@@ -160,6 +147,7 @@ public class NetworkTable implements ITable {
 		adapters.add(adapter);
 		m_node.addTableListener(adapter, immediateNotify);
 	}
+	
 	public void addSubTableListener(final ITableListener listener) {
 	    List<ITableListener> adapters = m_listenerMap.get(listener);
 		if(adapters == null){

@@ -2,7 +2,6 @@ package edu.wpi.first.wpilibj.networktables.type;
 
 /**
  *
- * @author Mitchell
  */
 public class ComplexData {
     private final ComplexEntryType m_type;
