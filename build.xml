@@ -93,6 +93,12 @@
       <fileset dir="${src.dir}" excludes="*.java,${excludes}" includes="${includes}">
           <filename name="**/*.java"/>
       </fileset>
+      <fileset dir="${src-lib.dir}" excludes="*.java,${excludes}" includes="${includes}">
+          <filename name="**/*.java"/>
+      </fileset>
+      <fileset dir="${src-tables.dir}" excludes="*.java,${excludes}" includes="${includes}">
+          <filename name="**/*.java"/>
+      </fileset>
     </javadoc>
     <copy todir="${dist.javadoc.dir}">
       <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">

@@ -27,11 +27,10 @@ import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.PWMJNI;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
+import io.github.robolib.nettable.ITable;
+import io.github.robolib.nettable.ITableListener;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.log.Logger;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
-import edu.wpi.first.wpilibj.networktables.ITableListener;
 
 /**
  * The PWM Interface class.

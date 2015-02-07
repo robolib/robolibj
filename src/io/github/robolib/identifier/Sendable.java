@@ -15,7 +15,7 @@
 
 package io.github.robolib.identifier;
 
-import edu.wpi.first.wpilibj.networktables.ITable;
+import io.github.robolib.nettable.ITable;
 
 /**
  * 

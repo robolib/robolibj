@@ -21,12 +21,11 @@ import io.github.robolib.RoboLibBot;
 import io.github.robolib.control.Trigger.ButtonScheduler;
 import io.github.robolib.identifier.Sendable;
 import io.github.robolib.jni.UsageReporting;
+import io.github.robolib.nettable.ITable;
+import io.github.robolib.nettable.entry.NumberArray;
+import io.github.robolib.nettable.entry.StringArray;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
-import edu.wpi.first.wpilibj.networktables.type.NumberArray;
-import edu.wpi.first.wpilibj.networktables.type.StringArray;
 
 /**
  * The Class Scheduler.

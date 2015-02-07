@@ -20,8 +20,7 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import io.github.robolib.lang.ChannelIndexException;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
+import io.github.robolib.nettable.ITable;
 
 /**
  * Common functions for use in the robot code.

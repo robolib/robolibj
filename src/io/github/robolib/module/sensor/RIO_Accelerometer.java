@@ -18,8 +18,7 @@ package io.github.robolib.module.sensor;
 import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.jni.AccelerometerJNI;
 import io.github.robolib.jni.UsageReporting;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
+import io.github.robolib.nettable.ITable;
 
 /**
  * The Class RIO_Accelerometer.

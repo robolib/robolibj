@@ -23,9 +23,8 @@ import io.github.robolib.control.ButtonTrigger;
 import io.github.robolib.identifier.Sendable;
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.PowerJNI;
+import io.github.robolib.nettable.ITable;
 import io.github.robolib.util.StringUtils;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * The Class RoboRIO.

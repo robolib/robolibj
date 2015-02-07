@@ -13,11 +13,10 @@ import io.github.robolib.lang.CANMessageNotFoundException;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.PDP.PowerChannel;
+import io.github.robolib.nettable.ITable;
+import io.github.robolib.nettable.ITableListener;
 import io.github.robolib.util.Timer;
 import io.github.robolib.util.log.Logger;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
-import edu.wpi.first.wpilibj.networktables.ITableListener;
 
 /**
  * Texas Instruments Jaguar Speed Controller as a CAN device. 

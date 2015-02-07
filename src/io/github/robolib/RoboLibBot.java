@@ -29,6 +29,8 @@ import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.module.Compressor;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.RoboRIO;
+import io.github.robolib.nettable.ITable;
+import io.github.robolib.nettable.NetworkTable;
 import io.github.robolib.robot.AutonMode;
 import io.github.robolib.robot.DisabledMode;
 import io.github.robolib.robot.GameMode;
@@ -38,9 +40,6 @@ import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.TableSender;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
  * A better version of the WPILib IterativeRobot class.

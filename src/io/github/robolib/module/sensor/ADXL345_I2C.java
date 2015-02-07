@@ -16,8 +16,7 @@
 package io.github.robolib.module.sensor;
 
 import io.github.robolib.module.iface.I2C;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
+import io.github.robolib.nettable.ITable;
 
 /**
  * 
