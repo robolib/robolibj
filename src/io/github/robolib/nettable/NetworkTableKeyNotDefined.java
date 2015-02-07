@@ -11,10 +11,10 @@ public class NetworkTableKeyNotDefined extends NoSuchElementException {
     private static final long serialVersionUID = 4535215854918583959L;
 
     /**
-	 * @param key the key that was not defined in the table
-	 */
-	public NetworkTableKeyNotDefined(String key) {
-		super("Unkown Table Key: "+key);
-	}
+     * @param key the key that was not defined in the table
+     */
+    public NetworkTableKeyNotDefined(String key) {
+        super("Unkown Table Key: "+key);
+    }
 
 }

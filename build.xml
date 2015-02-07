@@ -35,8 +35,8 @@
   <target name="compile" description="Compile the source code.">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${class.dir}"/>
-    <echo>[${project.name}-compile] ${src.path}, ${classpath} -> ${class.dir}</echo>
-    <javac srcdir="${src.path}"
+    <echo>[${project.name}-compile] ${src.dir}, ${classpath} -> ${class.dir}</echo>
+    <javac srcdir="${src.dir}"
       destdir="${class.dir}"
       includeAntRuntime="no"
       includeJavaRuntime="no"
@@ -82,7 +82,7 @@
       nonavbar="false"
       notree="false"
       private="true"
-      source="${src.path}"
+      source="${src.dir}"
       splitindex="true"
       useexternalfile="false"
       version="true"
@@ -91,12 +91,6 @@
           <path path="${classpath}"/>
       </classpath>
       <fileset dir="${src.dir}" excludes="*.java,${excludes}" includes="${includes}">
-          <filename name="**/*.java"/>
-      </fileset>
-      <fileset dir="${src-lib.dir}" excludes="*.java,${excludes}" includes="${includes}">
-          <filename name="**/*.java"/>
-      </fileset>
-      <fileset dir="${src-tables.dir}" excludes="*.java,${excludes}" includes="${includes}">
           <filename name="**/*.java"/>
       </fileset>
     </javadoc>
