@@ -22,9 +22,8 @@ import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.identifier.PIDSink;
 import io.github.robolib.identifier.PIDSource;
 import io.github.robolib.jni.UsageReporting;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
-import edu.wpi.first.wpilibj.networktables.ITableListener;
+import io.github.robolib.nettable.ITable;
+import io.github.robolib.nettable.ITableListener;
 
 /**
  * 

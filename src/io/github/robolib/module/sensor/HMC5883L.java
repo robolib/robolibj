@@ -17,9 +17,8 @@ package io.github.robolib.module.sensor;
 
 import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.module.iface.I2C;
+import io.github.robolib.nettable.ITable;
 import io.github.robolib.util.Timer;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * Honeywell HMC5883L I2C 3-axis compass class

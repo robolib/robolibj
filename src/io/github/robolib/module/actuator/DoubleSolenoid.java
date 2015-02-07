@@ -18,10 +18,9 @@ package io.github.robolib.module.actuator;
 import java.nio.ByteBuffer;
 
 import io.github.robolib.identifier.LiveWindowSendable;
+import io.github.robolib.nettable.ITable;
+import io.github.robolib.nettable.ITableListener;
 import io.github.robolib.util.log.Logger;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
-import edu.wpi.first.wpilibj.networktables.ITableListener;
 
 /**
  * The Class DoubleSolenoid.

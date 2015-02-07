@@ -23,8 +23,7 @@ import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.identifier.NumberSink;
 import io.github.robolib.jni.AnalogJNI;
 import io.github.robolib.jni.HALUtil;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
+import io.github.robolib.nettable.ITable;
 
 /**
  * Analog output class.

@@ -24,9 +24,8 @@ import io.github.robolib.RoboLibBot;
 import io.github.robolib.identifier.Sendable;
 import io.github.robolib.jni.CompressorJNI;
 import io.github.robolib.jni.HALUtil;
+import io.github.robolib.nettable.ITable;
 import io.github.robolib.util.StringUtils;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * A better class for accessing the Pneumatics Control Module.

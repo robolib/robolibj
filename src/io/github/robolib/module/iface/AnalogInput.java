@@ -27,9 +27,8 @@ import io.github.robolib.jni.AnalogJNI;
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
+import io.github.robolib.nettable.ITable;
 import io.github.robolib.util.Timer;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * 

@@ -23,9 +23,8 @@ import java.util.List;
 import io.github.robolib.identifier.Sendable;
 import io.github.robolib.jni.PDPJNI;
 import io.github.robolib.lang.ResourceAllocationException;
+import io.github.robolib.nettable.ITable;
 import io.github.robolib.util.StringUtils;
-
-import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * A class for accessing the Power Distribution Panel.
