@@ -29,7 +29,7 @@ import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.Timer;
 
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * 

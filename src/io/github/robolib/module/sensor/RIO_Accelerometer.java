@@ -19,7 +19,7 @@ import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.jni.AccelerometerJNI;
 import io.github.robolib.jni.UsageReporting;
 
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * The Class RIO_Accelerometer.

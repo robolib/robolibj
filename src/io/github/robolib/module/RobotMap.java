@@ -17,10 +17,12 @@ package io.github.robolib.module;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.robolib.module.actuator.SolenoidBuilder;
 import io.github.robolib.module.controller.SpeedControllerBuilder;
 import io.github.robolib.util.log.Logger;
 
@@ -84,5 +86,11 @@ public class RobotMap {
         JSONObject data = m_jMap.getJSONObject(key);
         ModuleBuilder<?> builder = m_builderMap.get(data.getString("type").toLowerCase());
         return builder.createModule(key, data.getJSONArray("data"));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> T get(String key, Type a){
+        
+        return (T) get(key);
     }
 }

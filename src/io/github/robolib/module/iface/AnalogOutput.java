@@ -24,7 +24,7 @@ import io.github.robolib.identifier.NumberSink;
 import io.github.robolib.jni.AnalogJNI;
 import io.github.robolib.jni.HALUtil;
 
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * Analog output class.

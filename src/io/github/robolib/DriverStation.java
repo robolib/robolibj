@@ -20,7 +20,6 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.control.Joystick;
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.NetworkCommunications;
 import io.github.robolib.robot.GameMode;
@@ -81,16 +80,16 @@ public final class DriverStation {
             m_dataSem.notifyAll();
         }
         while (m_thread_keepAlive){
-            HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
+//            HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
             synchronized(this){
                 
-                for(byte stick = 0; stick < Joystick.kNumJoysticks; stick++){
-                    short axes[] = NetworkCommunications.HALGetJoystickAxes(stick);
-                    short povs[] = NetworkCommunications.HALGetJoystickPOVs(stick);
-                    int btns = NetworkCommunications.HALGetJoystickButtons(stick, countBuffer);
-                    Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());
-                    countBuffer.clear();
-                }
+//                for(byte stick = 0; stick < Joystick.kNumJoysticks; stick++){
+//                    short axes[] = NetworkCommunications.HALGetJoystickAxes(stick);
+//                    short povs[] = NetworkCommunications.HALGetJoystickPOVs(stick);
+//                    int btns = NetworkCommunications.HALGetJoystickButtons(stick, countBuffer);
+//                    Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());
+//                    countBuffer.clear();
+//                }
                 
                 m_newControlData = true;
             }

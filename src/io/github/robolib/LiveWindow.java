@@ -23,8 +23,8 @@ import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
+import edu.wpi.first.wpilibj.networktables.ITable;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * 

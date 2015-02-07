@@ -23,8 +23,8 @@ import io.github.robolib.identifier.PIDSink;
 import io.github.robolib.identifier.PIDSource;
 import io.github.robolib.jni.UsageReporting;
 
-import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.tables.ITableListener;
+import edu.wpi.first.wpilibj.networktables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITableListener;
 
 /**
  * 
