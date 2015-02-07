@@ -21,7 +21,7 @@ import java.nio.ByteOrder;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.module.iface.SPI;
 
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * 

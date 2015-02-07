@@ -24,14 +24,7 @@ package org.json;
  SOFTWARE.
  */
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * A JSONArray is an ordered sequence of values. Its external text form is a
@@ -143,42 +136,7 @@ public class JSONArray {
     public JSONArray(String source) throws JSONException {
         this(new JSONTokener(source));
     }
-
-    /**
-     * Construct a JSONArray from a Collection.
-     *
-     * @param collection
-     *            A Collection.
-     */
-    public JSONArray(Collection<Object> collection) {
-        this.myArrayList = new ArrayList<Object>();
-        if (collection != null) {
-            Iterator<Object> iter = collection.iterator();
-            while (iter.hasNext()) {
-                this.myArrayList.add(JSONObject.wrap(iter.next()));
-            }
-        }
-    }
-
-    /**
-     * Construct a JSONArray from an array
-     *
-     * @throws JSONException
-     *             If not an array.
-     */
-    public JSONArray(Object array) throws JSONException {
-        this();
-        if (array.getClass().isArray()) {
-            int length = Array.getLength(array);
-            for (int i = 0; i < length; i += 1) {
-                this.put(JSONObject.wrap(Array.get(array, i)));
-            }
-        } else {
-            throw new JSONException(
-                    "JSONArray initial value should be a string or collection or array.");
-        }
-    }
-
+    
     /**
      * Get the object value associated with an index.
      *
@@ -342,30 +300,6 @@ public class JSONArray {
      */
     public boolean isNull(int index) {
         return JSONObject.NULL.equals(this.opt(index));
-    }
-
-    /**
-     * Make a string from the contents of this JSONArray. The
-     * <code>separator</code> string is inserted between each element. Warning:
-     * This method assumes that the data structure is acyclical.
-     *
-     * @param separator
-     *            A string that will be inserted between the elements.
-     * @return a string.
-     * @throws JSONException
-     *             If the array contains an invalid number.
-     */
-    public String join(String separator) throws JSONException {
-        int len = this.length();
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < len; i += 1) {
-            if (i > 0) {
-                sb.append(separator);
-            }
-            sb.append(JSONObject.valueToString(this.myArrayList.get(i)));
-        }
-        return sb.toString();
     }
 
     /**
@@ -584,20 +518,7 @@ public class JSONArray {
         this.put(value ? Boolean.TRUE : Boolean.FALSE);
         return this;
     }
-
-    /**
-     * Put a value in the JSONArray, where the value will be a JSONArray which
-     * is produced from a Collection.
-     *
-     * @param value
-     *            A Collection value.
-     * @return this.
-     */
-    public JSONArray put(Collection<Object> value) {
-        this.put(new JSONArray(value));
-        return this;
-    }
-
+    
     /**
      * Append a double value. This increases the array's length by one.
      *
@@ -639,19 +560,6 @@ public class JSONArray {
     }
 
     /**
-     * Put a value in the JSONArray, where the value will be a JSONObject which
-     * is produced from a Map.
-     *
-     * @param value
-     *            A Map value.
-     * @return this.
-     */
-    public JSONArray put(Map<String, Object> value) {
-        this.put(new JSONObject(value));
-        return this;
-    }
-
-    /**
      * Append an object value. This increases the array's length by one.
      *
      * @param value
@@ -680,23 +588,6 @@ public class JSONArray {
      */
     public JSONArray put(int index, boolean value) throws JSONException {
         this.put(index, value ? Boolean.TRUE : Boolean.FALSE);
-        return this;
-    }
-
-    /**
-     * Put a value in the JSONArray, where the value will be a JSONArray which
-     * is produced from a Collection.
-     *
-     * @param index
-     *            The subscript.
-     * @param value
-     *            A Collection value.
-     * @return this.
-     * @throws JSONException
-     *             If the index is negative or if the value is not finite.
-     */
-    public JSONArray put(int index, Collection<Object> value) throws JSONException {
-        this.put(index, new JSONArray(value));
         return this;
     }
 
@@ -755,24 +646,6 @@ public class JSONArray {
     }
 
     /**
-     * Put a value in the JSONArray, where the value will be a JSONObject that
-     * is produced from a Map.
-     *
-     * @param index
-     *            The subscript.
-     * @param value
-     *            The Map value.
-     * @return this.
-     * @throws JSONException
-     *             If the index is negative or if the the value is an invalid
-     *             number.
-     */
-    public JSONArray put(int index, Map<String, Object> value) throws JSONException {
-        this.put(index, new JSONObject(value));
-        return this;
-    }
-
-    /**
      * Put or replace an object value in the JSONArray. If the index is greater
      * than the length of the JSONArray, then null elements will be added as
      * necessary to pad it out.
@@ -819,39 +692,6 @@ public class JSONArray {
     }
 
     /**
-     * Determine if two JSONArrays are similar.
-     * They must contain similar sequences.
-     *
-     * @param other The other JSONArray
-     * @return true if they are equal
-     */
-    public boolean similar(Object other) {
-        if (!(other instanceof JSONArray)) {
-            return false;
-        }
-        int len = this.length();
-        if (len != ((JSONArray)other).length()) {
-            return false;
-        }
-        for (int i = 0; i < len; i += 1) {
-            Object valueThis = this.get(i);
-            Object valueOther = ((JSONArray)other).get(i);
-            if (valueThis instanceof JSONObject) {
-                if (!((JSONObject)valueThis).similar(valueOther)) {
-                    return false;
-                }
-            } else if (valueThis instanceof JSONArray) {
-                if (!((JSONArray)valueThis).similar(valueOther)) {
-                    return false;
-                }
-            } else if (!valueThis.equals(valueOther)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * Produce a JSONObject by combining a JSONArray of names with the values of
      * this JSONArray.
      *
@@ -872,106 +712,5 @@ public class JSONArray {
             jo.put(names.getString(i), this.opt(i));
         }
         return jo;
-    }
-
-    /**
-     * Make a JSON text of this JSONArray. For compactness, no unnecessary
-     * whitespace is added. If it is not possible to produce a syntactically
-     * correct JSON text then null will be returned instead. This could occur if
-     * the array contains an invalid number.
-     * <p>
-     * Warning: This method assumes that the data structure is acyclical.
-     *
-     * @return a printable, displayable, transmittable representation of the
-     *         array.
-     */
-    public String toString() {
-        try {
-            return this.toString(0);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Make a prettyprinted JSON text of this JSONArray. Warning: This method
-     * assumes that the data structure is acyclical.
-     *
-     * @param indentFactor
-     *            The number of spaces to add to each level of indentation.
-     * @return a printable, displayable, transmittable representation of the
-     *         object, beginning with <code>[</code>&nbsp;<small>(left
-     *         bracket)</small> and ending with <code>]</code>
-     *         &nbsp;<small>(right bracket)</small>.
-     * @throws JSONException
-     */
-    public String toString(int indentFactor) throws JSONException {
-        StringWriter sw = new StringWriter();
-        synchronized (sw.getBuffer()) {
-            return this.write(sw, indentFactor, 0).toString();
-        }
-    }
-
-    /**
-     * Write the contents of the JSONArray as JSON text to a writer. For
-     * compactness, no whitespace is added.
-     * <p>
-     * Warning: This method assumes that the data structure is acyclical.
-     *
-     * @return The writer.
-     * @throws JSONException
-     */
-    public Writer write(Writer writer) throws JSONException {
-        return this.write(writer, 0, 0);
-    }
-
-    /**
-     * Write the contents of the JSONArray as JSON text to a writer. For
-     * compactness, no whitespace is added.
-     * <p>
-     * Warning: This method assumes that the data structure is acyclical.
-     *
-     * @param indentFactor
-     *            The number of spaces to add to each level of indentation.
-     * @param indent
-     *            The indention of the top level.
-     * @return The writer.
-     * @throws JSONException
-     */
-    Writer write(Writer writer, int indentFactor, int indent)
-            throws JSONException {
-        try {
-            boolean commanate = false;
-            int length = this.length();
-            writer.write('[');
-
-            if (length == 1) {
-                JSONObject.writeValue(writer, this.myArrayList.get(0),
-                        indentFactor, indent);
-            } else if (length != 0) {
-                final int newindent = indent + indentFactor;
-
-                for (int i = 0; i < length; i += 1) {
-                    if (commanate) {
-                        writer.write(',');
-                    }
-                    if (indentFactor > 0) {
-                        writer.write('\n');
-                    }
-                    JSONObject.indent(writer, newindent);
-                    JSONObject.writeValue(writer, this.myArrayList.get(i),
-                            indentFactor, newindent);
-                    commanate = true;
-                }
-                if (indentFactor > 0) {
-                    writer.write('\n');
-                }
-                JSONObject.indent(writer, indent);
-            }
-            writer.write(']');
-            return writer;
-        } catch (IOException e) {
-            throw new JSONException(e);
-        }
     }
 }

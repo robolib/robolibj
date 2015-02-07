@@ -35,8 +35,8 @@
   <target name="compile" description="Compile the source code.">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${class.dir}"/>
-    <echo>[${project.name}-compile] ${src.dir}, ${classpath} -> ${class.dir}</echo>
-    <javac srcdir="${src.dir}"
+    <echo>[${project.name}-compile] ${src.path}, ${classpath} -> ${class.dir}</echo>
+    <javac srcdir="${src.path}"
       destdir="${class.dir}"
       includeAntRuntime="no"
       includeJavaRuntime="no"
@@ -70,7 +70,7 @@
   <target name="javadoc" description="Generate the Javadocs">
     <mkdir dir="${dist.dir.name}"/>
     <mkdir dir="${dist.javadoc.dir}"/>
-    <echo>[${project.name}-javadoc] ${src.dir} -> ${dist.javadoc.dir}</echo>
+    <echo>[${project.name}-javadoc] ${src.path} -> ${dist.javadoc.dir}</echo>
     <javadoc additionalparam="-Xdoclint:none"
       author="true"
       charset="UTF-8"
@@ -82,7 +82,7 @@
       nonavbar="false"
       notree="false"
       private="true"
-      source="${src.dir}"
+      source="${src.path}"
       splitindex="true"
       useexternalfile="false"
       version="true"

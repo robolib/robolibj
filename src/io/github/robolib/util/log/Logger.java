@@ -212,6 +212,7 @@ public final class Logger extends ILogger {
      */
     private void sendMsg(LogLevel l, String s){
         String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + RoboLibBot.getGameMode().getName() + "> " + m_label + ": " + s;
+        DriverStation.reportError(sout + "\n");
         TERM_OUT.sendMsg(sout);
         m_outs.forEach(lo -> lo.sendMsg(sout));
     }

@@ -25,7 +25,7 @@ import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.PowerJNI;
 import io.github.robolib.util.StringUtils;
 
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * The Class RoboRIO.

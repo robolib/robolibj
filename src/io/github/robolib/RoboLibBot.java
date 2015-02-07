@@ -39,8 +39,8 @@ import io.github.robolib.util.TableSender;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
+import edu.wpi.first.wpilibj.networktables.ITable;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * A better version of the WPILib IterativeRobot class.
@@ -271,19 +271,27 @@ public class RoboLibBot {
         ILogger log = Logger.get(RoboLibBot.class, "Framework");
         
         m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
-        
-        NetworkTable.setServerMode();
-        NetworkTable.getTable("");
-        NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
 
         log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
+        
+        log.info("Initializing Network Tables");
+        
+        try {
+            NetworkTable.initialize();
+        } catch (Throwable t) {
+            log.fatal("Failed initialize Network Tables", t);
+        }
 
         m_table = NetworkTable.getTable("Robot");
 
+        NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
+
         try {
-            TableSender.addFramework(PDP.getInstance(), "Power/PDP");
+            PDP.getInstance();
+            Compressor.getInstance();
+//            TableSender.addFramework(PDP.getInstance(), "Power/PDP");
             TableSender.addFramework(RoboRIO.getInstance(), "Power/RIO");
-            TableSender.addFramework(Compressor.getInstance(), "Compressor");
+//            TableSender.addFramework(Compressor.getInstance(), "Compressor");
             Scheduler.getInstance();
         }catch(Throwable t){
             log.fatal("Failure creating framework", t);

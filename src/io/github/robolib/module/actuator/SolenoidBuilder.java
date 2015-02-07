@@ -13,18 +13,17 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module;
+package io.github.robolib.module.actuator;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import io.github.robolib.module.actuator.DoubleSolenoid;
-import io.github.robolib.module.actuator.Solenoid;
-import io.github.robolib.module.actuator.SolenoidBase;
+import io.github.robolib.module.ModuleBuilder;
+import io.github.robolib.module.RobotMap;
 import io.github.robolib.module.actuator.SolenoidBase.SolenoidChannel;
 import io.github.robolib.util.log.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * 
@@ -49,8 +48,8 @@ public class SolenoidBuilder implements ModuleBuilder<SolenoidBase> {
      */
     @Override
     public SolenoidBase createModule(String key, JSONArray arrayData) {
-        String type = arrayData.getString(0);
         try {
+            String type = arrayData.getString(0);
             switch(type){
             case "single":
             case "solenoid":

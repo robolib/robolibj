@@ -24,9 +24,9 @@ import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.networktables2.type.NumberArray;
-import edu.wpi.first.wpilibj.networktables2.type.StringArray;
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITable;
+import edu.wpi.first.wpilibj.networktables.type.NumberArray;
+import edu.wpi.first.wpilibj.networktables.type.StringArray;
 
 /**
  * The Class Scheduler.

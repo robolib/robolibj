@@ -16,8 +16,8 @@ import io.github.robolib.module.PDP.PowerChannel;
 import io.github.robolib.util.Timer;
 import io.github.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.tables.ITableListener;
+import edu.wpi.first.wpilibj.networktables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITableListener;
 
 /**
  * Texas Instruments Jaguar Speed Controller as a CAN device. 

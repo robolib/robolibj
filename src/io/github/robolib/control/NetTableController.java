@@ -17,7 +17,7 @@ package io.github.robolib.control;
 
 import io.github.robolib.RoboLibBot;
 
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * The Class NetTableController.

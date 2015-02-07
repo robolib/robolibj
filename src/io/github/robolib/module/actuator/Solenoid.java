@@ -22,8 +22,8 @@ import io.github.robolib.identifier.BooleanSource;
 import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.util.log.Logger;
 
-import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.tables.ITableListener;
+import edu.wpi.first.wpilibj.networktables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITableListener;
 
 /**
  * The Class Solenoid.

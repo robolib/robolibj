@@ -21,7 +21,7 @@ import java.nio.IntBuffer;
 
 import io.github.robolib.lang.ChannelIndexException;
 
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.networktables.ITable;
 
 /**
  * Common functions for use in the robot code.
