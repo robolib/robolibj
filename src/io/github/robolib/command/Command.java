@@ -20,14 +20,16 @@ import static io.github.robolib.module.RoboRIO.getFPGATimestamp;
 import java.util.Vector;
 
 import io.github.robolib.DriverStation;
+import io.github.robolib.identifier.NamedSendable;
+import io.github.robolib.nettable.ITable;
+import io.github.robolib.nettable.ITableListener;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Command.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class Command {
+public abstract class Command implements NamedSendable {
     
     /** The m_name. */
     private String m_name;
@@ -64,6 +66,9 @@ public abstract class Command {
     
     /** The m_parent. */
     private CommandGroup m_parent;
+
+    private ITable m_table;
+    
     
     /**
      * Instantiates a new command.
@@ -110,6 +115,7 @@ public abstract class Command {
      *
      * @return the name
      */
+    @Override
     public String getName(){
         return m_name;
     }
@@ -162,9 +168,9 @@ public abstract class Command {
         m_initialized = false;
         m_canceled = false;
         m_running = false;
-//        if(table != null){
-//            table.putBoolean("running", false);
-//        }
+        if(m_table != null){
+            m_table.putBoolean("running", false);
+        }
     }
     
     /**
@@ -334,7 +340,7 @@ public abstract class Command {
     synchronized void startRunning(){
         m_running = true;
         m_startTime = -1;
-//        if(table != null) table.putBoolean("running", true);
+        if(m_table != null) m_table.putBoolean("running", true);
     }
     
     /**
@@ -450,6 +456,40 @@ public abstract class Command {
     @Override
     public String toString(){
         return m_name;
+    }
+    
+    public String getSmartDashboardType() {
+        return "Command";
+    }
+    
+    private ITableListener listener = new ITableListener() {
+        public void valueChanged(ITable table, String key, Object value, boolean isNew) {
+            if (((Boolean) value).booleanValue()) {
+                start();
+            } else {
+                cancel();
+            }
+        }
+    };
+    
+    public void initTable(ITable table) {
+        if(m_table!=null)
+            m_table.removeTableListener(listener);
+        m_table = table;
+        if(table!=null) {
+            table.putString("name", getName());
+            table.putBoolean("running", isRunning());
+            table.putBoolean("isParented", m_parent != null);
+            table.addTableListener("running", listener, false);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ITable getTable() {
+        return m_table;
     }
     
     

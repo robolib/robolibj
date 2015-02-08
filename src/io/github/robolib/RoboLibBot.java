@@ -86,20 +86,20 @@ public class RoboLibBot {
     private static RobotMode m_currentRobotMode;
     
     /** The m_modes. */
-    private static EnumMap<GameMode, RobotMode> m_modes;
+    private static final EnumMap<GameMode, RobotMode> m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
 
     //private final RobotMode m_modes[];
     
     private static volatile boolean m_thread_keepAlive = true;
 
     /** The m_name. */
-    protected String m_name;
+    private static String m_name;
     
     /** The m_version. */
-    protected String m_version;
+    private static String m_version;
     
     /** The m_log. */
-    protected ILogger m_log;
+    protected static ILogger m_log;
     
     /** The m_run. */
 //    private static boolean m_run = true;
@@ -268,8 +268,7 @@ public class RoboLibBot {
     public static void main(String args[]) {
         NetworkCommunications.NetworkCommunicationReserve();
         ILogger log = Logger.get(RoboLibBot.class, "Framework");
-        
-        m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
+        Thread.currentThread().setName("Framework Thread");
 
         log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         
@@ -286,12 +285,14 @@ public class RoboLibBot {
         NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
 
         try {
-            PDP.getInstance();
-            Compressor.getInstance();
+            DriverStation.initialize();
+            Scheduler.initialize();
+            PDP.initialize();
+            Compressor.initialize();
+            RoboRIO.initialize();
             TableSender.addFramework(PDP.getInstance(), "Power/PDP");
             TableSender.addFramework(RoboRIO.getInstance(), "Power/RIO");
             TableSender.addFramework(Compressor.getInstance(), "Compressor");
-            Scheduler.getInstance();
         }catch(Throwable t){
             log.fatal("Failure creating framework", t);
         }
@@ -320,15 +321,15 @@ public class RoboLibBot {
         }
         log.debug("Debug statements Enabled");
         
-        log.info("Starting '" + robot.m_name + "'");
+        log.info("Starting '" + m_name + "'");
 
         UsageReporting.report(UsageReporting.ResourceType_Language, UsageReporting.Language_Java);
         
             
         log.info("Initializing Robot Network Table and Data");
         try{
-            m_table.putString("name", robot.m_name);
-            m_table.putString("version", robot.m_version);
+            m_table.putString("name", m_name);
+            m_table.putString("version", m_version);
         }catch(Throwable t){
             log.error("Could not set Robot Name and Version in the Network Table. Did Something Screw Up?", t);
         }
@@ -386,7 +387,7 @@ public class RoboLibBot {
         DriverStation ds = DriverStation.getInstance();
         ds.startThread();
 
-        log.info(robot.m_name + ", Version " + robot.m_version + " Running");
+        log.info(m_name + ", Version " + m_version + " Running");
         
         log.info("Starting Main Loop");
 

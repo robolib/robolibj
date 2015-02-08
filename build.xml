@@ -162,7 +162,7 @@
   </target>
 
   <target name="copytowpi" depends="jar">
-    <copy todir="${wpilib.lib}">
+    <copy todir="${wpilib.lib.dir}">
       <fileset dir="${dist.dir}" />
     </copy>
   </target>

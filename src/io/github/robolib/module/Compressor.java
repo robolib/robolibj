@@ -20,8 +20,7 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import io.github.robolib.RoboLibBot;
-import io.github.robolib.identifier.Sendable;
+import io.github.robolib.identifier.UpdatingSendable;
 import io.github.robolib.jni.CompressorJNI;
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.nettable.ITable;
@@ -32,7 +31,7 @@ import io.github.robolib.util.StringUtils;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class Compressor implements Sendable {
+public final class Compressor implements UpdatingSendable {
     
     /** The m_table. */
     private ITable m_table;
@@ -43,13 +42,17 @@ public final class Compressor implements Sendable {
     /** The Constant m_instance. */
     private static Compressor m_instance;
     
+    public static final void initialize(){
+        m_instance = new Compressor();
+    }
+    
     /**
      * Gets the single instance of PCM.
      *
      * @return single instance of PCM
      */
     public static Compressor getInstance(){
-        return m_instance == null ? m_instance = new Compressor() : m_instance;
+        return m_instance;
     }
     
     /**
@@ -57,7 +60,6 @@ public final class Compressor implements Sendable {
      */
     private Compressor(){
         m_compressor = CompressorJNI.initializeCompressor((byte) 0);
-        initTable(RoboLibBot.getRobotTable().getSubTable("Compressor"));
     }
     
     public void free(){

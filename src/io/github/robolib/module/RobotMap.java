@@ -37,8 +37,6 @@ import org.json.JSONObject;
  */
 public class RobotMap {
 
-    private static RobotMap m_instance;
-    
     private static final Map<String, ModuleBuilder<?>> m_builderMap = new HashMap<String, ModuleBuilder<?>>();
     
     private static JSONObject m_jMap;
@@ -50,26 +48,17 @@ public class RobotMap {
     public static final void setMapFile(String file){
         m_mapFile = file;
         m_enabled = true;
-        getInstance();
+        File f = new File(m_mapFile);
+        try {
+            m_jMap = new JSONObject(new String(Files.readAllBytes(f.toPath()), "UTF-8"));
+        } catch (JSONException | IOException e) {
+            Logger.get(RobotMap.class).fatal("Failed to load config file", e);
+        }
     }
     
     static{
         registerModuleBuilder(new SpeedControllerBuilder());
         registerModuleBuilder(new SolenoidBuilder());
-    }
-    
-    public static final RobotMap getInstance(){
-        return m_instance == null ? m_instance = new RobotMap() : m_instance;
-    }
-    
-    private RobotMap(){
-        if(!m_enabled) return;
-        File file = new File(m_mapFile);
-        try {
-            m_jMap = new JSONObject(new String(Files.readAllBytes(file.toPath()), "UTF-8"));
-        } catch (JSONException | IOException e) {
-            Logger.get(this).fatal("Failed to load config file", e);
-        }
     }
     
     public static final void registerModuleBuilder(ModuleBuilder<?> builder){

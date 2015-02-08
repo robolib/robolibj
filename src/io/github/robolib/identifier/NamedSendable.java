@@ -15,15 +15,13 @@
 
 package io.github.robolib.identifier;
 
-
 /**
  * 
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface LiveWindowSendable extends UpdatingSendable {
+public interface NamedSendable extends Sendable {
     
-    void startLiveWindowMode();
-    
-    void stopLiveWindowMode();
+    public String getName();
 
 }

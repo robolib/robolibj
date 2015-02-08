@@ -20,7 +20,7 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.robolib.identifier.Sendable;
+import io.github.robolib.identifier.UpdatingSendable;
 import io.github.robolib.jni.PDPJNI;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.nettable.ITable;
@@ -31,7 +31,7 @@ import io.github.robolib.util.StringUtils;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PDP implements Sendable {
+public class PDP implements UpdatingSendable {
     
     /**
      * The Enum PowerChannel.
@@ -101,13 +101,17 @@ public class PDP implements Sendable {
     /** The m_table. */
     private ITable m_table;
     
+    public static final void initialize(){
+        m_instance = new PDP();
+    }
+    
     /**
      * Gets the single instance of PDP.
      *
      * @return single instance of PDP
      */
     public static PDP getInstance(){
-        return m_instance == null ? m_instance = new PDP() : m_instance;
+        return m_instance;
     }
     
     /**

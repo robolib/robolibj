@@ -20,7 +20,7 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.IntBuffer;
 
 import io.github.robolib.control.ButtonTrigger;
-import io.github.robolib.identifier.Sendable;
+import io.github.robolib.identifier.UpdatingSendable;
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.PowerJNI;
 import io.github.robolib.nettable.ITable;
@@ -31,7 +31,7 @@ import io.github.robolib.util.StringUtils;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class RoboRIO implements Sendable {
+public class RoboRIO implements UpdatingSendable {
     
     private ITable m_table;
     
@@ -39,8 +39,12 @@ public class RoboRIO implements Sendable {
     
     private static ButtonTrigger m_userButton;
     
+    public static final void initialize(){
+        m_instance = new RoboRIO();
+    }
+    
     public static final RoboRIO getInstance(){
-        return m_instance == null ? m_instance = new RoboRIO() : m_instance;
+        return m_instance;
     }
     
     /**

@@ -19,7 +19,7 @@ import java.util.Vector;
 
 import io.github.robolib.RoboLibBot;
 import io.github.robolib.control.Trigger.ButtonScheduler;
-import io.github.robolib.identifier.Sendable;
+import io.github.robolib.identifier.NamedSendable;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.nettable.ITable;
 import io.github.robolib.nettable.entry.NumberArray;
@@ -32,40 +32,44 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Scheduler implements Sendable {
+public class Scheduler implements NamedSendable {
     
     /** The m_instance. */
     private static Scheduler m_instance;
     
     /** The m_log. */
-    private final ILogger m_log;
+    private static final ILogger m_log = Logger.get(Scheduler.class);
     
     /** The m_table. */
-    private ITable m_table;
+    private static ITable m_table;
     
     /** The m_adding. */
-    private boolean m_adding = false;
+    private static boolean m_adding = false;
     
     /** The m_disabled. */
-    private boolean m_disabled = false;
+    private static boolean m_disabled = false;
     
     /** The m_running commands changed. */
-    private boolean m_runningCommandsChanged;
+    private static boolean m_runningCommandsChanged;
     
     /** The m_disabled counter. */
-    private byte m_disabledCounter = 0;
+    private static byte m_disabledCounter = 0;
     
     /** The m_subsystems. */
-    private Vector<Subsystem> m_subsystems = new Vector<Subsystem>();
+    private static final Vector<Subsystem> m_subsystems = new Vector<Subsystem>();
     
     /** The m_buttons. */
-    private Vector<ButtonScheduler> m_buttons = new Vector<ButtonScheduler>();
+    private static final Vector<ButtonScheduler> m_buttons = new Vector<ButtonScheduler>();
     
     /** The m_additions. */
-    private Vector<Command> m_additions = new Vector<Command>();
+    private static final Vector<Command> m_additions = new Vector<Command>();
     
     /** The m_command list. */
-    private CommandList m_commandList = new CommandList();
+    private static final CommandList m_commandList = new CommandList();
+    
+    public synchronized static final void initialize(){
+        m_instance = new Scheduler();
+    }
     
     /**
      * Gets the single instance of Scheduler.
@@ -73,7 +77,7 @@ public class Scheduler implements Sendable {
      * @return single instance of Scheduler
      */
     public synchronized static Scheduler getInstance(){
-        return m_instance == null ? m_instance = new Scheduler() : m_instance;
+        return m_instance;
     }
     
     /**
@@ -81,7 +85,6 @@ public class Scheduler implements Sendable {
      */
     private Scheduler(){
         UsageReporting.report(UsageReporting.ResourceType_Compressor, UsageReporting.Command_Scheduler);
-        m_log = Logger.get(Scheduler.class);
         initTable(RoboLibBot.getRobotTable().getSubTable("Scheduler"));
     }
     
@@ -251,6 +254,14 @@ public class Scheduler implements Sendable {
      * {@inheritDoc}
      */
     @Override
+    public String getName(){
+        return "Scheduler";
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getSmartDashboardType() {
         return "Scheduler";
     }
@@ -278,10 +289,6 @@ public class Scheduler implements Sendable {
         return m_table;
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void updateTable(){
         if(m_table != null){
             m_table.retrieveValue("Cancel", toCancel);

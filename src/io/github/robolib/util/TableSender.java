@@ -18,7 +18,7 @@ package io.github.robolib.util;
 import java.util.Vector;
 
 import io.github.robolib.RoboLibBot;
-import io.github.robolib.identifier.Sendable;
+import io.github.robolib.identifier.UpdatingSendable;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class TableSender {
     private static TableSender m_instance;
     
 //    private static Vector<Sendable> m_userSends = new Vector<Sendable>();
-    private static Vector<Sendable> m_framework = new Vector<Sendable>();
+    private static Vector<UpdatingSendable> m_framework = new Vector<UpdatingSendable>();
     
     private static boolean m_enabled = true;
     
@@ -40,7 +40,7 @@ public class TableSender {
     private TableSender(){}
     
     public void runFramework(){
-        if(m_enabled) m_framework.forEach(Sendable::updateTable);
+        if(m_enabled) m_framework.forEach(UpdatingSendable::updateTable);
     }
     
     public void runUser(){
@@ -55,7 +55,7 @@ public class TableSender {
 //        
 //    }
     
-    public static void addFramework(Sendable sendable, String tableName){
+    public static void addFramework(UpdatingSendable sendable, String tableName){
         sendable.initTable(CommonFunctions.getTable(RoboLibBot.getRobotTable(), tableName));
         m_framework.addElement(sendable);
         
