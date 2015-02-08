@@ -13,17 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.identifier;
-
+package io.github.robolib.module.sensor;
 
 /**
  * 
+ *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface LiveWindowSendable extends UpdatingSendable {
-    
-    void startLiveWindowMode();
-    
-    void stopLiveWindowMode();
+public class EncoderBuilder {
 
 }

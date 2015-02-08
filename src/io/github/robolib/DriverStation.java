@@ -46,8 +46,12 @@ public final class DriverStation {
 
     private static DriverStation m_instance = null;
     
+    public static final void initialize(){
+        m_instance = new DriverStation();
+    }
+    
     public static DriverStation getInstance(){
-        return m_instance == null ? m_instance = new DriverStation() : m_instance;
+        return m_instance;
     }
     
     /**
