@@ -1,0 +1,30 @@
+{
+  "motor_drive_front_left": {
+    "type": "speed_controller",
+    "data": ["talon", 0, "Front Left Drive Motor", 0]
+  },
+  "motor_drive_front_right": {
+    "type": "speed_controller",
+    "data": ["talon", 1, "Front Right Drive Motor", 1]
+  },
+  "motor_drive_back_left": {
+    "type": "speed_controller",
+    "data": ["talon", 2, "Rear Left Drive Motor", 2]
+  },
+  "motor_drive_back_right": {
+    "type": "speed_controller",
+    "data": ["talon", 3, "Rear Right Drive Motor", 3]
+  },
+  "motor_drawer": {
+    "type": "speed_controller",
+    "data": ["victor", 4, "Drawer Motor", 4]
+  },
+  "solenoid_tailgate": {
+    "type": "solenoid",
+    "data": ["single", 0]
+  },
+  "solenoid_drawerRaiser": {
+    "type": "solenoid",
+    "data": ["single", 1]
+  }
+}
