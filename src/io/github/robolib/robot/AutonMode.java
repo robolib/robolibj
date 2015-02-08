@@ -16,6 +16,7 @@
 package io.github.robolib.robot;
 
 import io.github.robolib.RobotMode;
+import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
 
 
@@ -59,5 +60,6 @@ public abstract class AutonMode extends RobotMode {
     protected final void modeRun(){
         NetworkCommunications.ObserveUserProgramAutonomous();
         run();
+        Scheduler.run();
     }
 }

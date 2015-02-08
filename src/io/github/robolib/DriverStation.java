@@ -20,6 +20,7 @@ import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import io.github.robolib.control.Joystick;
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.NetworkCommunications;
 import io.github.robolib.robot.GameMode;
@@ -33,8 +34,7 @@ import io.github.robolib.util.log.Logger;
  *
  */
 public final class DriverStation {
-    
-    
+
     private Thread m_thread;
     private final Object m_dataSem;
     private volatile boolean m_thread_keepAlive;
@@ -62,7 +62,7 @@ public final class DriverStation {
         NetworkCommunications.setNewDataSem(m_packetDataAvailableSem);
         
         //WOO lookie here. Lambda functions ^_^
-        m_thread = new Thread(() -> commTask(), "DriverStation");
+        m_thread = new Thread(() -> commTask(), "DriverStation JSThread");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
         m_thread.setDaemon(true);
         
@@ -76,20 +76,52 @@ public final class DriverStation {
         byte safetyCounter = 0;
         byte tableCounter = 0;
         ByteBuffer countBuffer = ByteBuffer.allocateDirect(1);
+        short[] axes;
+        short[] povs;
+        int btns;
         synchronized(m_dataSem){
             m_dataSem.notifyAll();
         }
+        
         while (m_thread_keepAlive){
-//            HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
+            HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
             synchronized(this){
                 
-//                for(byte stick = 0; stick < Joystick.kNumJoysticks; stick++){
-//                    short axes[] = NetworkCommunications.HALGetJoystickAxes(stick);
-//                    short povs[] = NetworkCommunications.HALGetJoystickPOVs(stick);
-//                    int btns = NetworkCommunications.HALGetJoystickButtons(stick, countBuffer);
-//                    Joystick.setJoystickData(stick, axes, povs, btns, countBuffer.get());
-//                    countBuffer.clear();
-//                }
+                axes = NetworkCommunications.HALGetJoystickAxes((byte) 0x00);
+                povs = NetworkCommunications.HALGetJoystickPOVs((byte) 0x00);
+                btns = NetworkCommunications.HALGetJoystickButtons((byte) 0x00, countBuffer);
+                Joystick.setJoystickData(0x00, axes, povs, btns, countBuffer.get());
+                countBuffer.clear();
+                
+                axes = NetworkCommunications.HALGetJoystickAxes((byte) 0x01);
+                povs = NetworkCommunications.HALGetJoystickPOVs((byte) 0x01);
+                btns = NetworkCommunications.HALGetJoystickButtons((byte) 0x01, countBuffer);
+                Joystick.setJoystickData(0x01, axes, povs, btns, countBuffer.get());
+                countBuffer.clear();
+                
+                axes = NetworkCommunications.HALGetJoystickAxes((byte) 0x02);
+                povs = NetworkCommunications.HALGetJoystickPOVs((byte) 0x02);
+                btns = NetworkCommunications.HALGetJoystickButtons((byte) 0x02, countBuffer);
+                Joystick.setJoystickData(0x02, axes, povs, btns, countBuffer.get());
+                countBuffer.clear();
+                
+                axes = NetworkCommunications.HALGetJoystickAxes((byte) 0x03);
+                povs = NetworkCommunications.HALGetJoystickPOVs((byte) 0x03);
+                btns = NetworkCommunications.HALGetJoystickButtons((byte) 0x03, countBuffer);
+                Joystick.setJoystickData(0x03, axes, povs, btns, countBuffer.get());
+                countBuffer.clear();
+                
+                axes = NetworkCommunications.HALGetJoystickAxes((byte) 0x04);
+                povs = NetworkCommunications.HALGetJoystickPOVs((byte) 0x04);
+                btns = NetworkCommunications.HALGetJoystickButtons((byte) 0x04, countBuffer);
+                Joystick.setJoystickData(0x04, axes, povs, btns, countBuffer.get());
+                countBuffer.clear();
+                
+                axes = NetworkCommunications.HALGetJoystickAxes((byte) 0x05);
+                povs = NetworkCommunications.HALGetJoystickPOVs((byte) 0x05);
+                btns = NetworkCommunications.HALGetJoystickButtons((byte) 0x05, countBuffer);
+                Joystick.setJoystickData(0x05, axes, povs, btns, countBuffer.get());
+                countBuffer.clear();
                 
                 m_newControlData = true;
             }

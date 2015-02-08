@@ -154,8 +154,8 @@ public class NetworkCommunications extends JNIWrapper {
 	public static native int HALGetRobotStatus();
 	public static native int HALGetAllianceStation();
 
-	public static int kMaxJoystickAxes = 12;
-	public static int kMaxJoystickPOVs = 12;
+	public static int MAX_JS_AXES = 12;
+	public static int MAX_JS_POVS = 12;
 	public static native short[] HALGetJoystickAxes(byte joystickNum);
 	public static native short[] HALGetJoystickPOVs(byte joystickNum);
 	public static native int HALGetJoystickButtons(byte joystickNum, ByteBuffer count);

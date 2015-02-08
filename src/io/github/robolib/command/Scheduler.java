@@ -145,6 +145,10 @@ public class Scheduler implements Sendable {
         
     }
     
+    public static final void run(){
+        m_instance._run();
+    }
+    
     /**
      * Runs a single iteration of the loop. This method should be called often
      * in order to have a functioning {@link Command} system. The loop has five
@@ -154,7 +158,7 @@ public class Scheduler implements Sendable {
      * <li> Send values to SmartDashboard </li> <li> Add Commands </li> <li> Add
      * Defaults </li> </ol>
      */
-    public void run(){
+    public void _run(){
         m_runningCommandsChanged = false;
         
         if(m_disabled){

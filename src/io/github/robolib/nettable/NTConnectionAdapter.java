@@ -54,7 +54,7 @@ public class NTConnectionAdapter {
             } catch(IOException e){
                 ioException(e);
             }
-        }, "Server Connection Reader Thread");
+        }, "NTConnection Reader Thread");
     }
     
     /**
