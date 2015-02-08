@@ -60,6 +60,6 @@ public abstract class AutonMode extends RobotMode {
     protected final void modeRun(){
         NetworkCommunications.ObserveUserProgramAutonomous();
         run();
-        Scheduler.run();
+        Scheduler.getInstance().run();
     }
 }

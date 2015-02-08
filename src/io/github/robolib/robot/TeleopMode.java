@@ -59,6 +59,6 @@ public abstract class TeleopMode extends RobotMode {
     protected final void modeRun(){
         NetworkCommunications.ObserveUserProgramTeleop();
         run();
-        Scheduler.run();
+        Scheduler.getInstance().run();
     }
 }

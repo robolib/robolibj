@@ -64,6 +64,6 @@ public abstract class DisabledMode extends RobotMode {
     protected final void modeRun(){
         NetworkCommunications.ObserveUserProgramDisabled();
         run();
-        Scheduler.run();
+        Scheduler.getInstance().run();
     }
 }

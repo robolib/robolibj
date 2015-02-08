@@ -15,7 +15,8 @@
 
 package io.github.robolib.command;
 
-import java.util.Vector;
+import io.github.robolib.identifier.NamedSendable;
+import io.github.robolib.nettable.ITable;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -23,7 +24,7 @@ import java.util.Vector;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class Subsystem {
+public abstract class Subsystem implements NamedSendable {
 
     
     /** The m_initialized default command. */
@@ -40,9 +41,11 @@ public abstract class Subsystem {
     
     /** The m_name. */
     private String m_name;
+
+    private ITable m_table;
     
     /** The m_all subsystems. */
-    private static Vector<Subsystem> m_allSubsystems = new Vector<Subsystem>();
+//    private static Vector<Subsystem> m_allSubsystems = new Vector<Subsystem>();
     
     /**
      * Instantiates a new subsystem.
@@ -78,20 +81,20 @@ public abstract class Subsystem {
         if(command == null){
             m_defaultCommand = null;
         }else{
-            if(!m_allSubsystems.stream().anyMatch(system -> system.equals(this)))
+            if(!command.getRequirements().contains(this)) 
                 throw new IllegalStateException("A default command must require the subsystem");
             
             m_defaultCommand = command;
         }
         
-//        if (m_table != null) {
-//            if (m_defaultCommand != null) {
-//                m_table.putBoolean("hasDefault", true);
-//                m_table.putString("default", m_defaultCommand.getName());
-//            } else {
-//                m_table.putBoolean("hasDefault", false);
-//            }
-//        }
+        if (m_table != null) {
+            if (m_defaultCommand != null) {
+                m_table.putBoolean("hasDefault", true);
+                m_table.putString("default", m_defaultCommand.getName());
+            } else {
+                m_table.putBoolean("hasDefault", false);
+            }
+        }
     }
     
     /**
@@ -123,14 +126,14 @@ public abstract class Subsystem {
     void confirmCommand(){
         if(m_currentCommandChanged){
             m_currentCommandChanged = false;
-//            if(m_table != null){
-//                if(m_currentCommand != null){
-//                    m_table.putBoolean("hasCommand", true);
-//                    m_table.putString("command", m_currentCommand.getName());
-//                }else{
-//                    m_table.putBoolean("hasCommand", false);
-//                }
-//            }
+            if(m_table != null){
+                if(m_currentCommand != null){
+                    m_table.putBoolean("hasCommand", true);
+                    m_table.putString("command", m_currentCommand.getName());
+                }else{
+                    m_table.putBoolean("hasCommand", false);
+                }
+            }
         }
     }
     
@@ -151,6 +154,34 @@ public abstract class Subsystem {
         return m_name;
     }
     
+    public String getSmartDashboardType() {
+        return "Subsystem";
+    }
+
+    public void initTable(ITable table) {
+        m_table = table;
+        if(table!=null) {
+            if (m_defaultCommand != null) {
+                m_table.putBoolean("hasDefault", true);
+                m_table.putString("default", m_defaultCommand.getName());
+            } else {
+                table.putBoolean("hasDefault", false);
+            }
+            if (m_currentCommand != null) {
+                m_table.putBoolean("hasCommand", true);
+                m_table.putString("command", m_currentCommand.getName());
+            } else {
+                m_table.putBoolean("hasCommand", false);
+            }
+        }
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public ITable getTable() {
+        return m_table;
+    }
+
     /**
      * Gets the name.
      *
