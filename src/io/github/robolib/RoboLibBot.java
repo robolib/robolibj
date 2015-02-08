@@ -71,7 +71,7 @@ public class RoboLibBot {
     public static final int MINOR_VERSION = 0;
     
     /** The Constant PATCH_VERSION. */
-    public static final int PATCH_VERSION = 2;
+    public static final int PATCH_VERSION = 3;
     
     /** The Constant NETTABLE_CURRENT_MODE. */
     private static final String NETTABLE_CURRENT_MODE = "mode";
@@ -288,9 +288,9 @@ public class RoboLibBot {
         try {
             PDP.getInstance();
             Compressor.getInstance();
-//            TableSender.addFramework(PDP.getInstance(), "Power/PDP");
+            TableSender.addFramework(PDP.getInstance(), "Power/PDP");
             TableSender.addFramework(RoboRIO.getInstance(), "Power/RIO");
-//            TableSender.addFramework(Compressor.getInstance(), "Compressor");
+            TableSender.addFramework(Compressor.getInstance(), "Compressor");
             Scheduler.getInstance();
         }catch(Throwable t){
             log.fatal("Failure creating framework", t);
@@ -375,8 +375,8 @@ public class RoboLibBot {
         }
         m_currentMode = GameMode.DISABLED;
         m_currentRobotMode = m_modes.get(m_currentMode);
-        getRobotTable().putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
-        getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, getCurrentRobotMode().getName());
+        m_table.putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
+        m_table.putString(NETTABLE_CURRENT_MODE_STRING, m_currentRobotMode.getName());
 
         PDP.resetFaults();
         Compressor.clearCompressorStickyFaults();
@@ -407,9 +407,9 @@ public class RoboLibBot {
                     
                     m_currentMode = gMode;
                     m_currentRobotMode = m_modes.get(m_currentMode);
-                    RoboLibBot.getRobotTable().putNumber(NETTABLE_CURRENT_MODE, gMode.ordinal());
-                    RoboLibBot.getRobotTable().putString(NETTABLE_CURRENT_MODE_STRING, m_currentRobotMode.getName());
-//                    System.gc();
+                    m_table.putNumber(NETTABLE_CURRENT_MODE, gMode.ordinal());
+                    m_table.putString(NETTABLE_CURRENT_MODE_STRING, m_currentRobotMode.getName());
+                    System.gc();
                     
                     try{
                         m_currentRobotMode.modeInit();
@@ -420,7 +420,6 @@ public class RoboLibBot {
                 
                 if(ds.isNewControlData()){
                     m_currentRobotMode.run();
-                    Scheduler.getInstance().run();
                 }
             }
         }catch(Throwable t){

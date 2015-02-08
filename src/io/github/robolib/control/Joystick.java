@@ -140,10 +140,10 @@ public class Joystick extends GenericHID {
     public static final int kNumJoysticks = 6;
     
     /** The m_joystick axes. */
-    private static short m_joystickAxes[][] = new short[kNumJoysticks][NetworkCommunications.kMaxJoystickAxes];
+    private static short m_joystickAxes[][] = new short[kNumJoysticks][NetworkCommunications.MAX_JS_AXES];
     
     /** The m_joystick po vs. */
-    private static short m_joystickPOVs[][] = new short[kNumJoysticks][NetworkCommunications.kMaxJoystickPOVs];
+    private static short m_joystickPOVs[][] = new short[kNumJoysticks][NetworkCommunications.MAX_JS_POVS];
     
     /** The m_joystick buttons. */
     private static int m_joystickButtons[] = new int[kNumJoysticks];

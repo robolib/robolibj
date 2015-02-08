@@ -85,7 +85,7 @@ public class NTServer implements NTRunnable, TableListenerManager {
     public void start(){
         if(m_monitorThread != null)
             stop();
-        m_monitorThread = NTThread.newBlockingPeriodicThread(this, "Server Incoming Stream Monitor Thread");
+        m_monitorThread = NTThread.newBlockingPeriodicThread(this, "NTServer Incoming Stream Monitor Thread");
     }
 
     /**

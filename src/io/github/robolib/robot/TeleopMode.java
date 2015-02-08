@@ -16,6 +16,7 @@
 package io.github.robolib.robot;
 
 import io.github.robolib.RobotMode;
+import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
 
 /**
@@ -56,7 +57,8 @@ public abstract class TeleopMode extends RobotMode {
      */
     @Override
     protected final void modeRun(){
-        NetworkCommunications.ObserveUserProgramTeleop();;
+        NetworkCommunications.ObserveUserProgramTeleop();
         run();
+        Scheduler.run();
     }
 }
