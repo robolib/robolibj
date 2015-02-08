@@ -58,7 +58,7 @@ public class PIDController implements LiveWindowSendable {
 	    }
 	}
 
-	public static final double kDefaultPeriod = 0.05;
+	public static final double DEFAULT_PERIOD = 0.05;
 	private static int m_instances = 0;
 	
 	private double m_P;
@@ -79,22 +79,33 @@ public class PIDController implements LiveWindowSendable {
 	private double m_result= 0.0;
 //	private double m_period = kDefaultPeriod;
 	PIDSource m_source;
-	PIDSink m_output;
+	PIDSink m_sink;
 	Timer m_controlLoop;
 //	private boolean m_freed = false;
 //	private boolean m_usingPercentTolerance;
 	
-	public PIDController(double P, double I, double D, double F,
-	        PIDSource source, PIDSink output, double period){
+	/**
+     * Allocate a PID object with the given constants for P, I, D, and F
+     * @param p the proportional coefficient
+     * @param i the integral coefficient
+     * @param d the derivative coefficient
+     * @param f the feed forward term
+     * @param source The PIDSource object that is used to get values
+     * @param sink The PIDOutput object that is set to the output percentage
+     * @param period the loop time for doing calculations. This particularly effects calculations of the
+     * integral and differential terms. The default is 50ms.
+     */
+	public PIDController(double p, double i, double d, double f,
+	        PIDSource source, PIDSink sink, double period){
 	    m_controlLoop = new java.util.Timer();
 	    
-	    m_P = P;
-	    m_I = I;
-	    m_D = D;
-	    m_F = F;
+	    m_P = p;
+	    m_I = i;
+	    m_D = d;
+	    m_F = f;
 	    
 	    m_source = source;
-	    m_output = output;
+	    m_sink = sink;
 //	    m_period = period;
 	    
 	    m_controlLoop.schedule(new PIDTask(this), 0L, (long) (period * 1000));
@@ -105,11 +116,54 @@ public class PIDController implements LiveWindowSendable {
 	    };
 	}
 	
+	/**
+     * Allocate a PID object with the given constants for P, I, D and period
+     * @param p the proportional coefficient
+     * @param i the integral coefficient
+     * @param d the derivative coefficient
+     * @param source the PIDSource object that is used to get values
+     * @param sink the PIDOutput object that is set to the output percentage
+     * @param period the loop time for doing calculations. This particularly effects calculations of the
+     * integral and differential terms. The default is 50ms.
+     */
+    public PIDController(double p, double i, double d,
+                         PIDSource source, PIDSink sink,
+                         double period) {
+        this(p, i, d, 0.0, source, sink, period);
+    }
+
+    /**
+     * Allocate a PID object with the given constants for P, I, D, using a 50ms period.
+     * @param p the proportional coefficient
+     * @param i the integral coefficient
+     * @param d the derivative coefficient
+     * @param source The PIDSource object that is used to get values
+     * @param sink The PIDOutput object that is set to the output percentage
+     */
+    public PIDController(double p, double i, double d,
+                         PIDSource source, PIDSink sink) {
+        this(p, i, d, source, sink, DEFAULT_PERIOD);
+    }
+
+    /**
+     * Allocate a PID object with the given constants for P, I, D, using a 50ms period.
+     * @param p the proportional coefficient
+     * @param i the integral coefficient
+     * @param d the derivative coefficient
+     * @param f the feed forward term
+     * @param source The PIDSource object that is used to get values
+     * @param sink The PIDOutput object that is set to the output percentage
+     */
+    public PIDController(double p, double i, double d, double f,
+                         PIDSource source, PIDSink sink) {
+        this(p, i, d, f, source, sink, DEFAULT_PERIOD);
+    }
+	
 	public void free(){
 	    m_controlLoop.cancel();
 	    synchronized (this){
 //	        m_freed = true;
-	        m_output = null;
+	        m_sink = null;
 	        m_source = null;
 	        m_controlLoop = null;
         }
@@ -130,7 +184,7 @@ public class PIDController implements LiveWindowSendable {
             if (m_source == null) {
                 return;
             }
-            if (m_output == null) {
+            if (m_sink == null) {
                 return;
             }
             enabled = m_enabled; // take snapshot of these values...
@@ -179,7 +233,7 @@ public class PIDController implements LiveWindowSendable {
                 } else if (m_result < m_minOutput) {
                     m_result = m_minOutput;
                 }
-                pidOutput = m_output;
+                pidOutput = m_sink;
                 result = m_result;
             }
 
@@ -389,7 +443,7 @@ public class PIDController implements LiveWindowSendable {
      * Stop running the PIDController, this sets the output to zero before stopping.
      */
     public synchronized void disable() {
-        m_output.pidWrite(0);
+        m_sink.pidWrite(0);
         m_enabled = false;
 
         if (m_table != null) {
