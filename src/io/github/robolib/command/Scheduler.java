@@ -22,6 +22,7 @@ import io.github.robolib.control.Trigger.ButtonScheduler;
 import io.github.robolib.identifier.NamedSendable;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.nettable.ITable;
+import io.github.robolib.nettable.NetworkTable;
 import io.github.robolib.nettable.entry.NumberArray;
 import io.github.robolib.nettable.entry.StringArray;
 import io.github.robolib.util.log.ILogger;
@@ -85,7 +86,7 @@ public class Scheduler implements NamedSendable {
      */
     private Scheduler(){
         UsageReporting.report(UsageReporting.ResourceType_Compressor, UsageReporting.Command_Scheduler);
-        initTable(RoboLibBot.getRobotTable().getSubTable("Scheduler"));
+        initTable(NetworkTable.getTable("Scheduler"));
     }
     
     
@@ -148,10 +149,6 @@ public class Scheduler implements NamedSendable {
         
     }
     
-    public static final void run(){
-        m_instance._run();
-    }
-    
     /**
      * Runs a single iteration of the loop. This method should be called often
      * in order to have a functioning {@link Command} system. The loop has five
@@ -161,7 +158,7 @@ public class Scheduler implements NamedSendable {
      * <li> Send values to SmartDashboard </li> <li> Add Commands </li> <li> Add
      * Defaults </li> </ol>
      */
-    public void _run(){
+    public void run(){
         m_runningCommandsChanged = false;
         
         if(m_disabled){

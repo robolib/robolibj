@@ -420,7 +420,7 @@ public class RoboLibBot {
                 }
                 
                 if(ds.isNewControlData()){
-                    m_currentRobotMode.run();
+                    m_currentRobotMode.modeRun();
                 }
             }
         }catch(Throwable t){

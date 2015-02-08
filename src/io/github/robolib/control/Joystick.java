@@ -283,12 +283,12 @@ public class Joystick extends GenericHID {
 
         m_port = port;
         m_portByte = (byte)port.ordinal();
-        m_axes = new JoystickAxis[numAxes];
+        m_axes = new HIDAxis[numAxes];
         for(int i = 0; i < numAxes; i++){
             m_axes[i] = new JoystickAxis(i);
         }
         
-        m_btns = new JoystickButton[numBtns];
+        m_btns = new HIDButton[numBtns];
         for(int i = 0; i < numBtns; i++){
             m_btns[i] = new JoystickButton(i);
         }
