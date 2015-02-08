@@ -156,6 +156,16 @@ public abstract class PIDCommand extends Command implements Sendable {
     protected void setInputRange(double min, double max){
         m_controller.setInputRange(min, max);
     }
+
+    /**
+     * Sets the maximum and minimum values to write.
+     *
+     * @param min the minimum value to write to the output
+     * @param max the maximum value to write to the output
+     */
+    protected void setOutputRange(double min, double max){
+        m_controller.setOutputRange(min, max);
+    }
     
     /**
      * Returns the input for the pid loop.

@@ -8,18 +8,18 @@
 
 package io.github.robolib.jni;
 
-public class SWIGTYPE_p_int {
+public class SWIGTYPE_Adapter {
   private long swigCPtr;
 
-  protected SWIGTYPE_p_int(long cPtr, boolean futureUse) {
+  public SWIGTYPE_Adapter(long cPtr, boolean futureUse) {
     swigCPtr = cPtr;
   }
 
-  protected SWIGTYPE_p_int() {
+  public SWIGTYPE_Adapter() {
     swigCPtr = 0;
   }
 
-  protected static long getCPtr(SWIGTYPE_p_int obj) {
+  public static long getCPtr(SWIGTYPE_Adapter obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 }
