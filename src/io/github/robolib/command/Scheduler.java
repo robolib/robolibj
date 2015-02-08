@@ -17,7 +17,6 @@ package io.github.robolib.command;
 
 import java.util.Vector;
 
-import io.github.robolib.RoboLibBot;
 import io.github.robolib.control.Trigger.ButtonScheduler;
 import io.github.robolib.identifier.NamedSendable;
 import io.github.robolib.jni.UsageReporting;
