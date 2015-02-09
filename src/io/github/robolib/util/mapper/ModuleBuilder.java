@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module;
+package io.github.robolib.util.mapper;
 
 import org.json.JSONArray;
 
