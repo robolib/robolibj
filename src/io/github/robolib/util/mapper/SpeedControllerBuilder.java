@@ -13,15 +13,20 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.controller;
+package io.github.robolib.util.mapper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.robolib.module.ModuleBuilder;
 import io.github.robolib.module.PDP.PowerChannel;
-import io.github.robolib.module.RobotMap;
+import io.github.robolib.module.controller.CANJaguar;
+import io.github.robolib.module.controller.Jaguar;
+import io.github.robolib.module.controller.SpeedController;
+import io.github.robolib.module.controller.Talon;
+import io.github.robolib.module.controller.TalonSRX;
+import io.github.robolib.module.controller.Victor;
+import io.github.robolib.module.controller.VictorSP;
 import io.github.robolib.module.iface.PWM.PWMChannel;
 import io.github.robolib.util.log.Logger;
 

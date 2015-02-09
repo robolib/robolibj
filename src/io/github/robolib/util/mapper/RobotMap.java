@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module;
+package io.github.robolib.util.mapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +22,6 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.robolib.module.actuator.SolenoidBuilder;
-import io.github.robolib.module.controller.SpeedControllerBuilder;
 import io.github.robolib.util.log.Logger;
 
 import org.json.JSONException;
