@@ -17,7 +17,8 @@ package io.github.robolib.command;
 
 import static io.github.robolib.module.RoboRIO.getFPGATimestamp;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.robolib.DriverStation;
 import io.github.robolib.identifier.NamedSendable;
@@ -44,7 +45,7 @@ public abstract class Command implements NamedSendable {
     private boolean m_initialized = false;
     
     /** The m_requirements. */
-    Vector<Subsystem> m_requirements;
+    private List<Subsystem> m_requirements;
     
     /** The m_running. */
     private boolean m_running = false;
@@ -95,7 +96,6 @@ public abstract class Command implements NamedSendable {
     public Command(double timeout){
         this();
         setTimeout(timeout);
-        m_timeout = timeout;
     }
     
     /**
@@ -107,7 +107,6 @@ public abstract class Command implements NamedSendable {
     public Command(String name, double timeout){
         this(name);
         setTimeout(timeout);
-        m_timeout = timeout;
     }
     
     /**
@@ -121,13 +120,16 @@ public abstract class Command implements NamedSendable {
     }
     
     /**
-     * Sets the timeout.
+     * Sets the timeout. A value of -1 means no time out
      *
      * @param timeout the new timeout
      */
-    protected synchronized final void setTimeout(double timeout){
-        if(timeout < 0) throw new IllegalArgumentException("Timeout can not be negative.");
-        m_timeout = timeout;
+    protected final void setTimeout(double timeout){
+        if(timeout < -1)
+            throw new IllegalArgumentException("Timeout can not be less than -1.");
+        synchronized (this) {
+            m_timeout = timeout;
+        }
     }
     
     /**
@@ -135,8 +137,10 @@ public abstract class Command implements NamedSendable {
      *
      * @return the double
      */
-    public synchronized final double timeSinceInitialized(){
-        return m_startTime < 0 ? 0 : getFPGATimestamp() - m_startTime;
+    public final double timeSinceInitialized(){
+        synchronized(this){
+            return m_startTime < 0 ? 0 : getFPGATimestamp() - m_startTime;
+        }
     }
     
     /**
@@ -144,32 +148,35 @@ public abstract class Command implements NamedSendable {
      *
      * @param subsys the subsys
      */
-    protected synchronized void requires(Subsystem subsys){
+    protected void requires(Subsystem subsys){
         validate("Cannot add new requirement to command");
         if(subsys == null) return;
-        if(m_requirements == null) m_requirements = new Vector<Subsystem>();
-        
-        m_requirements.add(subsys);
+        synchronized (m_requirements) {
+            if(m_requirements == null) m_requirements = new ArrayList<Subsystem>(4);
+            m_requirements.add(subsys);
+        }
     }
     
     /**
      * Removed.
      */
-    synchronized void removed(){
-        if(m_initialized){
-            if(isCanceled()){
-                interrupted();
-                interrupted_impl();
-            }else{
-                end();
-                end_impl();
+    void removed(){
+        synchronized(this){
+            if(m_initialized){
+                if(isCanceled()){
+                    interrupted();
+                    interrupted_impl();
+                }else{
+                    end();
+                    end_impl();
+                }
             }
-        }
-        m_initialized = false;
-        m_canceled = false;
-        m_running = false;
-        if(m_table != null){
-            m_table.putBoolean("running", false);
+            m_initialized = false;
+            m_canceled = false;
+            m_running = false;
+            if(m_table != null){
+                m_table.putBoolean("running", false);
+            }
         }
     }
     
@@ -178,22 +185,24 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if successful
      */
-    synchronized boolean run(){
-        if(!m_runWhenDisabled && m_parent == null && DriverStation.isDisabled()) cancel();
-        
-        if(isCanceled()) return false;
-        
-        if(!m_initialized){
-            m_initialized = true;
-            startTiming();
-            initialize_impl();
-            initialize();
+    boolean run(){
+        synchronized(this){
+            if(!m_runWhenDisabled && m_parent == null && DriverStation.isDisabled()) cancel();
+            
+            if(isCanceled()) return false;
+            
+            if(!m_initialized){
+                m_initialized = true;
+                startTiming();
+                initialize_impl();
+                initialize();
+            }
+            
+            execute_impl();
+            execute();
+            
+            return !isFinished();
         }
-        
-        execute_impl();
-        execute();
-        
-        return !isFinished();
     }
     
     /**
@@ -273,8 +282,10 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if is timed out
      */
-    protected synchronized boolean isTimedOut(){
-        return m_timeout != -1 && timeSinceInitialized() >= m_timeout;
+    protected boolean isTimedOut(){
+        synchronized(this){
+            return m_timeout != -1 && (m_startTime < 0 ? 0 : getFPGATimestamp() - m_startTime) >= m_timeout;
+        }
     }
     
     /**
@@ -282,8 +293,8 @@ public abstract class Command implements NamedSendable {
      *
      * @return the requirements
      */
-    synchronized Vector<Subsystem> getRequirements(){
-        return m_requirements == null ? m_requirements = new Vector<Subsystem>() : m_requirements;
+    synchronized List<Subsystem> getRequirements(){
+        return m_requirements == null ? m_requirements = new ArrayList<Subsystem>(4) : m_requirements;
     }
     
     /**
@@ -298,7 +309,7 @@ public abstract class Command implements NamedSendable {
      *
      * @param msg the msg
      */
-    synchronized void validate(String msg){
+    void validate(String msg){
         if(m_locked) throw new IllegalStateException(msg + " after being started or added to a command group.");
     }
     
@@ -307,7 +318,7 @@ public abstract class Command implements NamedSendable {
      *
      * @param msg the msg
      */
-    synchronized void validateParent(String msg){
+    void validateParent(String msg){
         if(m_parent != null) throw new IllegalStateException(msg + " that is in a command group.");
     }
     
@@ -316,7 +327,7 @@ public abstract class Command implements NamedSendable {
      *
      * @param parent the new parent
      */
-    synchronized void setParent(CommandGroup parent){
+    void setParent(CommandGroup parent){
         validateParent("Cannot change CommandGroup of command");
         
         lockChanges();
@@ -328,10 +339,10 @@ public abstract class Command implements NamedSendable {
     /**
      * Start.
      */
-    public synchronized void start(){
+    public void start(){
         lockChanges();
         validateParent("Cannot start command");
-        Scheduler.getInstance().add(this);
+        Scheduler.add(this);
     }
     
     /**

@@ -15,6 +15,7 @@
 
 package io.github.robolib.command;
 
+import java.util.List;
 import java.util.Vector;
 
 // TODO: Auto-generated Javadoc
@@ -205,7 +206,7 @@ public class CommandGroup extends Command {
         
         command.setParent(this);
         m_commands.addElement(new CommandEntry(command, state, timeout));
-        command.getRequirements().forEach(system -> requires(system));
+        command.getRequirements().forEach(this::requires);
     }
     
     /**
@@ -342,13 +343,18 @@ public class CommandGroup extends Command {
      */
     @Override
     public synchronized boolean isInterruptible(){
-        if(!super.isInterruptible()) return false;
+        if(!super.isInterruptible())
+            return false;
         
-        if(m_currentCommandIndex == -1 && m_currentCommandIndex < m_commands.size()){
-            if(!m_commands.get(m_currentCommandIndex).m_command.isInterruptible()) return false;
+        if(m_currentCommandIndex != -1 && m_currentCommandIndex < m_commands.size()){
+            if(!m_commands.get(m_currentCommandIndex).m_command.isInterruptible())
+                return false;
         }
         
-        if(m_children.stream().anyMatch(ce -> !ce.m_command.isInterruptible())) return false;
+        for(CommandEntry m : m_children){
+            if(!m.m_command.isInterruptible())
+                return false;
+        }
         
         return true;
     }
@@ -360,7 +366,7 @@ public class CommandGroup extends Command {
      */
     private void cancelConflicts(Command command){
         m_children.forEach(ce -> {
-            Vector<Subsystem> requires = command.getRequirements();
+            List<Subsystem> requires = command.getRequirements();
             if(requires.stream().anyMatch(system -> ce.m_command.doesRequire(system))){
                 ce.m_command.cancel_impl();
                 ce.m_command.removed();

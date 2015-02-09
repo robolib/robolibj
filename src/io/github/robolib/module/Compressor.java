@@ -43,6 +43,8 @@ public final class Compressor implements UpdatingSendable {
     private static Compressor m_instance;
     
     public static final void initialize(){
+        if(m_instance != null)
+            throw new IllegalStateException("Compressor has already been initialized.");
         m_instance = new Compressor();
     }
     

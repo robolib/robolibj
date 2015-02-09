@@ -122,7 +122,7 @@ public abstract class RobotMode {
      * This is called every time the mode changes.
      * It is called before anything in {@code run()} is run.
      */
-    public void init(){
+    protected void init(){
         
     }
     
@@ -142,7 +142,7 @@ public abstract class RobotMode {
      * This is called every period.
      * Every time the robot runs through a loop, this is called.
      */
-    public void run(){
+    protected void run(){
         
     }
     
@@ -163,7 +163,7 @@ public abstract class RobotMode {
      * 
      * Overload this to write your own end method.
      */
-    public void end(){
+    protected void end(){
         
     }
 }

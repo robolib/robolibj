@@ -71,13 +71,13 @@ public class LiveWindow {
                     initLWComponents();
                     m_firstTime = false;
                 }
-                Scheduler.getInstance().setEnabled(false);
-                Scheduler.getInstance().removeAll();
+                Scheduler.setEnabled(false);
+                Scheduler.removeAll();
                 m_components.keySet().forEach(s -> s.startLiveWindowMode());
             }else{
                 m_log.debug("Stopping live window mode.");
                 m_components.keySet().forEach(s -> s.stopLiveWindowMode());
-                Scheduler.getInstance().setEnabled(true);
+                Scheduler.setEnabled(true);
             }
             m_lwEnabled = enabled;
             m_statusTable.putBoolean("LW Enabled", enabled);

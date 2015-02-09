@@ -54,7 +54,7 @@ public abstract class Subsystem implements NamedSendable {
      */
     public Subsystem(String name){
         m_name = name;
-        Scheduler.getInstance().registerSubsystem(this);
+        Scheduler.registerSubsystem(this);
         m_currentCommandChanged = true;
     }
     
@@ -63,7 +63,7 @@ public abstract class Subsystem implements NamedSendable {
      */
     public Subsystem(){
         m_name = getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1);
-        Scheduler.getInstance().registerSubsystem(this);
+        Scheduler.registerSubsystem(this);
         m_currentCommandChanged = true;
     }
     
@@ -120,6 +120,11 @@ public abstract class Subsystem implements NamedSendable {
         m_currentCommandChanged = true;
     }
     
+    void nullifyCurrentCommand(){
+        m_currentCommand = null;
+        m_currentCommandChanged = true;
+    }
+    
     /**
      * Confirm command.
      */
@@ -137,6 +142,14 @@ public abstract class Subsystem implements NamedSendable {
         }
     }
     
+    void iterationRun(){
+        if(m_currentCommand == null)
+            setCurrentCommand(getDefaultCommand());
+        
+        confirmCommand();
+            
+    }
+    
     /**
      * Gets the current command.
      *
@@ -144,6 +157,13 @@ public abstract class Subsystem implements NamedSendable {
      */
     public Command getCurrentCommand(){
         return m_currentCommand;
+    }
+    
+    public boolean getCurrentCommandNotInterruptable(){
+        if(m_currentCommand == null){
+            return false;
+        }
+        return !m_currentCommand.isInterruptible();
     }
     
     /**

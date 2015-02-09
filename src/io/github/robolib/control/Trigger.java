@@ -33,7 +33,7 @@ public interface Trigger extends BooleanSource {
     public abstract class ButtonScheduler{
         
         protected ButtonScheduler(){
-            Scheduler.getInstance().addButton(this);
+            Scheduler.addButton(this);
         }
         public abstract void execute();
     }

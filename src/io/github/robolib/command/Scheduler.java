@@ -15,6 +15,9 @@
 
 package io.github.robolib.command;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import io.github.robolib.control.Trigger.ButtonScheduler;
@@ -65,10 +68,15 @@ public class Scheduler implements NamedSendable {
     private static final Vector<Command> m_additions = new Vector<Command>();
     
     /** The m_command list. */
-    private static final CommandList m_commandList = new CommandList();
+    private static final List<Command> m_commandList = new LinkedList<Command>();
     
     public synchronized static final void initialize(){
+        if(m_instance != null)
+            throw new IllegalStateException("Scheduler already initialized.");
+        
         m_instance = new Scheduler();
+        UsageReporting.report(UsageReporting.ResourceType_Command, UsageReporting.Command_Scheduler);
+        
     }
     
     /**
@@ -84,7 +92,6 @@ public class Scheduler implements NamedSendable {
      * Instantiates a new scheduler.
      */
     private Scheduler(){
-        UsageReporting.report(UsageReporting.ResourceType_Compressor, UsageReporting.Command_Scheduler);
         initTable(NetworkTable.getTable("Scheduler"));
     }
     
@@ -94,8 +101,8 @@ public class Scheduler implements NamedSendable {
      *
      * @param command the command
      */
-    public void add(Command command){
-        if(commands != null)
+    public static final void add(Command command){
+        if(command != null)
             m_additions.addElement(command);
     }
     
@@ -104,7 +111,7 @@ public class Scheduler implements NamedSendable {
      *
      * @param btn the btn
      */
-    public void addButton(ButtonScheduler btn){
+    public static final void addButton(ButtonScheduler btn){
         if(btn != null)
             m_buttons.addElement(btn);
     }
@@ -117,7 +124,7 @@ public class Scheduler implements NamedSendable {
      *
      * @param command the {@link Command} to add
      */
-    private void add_impl(Command command){
+    protected static final void add_internal(Command command){
         if(command == null) return;
         
         if(m_adding){
@@ -126,18 +133,23 @@ public class Scheduler implements NamedSendable {
         }
         
         if(!m_commandList.contains(command)){
-            Vector<Subsystem> requires = command.getRequirements();
-            if(requires.stream().anyMatch(system -> system.getCurrentCommand() != null &&
-                    !system.getCurrentCommand().isInterruptible())) return;
+            List<Subsystem> requires = command.getRequirements();
+            if(requires.stream().anyMatch(Subsystem::getCurrentCommandNotInterruptable))
+                return;
             
             m_adding = true;
-            requires.forEach(system -> {
-                if(system.getCurrentCommand() != null){
-                    system.getCurrentCommand().cancel();
-                    remove(system.getCurrentCommand());
+
+            Command cmd;
+            for(Subsystem system : requires){
+                if((cmd = system.getCurrentCommand()) != null){
+                    cmd.cancel();
+                    cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
+                    cmd.removed();
+                    m_commandList.remove(cmd);
                 }
                 system.setCurrentCommand(command);
-            });
+            }
+
             m_adding = false;
             
             m_commandList.add(command);
@@ -157,11 +169,11 @@ public class Scheduler implements NamedSendable {
      * <li> Send values to SmartDashboard </li> <li> Add Commands </li> <li> Add
      * Defaults </li> </ol>
      */
-    public void run(){
+    public static final void run(){
         m_runningCommandsChanged = false;
         
         if(m_disabled){
-            if(++m_disabledCounter >= 4){
+            if(++m_disabledCounter >= 32){
                 m_log.warn("Scheduler is being called, but is disabled.");
                 m_disabledCounter = 0;
             }
@@ -170,21 +182,26 @@ public class Scheduler implements NamedSendable {
         
         m_buttons.forEach(ButtonScheduler::execute);
         
-        m_commandList.forEach(cmd -> {
+        Command cmd = null;
+        for(Iterator<Command> iter = m_commandList.iterator();iter.hasNext();){
+            cmd = iter.next();
             if(!cmd.run()){
-                remove(cmd);
+                cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
+                cmd.removed();
+                iter.remove();
                 m_runningCommandsChanged = true;
             }
-        });
+        }
+
+//        iter = m_additions.iterator();
+//        for(;iter.hasNext();){
+//            add_impl(iter.next());
+//        }
         
-        m_additions.forEach(this::add_impl);
+        m_additions.forEach(Scheduler::add_internal);
         m_additions.removeAllElements();
         
-        m_subsystems.forEach(system -> {
-            if(system.getCurrentCommand() == null)
-                add_impl(system.getDefaultCommand());
-            system.confirmCommand();
-        });
+        m_subsystems.forEach(Subsystem::iterationRun);
         
         updateTable();
     }
@@ -196,30 +213,22 @@ public class Scheduler implements NamedSendable {
      *
      * @param system the system
      */
-    void registerSubsystem(Subsystem system){
+    static final void registerSubsystem(Subsystem system){
         if(system != null)
             m_subsystems.addElement(system);
     }
     
     /**
-     * Removes the {@link Command} from the {@link Scheduler}.
-     *
-     * @param command the command to remove
-     */
-    void remove(Command command){
-        if(command == null || !m_commandList.contains(command)) return;
-        
-        m_commandList.remove(command);
-        command.getRequirements().forEach(system -> system.setCurrentCommand(null));
-        
-        command.removed();
-    }
-    
-    /**
      * Removes the all.
      */
-    public void removeAll(){
-        m_commandList.forEach(this::remove);
+    public static final void removeAll(){
+        Command cmd;
+        for(Iterator<Command> iter = m_commandList.iterator(); iter.hasNext();){
+            cmd = iter.next();            
+            cmd.removed();
+            iter.remove();
+        }
+        m_subsystems.forEach(Subsystem::nullifyCurrentCommand);
     }
     
     /**
@@ -227,7 +236,7 @@ public class Scheduler implements NamedSendable {
      *
      * @param enabled the new enabled
      */
-    public void setEnabled(boolean enabled){
+    public static final void setEnabled(boolean enabled){
         m_disabled = !enabled;
     }
     
@@ -236,21 +245,21 @@ public class Scheduler implements NamedSendable {
      *
      * @return the type
      */
-    public String getType(){
+    public final String getType(){
         return "Scheduler";
     }
     
     /** The commands. */
-    private StringArray commands;
+    private static StringArray commands;
     
     /** The to cancel. */
-    private NumberArray ids, toCancel;
+    private static NumberArray ids, toCancel;
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getName(){
+    public final String getName(){
         return "Scheduler";
     }
     
@@ -258,7 +267,7 @@ public class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public String getSmartDashboardType() {
+    public final String getSmartDashboardType() {
         return "Scheduler";
     }
     
@@ -266,7 +275,7 @@ public class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public void initTable(ITable subtable){
+    public final void initTable(ITable subtable){
         m_table = subtable;
         commands = new StringArray();
         ids = new NumberArray();
@@ -281,11 +290,11 @@ public class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public ITable getTable() {
+    public final ITable getTable() {
         return m_table;
     }
     
-    public void updateTable(){
+    public static void updateTable(){
         if(m_table != null){
             m_table.retrieveValue("Cancel", toCancel);
 
