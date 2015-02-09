@@ -57,7 +57,7 @@ public abstract class Command implements NamedSendable {
     private boolean m_canceled = false;
     
     /** The m_locked. */
-    private boolean m_locked = false;
+    protected boolean m_locked = false;
     
     /** The m_run when disabled. */
     private boolean m_runWhenDisabled = false;
@@ -68,7 +68,10 @@ public abstract class Command implements NamedSendable {
     /** The m_parent. */
     private CommandGroup m_parent;
 
+    /** The m_table. */
     private ITable m_table;
+    
+    protected byte m_state;
     
     
     /**
@@ -149,7 +152,8 @@ public abstract class Command implements NamedSendable {
      * @param subsys the subsys
      */
     protected void requires(Subsystem subsys){
-        validate("Cannot add new requirement to command");
+        if(m_locked)
+            throw new IllegalStateException("Cannot add new requirement to command after being started or added to a command group.");
         if(subsys == null) return;
         synchronized (m_requirements) {
             if(m_requirements == null) m_requirements = new ArrayList<Subsystem>(4);
@@ -296,43 +300,22 @@ public abstract class Command implements NamedSendable {
     synchronized List<Subsystem> getRequirements(){
         return m_requirements == null ? m_requirements = new ArrayList<Subsystem>(4) : m_requirements;
     }
-    
-    /**
-     * Lock changes.
-     */
-    synchronized void lockChanges(){
-        m_locked = true;
-    }
-    
-    /**
-     * Validate.
-     *
-     * @param msg the msg
-     */
-    void validate(String msg){
-        if(m_locked) throw new IllegalStateException(msg + " after being started or added to a command group.");
-    }
-    
-    /**
-     * Validate parent.
-     *
-     * @param msg the msg
-     */
-    void validateParent(String msg){
-        if(m_parent != null) throw new IllegalStateException(msg + " that is in a command group.");
-    }
-    
+
     /**
      * Sets the parent.
      *
      * @param parent the new parent
      */
     void setParent(CommandGroup parent){
-        validateParent("Cannot change CommandGroup of command");
-        
-        lockChanges();
-        m_parent = parent;
-//        if(table != null) table.putBoolean("isParented", true);
+        synchronized(this){
+            if(m_parent != null)
+                throw new IllegalStateException("Cannot change CommandGroup of command that is in a command group.");
+            
+            m_locked = true;
+            m_parent = parent;
+            if(m_table != null)
+                m_table.putBoolean("isParented", true);
+        }
     }
     
     
@@ -340,18 +323,24 @@ public abstract class Command implements NamedSendable {
      * Start.
      */
     public void start(){
-        lockChanges();
-        validateParent("Cannot start command");
-        Scheduler.add(this);
+        synchronized(this){
+            m_locked = true;
+            if(m_parent != null)
+                throw new IllegalStateException("Cannot start command that is in a command group.");
+            
+            Scheduler.add(this);
+        }
     }
     
     /**
      * Start running.
      */
-    synchronized void startRunning(){
-        m_running = true;
-        m_startTime = -1;
-        if(m_table != null) m_table.putBoolean("running", true);
+    void startRunning(){
+        synchronized(this){
+            m_running = true;
+            m_startTime = -1;
+            if(m_table != null) m_table.putBoolean("running", true);
+        }
     }
     
     /**
@@ -360,22 +349,30 @@ public abstract class Command implements NamedSendable {
      * @return true, if is running
      */
     public boolean isRunning(){
-        return m_running;
+        synchronized(this){
+            return m_running;
+        }
     }
     
     /**
      * Cancel.
      */
-    public synchronized void cancel(){
-        validateParent("Cannot stop command");
+    public void cancel(){
+        synchronized(this){
+            if(m_parent != null)
+                throw new IllegalStateException("Cannot stop command that is in a command group.");
+        }
         cancel_impl();
     }
     
     /**
      * Cancel_impl.
      */
-    synchronized void cancel_impl(){
-        if(isRunning()) m_canceled = true;
+    void cancel_impl(){
+        synchronized(this){
+            if(m_running)
+                m_canceled = true;
+        }
     }
     
     /**
@@ -383,8 +380,10 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if is canceled
      */
-    public synchronized boolean isCanceled(){
-        return m_canceled;
+    public boolean isCanceled(){
+        synchronized(this){
+            return m_canceled;
+        }
     }
     
     /**
@@ -392,8 +391,10 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if is interruptible
      */
-    public synchronized boolean isInterruptible(){
-        return m_interruptible;
+    public boolean isInterruptible(){
+        synchronized(this){
+            return m_interruptible;
+        }
     }
     
     /**
@@ -401,8 +402,10 @@ public abstract class Command implements NamedSendable {
      *
      * @param interruptible the new interruptible
      */
-    public synchronized void setInterruptible(boolean interruptible){
-        m_interruptible = interruptible;
+    public void setInterruptible(boolean interruptible){
+        synchronized(this){
+            m_interruptible = interruptible;
+        }
     }
     
     /**
@@ -411,8 +414,10 @@ public abstract class Command implements NamedSendable {
      * @param system the system
      * @return true, if successful
      */
-    public synchronized boolean doesRequire(Subsystem system){
-        return m_requirements != null && m_requirements.contains(system);
+    public boolean doesRequire(Subsystem system){
+        synchronized(m_requirements){
+            return m_requirements != null && m_requirements.contains(system);
+        }
     }
     
     /**
@@ -420,8 +425,10 @@ public abstract class Command implements NamedSendable {
      * Will return null if this {@link Command} is not in a group.
      * @return the {@link CommandGroup} that this command is a part of (or null if not in group)
      */
-    public synchronized CommandGroup getGroup(){
-        return m_parent;
+    public CommandGroup getGroup(){
+        synchronized(m_parent){
+            return m_parent;
+        }
     }
     
     /**
