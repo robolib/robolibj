@@ -47,9 +47,9 @@ public class I2C extends Interface {
         this(Port.ONBOARD, address);
     }
     
-    protected byte m_port;
-    protected byte m_address;
-    private static final boolean m_portInitialized[] = new boolean[2];
+    protected final byte m_port;
+    protected final byte m_address;
+    private static final boolean INITIALIZED_PORTS[] = new boolean[2];
     
     
     /**
@@ -60,7 +60,7 @@ public class I2C extends Interface {
      */
     public I2C(Port port, int address) {
         super(InterfaceType.I2C);
-        if(port == Port.MXP && !m_portInitialized[1]){
+        if(port == Port.MXP && !INITIALIZED_PORTS[1]){
             allocateMXPPin(32);
             allocateMXPPin(34);
         }
@@ -68,11 +68,11 @@ public class I2C extends Interface {
         m_port = (byte)port.ordinal();
         m_address = (byte)address;
 
-        if(!m_portInitialized[port.ordinal()]){
+        if(!INITIALIZED_PORTS[port.ordinal()]){
             IntBuffer status = getLE4IntBuffer();
             I2CJNI.i2CInitialize(m_port, status);
             HALUtil.checkStatus(status);
-            m_portInitialized[port.ordinal()] = true;
+            INITIALIZED_PORTS[port.ordinal()] = true;
         }
         
         UsageReporting.report(UsageReporting.ResourceType_I2C, address);
@@ -98,7 +98,7 @@ public class I2C extends Interface {
      * @param receiveSize Number of bytes to read from the device.
      * @return Status of operation (true = success)
      */
-    public synchronized boolean transaction(byte[] dataToSend, int sendSize, byte[] dataReceived, int receiveSize){
+    public synchronized final boolean transaction(byte[] dataToSend, int sendSize, byte[] dataReceived, int receiveSize){
         boolean success = false;
         ByteBuffer dataSendBuffer = ByteBuffer.allocateDirect(sendSize);
         dataSendBuffer.put(dataToSend);
@@ -121,7 +121,7 @@ public class I2C extends Interface {
      *
      * @return Status of operation (true = success)
      */
-    public boolean checkAddress(){
+    public final boolean checkAddress(){
         return transaction(null, 0, null, 0); 
     }
     
@@ -135,7 +135,7 @@ public class I2C extends Interface {
      * @param data The byte to write to the register on the device.
      * @return Status of operation (true = success)
      */
-    public synchronized boolean write(int reg, int data){
+    public synchronized final boolean write(int reg, int data){
         ByteBuffer dataToSendBuffer = ByteBuffer.allocateDirect(2);
         dataToSendBuffer.put(new byte[]{(byte) reg, (byte) data});
 
@@ -151,7 +151,7 @@ public class I2C extends Interface {
      * @param data The data to write to the device.
      * @return Status of operation (true = success)
      */
-    public synchronized boolean writeBulk(byte[] data){
+    public synchronized final boolean writeBulk(byte[] data){
         ByteBuffer b = ByteBuffer.allocateDirect(data.length);
         b.put(data);
         return I2CJNI.i2CWrite(m_port, m_address, b, (byte)data.length) > 0;
@@ -165,7 +165,7 @@ public class I2C extends Interface {
      * @param value New bit value to write
      * @return Status of operation (true = success)
      */
-    public synchronized boolean writeBit(int reg, int bit, byte value){
+    public synchronized final boolean writeBit(int reg, int bit, byte value){
         return writeBit(reg, bit, value != 0);
     }
 
@@ -177,7 +177,7 @@ public class I2C extends Interface {
      * @param value New bit value to write
      * @return Status of operation (true = success)
      */
-    public synchronized boolean writeBit(int reg, int bit, boolean value){
+    public synchronized final boolean writeBit(int reg, int bit, boolean value){
         byte[] b = new byte[1];
         readByte(reg, b);
         b[0] = (byte) (value ? (b[0] | (1 << bit)) : (b[0] & ~(1 << bit)));
@@ -193,7 +193,7 @@ public class I2C extends Interface {
      * @param data Right-aligned value to write
      * @return Status of operation (true = success)
      */
-    public synchronized boolean writeBits(int reg, int bitStart, int length, byte data){
+    public synchronized final boolean writeBits(int reg, int bitStart, int length, byte data){
         byte[] b = new byte[1];
         if(readByte(reg, b)){
             byte mask = (byte) (((1 << length) - 1) << (bitStart - length + 1));
@@ -213,7 +213,7 @@ public class I2C extends Interface {
      * @param data New byte value to write
      * @return Status of operation (true = success)
      */
-    public synchronized boolean writeByte(int reg, byte data){
+    public synchronized final boolean writeByte(int reg, byte data){
         return write(reg, data);
     }
 
@@ -224,7 +224,7 @@ public class I2C extends Interface {
      * @param data New word value to write
      * @return Status of operation (true = success)
      */
-    public synchronized boolean writeWord(int reg, short data) {
+    public synchronized final boolean writeWord(int reg, short data) {
         return writeWords(reg, new short[]{data}, 1);
     }
 
@@ -236,7 +236,7 @@ public class I2C extends Interface {
      * @param length Number of bytes to write
      * @return Status of operation (true = success)
      */
-    public synchronized boolean writeBytes(int reg, byte[] data, int length){
+    public synchronized final boolean writeBytes(int reg, byte[] data, int length){
         ByteBuffer b = ByteBuffer.allocateDirect(data.length + 1);
         b.put((byte)reg);
         b.put(data);
@@ -251,7 +251,7 @@ public class I2C extends Interface {
      * @param length Number of words to write
      * @return Status of operation (true = success)
      */
-    public synchronized boolean writeWords(int reg, short[] data, int length){
+    public synchronized final boolean writeWords(int reg, short[] data, int length){
         byte[] out = new byte[length * 2];
         for(int i = 0; i < length; i++){
             out[i*2] = (byte) (data[i] >> 8);
@@ -268,7 +268,7 @@ public class I2C extends Interface {
      * @param data Container for single bit value
      * @return Status of read operation (true = success)
      */
-    public synchronized boolean readBit(int reg, int bit, byte[] data){
+    public synchronized final boolean readBit(int reg, int bit, byte[] data){
         boolean a = readByte(reg, data);
         data[0] = (byte) (data[0] & (1 << bit));
         return a; 
@@ -281,7 +281,7 @@ public class I2C extends Interface {
      * @param bit Bit position to read (0-7)
      * @return the value of the bit as a boolean
      */
-    public synchronized boolean readBit(int reg, int bit){
+    public synchronized final boolean readBit(int reg, int bit){
         byte[] a = new byte[1];
         readBit(reg, bit, a);
         return (a[0] & 0x01) != 0;
@@ -296,7 +296,7 @@ public class I2C extends Interface {
      * @param data Container for right-aligned value (i.e. '101' read from any bitStart position will equal 0x05)
      * @return Status of read operation (true = success)
      */
-    public synchronized boolean readBits(int reg, int bitStart, int length, byte[] data){
+    public synchronized final boolean readBits(int reg, int bitStart, int length, byte[] data){
         byte[] b = new byte[1];
         if(readByte(reg, b)){
             byte mask = (byte) (((1 << length) - 1) << (bitStart - length + 1));
@@ -315,7 +315,7 @@ public class I2C extends Interface {
      * @param data Container for byte value read from device
      * @return Status of read operation (true = success)
      */
-    public synchronized boolean readByte(int reg, byte[] data){
+    public synchronized final boolean readByte(int reg, byte[] data){
         return read(reg, data,  1);
     }
 
@@ -325,7 +325,7 @@ public class I2C extends Interface {
      * @param data Container for word value read from device
      * @return Status of read operation (true = success)
      */
-    public synchronized boolean readWord(int reg, short[] data) {
+    public synchronized final boolean readWord(int reg, short[] data) {
         return readWords(reg, data, 1);
     }
 
@@ -337,7 +337,7 @@ public class I2C extends Interface {
      * @param length Number of bytes to read
      * @return Status of read operation (true = success)
      */
-    public synchronized boolean readBytes(int reg, byte[] data, int length){
+    public synchronized final boolean readBytes(int reg, byte[] data, int length){
         return read(reg, data, length);
     }
 
@@ -349,7 +349,7 @@ public class I2C extends Interface {
      * @param length Number of words to read
      * @return Status of read operation (true = success)
      */
-    public synchronized boolean readWords(int reg, short[] data,  int length) {
+    public synchronized final boolean readWords(int reg, short[] data,  int length) {
 
         byte[] intermediate = new byte[length * 2];
         if (read(reg, intermediate, length * 2)) {
@@ -374,7 +374,7 @@ public class I2C extends Interface {
      * @param count The number of bytes to read in the transaction.
      * @return Status of operation (true = success)
      */
-    public boolean read(int reg, byte[] buffer, int count){
+    public final boolean read(int reg, byte[] buffer, int count){
         /*if(!MathUtils.inBounds(count, 1, 7))
             throw new IllegalArgumentException("Count must be between 1 and 7");*/
                 
@@ -392,7 +392,7 @@ public class I2C extends Interface {
      * @param count The number of bytes to read in the transaction.
      * @return Status of operation (true = success)
      */
-    public boolean readOnly(byte[] buffer, int count){
+    public final boolean readOnly(byte[] buffer, int count){
         if(!MathUtils.inBounds(count, 1, 7))
             throw new IllegalArgumentException("Count must be between 1 and 7");
         
@@ -411,7 +411,7 @@ public class I2C extends Interface {
      * @param reg The register to write on all devices on the bus.
      * @param data The value to write to the devices.
      */
-    public void broadcast(int reg, int data){
+    public final void broadcast(int reg, int data){
         
     }
     
@@ -427,7 +427,7 @@ public class I2C extends Interface {
      * @param expected A buffer containing the values expected from the device.
      * @return true if the sensor was verified to be connected
      */
-    public boolean verifySensor(int reg, int count, byte[] expected){
+    public final boolean verifySensor(int reg, int count, byte[] expected){
         byte[] devData = new byte[4];
         
         for(int i = 0, currentAddress = reg; i < count; i += 4, currentAddress += 4){

@@ -87,7 +87,7 @@ public abstract class RobotMode {
      *
      * @return GameMode type
      */
-    public GameMode getModeType(){
+    public final GameMode getModeType(){
         return m_mode;
     }
     

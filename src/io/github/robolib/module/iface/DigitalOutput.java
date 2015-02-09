@@ -38,21 +38,15 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
     }
     
     /**
+     * {@inheritDoc}
      * Set the value of this DigitalOutput
      * @param value the value true = High, false = Low
      */
-    public void set(boolean value){
+    @Override
+    public void setState(boolean value){
         IntBuffer status = getLE4IntBuffer();
         DIOJNI.setDIO(m_port, (short)(value?1:0), status);
         HALUtil.checkStatus(status);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setState(boolean value){
-        set(value);
     }
     
     /**
@@ -61,7 +55,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * @param pulseLength The length of the pulse.
      */
-    public void pulse(double pulseLength){
+    public final void pulse(double pulseLength){
         IntBuffer status = getLE4IntBuffer();
         DIOJNI.pulse(m_port, pulseLength, status);
         HALUtil.checkStatus(status);
@@ -73,7 +67,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * @return true if pulsing
      */
-    public boolean isPulsing(){
+    public final boolean isPulsing(){
         IntBuffer status = getLE4IntBuffer();
         boolean value = DIOJNI.isPulsing(m_port, status) != 0;
         HALUtil.checkStatus(status);
@@ -90,7 +84,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * @param rate The frequency to output all digital output PWM signals.
      */
-    public static void setPWMRate(double rate){
+    public static final void setPWMRate(double rate){
         IntBuffer status = getLE4IntBuffer();
         PWMJNI.setPWMRate(rate, status);
         HALUtil.checkStatus(status);
@@ -109,7 +103,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * @param initialDutyCycle The duty-cycle to start generating. [0..1]
      */
-    public void enablePWM(double initialDutyCycle){
+    public final void enablePWM(double initialDutyCycle){
         if(m_pwmGenerator != null)
             return;
         
@@ -126,7 +120,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * Free up one of the 6 DO PWM generator resources that were in use.
      */
-    public void disablePWM(){
+    public final void disablePWM(){
         if(m_pwmGenerator == null)
             return;
         
@@ -145,7 +139,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * @param dutyCycle The duty-cycle to change to. [0..1]
      */
-    public void updateDutyCycle(double dutyCycle){
+    public final void updateDutyCycle(double dutyCycle){
         if(m_pwmGenerator == null)
             return;
         

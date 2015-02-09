@@ -24,7 +24,7 @@ import io.github.robolib.module.PDP.PowerChannel;
  * @author Austin Reuland <amreuland@gmail.com>
  *
  */
-public class Jaguar extends PWMController {
+public final class Jaguar extends PWMController {
 
     /**
      * Instantiates a new Jaguar motor controller.

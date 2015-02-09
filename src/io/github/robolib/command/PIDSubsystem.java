@@ -28,10 +28,10 @@ import io.github.robolib.nettable.ITable;
  */
 public abstract class PIDSubsystem extends Subsystem implements Sendable {
     
-    private PIDController m_controller;
+    final PIDController m_controller;
     
-    private PIDSink m_sink = this::usePIDOutput;
-    private PIDSource m_source = this::returnPIDInput;
+    final PIDSink m_sink = this::usePIDOutput;
+    final PIDSource m_source = this::returnPIDInput;
 
     /**
      * Instantiates a {@link PIDSubsystem} that will use the given p, i and d values.
@@ -118,7 +118,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      *
      * @return the {@link PIDController} used by this {@link PIDSubsystem}
      */
-    public PIDController getPIDController() {
+    public final PIDController getPIDController() {
         return m_controller;
     }
     
@@ -128,7 +128,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      * then the bounds will still be honored by this method.
      * @param deltaSetpoint the change in the setpoint
      */
-    public void setSetpointRelative(double deltaSetpoint) {
+    public final void setSetpointRelative(double deltaSetpoint) {
         setSetpoint(getPosition() + deltaSetpoint);
     }
     
@@ -139,7 +139,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      * will be trimmed to fit within the range.
      * @param point the new setpoint
      */
-    public void setSetpoint(double point) {
+    public final void setSetpoint(double point) {
         m_controller.setSetpoint(point);
     }
     
@@ -147,7 +147,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      * Returns the setpoint.
      * @return the setpoint
      */
-    public double getSetpoint() {
+    public final double getSetpoint() {
         return m_controller.getSetpoint();
     }
     
@@ -155,7 +155,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      * Returns the current position
      * @return the current position
      */
-    public double getPosition() {
+    public final double getPosition() {
         return returnPIDInput();
     }
     
@@ -165,7 +165,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      * @param min the minimum value expected from the input and setpoint
      * @param max the maximum value expected from the input and setpoint
      */
-    public void setInputRange(double min, double max){
+    public final void setInputRange(double min, double max){
         m_controller.setInputRange(min, max);
     }
     
@@ -175,7 +175,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      * @param min the minimum value to write to the output
      * @param max the maximum value to write to the output
      */
-    public void setOutputRange(double min, double max){
+    public final void setOutputRange(double min, double max){
         m_controller.setOutputRange(min, max);
     }
     
@@ -184,7 +184,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      * OnTarget. The value is in the same range as the PIDInput values.
      * @param t the absolute tolerance
      */
-     public void setAbsoluteTolerance(double t) {
+     public final void setAbsoluteTolerance(double t) {
          m_controller.setAbsoluteTolerance(t);
      }
 
@@ -193,7 +193,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      * OnTarget. (Value of 15.0 == 15 percent)
      * @param p the percent tolerance
      */
-     public void setPercentTolerance(double p) {
+     public final void setPercentTolerance(double p) {
          m_controller.setPercentTolerance(p);
      }
 
@@ -203,7 +203,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
       * were set using setInput.
       * @return true if the error is less than the tolerance
       */
-     public boolean onTarget() {
+     public final boolean onTarget() {
          return m_controller.onTarget();
      }
 
@@ -232,22 +232,22 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      /**
       * Enables the internal {@link PIDController}
       */
-     public void enable() {
+     public final void enable() {
          m_controller.enable();
      }
 
      /**
       * Disables the internal {@link PIDController}
       */
-     public void disable() {
+     public final void disable() {
          m_controller.disable();
      }
 
-     public String getSmartDashboardType() {
+     public final String getSmartDashboardType() {
          return "PIDSubsystem";
      }
      
-     public void initTable(ITable table) {
+     public final void initTable(ITable table) {
          m_controller.initTable(table);
          super.initTable(table);
      }

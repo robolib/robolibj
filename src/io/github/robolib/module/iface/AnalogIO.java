@@ -78,14 +78,14 @@ public class AnalogIO extends Interface {
     }
     
     /** Keep track of already used channels. */
-    private static boolean m_usedInChannels[] = new boolean[MAX_ANALOG_IN_CHANNELS];
+    private static final boolean USED_IN_CHANNELS[] = new boolean[MAX_ANALOG_IN_CHANNELS];
     
     /** The m_used out channels. */
-    private static boolean m_usedOutChannels[] = new boolean[MAX_ANALOG_OUT_CHANNELS];
+    private static final boolean USED_OUT_CHANNELS[] = new boolean[MAX_ANALOG_OUT_CHANNELS];
     
     
-    protected ByteBuffer m_port;
-    protected ByteBuffer m_portPointer;
+    protected final ByteBuffer m_port;
+    protected final ByteBuffer m_portPointer;
     protected AnalogChannel m_channel;
      
     /**
@@ -97,28 +97,32 @@ public class AnalogIO extends Interface {
     protected AnalogIO(AnalogChannel channel, Direction dir) {
         super(InterfaceType.ANALOG);
         
-        ByteBuffer m_portPointer = AnalogJNI.getPort((byte) channel.ordinal());
+        m_portPointer = AnalogJNI.getPort((byte) channel.ordinal());
         IntBuffer status = getLE4IntBuffer();
 
         switch(dir){
         case IN:
             checkAnalogInputChannel(channel.ordinal());
-            if(m_usedInChannels[channel.ordinal()] == true)
+            if(USED_IN_CHANNELS[channel.ordinal()] == true)
                 throw new ResourceAllocationException("AnalogIO Input channel '" + channel.name() + "' already in use.");
             
-            m_usedInChannels[channel.ordinal()] = true;
+            USED_IN_CHANNELS[channel.ordinal()] = true;
             m_port = AnalogJNI.initializeAnalogInputPort(m_portPointer, status);
         break;
         case OUT:
             checkAnalogOutputChannel(channel.ordinal());
-            if(m_usedOutChannels[channel.ordinal()] == true)
+            if(USED_OUT_CHANNELS[channel.ordinal()] == true)
                 throw new ResourceAllocationException("AnalogIO Output channel '" + channel.name() + "' already in use.");
             
-            m_usedOutChannels[channel.ordinal()] = true;
+            USED_OUT_CHANNELS[channel.ordinal()] = true;
             m_port = AnalogJNI.initializeAnalogOutputPort(m_portPointer, status);
             
         break;
+        default:
+            throw new IllegalStateException("How did you get here?");
         }
+        
+        m_channel = channel;
         
         HALUtil.checkStatus(status);
         
@@ -138,7 +142,7 @@ public class AnalogIO extends Interface {
      *
      * @return The channel AnalogChannel.
      */
-    public AnalogChannel getChannel(){
+    public final AnalogChannel getChannel(){
         return m_channel;
     }
     
@@ -147,7 +151,7 @@ public class AnalogIO extends Interface {
      *
      * @return The channel number.
      */
-    public int getChannelNumber(){
+    public final int getChannelNumber(){
         return m_channel.ordinal();
     }
     

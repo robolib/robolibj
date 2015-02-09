@@ -73,7 +73,7 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Number
      * {@inheritDoc}
      */
     @Override
-    public String getSmartDashboardType(){
+    public final String getSmartDashboardType(){
         return "Analog Output";
     }
     
@@ -81,7 +81,7 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Number
      * {@inheritDoc}
      */
     @Override
-    public void initTable(ITable subtable) {
+    public final void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
     }
@@ -90,7 +90,7 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Number
      * {@inheritDoc}
      */
     @Override
-    public void updateTable(){
+    public final void updateTable(){
         if(m_table != null){
             m_table.putNumber("Value", getVoltage());
         }

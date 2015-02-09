@@ -37,18 +37,11 @@ public class DigitalInput extends DigitalIO implements Trigger,  BooleanSource {
     /**
      * {@inheritDoc}
      */
-    public boolean get(){
+    @Override
+    public boolean getState(){
         IntBuffer status = getLE4IntBuffer();
         boolean value = DIOJNI.getDIO(m_port, status) != 0;
         HALUtil.checkStatus(status);
         return value;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getState(){
-        return get();
     }
 }

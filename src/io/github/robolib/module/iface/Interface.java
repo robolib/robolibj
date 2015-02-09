@@ -63,7 +63,7 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static void checkDigitalChannel(final int channel){
+    protected static final void checkDigitalChannel(final int channel){
         if(channel < 0 || channel > MAX_DIGITAL_CHANNELS){
             throw new IndexOutOfBoundsException("Bad Digital Channel");
         }
@@ -74,7 +74,7 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static void checkAnalogInputChannel(final int channel){
+    protected static final void checkAnalogInputChannel(final int channel){
         if(channel < 0 || channel > MAX_ANALOG_IN_CHANNELS){
             throw new IndexOutOfBoundsException("Bad AnalogIO Input Channel");
         }
@@ -85,7 +85,7 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static void checkAnalogOutputChannel(final int channel){
+    protected static final void checkAnalogOutputChannel(final int channel){
         if(channel < 0 || channel > MAX_ANALOG_OUT_CHANNELS){
             throw new IndexOutOfBoundsException("Bad AnalogIO Output Channel");
         }
@@ -96,7 +96,7 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static void checkPWMChannel(final int channel){
+    protected static final void checkPWMChannel(final int channel){
         if(channel < 0 || channel > MAX_PWM_CHANNELS){
             throw new IndexOutOfBoundsException("Bad PWM Channel");
         }
@@ -107,7 +107,7 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static void checkRelayChannel(final int channel){
+    protected static final void checkRelayChannel(final int channel){
         if(channel < 0 || channel > MAX_RELAY_CHANNELS){
             throw new IndexOutOfBoundsException("Bad Relay Channel");
         }
@@ -117,7 +117,8 @@ public abstract class Interface {
     protected final InterfaceType m_ifaceType;
 
     /** Keep a mapping of MXP pins to InterfaceTypes. */
-    private static Map<Integer, InterfaceType> m_mxpMap = new HashMap<Integer, InterfaceType>();
+    private static final Map<Integer, InterfaceType> MXP_MAP =
+            new HashMap<Integer, InterfaceType>();
 
     /**
      * Instantiates a new interface.
@@ -135,10 +136,10 @@ public abstract class Interface {
      */
     protected final void allocateMXPPin(int pin){
         if(pin > 0){
-            if(m_mxpMap.containsKey(pin)){
-                throw new ResourceAllocationException("MXP pin '" + pin + "' already allocated as '" + m_mxpMap.get(pin).name() + "'.");
+            if(MXP_MAP.containsKey(pin)){
+                throw new ResourceAllocationException("MXP pin '" + pin + "' already allocated as '" + MXP_MAP.get(pin).name() + "'.");
             }else{
-                m_mxpMap.put(pin, m_ifaceType);
+                MXP_MAP.put(pin, m_ifaceType);
             }
         }
     }
@@ -150,12 +151,12 @@ public abstract class Interface {
      */
     protected final void freeMXPPin(int pin){
         if(pin > 0){
-            if(m_mxpMap.containsKey(pin)){
-                if(m_mxpMap.get(pin).equals(m_ifaceType)){
-                    m_mxpMap.remove(pin);
+            if(MXP_MAP.containsKey(pin)){
+                if(MXP_MAP.get(pin).equals(m_ifaceType)){
+                    MXP_MAP.remove(pin);
                 }else{
-                    Logger.get(Interface.class).warn("Attempt to release MXP pin '" + pin + "' (" + m_mxpMap.get(pin).name() + ")  failed. Type");
-                    Logger.get(Interface.class).warn("Allocated Type: " + m_mxpMap.get(pin).name() + ", Releasing type: " + m_ifaceType.name() + ".");
+                    Logger.get(Interface.class).warn("Attempt to release MXP pin '" + pin + "' (" + MXP_MAP.get(pin).name() + ")  failed. Type");
+                    Logger.get(Interface.class).warn("Allocated Type: " + MXP_MAP.get(pin).name() + ", Releasing type: " + m_ifaceType.name() + ".");
                 }
             }else{
                 Logger.get(Interface.class).warn("MXP pin '" + pin + "' Was not allocated. Should have been type: '" + m_ifaceType.name() + "'.");

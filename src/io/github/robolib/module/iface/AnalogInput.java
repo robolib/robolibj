@@ -82,7 +82,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * {@inheritDoc}
      */
     @Override
-    public void free(){
+    public final void free(){
         if(m_triggerPort != null){
             IntBuffer status = getLE4IntBuffer();
             AnalogJNI.cleanAnalogTrigger(m_triggerPort, status);

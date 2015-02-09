@@ -15,7 +15,7 @@ import io.github.robolib.jni.SWIGTYPE_Adapter;
 import io.github.robolib.util.Timer;
 
 @SuppressWarnings("unused")
-public class CANTalon implements MotorSafety, PIDSink, SpeedController {
+public final class CANTalon implements MotorSafety, PIDSink, SpeedController {
 
     private MotorSafetyHelper m_safetyHelper;
     

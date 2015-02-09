@@ -40,7 +40,7 @@ public abstract class Subsystem implements NamedSendable {
     private Command m_defaultCommand;
     
     /** The m_name. */
-    private String m_name;
+    private final String m_name;
 
     private ITable m_table;
     

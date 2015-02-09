@@ -41,7 +41,7 @@ public class Scheduler implements NamedSendable {
     private static Scheduler m_instance;
     
     /** The m_log. */
-    private static final ILogger m_log = Logger.get(Scheduler.class);
+    private static final ILogger LOG = Logger.get(Scheduler.class);
     
     /** The m_table. */
     private static ITable m_table;
@@ -59,16 +59,16 @@ public class Scheduler implements NamedSendable {
     private static byte m_disabledCounter = 0;
     
     /** The m_subsystems. */
-    private static final Vector<Subsystem> m_subsystems = new Vector<Subsystem>();
+    private static final Vector<Subsystem> SUBSYSTEMS = new Vector<Subsystem>();
     
     /** The m_buttons. */
-    private static final Vector<ButtonScheduler> m_buttons = new Vector<ButtonScheduler>();
+    private static final Vector<ButtonScheduler> BUTTONS = new Vector<ButtonScheduler>();
     
     /** The m_additions. */
-    private static final Vector<Command> m_additions = new Vector<Command>();
+    private static final Vector<Command> ADDITIONS = new Vector<Command>();
     
     /** The m_command list. */
-    private static final List<Command> m_commandList = new LinkedList<Command>();
+    private static final List<Command> COMMAND_LIST = new LinkedList<Command>();
     
     public synchronized static final void initialize(){
         if(m_instance != null)
@@ -103,7 +103,7 @@ public class Scheduler implements NamedSendable {
      */
     public static final void add(Command command){
         if(command != null)
-            m_additions.addElement(command);
+            ADDITIONS.addElement(command);
     }
     
     /**
@@ -113,7 +113,7 @@ public class Scheduler implements NamedSendable {
      */
     public static final void addButton(ButtonScheduler btn){
         if(btn != null)
-            m_buttons.addElement(btn);
+            BUTTONS.addElement(btn);
     }
     
     /**
@@ -128,11 +128,11 @@ public class Scheduler implements NamedSendable {
         if(command == null) return;
         
         if(m_adding){
-            m_log.warn("Cannot start command from cancel. Ignoring '" + command + "'");
+            LOG.warn("Cannot start command from cancel. Ignoring '" + command + "'");
             return;
         }
         
-        if(!m_commandList.contains(command)){
+        if(!COMMAND_LIST.contains(command)){
             List<Subsystem> requires = command.getRequirements();
             if(requires.stream().anyMatch(Subsystem::getCurrentCommandNotInterruptable))
                 return;
@@ -145,14 +145,14 @@ public class Scheduler implements NamedSendable {
                     cmd.cancel();
                     cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
                     cmd.removed();
-                    m_commandList.remove(cmd);
+                    COMMAND_LIST.remove(cmd);
                 }
                 system.setCurrentCommand(command);
             }
 
             m_adding = false;
             
-            m_commandList.add(command);
+            COMMAND_LIST.add(command);
             
             m_runningCommandsChanged = true;
             command.startRunning();
@@ -174,16 +174,16 @@ public class Scheduler implements NamedSendable {
         
         if(m_disabled){
             if(++m_disabledCounter >= 32){
-                m_log.warn("Scheduler is being called, but is disabled.");
+                LOG.warn("Scheduler is being called, but is disabled.");
                 m_disabledCounter = 0;
             }
             return;
         }
         
-        m_buttons.forEach(ButtonScheduler::execute);
+        BUTTONS.forEach(ButtonScheduler::execute);
         
         Command cmd = null;
-        for(Iterator<Command> iter = m_commandList.iterator();iter.hasNext();){
+        for(Iterator<Command> iter = COMMAND_LIST.iterator();iter.hasNext();){
             cmd = iter.next();
             if(!cmd.run()){
                 cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
@@ -198,10 +198,10 @@ public class Scheduler implements NamedSendable {
 //            add_impl(iter.next());
 //        }
         
-        m_additions.forEach(Scheduler::add_internal);
-        m_additions.removeAllElements();
+        ADDITIONS.forEach(Scheduler::add_internal);
+        ADDITIONS.removeAllElements();
         
-        m_subsystems.forEach(Subsystem::iterationRun);
+        SUBSYSTEMS.forEach(Subsystem::iterationRun);
         
         updateTable();
     }
@@ -215,7 +215,7 @@ public class Scheduler implements NamedSendable {
      */
     static final void registerSubsystem(Subsystem system){
         if(system != null)
-            m_subsystems.addElement(system);
+            SUBSYSTEMS.addElement(system);
     }
     
     /**
@@ -223,12 +223,12 @@ public class Scheduler implements NamedSendable {
      */
     public static final void removeAll(){
         Command cmd;
-        for(Iterator<Command> iter = m_commandList.iterator(); iter.hasNext();){
+        for(Iterator<Command> iter = COMMAND_LIST.iterator(); iter.hasNext();){
             cmd = iter.next();            
             cmd.removed();
             iter.remove();
         }
-        m_subsystems.forEach(Subsystem::nullifyCurrentCommand);
+        SUBSYSTEMS.forEach(Subsystem::nullifyCurrentCommand);
     }
     
     /**
@@ -299,7 +299,7 @@ public class Scheduler implements NamedSendable {
             m_table.retrieveValue("Cancel", toCancel);
 
             if(toCancel.size() > 0){
-                m_commandList.forEach(cmd -> {
+                COMMAND_LIST.forEach(cmd -> {
                     for(int i = 0; i < toCancel.size(); i++){
                         if(cmd.hashCode() == toCancel.get(i)){
                             cmd.cancel();
@@ -315,7 +315,7 @@ public class Scheduler implements NamedSendable {
         if(m_runningCommandsChanged){
             commands.setSize(0);
             ids.setSize(0);
-            m_commandList.forEach(cmd -> {
+            COMMAND_LIST.forEach(cmd -> {
                 commands.add(cmd.getName());
                 ids.add(cmd.hashCode());
             });

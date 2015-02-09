@@ -28,7 +28,7 @@ public abstract class AnalogTriggerOutput extends DigitalIO implements BooleanSo
      * {@inheritDoc}
      */
     @Override
-    public boolean isAnalogTrigger() {
+    public final boolean isAnalogTrigger() {
         return true;
     }
     

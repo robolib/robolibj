@@ -20,13 +20,14 @@ package io.github.robolib.command;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class WaitForChildren extends Command {
+public final class WaitForChildren extends Command {
     protected void initialize() {}
     protected void execute() {}
-    protected void end() {}
-    protected void interrupted() {}
     protected boolean isFinished() {
         return getGroup() == null || getGroup().m_children.isEmpty();
     }
+    protected void end() {}
+    protected void interrupted() {}
+    
 
 }

@@ -23,7 +23,7 @@ import io.github.robolib.module.LimitSystem;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class LimitedController implements SpeedController, MotorSafety {
+public final class LimitedController implements SpeedController, MotorSafety {
     
     /** The m_motor. */
     private final SpeedController m_motor;

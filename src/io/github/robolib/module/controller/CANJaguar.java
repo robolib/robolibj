@@ -23,7 +23,7 @@ import io.github.robolib.util.log.Logger;
  *
  * @author Thomas Clark
  */
-public class CANJaguar implements SpeedController, MotorSafety,
+public final class CANJaguar implements SpeedController, MotorSafety,
         RateSource, LiveWindowSendable {
 
 

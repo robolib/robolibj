@@ -52,10 +52,12 @@ public final class Logger extends ILogger {
     
     
 	/** The Constant m_loggers. */
-	private static final Map<Object, Logger> m_loggers = new HashMap<>();
+	private static final Map<Object, Logger> LOGGERS =
+	        new HashMap<Object, Logger>();
     
     /** The Constant m_defOuts. */
-    private static final List<LogOutput> m_defOuts = new ArrayList<LogOutput>();
+    private static final List<LogOutput> DEFAULT_OUTS =
+            new ArrayList<LogOutput>();
     
     /** The m_debugEnabled. */
     private static boolean m_debugEnabled = false;
@@ -98,10 +100,10 @@ public final class Logger extends ILogger {
      * @return an ILogger instance
      */
     public static Logger get(Object o, String s){
-        if(!m_loggers.containsKey(o))
-            m_loggers.put(o, new Logger(s));
+        if(!LOGGERS.containsKey(o))
+            LOGGERS.put(o, new Logger(s));
         
-        return m_loggers.get(o);
+        return LOGGERS.get(o);
     }
     
     
@@ -113,7 +115,7 @@ public final class Logger extends ILogger {
      */
     private Logger(String label){
         m_outs = new ArrayList<>();
-        m_outs.addAll(m_defOuts);
+        m_outs.addAll(DEFAULT_OUTS);
         m_label = "(" + label + ")";
     }
     
@@ -157,8 +159,8 @@ public final class Logger extends ILogger {
      * @param out a {@link LogOutput} instance
      */
     public static void registerDefaultOutput(LogOutput out){
-        if(!m_defOuts.contains(out) && (!out.equals(TERM_OUT) || !out.equals(TERM_ERR)))
-            m_defOuts.add(out);
+        if(!DEFAULT_OUTS.contains(out) && (!out.equals(TERM_OUT) || !out.equals(TERM_ERR)))
+            DEFAULT_OUTS.add(out);
     }
 
     /**
@@ -198,7 +200,7 @@ public final class Logger extends ILogger {
      * @param out a {@link LogOutput} instance
      */
     public static void registerToAll(LogOutput out){
-        m_loggers.values().forEach(l -> {
+        LOGGERS.values().forEach(l -> {
             if(l.m_acceptGlobals)
                 l.registerOutput(out);
         });

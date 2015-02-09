@@ -154,7 +154,7 @@ public abstract class DigitalIO extends InterruptBase {
     }
 
     /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[MAX_DIGITAL_CHANNELS];
+    private static final boolean USED_CHANNELS[] = new boolean[MAX_DIGITAL_CHANNELS];
 
     /** The The RoboRIO port identifier. */
     protected ByteBuffer m_port;
@@ -201,7 +201,7 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * Free the resource associated with the Digital IO channel and set the value to 0.
      */
-    public void free() {
+    public final void free() {
 
         freeChannel(getChannel());
 
@@ -217,13 +217,13 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @param channel the DigitalIO channel to allocate
      */
-    private void allocateChannel(DigitalChannel channel){
+    private final void allocateChannel(DigitalChannel channel){
         if(channel.ordinal() > 9){
             allocateMXPPin(channel.m_mxpPin);
         }
 
-        if(m_usedChannels[channel.ordinal()] == false){
-            m_usedChannels[channel.ordinal()] = true;
+        if(USED_CHANNELS[channel.ordinal()] == false){
+            USED_CHANNELS[channel.ordinal()] = true;
         }else{
             throw new ResourceAllocationException("Digital IO channel '" + channel.name() + "' already in use.");
         }
@@ -234,13 +234,13 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @param channel the DigitalIO channel to free
      */
-    private void freeChannel(DigitalChannel channel){
+    private final void freeChannel(DigitalChannel channel){
         if(channel.ordinal() > 9){
             freeMXPPin(channel.m_mxpPin);
         }
 
-        if(m_usedChannels[channel.ordinal()] == true){
-            m_usedChannels[channel.ordinal()] = false;
+        if(USED_CHANNELS[channel.ordinal()] == true){
+            USED_CHANNELS[channel.ordinal()] = false;
         }else{
             Logger.get(DigitalIO.class).error("Digital IO Channel '" + channel.name() + "' was not allocated. How did you get here?");
         }
@@ -251,7 +251,7 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @return {@link DigitalChannel} representation of the DigitalIO channel
      */
-    public DigitalChannel getChannel(){
+    public final DigitalChannel getChannel(){
         return m_channel;
     }
 

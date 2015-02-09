@@ -28,7 +28,7 @@ import io.github.robolib.module.controller.MotorSafetyHelper;
 public final class SafetyManager {
     
     /** The m_safety objects. */
-    private static List<MotorSafetyHelper> m_safetyObjects = new ArrayList<MotorSafetyHelper>();
+    private static final List<MotorSafetyHelper> SAFETY_OBJECTS = new ArrayList<MotorSafetyHelper>();
     
     /**
      * Adds the motor.
@@ -38,7 +38,7 @@ public final class SafetyManager {
      */
     public static MotorSafetyHelper addMotor(MotorSafety object){
         MotorSafetyHelper msh = new MotorSafetyHelper(object);
-        m_safetyObjects.add(msh);
+        SAFETY_OBJECTS.add(msh);
         return msh;
     }
     
@@ -46,7 +46,7 @@ public final class SafetyManager {
      * Check.
      */
     public static void check(){
-        m_safetyObjects.forEach(MotorSafetyHelper::check);
+        SAFETY_OBJECTS.forEach(MotorSafetyHelper::check);
     }
 
 }

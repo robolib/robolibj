@@ -108,10 +108,10 @@ public abstract class SolenoidBase {
     }
 
     /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[SolenoidChannel.values().length];
+    private static final boolean USED_CHANNELS[] = new boolean[SolenoidChannel.values().length];
     
     /** Ports for blacklist checking */
-    private static ByteBuffer m_modulePorts[] = new ByteBuffer[2];
+    private static final ByteBuffer MODULE_PORTS[] = new ByteBuffer[2];
     
     /** The Constant kSolenoidOff. */
     protected static final byte SOLENOID_OFF = (byte)0x00;
@@ -126,7 +126,7 @@ public abstract class SolenoidBase {
      * @param channel the channel
      * @return the byte buffer
      */
-    protected synchronized static ByteBuffer initChannel(SolenoidChannel channel){
+    protected synchronized static final ByteBuffer initChannel(SolenoidChannel channel){
         allocateChannel(channel);
         IntBuffer status = getLE4IntBuffer();
         byte ch = (byte)(channel.ordinal()/8);
@@ -134,8 +134,8 @@ public abstract class SolenoidBase {
         port = SolenoidJNI.initializeSolenoidPort(port, status);
         HALUtil.checkStatus(status);
         
-        if(m_modulePorts[ch] == null)
-            m_modulePorts[ch] = port;
+        if(MODULE_PORTS[ch] == null)
+            MODULE_PORTS[ch] = port;
         return port;
     }
     
@@ -144,7 +144,7 @@ public abstract class SolenoidBase {
      *
      * @param channel the channel
      */
-    protected synchronized static void freeChannel(SolenoidChannel channel){
+    protected synchronized static final void freeChannel(SolenoidChannel channel){
         unallocateChannel(channel);
     }
     
@@ -153,12 +153,12 @@ public abstract class SolenoidBase {
      *
      * @param channel the Solenoid channel to allocate
      */
-    private synchronized static void allocateChannel(SolenoidChannel channel){
+    private synchronized static final void allocateChannel(SolenoidChannel channel){
 
-        if(m_usedChannels[channel.ordinal()] == true)
+        if(USED_CHANNELS[channel.ordinal()] == true)
             throw new ResourceAllocationException("Solenoid channel '" + channel.name() + "' already in use.");
             
-        m_usedChannels[channel.ordinal()] = true;
+        USED_CHANNELS[channel.ordinal()] = true;
     }
 
     /**
@@ -166,12 +166,12 @@ public abstract class SolenoidBase {
      *
      * @param channel the Solenoid channel to free
      */
-    private synchronized static void unallocateChannel(SolenoidChannel channel){
+    private synchronized static final void unallocateChannel(SolenoidChannel channel){
 
-        if(m_usedChannels[channel.ordinal()] == false)
+        if(USED_CHANNELS[channel.ordinal()] == false)
             Logger.get(SolenoidBase.class, "Solenoid").error("Solenoid Channel '" + channel.name() + "' was not allocated. How did you get here?");
             
-        m_usedChannels[channel.ordinal()] = false;
+        USED_CHANNELS[channel.ordinal()] = false;
     }
     
     /**
@@ -184,9 +184,9 @@ public abstract class SolenoidBase {
      * @param module 
      * @return The solenoid blacklist of all 8 solenoids on the module.
      */
-    public byte getPCMSolenoidBlacklist(int module){
+    public final byte getPCMSolenoidBlacklist(int module){
         IntBuffer status = getLE4IntBuffer();
-        byte value = SolenoidJNI.getPCMSolenoidBlackList(m_modulePorts[module], status);
+        byte value = SolenoidJNI.getPCMSolenoidBlackList(MODULE_PORTS[module], status);
         HALUtil.checkStatus(status);
         return value;
     }
@@ -197,9 +197,9 @@ public abstract class SolenoidBase {
      *          highside solenoid voltage rail is too low,
      *          most likely a solenoid channel is shorted.
      */
-    public boolean getPCMSolenoidVoltageStickyFault(int module){
+    public final boolean getPCMSolenoidVoltageStickyFault(int module){
         IntBuffer status = getLE4IntBuffer();
-        boolean value = SolenoidJNI.getPCMSolenoidVoltageStickyFault(m_modulePorts[module], status);
+        boolean value = SolenoidJNI.getPCMSolenoidVoltageStickyFault(MODULE_PORTS[module], status);
         HALUtil.checkStatus(status);
         return value;
     }
@@ -210,9 +210,9 @@ public abstract class SolenoidBase {
      *          highside solenoid voltage rail is too low,
      *          most likely a solenoid channel is shorted.
      */
-    public boolean getPCMSolenoidVoltageFault(int module){
+    public final boolean getPCMSolenoidVoltageFault(int module){
         IntBuffer status = getLE4IntBuffer();
-        boolean value = SolenoidJNI.getPCMSolenoidVoltageFault(m_modulePorts[module], status);
+        boolean value = SolenoidJNI.getPCMSolenoidVoltageFault(MODULE_PORTS[module], status);
         HALUtil.checkStatus(status);
         return value;
     }
@@ -228,9 +228,9 @@ public abstract class SolenoidBase {
      * If no sticky faults are set then this call will have no effect.
      * @param module 
      */
-    public void clearAllPCMStickyFaults(int module){
+    public final void clearAllPCMStickyFaults(int module){
         IntBuffer status = getLE4IntBuffer();
-        SolenoidJNI.clearAllPCMStickyFaults(m_modulePorts[module], status);
+        SolenoidJNI.clearAllPCMStickyFaults(MODULE_PORTS[module], status);
         HALUtil.checkStatus(status);
     }
     

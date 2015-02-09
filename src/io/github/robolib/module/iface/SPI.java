@@ -45,11 +45,11 @@ public class SPI extends Interface {
     };
     
     private int m_bitOrder;
-    private byte m_port;
+    private final byte m_port;
     private int m_clockPolarity;
     private int m_dataOnTrailing;
     
-    private static final boolean[] m_allocated = new boolean[5];
+    private static final boolean[] ALLOCATED_PORTS = new boolean[5];
     
     /**
      * Constructor
@@ -59,7 +59,7 @@ public class SPI extends Interface {
     public SPI(Port port) {
         super(InterfaceType.SPI);
         
-        if(m_allocated[port.ordinal()])
+        if(ALLOCATED_PORTS[port.ordinal()])
             throw new ResourceAllocationException("Cannot allocate spi port '" + port.name() + "', already in use.");
 
         if(port == Port.MXP){
@@ -69,7 +69,7 @@ public class SPI extends Interface {
             allocateMXPPin(25);
         }
         
-        m_allocated[port.ordinal()] = true;
+        ALLOCATED_PORTS[port.ordinal()] = true;
         
         IntBuffer status = getLE4IntBuffer();
         
@@ -85,7 +85,7 @@ public class SPI extends Interface {
     /**
      * Free the resources used by this object
      */
-    public void free(){
+    public final void free(){
         SPIJNI.spiClose(m_port);
     }
     
@@ -182,7 +182,7 @@ public class SPI extends Interface {
      * @param data the data to write
      * @param size the number of bytes to send
      */
-    public int write(byte[] data, int size){
+    public final int write(byte[] data, int size){
         int retVal = 0;
         ByteBuffer dB = ByteBuffer.allocateDirect(size);
         dB.put(data);
@@ -205,7 +205,7 @@ public class SPI extends Interface {
      * @param data the buffer to read into
      * @param size the number of bytes to read
      */
-    public int read(Boolean initiate, byte[] data, int size){
+    public final int read(Boolean initiate, byte[] data, int size){
         int retVal = 0;
         ByteBuffer dRB = ByteBuffer.allocateDirect(size);
         
@@ -227,7 +227,7 @@ public class SPI extends Interface {
      * @param dataGet Buffer to receive data from the device
      * @param size The length of the transaction, in bytes
      */
-    public int transaction(byte[] dataSend, byte[] dataGet, int size){
+    public final int transaction(byte[] dataSend, byte[] dataGet, int size){
         int retVal = 0;
         ByteBuffer dSB = ByteBuffer.allocateDirect(size);
         dSB.put(dataSend);
