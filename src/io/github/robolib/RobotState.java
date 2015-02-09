@@ -23,6 +23,8 @@ package io.github.robolib;
  */
 public final class RobotState {
     
+    private RobotState(){}
+    
     public static boolean isEnabled(){
         return DriverStation.isEnabled();
     }

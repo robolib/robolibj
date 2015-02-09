@@ -29,11 +29,11 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Solenoid extends SolenoidBase implements LiveWindowSendable, BooleanSink,
+public final class Solenoid extends SolenoidBase implements LiveWindowSendable, BooleanSink,
         BooleanSource {
     
-    private ByteBuffer m_port;
-    private SolenoidChannel m_channel;
+    private final ByteBuffer m_port;
+    private final SolenoidChannel m_channel;
     
     private ITable m_table;
     private ITableListener m_table_listener;

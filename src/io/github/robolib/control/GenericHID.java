@@ -49,7 +49,9 @@ public abstract class GenericHID {
      */
     protected GenericHID(int numAxes, int numBtns){
         m_numAxes = numAxes;
+        m_axes = new HIDAxis[numAxes];
         m_numBtns = numBtns;
+        m_btns = new HIDButton[numBtns];
     }
     
     /**
@@ -61,7 +63,7 @@ public abstract class GenericHID {
      * @return a {@link HIDAxis} instance of the requested Axis
      * @see HIDAxis
      */
-    public HIDAxis getAxis(int axis) {
+    public final HIDAxis getAxis(int axis) {
         checkAxis(axis);
         return m_axes[axis];
     }
@@ -75,7 +77,7 @@ public abstract class GenericHID {
      * @param axis the new {@link HIDAxis}
      * @see HIDAxis
      */
-    public void setAxis(int index, HIDAxis axis){
+    public final void setAxis(int index, HIDAxis axis){
         checkButton(index);
         m_axes[index] = axis;
     }
@@ -95,7 +97,7 @@ public abstract class GenericHID {
      * @param axis the axis to invert
      * @see HIDAxis
      */
-    public void setAxisInverted(int axis){
+    public final void setAxisInverted(int axis){
         getAxis(axis).setInverted(true);
     }
     
@@ -106,7 +108,7 @@ public abstract class GenericHID {
      * @param deadband the deadband
      * @see HIDAxis
      */
-    public void setAxisDeadband(int axis, double deadband){
+    public final void setAxisDeadband(int axis, double deadband){
         getAxis(axis).setDeadband(deadband);
     }
     
@@ -131,7 +133,7 @@ public abstract class GenericHID {
      * @return a {@link HIDButton} instance of the requested Button
      * @see HIDButton
      */
-    public HIDButton getButton(int button) {
+    public final HIDButton getButton(int button) {
         checkButton(button);
         return m_btns[button];
     }
@@ -145,7 +147,7 @@ public abstract class GenericHID {
      * @param button the new {@link HIDButton}
      * @see HIDButton
      */
-    public void setButton(int index, HIDButton button){
+    public final void setButton(int index, HIDButton button){
         checkButton(index);
         m_btns[index] = button;
     }
@@ -216,7 +218,7 @@ public abstract class GenericHID {
      *
      * @param button the btn
      */
-    protected void addButton(final HIDButton button){
+    protected final void addButton(final HIDButton button){
         m_btns = Arrays.copyOf(m_btns, m_numBtns + 1);
         m_btns[m_btns.length - 1] = button;
         m_numBtns = m_btns.length;
@@ -229,7 +231,7 @@ public abstract class GenericHID {
      * @param posThresh the pos thresh
      * @param negThresh the neg thresh
      */
-    protected void addAxisButton(final int channel, final double posThresh, final double negThresh){
+    protected final void addAxisButton(final int channel, final double posThresh, final double negThresh){
         addButton(new HIDButton(){           
             @Override
             public boolean getState() {
@@ -265,7 +267,7 @@ public abstract class GenericHID {
      * @param axis the axis being checked
      * @see HIDAxis
      */
-    protected void checkAxis(int axis){
+    protected final void checkAxis(int axis){
         if(0 > axis || m_numAxes < axis){
             throw new InvalidAxisException(axis);
         }
@@ -297,7 +299,7 @@ public abstract class GenericHID {
      * @param button the button being checked.
      * @see HIDButton
      */
-    protected void checkButton(int button){
+    protected final void checkButton(int button){
         if(0 > button || m_numBtns < button){
             throw new InvalidButtonException(button);
         }

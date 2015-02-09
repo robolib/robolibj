@@ -23,26 +23,20 @@ import io.github.robolib.nettable.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class NetTableController extends GenericHID {
+public final class NetTableController extends GenericHID {
 
     /** The m_table. */
     private final ITable m_table;
-    
-    /** The m_axes. */
-    private HIDAxis m_axes[];
-    
-    /** The m_btns. */
-    private HIDButton m_btns[];
     
     /**
      * The Class NetTableAxis.
      * 
      * @author noriah Reuland <vix@noriah.dev>
      */
-    public class NetTableAxis implements HIDAxis {
+    public final class NetTableAxis implements HIDAxis {
 
         /** The m_invert. */
-        private int m_invert = 1;
+        private boolean m_invert = false;
         
         /** The m_dead band. */
         private double m_deadBand = 0.00;
@@ -65,8 +59,9 @@ public class NetTableController extends GenericHID {
          */
         @Override
         public double get(){
-            double out = m_table.getNumber("axis-" + m_channel, 0.00) * m_invert;
-            return (Math.abs(out) <= m_deadBand ? 0 : out);
+            double out = m_table.getNumber("axis-" + m_channel, 0.00);
+            out = (Math.abs(out) <= m_deadBand ? 0 : out);
+            return m_invert ? -out : out;
         }
 
         /**
@@ -74,7 +69,7 @@ public class NetTableController extends GenericHID {
          */
         @Override
         public void setInverted(boolean inverted){
-            m_invert = inverted ? -1 : 1;
+            m_invert = inverted;
         }
 
         /**
@@ -91,7 +86,7 @@ public class NetTableController extends GenericHID {
      * 
      * @author noriah Reuland <vix@noriah.dev>
      */
-    public class NetTableButton implements HIDButton {
+    public final class NetTableButton implements HIDButton {
         
         /** The m_invert. */
         private boolean m_invert = false;
@@ -135,10 +130,7 @@ public class NetTableController extends GenericHID {
      * @param numBtns Number of Buttons to add to the Joystick
      */
     public NetTableController(String name, int numAxes, int numBtns){
-        
         super(numAxes, numBtns);
-        m_axes = new NetTableAxis[numAxes];
-        m_btns = new NetTableButton[numBtns];
         
         m_table = RoboLibBot.getRobotTable().getSubTable("Joystick").getSubTable(name);
         for(int i = 0; i < numAxes; i++)
@@ -146,28 +138,6 @@ public class NetTableController extends GenericHID {
         
         for(int i = 0; i < numBtns; i++)
             m_btns[i] = new NetTableButton(i + 1);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return a {@link NetTableAxis} instance of the requested Axis
-     * @see NetTableAxis
-     */
-    @Override
-    public HIDAxis getAxis(int axis) {
-        checkAxis(axis);
-        return m_axes[axis - 1];
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return a {@link NetTableButton} instance of the requested Button
-     * @see NetTableButton
-     */
-    @Override
-    public HIDButton getButton(int btn) {
-        checkButton(btn);
-        return m_btns[btn - 1];
     }
 
     /**

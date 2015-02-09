@@ -61,7 +61,7 @@ public class Joystick extends GenericHID {
      * 
      * @author noriah Reuland <vix@noriah.dev>
      */
-    protected class JoystickAxis implements HIDAxis {
+    protected final class JoystickAxis implements HIDAxis {
 
         /** The m_invert. */
         private boolean m_inverted = false;
@@ -113,7 +113,7 @@ public class Joystick extends GenericHID {
      * 
      * @author noriah Reuland <vix@noriah.dev>
      */
-    protected class JoystickButton implements HIDButton {
+    protected final class JoystickButton implements HIDButton {
         
         /** The m_channel. */
         private final int m_channel;
@@ -179,7 +179,7 @@ public class Joystick extends GenericHID {
     
     private static double m_nextComplainTime = 0.0;
     
-    protected synchronized static void complainJoystickMissing(String msg){
+    protected synchronized static final void complainJoystickMissing(String msg){
         double c = RoboRIO.getFPGATimestamp();
         if(c > m_nextComplainTime){
             Logger.get(Joystick.class).error(msg);
@@ -194,7 +194,7 @@ public class Joystick extends GenericHID {
      * @param axis the axis
      * @return the stick axis
      */
-    protected synchronized static double getStickAxis(JSID stick, int axis){
+    protected synchronized static final double getStickAxis(JSID stick, int axis){
         if(m_joystickAxes[stick.ordinal()].length <= axis){
             complainJoystickMissing("Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return 0.0;
@@ -215,7 +215,7 @@ public class Joystick extends GenericHID {
      * @param button the button
      * @return the stick button
      */
-    protected synchronized static boolean getStickButton(JSID stick, int button){
+    protected synchronized static final boolean getStickButton(JSID stick, int button){
         if(m_joystickButtonsCount[stick.ordinal()] <= button){
             complainJoystickMissing("Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return false;
@@ -231,7 +231,7 @@ public class Joystick extends GenericHID {
      * @param pov the pov
      * @return the stick pov
      */
-    protected synchronized static int getStickPOV(JSID stick, int pov){
+    protected synchronized static final int getStickPOV(JSID stick, int pov){
         if(m_joystickButtonsCount[stick.ordinal()] <= pov){
             complainJoystickMissing("Button '" + pov + "' on stick '" + stick + "' is invalid. Is it plugged in?");
             return 0;
@@ -283,12 +283,10 @@ public class Joystick extends GenericHID {
 
         m_port = port;
         m_portByte = (byte)port.ordinal();
-        m_axes = new HIDAxis[numAxes];
         for(int i = 0; i < numAxes; i++){
             m_axes[i] = new JoystickAxis(i);
         }
         
-        m_btns = new HIDButton[numBtns];
         for(int i = 0; i < numBtns; i++){
             m_btns[i] = new JoystickButton(i);
         }
@@ -299,7 +297,7 @@ public class Joystick extends GenericHID {
      * {@inheritDoc}
      */
     @Override
-    public int getPOV(int pov){
+    public final int getPOV(int pov){
         return getStickPOV(m_port, pov);
     }
     
@@ -307,7 +305,7 @@ public class Joystick extends GenericHID {
      * Get the Port JSID that this Joystick is on
      * @return the stick this joystick is on
      */
-    public JSID getStickPort(){
+    public final JSID getStickPort(){
         return m_port;
     }
     
@@ -328,7 +326,7 @@ public class Joystick extends GenericHID {
      * @param type Which rumble value to set
      * @param value The normalized value (0 to 1) to set the rumble to
      */
-    public void setRumble(RumbleSide type, float value) {
+    public final void setRumble(RumbleSide type, float value) {
         short rVal = (short)(MathUtils.clamp(value, 0F, 1F) * 65535);
         switch(type){
         case LEFT:
@@ -345,7 +343,7 @@ public class Joystick extends GenericHID {
         NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }
     
-    public void setOutput(int outputNumber, boolean value){
+    public final void setOutput(int outputNumber, boolean value){
         if(MathUtils.inBounds(outputNumber, 0, 31)){
             m_outputs = (m_outputs & ~(1 << outputNumber)) | ((value?1:0) << outputNumber);
             NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
@@ -355,7 +353,7 @@ public class Joystick extends GenericHID {
             
     }
     
-    public void setOutputs(int value){
+    public final void setOutputs(int value){
         m_outputs = value;
         NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }

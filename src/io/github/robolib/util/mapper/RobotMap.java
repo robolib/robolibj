@@ -33,9 +33,10 @@ import org.json.JSONObject;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class RobotMap {
+public final class RobotMap {
 
-    private static final Map<String, ModuleBuilder<?>> m_builderMap = new HashMap<String, ModuleBuilder<?>>();
+    private static final Map<String, ModuleBuilder<?>> BUILDER_MAP =
+            new HashMap<String, ModuleBuilder<?>>();
     
     private static JSONObject m_jMap;
     
@@ -43,7 +44,7 @@ public class RobotMap {
     
     private static boolean m_enabled = false;
     
-    public static final void setMapFile(String file){
+    public static void setMapFile(String file){
         m_mapFile = file;
         m_enabled = true;
         File f = new File(m_mapFile);
@@ -59,24 +60,28 @@ public class RobotMap {
         registerModuleBuilder(new SolenoidBuilder());
     }
     
-    public static final void registerModuleBuilder(ModuleBuilder<?> builder){
+    private RobotMap(){}
+    
+    public static void registerModuleBuilder(ModuleBuilder<?> builder){
         for(String s : builder.getStringIdentifiers()){
-            if(m_builderMap.containsKey(s.toLowerCase()))
-                throw new IllegalArgumentException("A module builder under the key '" + s + "' already exists.");
-            m_builderMap.put(s.toLowerCase(), builder);
+            if(BUILDER_MAP.containsKey(s.toLowerCase()))
+                throw new IllegalArgumentException("A module builder under the key '"
+                        + s + "' already exists.");
+            BUILDER_MAP.put(s.toLowerCase(), builder);
         }
     }
 
-    public static final Object get(String key){
+    public static Object get(String key){
         if(!m_enabled)
-            throw new IllegalStateException("You must set the map file in the robot constructor before anything else.");
+            throw new IllegalStateException(
+                    "You must set the map file in the robot constructor before anything else.");
         JSONObject data = m_jMap.getJSONObject(key);
-        ModuleBuilder<?> builder = m_builderMap.get(data.getString("type").toLowerCase());
+        ModuleBuilder<?> builder = BUILDER_MAP.get(data.getString("type").toLowerCase());
         return builder.createModule(key, data.getJSONArray("data"));
     }
     
     @SuppressWarnings("unchecked")
-    public static final <T> T get(String key, Type a){
+    public static <T> T get(String key, Type a){
         
         return (T) get(key);
     }

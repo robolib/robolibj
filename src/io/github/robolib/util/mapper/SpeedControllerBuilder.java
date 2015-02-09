@@ -38,9 +38,10 @@ import org.json.JSONException;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class SpeedControllerBuilder implements ModuleBuilder<SpeedController> {
+public final class SpeedControllerBuilder implements ModuleBuilder<SpeedController> {
 
-    private static final Map<String, Class<? extends SpeedController>> m_classMap = new HashMap<>();
+    private static final Map<String, Class<? extends SpeedController>> CONTROLLER_MAP =
+            new HashMap<String, Class<? extends SpeedController>>();
     
     static{        
         registerController("Talon", Talon.class);
@@ -92,7 +93,7 @@ public class SpeedControllerBuilder implements ModuleBuilder<SpeedController> {
                     
             }
             
-            SpeedController s = m_classMap.get(type).getConstructor(classes).newInstance(args);
+            SpeedController s = CONTROLLER_MAP.get(type).getConstructor(classes).newInstance(args);
             s.setInverted(invert);
             return s;
             
@@ -106,11 +107,11 @@ public class SpeedControllerBuilder implements ModuleBuilder<SpeedController> {
     }
     
     public static final void registerController(String key, Class<? extends SpeedController> con){
-        if(m_classMap.containsKey(key.toLowerCase())){
+        if(CONTROLLER_MAP.containsKey(key.toLowerCase())){
             Logger.get(RobotMap.class).warn(
                     "SpeedControllerBuilder already contains a an item for key '" + key + "'.");
         }else{
-            m_classMap.put(key.toLowerCase(), con);
+            CONTROLLER_MAP.put(key.toLowerCase(), con);
         }
             
     }

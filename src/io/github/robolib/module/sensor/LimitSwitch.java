@@ -74,8 +74,8 @@ public class LimitSwitch extends DigitalInput {
      * {@inheritDoc}
      */
     @Override
-    public boolean get() {
-        return m_type.value && super.get();
+    public boolean getState() {
+        return m_type.value && super.getState();
     }
 
     /**

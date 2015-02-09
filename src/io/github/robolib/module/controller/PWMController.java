@@ -26,7 +26,7 @@ import io.github.robolib.module.iface.PWM;
  */
 public class PWMController extends PWM implements SpeedController, MotorSafety {
     
-    protected MotorSafetyHelper m_safetyHelper;
+    protected final MotorSafetyHelper m_safetyHelper;
     
     private boolean m_inverted = false;
     
@@ -103,7 +103,7 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public MotorSafetyHelper getSafetyHelper() {
+    public final MotorSafetyHelper getSafetyHelper() {
         return m_safetyHelper;
     }
     
@@ -111,7 +111,7 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public double getSpeed(){
+    public final double getSpeed(){
     	return (m_inverted ? -super.getSpeed() : super.getSpeed());
     }
     
@@ -119,7 +119,7 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public void setSpeed(double speed){
+    public final void setSpeed(double speed){
         super.setSpeed(m_inverted ? -speed : speed);
         m_safetyHelper.feed();
     }
@@ -128,7 +128,7 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public void setInverted(boolean inverted){
+    public final void setInverted(boolean inverted){
         m_inverted = inverted;
     }
 
@@ -136,15 +136,15 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public void stopMotor() {
-        setRaw(kPWMDisabled);
+    public final void stopMotor() {
+        setRaw(PWM_DISABLED_WIDTH);
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getDescription() {
+    public final String getDescription() {
         return m_description;
     }
 }

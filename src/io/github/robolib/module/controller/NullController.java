@@ -20,16 +20,14 @@ package io.github.robolib.module.controller;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class NullController implements SpeedController {
+public final class NullController implements SpeedController {
     
     /**
      * Do absolutely nothing
      * @return 0.00
      */
     @Override
-    public double getSpeed() {
-        return 0.00;
-    }
+    public double getSpeed() { return 0.00; }
 
     /**
      * Do absolutely nothing
@@ -47,10 +45,7 @@ public class NullController implements SpeedController {
      * {@inheritDoc}
      */
     @Override
-    public void pidWrite(double output) {
-        // TODO Auto-generated method stub
-        
-    }
+    public void pidWrite(double output) {}
 
     /**
      * Do Nothing

@@ -27,13 +27,13 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
+public final class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
     
-    private SolenoidChannel m_forwardChannel;
-    private SolenoidChannel m_reverseChannel;
+    private final SolenoidChannel m_forwardChannel;
+    private final SolenoidChannel m_reverseChannel;
     
-    private ByteBuffer m_forwardPort;
-    private ByteBuffer m_reversePort;
+    private final ByteBuffer m_forwardPort;
+    private final ByteBuffer m_reversePort;
     
     private ITable m_table;
     private ITableListener m_table_listener;

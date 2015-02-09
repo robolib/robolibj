@@ -26,7 +26,7 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class MotorSafetyHelper {
+public final class MotorSafetyHelper {
     
     /** The m_safety object. */
     private MotorSafety m_safetyObject;

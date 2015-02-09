@@ -22,9 +22,9 @@ import io.github.robolib.RoboLibBot;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class WaitUntilCommand extends Command {
+public final class WaitUntilCommand extends Command {
     
-    private double m_time;
+    private final double m_time;
     
     public WaitUntilCommand(double time){
         this("WaitUntil " + time, time);
@@ -36,15 +36,11 @@ public class WaitUntilCommand extends Command {
     }
     
     public void initialize() {}
-
     public void execute() {}
-
     public boolean isFinished() {
         return RoboLibBot.getMatchTime() >= m_time;
     }
-
     public void end() {}
-
     public void interrupted() {}
 
 }

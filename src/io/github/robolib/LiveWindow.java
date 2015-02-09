@@ -29,54 +29,58 @@ import io.github.robolib.util.log.Logger;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class LiveWindow {
+public final class LiveWindow {
     
-    private static Vector<LiveWindowSendable> m_sensors = new Vector<LiveWindowSendable>();
+    private static final Vector<LiveWindowSendable> SENSORS_LIST =
+            new Vector<LiveWindowSendable>();
     
-    private static Hashtable<LiveWindowSendable, LWComponent> m_components = new Hashtable<LiveWindowSendable, LWComponent>();
+    private static final Hashtable<LiveWindowSendable, LWComponent> COMPONENTS_LIST =
+            new Hashtable<LiveWindowSendable, LWComponent>();
     
     private static ITable m_table;
     
     private static ITable m_statusTable;
     
-    private static ILogger m_log = Logger.get(LiveWindow.class);
+    private static final ILogger LOG = Logger.get(LiveWindow.class);
     
     private static boolean m_lwEnabled = false;
     
     private static boolean m_firstTime = true;
     
+    private LiveWindow(){}
+    
     private static void initLWComponents(){
-        m_log.debug("Initializing the components first time");
+        LOG.debug("Initializing the components first time");
         m_table = NetworkTable.getTable("LiveWindow");
         m_statusTable = m_table.getSubTable("~STATUS~");
-        m_components.forEach((LiveWindowSendable s, LWComponent c) -> {
+        COMPONENTS_LIST.forEach((LiveWindowSendable s, LWComponent c) -> {
             String subsystem = c.m_subsystem;
             String name = c.m_name;
-            m_log.debug("Initializing table for '" + subsystem + "' '" + name + "'");
+            LOG.debug("Initializing table for '" + subsystem + "' '" + name + "'");
             m_table.getSubTable("subsystem").putString("~TYPE~", "LW Subsystem");
             ITable table = m_table.getSubTable(subsystem).getSubTable(name);
             table.putString("~TYPE~", s.getSmartDashboardType());
             table.putString("Name", name);
             table.putString("Subsystem", subsystem);
             s.initTable(table);
-            if(c.m_isSensor) m_sensors.addElement(s);
+            if(c.m_isSensor) SENSORS_LIST.addElement(s);
         });
     }
     
     public static void setEnabled(boolean enabled){
         if(m_lwEnabled != enabled){
             if(enabled){
-                m_log.debug("Starting live window mode");
+                LOG.debug("Starting live window mode");
                 if(m_firstTime){
                     initLWComponents();
                     m_firstTime = false;
                 }
                 Scheduler.setEnabled(false);
                 Scheduler.removeAll();
-                m_components.keySet().forEach(s -> s.startLiveWindowMode());
+                COMPONENTS_LIST.keySet().forEach(s -> s.startLiveWindowMode());
             }else{
-                m_log.debug("Stopping live window mode.");
-                m_components.keySet().forEach(s -> s.stopLiveWindowMode());
+                LOG.debug("Stopping live window mode.");
+                COMPONENTS_LIST.keySet().forEach(s -> s.stopLiveWindowMode());
                 Scheduler.setEnabled(true);
             }
             m_lwEnabled = enabled;
@@ -85,23 +89,23 @@ public class LiveWindow {
     }
     
     public static void run(){
-        m_sensors.forEach(sensor -> sensor.updateTable());
+        SENSORS_LIST.forEach(sensor -> sensor.updateTable());
     }
     
     public static void addSensor(String subsystem, String name, LiveWindowSendable component){
-        m_components.put(component, new LWComponent(subsystem, name, true));
+        COMPONENTS_LIST.put(component, new LWComponent(subsystem, name, true));
     }
     
     public static void addSensor(String itemType, int channel, LiveWindowSendable component){
         addSensor("Ungrouped", itemType + "[" + channel + "]", component);
-        if (m_sensors.contains(component)) {
-            m_sensors.removeElement(component);
+        if (SENSORS_LIST.contains(component)) {
+            SENSORS_LIST.removeElement(component);
         }
-        m_sensors.addElement(component);
+        SENSORS_LIST.addElement(component);
     }
     
     public static void addActuator(String subsystem, String name, LiveWindowSendable component){
-        m_components.put(component, new LWComponent(subsystem, name, false));
+        COMPONENTS_LIST.put(component, new LWComponent(subsystem, name, false));
     }
     
     public static void addActuator(String itemType, int channel, LiveWindowSendable component){

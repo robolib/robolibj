@@ -86,7 +86,8 @@ public class RoboLibBot {
     private static RobotMode m_currentRobotMode;
     
     /** The m_modes. */
-    private static final EnumMap<GameMode, RobotMode> m_modes = new EnumMap<GameMode, RobotMode>(GameMode.class);
+    private static final EnumMap<GameMode, RobotMode> MODES_MAP =
+            new EnumMap<GameMode, RobotMode>(GameMode.class);
 
     //private final RobotMode m_modes[];
     
@@ -154,7 +155,7 @@ public class RoboLibBot {
     /**
      * Enable Debug Messages.
      */
-    protected void enableDebugStatements(){
+    protected final void enableDebugStatements(){
         enableDebug(true);
     }
 
@@ -163,7 +164,7 @@ public class RoboLibBot {
      *
      * @param debug Enable or Disable
      */
-    protected void enableDebug(boolean debug){
+    protected final void enableDebug(boolean debug){
         m_log.enableDebug(debug);
     }
 
@@ -218,7 +219,7 @@ public class RoboLibBot {
      * Get the main NetworkTable table for the robot.
      * @return a networktable ITable
      */
-    public static ITable getRobotTable(){
+    public static final ITable getRobotTable(){
         return m_table;
     }
 
@@ -265,7 +266,7 @@ public class RoboLibBot {
      * @see AutonMode
      * @see TeleopMode
      */
-    public static void main(String args[]) {
+    public static final void main(String args[]) {
         NetworkCommunications.NetworkCommunicationReserve();
         ILogger log = Logger.get(RoboLibBot.class, "Framework");
         Thread.currentThread().setName("Framework Thread");
@@ -351,31 +352,31 @@ public class RoboLibBot {
 
         log.info("Initializing Robot Modes");
 
-        if(!m_modes.containsKey(GameMode.DISABLED)){
+        if(!MODES_MAP.containsKey(GameMode.DISABLED)){
             log.debug("No Disabled Robot Mode Defined");
             log.debug("Creating Empty Disabled Mode");
             new DisabledMode(){};
         }
         
-        if(!m_modes.containsKey(GameMode.TEST)){
+        if(!MODES_MAP.containsKey(GameMode.TEST)){
             log.debug("No Test Robot Mode Defined");
             log.debug("Creating Empty Test Mode");
             new TestMode(){};
         }
         
-        if(!m_modes.containsKey(GameMode.AUTON)){
+        if(!MODES_MAP.containsKey(GameMode.AUTON)){
             log.debug("No Autonomous Robot Mode Defined");
             log.debug("Creating Empty Autonomous Mode");
             new AutonMode(){};
         }
         
-        if(!m_modes.containsKey(GameMode.TELEOP)){
+        if(!MODES_MAP.containsKey(GameMode.TELEOP)){
             log.debug("No Teleop Robot Mode Defined");
             log.debug("Creating Empty Teleop Mode");
             new TeleopMode(){};
         }
         m_currentMode = GameMode.DISABLED;
-        m_currentRobotMode = m_modes.get(m_currentMode);
+        m_currentRobotMode = MODES_MAP.get(m_currentMode);
         m_table.putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
         m_table.putString(NETTABLE_CURRENT_MODE_STRING, m_currentRobotMode.getName());
 
@@ -407,7 +408,7 @@ public class RoboLibBot {
                     }
                     
                     m_currentMode = gMode;
-                    m_currentRobotMode = m_modes.get(m_currentMode);
+                    m_currentRobotMode = MODES_MAP.get(m_currentMode);
                     m_table.putNumber(NETTABLE_CURRENT_MODE, gMode.ordinal());
                     m_table.putString(NETTABLE_CURRENT_MODE_STRING, m_currentRobotMode.getName());
                     System.gc();
@@ -486,7 +487,7 @@ public class RoboLibBot {
     public void free() {
     }
     
-    public static void registerAutonomous(AutonMode aMode, String name){
+    public static final void registerAutonomous(AutonMode aMode, String name){
         
     }
     
@@ -500,7 +501,7 @@ public class RoboLibBot {
      */
     protected static final void set(GameMode gMode, RobotMode rMode){
         if(!getGameMode().equals(gMode)){
-            m_modes.put(gMode, rMode);
+            MODES_MAP.put(gMode, rMode);
         }
     }
     
@@ -532,10 +533,10 @@ public class RoboLibBot {
      * @return {@link RobotMode}
      */
     public static final RobotMode getRobotMode(GameMode mode){
-        if(!m_modes.containsKey(mode))
+        if(!MODES_MAP.containsKey(mode))
             return new RobotMode(){};
 
-        return m_modes.get(mode);
+        return MODES_MAP.get(mode);
     }
 
     /**
@@ -545,7 +546,7 @@ public class RoboLibBot {
      * @return boolean do we have it?
      */
     public static final boolean hasMode(GameMode mode){
-        return m_modes.containsKey(mode);
+        return MODES_MAP.containsKey(mode);
     }
     
     /**
@@ -578,7 +579,7 @@ public class RoboLibBot {
      *
      * @return If the robot is running in simulation.
      */
-    public static boolean isSimulation() {
+    public static final boolean isSimulation() {
         return false;
     }
 
@@ -587,7 +588,7 @@ public class RoboLibBot {
      *
      * @return If the robot is running in the real world.
      */
-    public static boolean isReal() {
+    public static final boolean isReal() {
         return true;
     }
 

@@ -35,7 +35,7 @@ import io.github.robolib.util.log.Logger;
  */
 public final class DriverStation {
 
-    private Thread m_thread;
+    private final Thread m_thread;
     private final Object m_dataSem;
     private volatile boolean m_thread_keepAlive;
     private volatile boolean m_thread_exit_error;
@@ -44,13 +44,15 @@ public final class DriverStation {
     private final ByteBuffer m_packetDataAvailableSem;
     private final ILogger m_log;
 
-    private static DriverStation m_instance = null;
+    private static DriverStation m_instance;
     
-    public static final void initialize(){
+    protected static void initialize(){
+        if(m_instance != null)
+            throw new IllegalStateException("DriverStation already Initialized");
         m_instance = new DriverStation();
     }
     
-    public static DriverStation getInstance(){
+    public static final DriverStation getInstance(){
         return m_instance;
     }
     
@@ -69,7 +71,6 @@ public final class DriverStation {
         m_thread = new Thread(() -> commTask(), "DriverStation JSThread");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
         m_thread.setDaemon(true);
-        
     }
     
     /**
@@ -191,10 +192,12 @@ public final class DriverStation {
      * Has a new control packet from the driver station arrived since the last time this function was called?
      * @return True if the control data has been updated since the last call.
      */
-    protected synchronized boolean isNewControlData() {
-        boolean result = m_newControlData;
-        m_newControlData = false;
-        return result;
+    protected boolean isNewControlData() {
+        synchronized(this){
+            boolean result = m_newControlData;
+            m_newControlData = false;
+            return result;
+        }
     }
     
     /**

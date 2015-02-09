@@ -23,9 +23,9 @@ package io.github.robolib.command;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class StartCommand extends Command {
+public final class StartCommand extends Command {
     
-    private Command m_command;
+    private final Command m_command;
     
     /**
      * Instantiates a {@link StartCommand} which will start the
@@ -35,24 +35,11 @@ public class StartCommand extends Command {
     public StartCommand(Command command){
         m_command = command;
     }
-
-    @Override
-    protected void initialize() {
-        m_command.start();
-    }
-
-    @Override
+    
+    protected void initialize() {m_command.start();}
     protected void execute() {}
-
-    @Override
-    protected boolean isFinished() {
-        return true;
-    }
-
-    @Override
+    protected boolean isFinished() { return true; }
     protected void end() {}
-
-    @Override
     protected void interrupted() {}
 
 }

@@ -41,7 +41,7 @@ import io.github.robolib.util.log.Logger;
  *   
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Serial extends Interface {
+public final class Serial extends Interface {
 
     /**
      * Valid ports for the serial port.

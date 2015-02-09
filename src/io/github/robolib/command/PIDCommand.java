@@ -28,11 +28,11 @@ import io.github.robolib.nettable.ITable;
  */
 public abstract class PIDCommand extends Command implements Sendable {
     
-    private PIDController m_controller;
+    final PIDController m_controller;
     
-    private PIDSink m_sink = this::usePIDOutput;
+    final PIDSink m_sink = this::usePIDOutput;
     
-    private PIDSource m_source = this::returnPIDInput;
+    final PIDSource m_source = this::returnPIDInput;
     
     /**
      * Instantiates a {@link PIDCommand} that will use the given p, i and d values.
@@ -96,17 +96,17 @@ public abstract class PIDCommand extends Command implements Sendable {
     }
     
     @Override
-    void initialize_impl(){
+    final void initialize_impl(){
         m_controller.enable();
     }
     
     @Override
-    void end_impl(){
+    final void end_impl(){
         m_controller.disable();
     }
     
     @Override
-    void interrupted_impl(){
+    final void interrupted_impl(){
         m_controller.disable();
     }
     
@@ -116,7 +116,7 @@ public abstract class PIDCommand extends Command implements Sendable {
      * then the bounds will still be honored by this method.
      * @param deltaSetpoint the change in the setpoint
      */
-    public void setSetpointRelative(double deltaSetpoint){
+    public final void setSetpointRelative(double deltaSetpoint){
         setSetpoint(getSetpoint() + deltaSetpoint);
     }
     
@@ -127,7 +127,7 @@ public abstract class PIDCommand extends Command implements Sendable {
      * will be trimmed to fit within the range.
      * @param setpoint the new setpoint
      */
-    protected void setSetpoint(double point){
+    protected final void setSetpoint(double point){
         m_controller.setSetpoint(point);
     }
     
@@ -135,7 +135,7 @@ public abstract class PIDCommand extends Command implements Sendable {
      * Returns the setpoint.
      * @return the setpoint
      */
-    protected double getSetpoint(){
+    protected final double getSetpoint(){
         return m_controller.getSetpoint();
     }
     
@@ -143,7 +143,7 @@ public abstract class PIDCommand extends Command implements Sendable {
      * Returns the current position
      * @return the current position
      */
-    protected double getPosition(){
+    protected final double getPosition(){
         return returnPIDInput();
     }
     
@@ -153,7 +153,7 @@ public abstract class PIDCommand extends Command implements Sendable {
      * @param min the minimum value expected from the input and setpoint
      * @param max the maximum value expected from the input and setpoint
      */
-    protected void setInputRange(double min, double max){
+    protected final void setInputRange(double min, double max){
         m_controller.setInputRange(min, max);
     }
 
@@ -163,7 +163,7 @@ public abstract class PIDCommand extends Command implements Sendable {
      * @param min the minimum value to write to the output
      * @param max the maximum value to write to the output
      */
-    protected void setOutputRange(double min, double max){
+    protected final void setOutputRange(double min, double max){
         m_controller.setOutputRange(min, max);
     }
     
@@ -193,11 +193,11 @@ public abstract class PIDCommand extends Command implements Sendable {
      */
     protected abstract void usePIDOutput(double output);
     
-    public String getSmartDashboardType(){
+    public final String getSmartDashboardType(){
         return "PIDCommand";
     }
     
-    public void initTable(ITable table){
+    public final void initTable(ITable table){
         m_controller.initTable(table);
         super.initTable(table);
     }

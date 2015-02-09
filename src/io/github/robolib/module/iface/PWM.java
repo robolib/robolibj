@@ -156,21 +156,21 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     }
 
     /** The default PWM Period. */
-    protected static final double kDefaultPWMPeriod = 5.05;
+    protected static final double PWM_DEFAULT_PERIOD = 5.05;
 
     /** The default PWM center pulse width in ms. */
-    protected static final double kDefaultPWMCenter = 1.5;
+    protected static final double PWM_DEFAULT_CENTER = 1.5;
 
     /** The default steps down for a PWM? */
-    protected static final int kDefaultPWMStepsDown = 1000;
+    protected static final int PWM_DEFAULT_STEPS_DOWN = 1000;
 
     /** The default disable value for a PWM. */
-    public static final int kPWMDisabled = 0;
+    public static final int PWM_DISABLED_WIDTH = 0;
     
-    public static final int kSystemClockTicksPerMicrosecond = 40;
+    public static final int SYSTEM_CLOCK_TICKS_PER_MICROSEC = 40;
 
     /** Keep track of already used channels. */
-    private static final boolean m_usedChannels[] = new boolean[MAX_PWM_CHANNELS];
+    private static final boolean USED_CHANNELS[] = new boolean[MAX_PWM_CHANNELS];
 
     /** Should we be destroying the deadband? Only used by setBounds() */
     private boolean m_eliminateDeadband = false;
@@ -208,7 +208,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     protected final String m_description;
 
     /** The The RoboRIO port identifier. */
-    private ByteBuffer m_port;
+    private final ByteBuffer m_port;
 
     /** The PWM Channel this PWM is operating on. */
     private PWMChannel m_channel;
@@ -289,13 +289,13 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @param channel the PWM channel to allocate
      */
-    private void allocateChannel(PWMChannel channel){
+    private final void allocateChannel(PWMChannel channel){
         if(channel.ordinal() > 9){
             allocateMXPPin(channel.m_mxpPin);
         }
 
-        if(m_usedChannels[channel.ordinal()] == false){
-            m_usedChannels[channel.ordinal()] = true;
+        if(USED_CHANNELS[channel.ordinal()] == false){
+            USED_CHANNELS[channel.ordinal()] = true;
         }else{
             throw new ResourceAllocationException("Cannot create '" + m_description + "', PWM channel '"
                     + getChannelName() + "' already in use.");
@@ -307,13 +307,13 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @param channel the PWM channel to free
      */
-    private boolean freeChannel(PWMChannel channel){
+    private final boolean freeChannel(PWMChannel channel){
         if(channel.ordinal() > 9){
             freeMXPPin(channel.m_mxpPin);
         }
 
-        if(m_usedChannels[channel.ordinal()] == true){
-            m_usedChannels[channel.ordinal()] = false;
+        if(USED_CHANNELS[channel.ordinal()] == true){
+            USED_CHANNELS[channel.ordinal()] = false;
             return true;
         }else{
             Logger.get(PWM.class).error("PWM Channel '" + getChannelName()
@@ -327,7 +327,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @return {@link PWMChannel} representation of the PWM channel
      */
-    public PWMChannel getChannel(){
+    public final PWMChannel getChannel(){
         return m_channel;
     }
 
@@ -336,7 +336,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @return integer representation of the PWM channel
      */
-    public int getChannelNumber(){
+    public final int getChannelNumber(){
         return m_channel.ordinal();
     }
 
@@ -345,7 +345,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @return string representation of the PWM channel
      */
-    public String getChannelName(){
+    public final String getChannelName(){
         return m_channel.name();
     }
 
@@ -358,16 +358,16 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @param deadMin the mimium of the pulse deadband in ms
      * @param min The minimum PWM pulse in ms
      */
-    public void setBounds(double max, double deadMax, double center, double deadMin, double min){
+    public final void setBounds(double max, double deadMax, double center, double deadMin, double min){
         double loopTime = DIOJNI.getLoopTiming(getLE4IntBuffer())/
-                (kSystemClockTicksPerMicrosecond*1e3);
-        m_boundsPositiveMax = (int) ((max - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
-        m_boundsNegativeMin = (int) ((min - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
-        m_boundsCenter = (int) ((center - kDefaultPWMCenter)/loopTime + kDefaultPWMStepsDown - 1);
-        m_boundsPositiveMinDeadband = (int) ((deadMax - kDefaultPWMCenter)/
-                loopTime + kDefaultPWMStepsDown - 1);
-        m_boundsNegativeMaxDeadband = (int) ((deadMin - kDefaultPWMCenter)/
-                loopTime + kDefaultPWMStepsDown - 1);
+                (SYSTEM_CLOCK_TICKS_PER_MICROSEC*1e3);
+        m_boundsPositiveMax = (int) ((max - PWM_DEFAULT_CENTER)/loopTime + PWM_DEFAULT_STEPS_DOWN - 1);
+        m_boundsNegativeMin = (int) ((min - PWM_DEFAULT_CENTER)/loopTime + PWM_DEFAULT_STEPS_DOWN - 1);
+        m_boundsCenter = (int) ((center - PWM_DEFAULT_CENTER)/loopTime + PWM_DEFAULT_STEPS_DOWN - 1);
+        m_boundsPositiveMinDeadband = (int) ((deadMax - PWM_DEFAULT_CENTER)/
+                loopTime + PWM_DEFAULT_STEPS_DOWN - 1);
+        m_boundsNegativeMaxDeadband = (int) ((deadMin - PWM_DEFAULT_CENTER)/
+                loopTime + PWM_DEFAULT_STEPS_DOWN - 1);
 
         eliminateDeadband(m_eliminateDeadband);
     }
@@ -377,7 +377,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @param eliminateDeadband Yes or No
      */
-    public void eliminateDeadband(boolean eliminateDeadband){
+    public final void eliminateDeadband(boolean eliminateDeadband){
         m_eliminateDeadband = eliminateDeadband;
         if(eliminateDeadband){
             m_boundsPositiveMin = m_boundsPositiveMinDeadband;
@@ -467,7 +467,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @param value Raw PWM value.  Range 0 - 255.
      */
-    public void setRaw(int value) {
+    public final void setRaw(int value) {
         IntBuffer status = getLE4IntBuffer();
         PWMJNI.setPWM(m_port, (short) value, status);
         HALUtil.checkStatus(status);
@@ -480,7 +480,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @return Raw PWM control value.  Range: 0 - 255.
      */
-    public int getRaw() {
+    public final int getRaw() {
         IntBuffer status = getLE4IntBuffer();
         int value = PWMJNI.getPWM(m_port, status);
         HALUtil.checkStatus(status);
@@ -511,7 +511,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * 
      * @return the center pwm value
      */
-    public int getCenterPWM(){
+    public final int getCenterPWM(){
         return m_boundsCenter;
     }
 
@@ -520,7 +520,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @param multi The PeriodMultiplier enum
      */
-    public void setPeriodMultiplier(PeriodMultiplier multi){
+    public final void setPeriodMultiplier(PeriodMultiplier multi){
         IntBuffer status = getLE4IntBuffer();
         PWMJNI.setPWMPeriodScale(m_port, multi.value, status);
         HALUtil.checkStatus(status);
@@ -529,7 +529,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     /**
      * Sets the zero latch.
      */
-    protected void setZeroLatch(){
+    protected final void setZeroLatch(){
         IntBuffer status = getLE4IntBuffer();
         PWMJNI.latchPWMZero(m_port, status);
         HALUtil.checkStatus(status);
@@ -542,7 +542,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * {@inheritDoc}
      */
     @Override
-    public void initTable(ITable subtable) {
+    public final void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
     }
@@ -551,7 +551,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * {@inheritDoc}
      */
     @Override
-    public ITable getTable() {
+    public final ITable getTable() {
         return m_table;
     }
 
@@ -559,7 +559,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * {@inheritDoc}
      */
     @Override
-    public String getSmartDashboardType() {
+    public final String getSmartDashboardType() {
         return m_description;
     }
 
@@ -567,7 +567,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * {@inheritDoc}
      */
     @Override
-    public void updateTable() {
+    public final void updateTable() {
         if(m_table != null){
             m_table.putNumber("Value",  get());
         }
@@ -577,7 +577,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * {@inheritDoc}
      */
     @Override
-    public void startLiveWindowMode() {
+    public final void startLiveWindowMode() {
         setSpeed(0);
         m_table_listener = new ITableListener(){
             @Override
@@ -592,7 +592,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * {@inheritDoc}
      */
     @Override
-    public void stopLiveWindowMode() {
+    public final void stopLiveWindowMode() {
         setSpeed(0);
         m_table.removeTableListener(m_table_listener);
     }

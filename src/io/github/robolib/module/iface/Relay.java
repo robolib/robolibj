@@ -40,7 +40,7 @@ import io.github.robolib.util.log.Logger;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Relay extends Interface {
+public final class Relay extends Interface {
     
     /**
      * Enum representation of Relay channels on the RIO
@@ -82,14 +82,14 @@ public class Relay extends Interface {
         }
     }
     
-    private static final byte kRelayOn = (byte) 1;
-    private static final byte kRelayOff = (byte) 0;
+    private static final byte RELAY_ON = (byte) 1;
+    private static final byte RELAY_OFF = (byte) 0;
     
     
     protected final String m_description;
     
     /** The The RoboRIO port identifier. */
-    private ByteBuffer m_port;
+    private final ByteBuffer m_port;
 
     /** The Relay Channel this Relay is operating on. */
     private RelayChannel m_channel;
@@ -98,7 +98,7 @@ public class Relay extends Interface {
     private RelayDirection m_direction;
     
     /** Keep track of already used channels. */
-    private static boolean m_usedChannels[] = new boolean[MAX_RELAY_CHANNELS];
+    private static final boolean USED_CHANNELS[] = new boolean[MAX_RELAY_CHANNELS];
     
     /**
      * Relay constructor given a channel, allowing both directions.
@@ -132,8 +132,8 @@ public class Relay extends Interface {
         m_description = desc;
         m_direction = dir;
         
-        if(m_usedChannels[channel.ordinal()] == false){
-            m_usedChannels[channel.ordinal()] = true;
+        if(USED_CHANNELS[channel.ordinal()] == false){
+            USED_CHANNELS[channel.ordinal()] = true;
         }else{
             throw new ResourceAllocationException("Cannot create '" + desc + "', Relay channel '" + channel.name() + "' already in use.");
         }
@@ -151,8 +151,8 @@ public class Relay extends Interface {
      * Free the Relay channel.
      */
     public void free(){
-        if(m_usedChannels[m_channel.ordinal()] == true){
-            m_usedChannels[m_channel.ordinal()] = false;
+        if(USED_CHANNELS[m_channel.ordinal()] == true){
+            USED_CHANNELS[m_channel.ordinal()] = false;
         }else{
             Logger.get(Relay.class).error("Relay Channel '" + getChannelName() + "' was not allocated. How did you get here?");
         }
@@ -190,28 +190,28 @@ public class Relay extends Interface {
         IntBuffer status = getLE4IntBuffer();
         switch(value){
         case OFF:
-            RelayJNI.setRelayForward(m_port, kRelayOff, status);
-            RelayJNI.setRelayReverse(m_port, kRelayOff, status);
+            RelayJNI.setRelayForward(m_port, RELAY_OFF, status);
+            RelayJNI.setRelayReverse(m_port, RELAY_OFF, status);
             break;
         case FORWARD:
-            RelayJNI.setRelayReverse(m_port, kRelayOff, status);
+            RelayJNI.setRelayReverse(m_port, RELAY_OFF, status);
             if(m_direction == RelayDirection.REVERSE)
                 Logger.get(Relay.class).warn("Relay '" + m_description + "' configured for REVERSE. cannot go FORWARD.");
             else
-                RelayJNI.setRelayForward(m_port, kRelayOn, status);
+                RelayJNI.setRelayForward(m_port, RELAY_ON, status);
             break;
         case REVERSE:
-            RelayJNI.setRelayForward(m_port, kRelayOff, status);
+            RelayJNI.setRelayForward(m_port, RELAY_OFF, status);
             if(m_direction == RelayDirection.FORWARD)
                 Logger.get(Relay.class).warn("Relay '" + m_description + "' configured for FORWARD. cannot go REVERSE.");
             else
-                RelayJNI.setRelayReverse(m_port, kRelayOn, status);
+                RelayJNI.setRelayReverse(m_port, RELAY_ON, status);
             break;
         case ON:
             if((m_direction.value & 1) != 0)
-                RelayJNI.setRelayForward(m_port, kRelayOn, status);
+                RelayJNI.setRelayForward(m_port, RELAY_ON, status);
             if((m_direction.value & 2) != 0)
-                RelayJNI.setRelayReverse(m_port, kRelayOn, status);
+                RelayJNI.setRelayReverse(m_port, RELAY_ON, status);
             break;
         }
         HALUtil.checkStatus(status);

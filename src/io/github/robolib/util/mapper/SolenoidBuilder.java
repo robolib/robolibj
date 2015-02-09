@@ -31,7 +31,7 @@ import org.json.JSONException;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class SolenoidBuilder implements ModuleBuilder<SolenoidBase> {
+public final class SolenoidBuilder implements ModuleBuilder<SolenoidBase> {
 
     /**
      * {@inheritDoc}

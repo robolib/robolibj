@@ -37,10 +37,10 @@ public class CommandGroup extends Command {
     private static final byte BRANCH_CHILD = 2;
     
     /** The m_commands. */
-    List<Command> m_commands = new ArrayList<Command>();
+    final List<Command> m_commands = new ArrayList<Command>();
     
     /** The m_children. */
-    Vector<Command> m_children = new Vector<Command>();
+    final Vector<Command> m_children = new Vector<Command>();
     
     /** The m_current command index. */
     int m_currentCommandIndex = -1;
@@ -177,7 +177,7 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    void initialize_impl(){
+    final void initialize_impl(){
         m_currentCommandIndex = -1;
     }
     
@@ -185,7 +185,7 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    void execute_impl(){
+    final void execute_impl(){
         Command entry = null;
         Command cmd = null;
         boolean firstRun = false;
@@ -247,7 +247,7 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    void end_impl(){
+    final void end_impl(){
         if(m_currentCommandIndex != -1 && m_currentCommandIndex < m_commands.size()){
             Command cmd = m_commands.get(m_currentCommandIndex);
             cmd.cancel_impl();
@@ -265,7 +265,7 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    void interrupted_impl(){
+    final void interrupted_impl(){
         end_impl();
     }
     
@@ -273,7 +273,7 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    protected boolean isFinished(){
+    protected final boolean isFinished(){
         return m_currentCommandIndex >= m_commands.size() && m_children.isEmpty();
     }
     
@@ -281,31 +281,31 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    protected void initialize(){}
+    protected final void initialize(){}
     
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void execute(){}
+    protected final void execute(){}
     
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void end(){}
+    protected final void end(){}
     
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void interrupted(){}
+    protected final void interrupted(){}
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isInterruptible(){
+    public final boolean isInterruptible(){
         synchronized(this){
             if(!super.isInterruptible())
                 return false;
@@ -329,7 +329,7 @@ public class CommandGroup extends Command {
      *
      * @param command the command
      */
-    private void cancelConflicts(Command command){
+    private final void cancelConflicts(Command command){
         m_children.forEach(ce -> {
             List<Subsystem> requires = command.getRequirements();
             if(requires.stream().anyMatch(system -> ce.doesRequire(system))){

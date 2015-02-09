@@ -26,7 +26,7 @@ import io.github.robolib.module.PDP.PowerChannel;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Victor extends PWMController {
+public final class Victor extends PWMController {
     
     /**
      * Instantiates a new Victor motor controller.

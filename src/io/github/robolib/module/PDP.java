@@ -17,8 +17,8 @@ package io.github.robolib.module;
 
 import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.robolib.identifier.UpdatingSendable;
 import io.github.robolib.jni.PDPJNI;
@@ -31,7 +31,7 @@ import io.github.robolib.util.StringUtils;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PDP implements UpdatingSendable {
+public final class PDP implements UpdatingSendable {
     
     /**
      * The Enum PowerChannel.
@@ -90,18 +90,19 @@ public class PDP implements UpdatingSendable {
     }
     
     /** Number of PDP channels. **/
-    public static final int kNumPowerChannels = 16;
+    public static final int MAX_POWER_CHANNELS = 16;
     
     /** The Constant m_instance. */
     private static PDP m_instance;
     
     /** The m_update channels. */
-    private static List<Integer> m_updateChannels = new ArrayList<>();
+    private static final Map<Integer, String> CHANNEL_MAP =
+            new HashMap<Integer, String>(MAX_POWER_CHANNELS);
     
     /** The m_table. */
     private ITable m_table;
     
-    public static final void initialize(){
+    public static void initialize(){
         m_instance = new PDP();
     }
     
@@ -119,9 +120,6 @@ public class PDP implements UpdatingSendable {
      */
     private PDP(){}
     
-    /** The m_chan names. */
-    private static String m_chanNames[] = new String[kNumPowerChannels];
-    
     /**
      * Gets the channel name.
      *
@@ -129,7 +127,7 @@ public class PDP implements UpdatingSendable {
      * @return the channel name
      */
     public static String getChannelName(PowerChannel channel){
-        return m_chanNames[channel.ordinal()];
+        return CHANNEL_MAP.get(channel.ordinal());
     }
     
     /**
@@ -140,11 +138,12 @@ public class PDP implements UpdatingSendable {
      */
     public static void claimChannel(PowerChannel channel, String name){
 
-        if(m_updateChannels.contains(channel.ordinal()))
-            throw new ResourceAllocationException("PDP channel '" + channel.name() + "' already claimed by '" + m_chanNames[channel.ordinal()] + "'.");
+        if(CHANNEL_MAP.containsKey(channel.ordinal()))
+            throw new ResourceAllocationException("PDP channel '"
+                    + channel.name() + "' already claimed by '"
+                    + CHANNEL_MAP.get(channel.ordinal()) + "'.");
         
-        m_chanNames[channel.ordinal()] = name;
-        m_updateChannels.add(channel.ordinal());
+        CHANNEL_MAP.put(channel.ordinal(),  name);
     }
     
     /**
@@ -255,8 +254,8 @@ public class PDP implements UpdatingSendable {
      */
     @Override
     public void updateTable() {
-        m_updateChannels.forEach(i -> m_table.putString(m_chanNames[i],
-                StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A")));
+        CHANNEL_MAP.forEach((Integer i, String s) ->
+            m_table.putString(s, StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A")));
         
         m_table.putString("Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
         m_table.putString("TotalCurrent", StringUtils.getNumber2DWithUnits(getTotalCurrent(), "A"));

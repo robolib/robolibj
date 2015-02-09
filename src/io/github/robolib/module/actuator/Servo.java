@@ -55,7 +55,7 @@ public class Servo extends PWM implements AngleSink, AngleSource {
      * @param value Position from 0.0 to 1.0.
      */
     @Override
-    public void set(double value){
+    public final void set(double value){
         setPosition(value);
     }
     
@@ -67,7 +67,7 @@ public class Servo extends PWM implements AngleSink, AngleSource {
      * @return Position from 0.0 to 1.0.
      */
     @Override
-    public double get(){
+    public final double get(){
         return getPosition();
     }
     
@@ -82,7 +82,7 @@ public class Servo extends PWM implements AngleSink, AngleSource {
      *
      * @param degrees The angle in degrees to set the servo.
      */
-    public void setAngle(double degrees){
+    public final void setAngle(double degrees){
         degrees = MathUtils.clamp(degrees, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
 
         setPosition(((degrees - SERVO_MIN_ANGLE)) / SERVO_ANGLE_RANGE);
@@ -94,7 +94,7 @@ public class Servo extends PWM implements AngleSink, AngleSource {
      * Assume that the servo angle is linear with respect to the PWM value (big assumption, need to test).
      * @return The angle in degrees to which the servo is set.
      */
-    public double getAngle() {
+    public final double getAngle() {
         return getPosition() * SERVO_ANGLE_RANGE + SERVO_MIN_ANGLE;
     }
 }

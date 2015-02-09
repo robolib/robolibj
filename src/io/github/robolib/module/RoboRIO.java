@@ -31,15 +31,17 @@ import io.github.robolib.util.StringUtils;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class RoboRIO implements UpdatingSendable {
+public final class RoboRIO implements UpdatingSendable {
     
     private ITable m_table;
     
     private static RoboRIO m_instance;
     
-    private static ButtonTrigger m_userButton;
+    private static final ButtonTrigger USER_BUTTON = () -> getUserButton();
     
-    public static final void initialize(){
+    public static void initialize(){
+        if(m_instance != null)
+            throw new IllegalStateException("RoboRIO already Initialized.");
         m_instance = new RoboRIO();
     }
     
@@ -90,7 +92,7 @@ public class RoboRIO implements UpdatingSendable {
     }
     
     public static ButtonTrigger getUserButtonAsButton(){
-        return m_userButton == null ? (m_userButton = () -> getUserButton()) : m_userButton;
+        return USER_BUTTON;
     }
     
     /**

@@ -23,7 +23,7 @@ import io.github.robolib.module.PDP.PowerChannel;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class TalonSRX extends PWMController {
+public final class TalonSRX extends PWMController {
 
     /**
      * Instantiates a new TalonSRX motor controller.

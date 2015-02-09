@@ -23,7 +23,7 @@ import io.github.robolib.util.MathUtils;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class XBoxController extends Joystick {
+public final class XBoxController extends Joystick {
 
     /** Left X Axis ID. */
     public static final int AXIS_X_LEFT = 0;
@@ -417,9 +417,9 @@ public class XBoxController extends Joystick {
         return Math.toDegrees(getRightDirectionRadians());
     }
     
-    private class MagAxis implements HIDAxis {
+    private final class MagAxis implements HIDAxis {
         
-        private int m_a1, m_a2;
+        private final int m_a1, m_a2;
         private double m_deadband;
         
         MagAxis(int axis1, int axis2){
