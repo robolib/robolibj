@@ -15,6 +15,7 @@
 
 package io.github.robolib.command;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -35,55 +36,11 @@ public class CommandGroup extends Command {
     /** The Constant BRANCH_CHILD. */
     private static final byte BRANCH_CHILD = 2;
     
-    /**
-     * The Class CommandEntry.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
-     */
-    private final class CommandEntry {
-        
-        /** The m_command. */
-        Command m_command;
-        
-        /** The m_state. */
-        byte m_state;
-        
-        /** The m_timeout. */
-        double m_timeout;
-        
-        /**
-         * Instantiates a new command entry.
-         *
-         * @param command the command
-         * @param state the state
-         * @param timeout the timeout
-         */
-        CommandEntry(Command command, byte state, double timeout){
-            m_command = command;
-            m_state = state;
-            m_timeout = timeout;
-        }
-        
-        /**
-         * Checks if is timed out.
-         *
-         * @return true, if is timed out
-         */
-        boolean isTimedOut(){
-            if(m_timeout == -1){
-                return false;
-            }else{
-                double time = m_command.timeSinceInitialized();
-                return time == 0 ? false : time >= m_timeout;
-            }
-        }
-    }
-
     /** The m_commands. */
-    Vector<CommandEntry> m_commands = new Vector<CommandEntry>();
+    List<Command> m_commands = new ArrayList<Command>();
     
     /** The m_children. */
-    Vector<CommandEntry> m_children = new Vector<CommandEntry>();
+    Vector<Command> m_children = new Vector<Command>();
     
     /** The m_current command index. */
     int m_currentCommandIndex = -1;
@@ -114,7 +71,7 @@ public class CommandGroup extends Command {
      *
      * @param command The {@link Command Command} to be added
      */
-    public synchronized final void addSequential(Command command){
+    public final void addSequential(Command command){
         addCommand(command, IN_SEQUENCE, -1);
     }
 
@@ -136,7 +93,7 @@ public class CommandGroup extends Command {
      * @param command The {@link Command Command} to be added
      * @param timeout The timeout (in seconds)
      */
-    public synchronized final void addSequential(Command command, double timeout){
+    public final void addSequential(Command command, double timeout){
         addCommand(command, IN_SEQUENCE, timeout);
     }
     
@@ -159,7 +116,7 @@ public class CommandGroup extends Command {
      *
      * @param command The command to be added
      */
-    public synchronized final void addParallel(Command command){
+    public final void addParallel(Command command){
         addCommand(command, BRANCH_CHILD, -1);
     }
     
@@ -188,7 +145,7 @@ public class CommandGroup extends Command {
      * @param command The command to be added
      * @param timeout The timeout (in seconds)
      */
-    public synchronized final void addParallel(Command command, double timeout){
+    public final void addParallel(Command command, double timeout){
         addCommand(command, BRANCH_CHILD, timeout);
     }
     
@@ -199,14 +156,21 @@ public class CommandGroup extends Command {
      * @param state the state
      * @param timeout the timeout
      */
-    private synchronized final void addCommand(Command command, byte state, double timeout){
-        validate("Cannot add new command to command group");
-        if(command == null) return;
-        if(timeout < -1) throw new IllegalArgumentException("Timeout cannot be less than -1");
-        
-        command.setParent(this);
-        m_commands.addElement(new CommandEntry(command, state, timeout));
-        command.getRequirements().forEach(this::requires);
+    private final void addCommand(Command command, byte state, double timeout){
+        synchronized(this){
+            if(m_locked)
+                throw new IllegalStateException("Cannot add new command to command group after being started or added to a command group.");
+            if(command == null) return;
+            if(timeout < -1) throw new IllegalArgumentException("Timeout cannot be less than -1");
+            
+            
+            synchronized(command){
+                command.setParent(this);
+                command.m_state = state;
+                command.getRequirements().forEach(this::requires);
+            }
+            m_commands.add(command);
+        }
     }
     
     /**
@@ -222,7 +186,7 @@ public class CommandGroup extends Command {
      */
     @Override
     void execute_impl(){
-        CommandEntry entry = null;
+        Command entry = null;
         Command cmd = null;
         boolean firstRun = false;
         if(m_currentCommandIndex == -1){
@@ -232,7 +196,7 @@ public class CommandGroup extends Command {
         
         while(m_currentCommandIndex < m_commands.size()){
             if(cmd != null){
-                if(entry.isTimedOut()) cmd.cancel_impl();
+                if(cmd.isTimedOut()) cmd.cancel_impl();
                 if(cmd.run()){
                     break;
                 }else{
@@ -244,12 +208,12 @@ public class CommandGroup extends Command {
                 }
             }
             
-            entry = m_commands.elementAt(m_currentCommandIndex);
+            entry = m_commands.get(m_currentCommandIndex);
             cmd = null;
             
             switch(entry.m_state){
             case IN_SEQUENCE:
-                cmd = entry.m_command;
+                cmd = entry;
                 if(firstRun){
                     cmd.startRunning();
                     cancelConflicts(cmd);
@@ -258,22 +222,21 @@ public class CommandGroup extends Command {
                 break;
             case BRANCH_PEER:
                 m_currentCommandIndex++;
-                entry.m_command.start();
+                entry.start();
                 break;
             case BRANCH_CHILD:
                 m_currentCommandIndex++;
-                cancelConflicts(entry.m_command);
-                entry.m_command.startRunning();
+                cancelConflicts(entry);
+                entry.startRunning();
                 m_children.addElement(entry);
                 break;
             }
             
-            m_children.forEach(ce -> {
-                Command child = ce.m_command;
-                if(ce.isTimedOut()) child.cancel_impl();
+            m_children.forEach(child -> {
+                if(child.isTimedOut()) child.cancel_impl();
                 if(!child.run()){
                     child.removed();
-                    m_children.remove(ce);
+                    m_children.remove(child);
                 }
             });
                     
@@ -286,14 +249,14 @@ public class CommandGroup extends Command {
     @Override
     void end_impl(){
         if(m_currentCommandIndex != -1 && m_currentCommandIndex < m_commands.size()){
-            Command cmd = m_commands.elementAt(m_currentCommandIndex).m_command;
+            Command cmd = m_commands.get(m_currentCommandIndex);
             cmd.cancel_impl();
             cmd.removed();
         }
         
         m_children.forEach(ce -> {
-            ce.m_command.cancel_impl();
-            ce.m_command.removed();
+            ce.cancel_impl();
+            ce.removed();
         });
         m_children.removeAllElements();
     }
@@ -342,18 +305,20 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    public synchronized boolean isInterruptible(){
-        if(!super.isInterruptible())
-            return false;
-        
-        if(m_currentCommandIndex != -1 && m_currentCommandIndex < m_commands.size()){
-            if(!m_commands.get(m_currentCommandIndex).m_command.isInterruptible())
+    public boolean isInterruptible(){
+        synchronized(this){
+            if(!super.isInterruptible())
                 return false;
-        }
-        
-        for(CommandEntry m : m_children){
-            if(!m.m_command.isInterruptible())
-                return false;
+            
+            if(m_currentCommandIndex != -1 && m_currentCommandIndex < m_commands.size()){
+                if(!m_commands.get(m_currentCommandIndex).isInterruptible())
+                    return false;
+            }
+            
+            for(Command m : m_children){
+                if(!m.isInterruptible())
+                    return false;
+            }
         }
         
         return true;
@@ -367,9 +332,9 @@ public class CommandGroup extends Command {
     private void cancelConflicts(Command command){
         m_children.forEach(ce -> {
             List<Subsystem> requires = command.getRequirements();
-            if(requires.stream().anyMatch(system -> ce.m_command.doesRequire(system))){
-                ce.m_command.cancel_impl();
-                ce.m_command.removed();
+            if(requires.stream().anyMatch(system -> ce.doesRequire(system))){
+                ce.cancel_impl();
+                ce.removed();
                 m_children.remove(ce);
             }
         });
