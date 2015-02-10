@@ -15,6 +15,8 @@
 
 package io.github.robolib.identifier;
 
+import java.util.function.DoubleSupplier;
+
 import io.github.robolib.command.Scheduler;
 
 /**
@@ -28,6 +30,10 @@ public interface AngleSink {
     
     public default void bindAngle(AngleSource source){
         Scheduler.addBind(() -> setAngle(source.getAngle()));
+    }
+    
+    public default void bindAngle(DoubleSupplier source){
+        Scheduler.addBind(() -> setAngle(source.getAsDouble()));
     }
 
 }
