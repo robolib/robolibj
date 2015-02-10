@@ -15,6 +15,10 @@
 
 package io.github.robolib.identifier;
 
+import java.util.function.DoubleSupplier;
+
+import io.github.robolib.command.Scheduler;
+
 /**
  * An interface for a class that takes a double as a value.
  *
@@ -27,5 +31,13 @@ public interface NumberSink {
      * @param value new value
      */
     void set(double value);
+    
+    public default void bindValue(NumberSource source){
+        Scheduler.addBind(() -> set(source.get()));
+    }
+    
+    public default void bindValue(DoubleSupplier source){
+        Scheduler.addBind(() -> set(source.getAsDouble()));
+    }
 
 }

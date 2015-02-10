@@ -66,7 +66,7 @@ public final class Scheduler implements NamedSendable {
     /** The m_additions. */
     private static final Vector<Command> m_additions = new Vector<Command>();
     
-    private static final Vector<Schedulable> m_binds = new Vector<Schedulable>();
+    private static final Vector<Binding> m_binds = new Vector<Binding>();
     
     /** The m_command list. */
     private static final List<Command> m_commandList = new LinkedList<Command>();
@@ -110,7 +110,7 @@ public final class Scheduler implements NamedSendable {
             m_additions.addElement(command);
     }
     
-    public static void addBind(Schedulable sink){
+    public static void addBind(Binding sink){
         m_binds.addElement(sink);
     }
     
@@ -190,7 +190,7 @@ public final class Scheduler implements NamedSendable {
         
         m_buttons.forEach(ButtonScheduler::execute);
         
-        m_binds.forEach(Schedulable::execute);
+        m_binds.forEach(Binding::updateValue);
         
         Command cmd = null;
         for(Iterator<Command> iter = m_commandList.iterator();iter.hasNext();){

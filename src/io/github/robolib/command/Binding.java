@@ -13,21 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.identifier;
-
-import io.github.robolib.command.Scheduler;
+package io.github.robolib.command;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface AngleSink {
+public interface Binding {
     
-    void setAngle(double angle);
-    
-    public default void bindAngle(AngleSource source){
-        Scheduler.addBind(() -> setAngle(source.getAngle()));
-    }
+    void updateValue();
 
 }

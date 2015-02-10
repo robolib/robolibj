@@ -15,6 +15,8 @@
 
 package io.github.robolib.identifier;
 
+import java.util.function.DoubleSupplier;
+
 import io.github.robolib.command.Scheduler;
 
 /**
@@ -26,8 +28,12 @@ public interface SpeedSink {
     
     void setSpeed(double speed);
     
-    public default void bindSpeed(SpeedSource speed){
-        Scheduler.addBind(() -> setSpeed(speed.getSpeed()));        
+    public default void bindSpeed(SpeedSource source){
+        Scheduler.addBind(() -> setSpeed(source.getSpeed()));
+    }
+    
+    public default void bindSpeed(DoubleSupplier source){
+        Scheduler.addBind(() -> setSpeed(source.getAsDouble()));
     }
     
 }

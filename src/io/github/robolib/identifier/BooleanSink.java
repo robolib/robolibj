@@ -15,6 +15,10 @@
 
 package io.github.robolib.identifier;
 
+import java.util.function.BooleanSupplier;
+
+import io.github.robolib.command.Scheduler;
+
 /**
  * An interface for a class that takes a Boolean
  *
@@ -27,5 +31,13 @@ public interface BooleanSink {
      * @param value boolean
      */
     void setState(boolean value);
+    
+    public default void bindBoolean(BooleanSource source){
+        Scheduler.addBind(() -> setState(source.getState()));
+    }
+    
+    public default void bindBoolean(BooleanSupplier source){
+        Scheduler.addBind(() -> setState(source.getAsBoolean()));
+    }
 
 }
