@@ -267,9 +267,9 @@ public class RoboLibBot {
      * @see TeleopMode
      */
     public static final void main(String args[]) {
+        Thread.currentThread().setName("Framework Thread");
         NetworkCommunications.NetworkCommunicationReserve();
         ILogger log = Logger.get(RoboLibBot.class, "Framework");
-        Thread.currentThread().setName("Framework Thread");
 
         log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         
