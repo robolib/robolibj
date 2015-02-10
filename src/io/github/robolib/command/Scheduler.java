@@ -35,7 +35,7 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Scheduler implements NamedSendable {
+public final class Scheduler implements NamedSendable {
     
     /** The m_instance. */
     private static Scheduler m_instance;
@@ -70,7 +70,7 @@ public class Scheduler implements NamedSendable {
     /** The m_command list. */
     private static final List<Command> COMMAND_LIST = new LinkedList<Command>();
     
-    public synchronized static final void initialize(){
+    public synchronized static void initialize(){
         if(m_instance != null)
             throw new IllegalStateException("Scheduler already initialized.");
         
@@ -84,8 +84,10 @@ public class Scheduler implements NamedSendable {
      *
      * @return single instance of Scheduler
      */
-    public synchronized static Scheduler getInstance(){
-        return m_instance;
+    public static Scheduler getInstance(){
+        synchronized(m_instance){
+            return m_instance;
+        }
     }
     
     /**
@@ -101,7 +103,7 @@ public class Scheduler implements NamedSendable {
      *
      * @param command the command
      */
-    public static final void add(Command command){
+    public static void add(Command command){
         if(command != null)
             ADDITIONS.addElement(command);
     }
@@ -111,7 +113,7 @@ public class Scheduler implements NamedSendable {
      *
      * @param btn the btn
      */
-    public static final void addButton(ButtonScheduler btn){
+    public static void addButton(ButtonScheduler btn){
         if(btn != null)
             BUTTONS.addElement(btn);
     }
@@ -124,7 +126,7 @@ public class Scheduler implements NamedSendable {
      *
      * @param command the {@link Command} to add
      */
-    protected static final void add_internal(Command command){
+    protected static void add_internal(Command command){
         if(command == null) return;
         
         if(m_adding){
@@ -169,7 +171,7 @@ public class Scheduler implements NamedSendable {
      * <li> Send values to SmartDashboard </li> <li> Add Commands </li> <li> Add
      * Defaults </li> </ol>
      */
-    public static final void run(){
+    public static void run(){
         m_runningCommandsChanged = false;
         
         if(m_disabled){
@@ -213,7 +215,7 @@ public class Scheduler implements NamedSendable {
      *
      * @param system the system
      */
-    static final void registerSubsystem(Subsystem system){
+    static void registerSubsystem(Subsystem system){
         if(system != null)
             SUBSYSTEMS.addElement(system);
     }
@@ -221,7 +223,7 @@ public class Scheduler implements NamedSendable {
     /**
      * Removes the all.
      */
-    public static final void removeAll(){
+    public static void removeAll(){
         Command cmd;
         for(Iterator<Command> iter = COMMAND_LIST.iterator(); iter.hasNext();){
             cmd = iter.next();            
@@ -236,7 +238,7 @@ public class Scheduler implements NamedSendable {
      *
      * @param enabled the new enabled
      */
-    public static final void setEnabled(boolean enabled){
+    public static void setEnabled(boolean enabled){
         m_disabled = !enabled;
     }
     
@@ -245,7 +247,7 @@ public class Scheduler implements NamedSendable {
      *
      * @return the type
      */
-    public final String getType(){
+    public String getType(){
         return "Scheduler";
     }
     
@@ -259,7 +261,7 @@ public class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public final String getName(){
+    public String getName(){
         return "Scheduler";
     }
     
@@ -267,7 +269,7 @@ public class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public final String getSmartDashboardType() {
+    public String getSmartDashboardType() {
         return "Scheduler";
     }
     
@@ -275,7 +277,7 @@ public class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public final void initTable(ITable subtable){
+    public void initTable(ITable subtable){
         m_table = subtable;
         commands = new StringArray();
         ids = new NumberArray();
@@ -290,7 +292,7 @@ public class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public final ITable getTable() {
+    public ITable getTable() {
         return m_table;
     }
     

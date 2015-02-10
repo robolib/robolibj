@@ -45,6 +45,7 @@ public final class SpeedControllerBuilder implements ModuleBuilder<SpeedControll
     
     static{        
         registerController("Talon", Talon.class);
+        registerController("TalonSR", Talon.class);
         registerController("TalonSRX", TalonSRX.class);
         registerController("Victor", Victor.class);
         registerController("VictorSP", VictorSP.class);
