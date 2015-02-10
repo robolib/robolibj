@@ -15,6 +15,8 @@
 
 package io.github.robolib.identifier;
 
+import io.github.robolib.command.Scheduler;
+
 /**
  * 
  *
@@ -23,5 +25,9 @@ package io.github.robolib.identifier;
 public interface AngleSink {
     
     void setAngle(double angle);
+    
+    public default void bindAngle(AngleSource source){
+        Scheduler.addBind(() -> setAngle(source.getAngle()));
+    }
 
 }

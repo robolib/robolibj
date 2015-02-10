@@ -13,31 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.identifier;
-
-import java.util.function.BooleanSupplier;
-
-import io.github.robolib.command.Scheduler;
+package io.github.robolib.command;
 
 /**
- * An interface for a class that takes a Boolean
+ * 
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface BooleanSink {
+public interface Binding {
     
-    /**
-     * Set the value of this BooleanSink
-     * @param value boolean
-     */
-    void setState(boolean value);
-    
-    public default void bindBoolean(BooleanSource source){
-        Scheduler.addBind(() -> setState(source.getState()));
-    }
-    
-    public default void bindBoolean(BooleanSupplier source){
-        Scheduler.addBind(() -> setState(source.getAsBoolean()));
-    }
+    void updateValue();
 
 }

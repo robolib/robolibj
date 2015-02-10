@@ -15,6 +15,10 @@
 
 package io.github.robolib.identifier;
 
+import java.util.function.DoubleSupplier;
+
+import io.github.robolib.command.Scheduler;
+
 /**
  * 
  *
@@ -23,5 +27,13 @@ package io.github.robolib.identifier;
 public interface RateSink {
     
     void setRate(double rate);
+    
+    public default void bindRate(RateSource source){
+        Scheduler.addBind(() -> setRate(source.getRate()));
+    }
+    
+    public default void bindRate(DoubleSupplier source){
+        Scheduler.addBind(() -> setRate(source.getAsDouble()));
+    }
 
 }
