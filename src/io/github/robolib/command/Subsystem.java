@@ -144,7 +144,7 @@ public abstract class Subsystem implements NamedSendable {
     
     void iterationRun(){
         if(m_currentCommand == null)
-            setCurrentCommand(getDefaultCommand());
+            Scheduler.add_internal(getDefaultCommand());
         
         confirmCommand();
             

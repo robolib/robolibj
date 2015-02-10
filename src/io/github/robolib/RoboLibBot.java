@@ -291,9 +291,9 @@ public class RoboLibBot {
             PDP.initialize();
             Compressor.initialize();
             RoboRIO.initialize();
-            TableSender.addFramework(PDP.getInstance(), "Power/PDP");
+//            TableSender.addFramework(PDP.getInstance(), "Power/PDP");
             TableSender.addFramework(RoboRIO.getInstance(), "Power/RIO");
-            TableSender.addFramework(Compressor.getInstance(), "Compressor");
+//            TableSender.addFramework(Compressor.getInstance(), "Compressor");
         }catch(Throwable t){
             log.fatal("Failure creating framework", t);
         }

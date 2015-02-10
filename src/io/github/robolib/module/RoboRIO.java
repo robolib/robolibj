@@ -294,6 +294,8 @@ public final class RoboRIO implements UpdatingSendable {
     public void updateTable(){
         m_table.putString("RIO Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
         m_table.putString("RIO Current", StringUtils.getNumber2DWithUnits(getCurrent(), "A"));
+        m_table.putNumber("Volts", getVoltage());
+        
         
         m_table.putString("3v3 Voltage", StringUtils.getNumber2DWithUnits(get3V3Voltage(), "V"));
         m_table.putString("3v3 Current", StringUtils.getNumber2DWithUnits(get3V3Current(), "A"));
