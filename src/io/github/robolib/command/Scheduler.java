@@ -24,7 +24,6 @@ import io.github.robolib.control.Trigger.ButtonScheduler;
 import io.github.robolib.identifier.NamedSendable;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.nettable.ITable;
-import io.github.robolib.nettable.NetworkTable;
 import io.github.robolib.nettable.entry.NumberArray;
 import io.github.robolib.nettable.entry.StringArray;
 import io.github.robolib.util.log.ILogger;
@@ -41,7 +40,7 @@ public final class Scheduler implements NamedSendable {
     private static Scheduler m_instance;
     
     /** The m_log. */
-    private static final ILogger LOG = Logger.get(Scheduler.class);
+    private static final ILogger m_log = Logger.get(Scheduler.class);
     
     /** The m_table. */
     private static ITable m_table;
@@ -59,16 +58,18 @@ public final class Scheduler implements NamedSendable {
     private static byte m_disabledCounter = 0;
     
     /** The m_subsystems. */
-    private static final Vector<Subsystem> SUBSYSTEMS = new Vector<Subsystem>();
+    private static final Vector<Subsystem> m_subsystems = new Vector<Subsystem>();
     
     /** The m_buttons. */
-    private static final Vector<ButtonScheduler> BUTTONS = new Vector<ButtonScheduler>();
+    private static final Vector<ButtonScheduler> m_buttons = new Vector<ButtonScheduler>();
     
     /** The m_additions. */
-    private static final Vector<Command> ADDITIONS = new Vector<Command>();
+    private static final Vector<Command> m_additions = new Vector<Command>();
+    
+    private static final Vector<Schedulable> m_binds = new Vector<Schedulable>();
     
     /** The m_command list. */
-    private static final List<Command> COMMAND_LIST = new LinkedList<Command>();
+    private static final List<Command> m_commandList = new LinkedList<Command>();
     
     public synchronized static void initialize(){
         if(m_instance != null)
@@ -94,7 +95,8 @@ public final class Scheduler implements NamedSendable {
      * Instantiates a new scheduler.
      */
     private Scheduler(){
-        initTable(NetworkTable.getTable("Scheduler"));
+//        initTable(NetworkTable.getTable("Scheduler"));
+//        SmartDashboard.putData(this);
     }
     
     
@@ -105,7 +107,11 @@ public final class Scheduler implements NamedSendable {
      */
     public static void add(Command command){
         if(command != null)
-            ADDITIONS.addElement(command);
+            m_additions.addElement(command);
+    }
+    
+    public static void addBind(Schedulable sink){
+        m_binds.addElement(sink);
     }
     
     /**
@@ -115,7 +121,7 @@ public final class Scheduler implements NamedSendable {
      */
     public static void addButton(ButtonScheduler btn){
         if(btn != null)
-            BUTTONS.addElement(btn);
+            m_buttons.addElement(btn);
     }
     
     /**
@@ -130,11 +136,11 @@ public final class Scheduler implements NamedSendable {
         if(command == null) return;
         
         if(m_adding){
-            LOG.warn("Cannot start command from cancel. Ignoring '" + command + "'");
+            m_log.warn("Cannot start command from cancel. Ignoring '" + command + "'");
             return;
         }
         
-        if(!COMMAND_LIST.contains(command)){
+        if(!m_commandList.contains(command)){
             List<Subsystem> requires = command.getRequirements();
             if(requires.stream().anyMatch(Subsystem::getCurrentCommandNotInterruptable))
                 return;
@@ -147,14 +153,14 @@ public final class Scheduler implements NamedSendable {
                     cmd.cancel();
                     cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
                     cmd.removed();
-                    COMMAND_LIST.remove(cmd);
+                    m_commandList.remove(cmd);
                 }
                 system.setCurrentCommand(command);
             }
 
             m_adding = false;
             
-            COMMAND_LIST.add(command);
+            m_commandList.add(command);
             
             m_runningCommandsChanged = true;
             command.startRunning();
@@ -176,16 +182,18 @@ public final class Scheduler implements NamedSendable {
         
         if(m_disabled){
             if(++m_disabledCounter >= 32){
-                LOG.warn("Scheduler is being called, but is disabled.");
+                m_log.warn("Scheduler is being called, but is disabled.");
                 m_disabledCounter = 0;
             }
             return;
         }
         
-        BUTTONS.forEach(ButtonScheduler::execute);
+        m_buttons.forEach(ButtonScheduler::execute);
+        
+        m_binds.forEach(Schedulable::execute);
         
         Command cmd = null;
-        for(Iterator<Command> iter = COMMAND_LIST.iterator();iter.hasNext();){
+        for(Iterator<Command> iter = m_commandList.iterator();iter.hasNext();){
             cmd = iter.next();
             if(!cmd.run()){
                 cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
@@ -200,10 +208,10 @@ public final class Scheduler implements NamedSendable {
 //            add_impl(iter.next());
 //        }
         
-        ADDITIONS.forEach(Scheduler::add_internal);
-        ADDITIONS.removeAllElements();
+        m_additions.forEach(Scheduler::add_internal);
+        m_additions.removeAllElements();
         
-        SUBSYSTEMS.forEach(Subsystem::iterationRun);
+        m_subsystems.forEach(Subsystem::iterationRun);
         
         updateTable();
     }
@@ -217,7 +225,7 @@ public final class Scheduler implements NamedSendable {
      */
     static void registerSubsystem(Subsystem system){
         if(system != null)
-            SUBSYSTEMS.addElement(system);
+            m_subsystems.addElement(system);
     }
     
     /**
@@ -225,12 +233,12 @@ public final class Scheduler implements NamedSendable {
      */
     public static void removeAll(){
         Command cmd;
-        for(Iterator<Command> iter = COMMAND_LIST.iterator(); iter.hasNext();){
+        for(Iterator<Command> iter = m_commandList.iterator(); iter.hasNext();){
             cmd = iter.next();            
             cmd.removed();
             iter.remove();
         }
-        SUBSYSTEMS.forEach(Subsystem::nullifyCurrentCommand);
+        m_subsystems.forEach(Subsystem::nullifyCurrentCommand);
     }
     
     /**
@@ -301,7 +309,7 @@ public final class Scheduler implements NamedSendable {
             m_table.retrieveValue("Cancel", toCancel);
 
             if(toCancel.size() > 0){
-                COMMAND_LIST.forEach(cmd -> {
+                m_commandList.forEach(cmd -> {
                     for(int i = 0; i < toCancel.size(); i++){
                         if(cmd.hashCode() == toCancel.get(i)){
                             cmd.cancel();
@@ -312,17 +320,17 @@ public final class Scheduler implements NamedSendable {
             }
             toCancel.setSize(0);
             m_table.putValue("Cancel", toCancel);
-        }
-        
-        if(m_runningCommandsChanged){
-            commands.setSize(0);
-            ids.setSize(0);
-            COMMAND_LIST.forEach(cmd -> {
-                commands.add(cmd.getName());
-                ids.add(cmd.hashCode());
-            });
-            m_table.putValue("Names", commands);
-            m_table.putValue("Ids", ids);
+            
+            if(m_runningCommandsChanged){
+                commands.setSize(0);
+                ids.setSize(0);
+                m_commandList.forEach(cmd -> {
+                    commands.add(cmd.getName());
+                    ids.add(cmd.hashCode());
+                });
+                m_table.putValue("Names", commands);
+                m_table.putValue("Ids", ids);
+            }
         }
     }
 }

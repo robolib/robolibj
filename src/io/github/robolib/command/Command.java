@@ -45,7 +45,7 @@ public abstract class Command implements NamedSendable {
     private boolean m_initialized = false;
     
     /** The m_requirements. */
-    private List<Subsystem> m_requirements;
+    private List<Subsystem> m_requirements = new ArrayList<Subsystem>(4);
     
     /** The m_running. */
     private boolean m_running = false;
@@ -155,8 +155,12 @@ public abstract class Command implements NamedSendable {
         if(m_locked)
             throw new IllegalStateException("Cannot add new requirement to command after being started or added to a command group.");
         if(subsys == null) return;
+//        if(m_requirements == null){
+//            synchronized(this){
+//                m_requirements = new ArrayList<Subsystem>(4);
+//            }
+//        }
         synchronized (m_requirements) {
-            if(m_requirements == null) m_requirements = new ArrayList<Subsystem>(4);
             m_requirements.add(subsys);
         }
     }
@@ -299,7 +303,7 @@ public abstract class Command implements NamedSendable {
      */
     List<Subsystem> getRequirements(){
         synchronized(m_requirements){
-            return m_requirements == null ? m_requirements = new ArrayList<Subsystem>(4) : m_requirements;
+            return m_requirements;
         }
     }
 
@@ -418,7 +422,7 @@ public abstract class Command implements NamedSendable {
      */
     public boolean doesRequire(Subsystem system){
         synchronized(m_requirements){
-            return m_requirements != null && m_requirements.contains(system);
+            return m_requirements.contains(system);
         }
     }
     
