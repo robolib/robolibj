@@ -51,7 +51,7 @@ public abstract class Command implements NamedSendable {
     private boolean m_running = false;
     
     /** The m_interruptible. */
-    private boolean m_interruptible;
+    private boolean m_interruptible = true;
     
     /** The m_canceled. */
     private boolean m_canceled = false;

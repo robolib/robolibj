@@ -81,7 +81,7 @@ public abstract class Subsystem implements NamedSendable {
         if(command == null){
             m_defaultCommand = null;
         }else{
-            if(!command.getRequirements().contains(this)) 
+            if(!command.getRequirements().contains(this))
                 throw new IllegalStateException("A default command must require the subsystem");
             
             m_defaultCommand = command;
