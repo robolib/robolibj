@@ -18,8 +18,6 @@ package io.github.robolib.module;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sound.sampled.Port;
-
 import io.github.robolib.module.iface.I2C;
 import io.github.robolib.util.Timer;
 
