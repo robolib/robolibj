@@ -116,8 +116,8 @@ public class DriveBase implements MotorSafety {
         m_rearLeftMotor = rearLeft;
         m_rearRightMotor = rearRight;
         
-        m_frontRightMotor.setInverted(true);
-        m_rearRightMotor.setInverted(true);
+        m_frontLeftMotor.setInverted(true);
+        m_rearLeftMotor.setInverted(true);
         
         m_wheelSpeeds = new double[4];
 
@@ -172,7 +172,8 @@ public class DriveBase implements MotorSafety {
         forward = MathUtils.clamp(forward, -1.0, 1.0);
         rotation = MathUtils.clamp(rotation, -1.0, 1.0);
         
-        setMotors(forward - rotation);
+//        setMotors(forward - rotation);
+        setMotors(forward + rotation, forward - rotation);
         
         /*double left;
         double right;
@@ -477,7 +478,7 @@ public class DriveBase implements MotorSafety {
      * @param right The speed to send to the right side of the robot.
      */
     public void setMotors(double left, double right){
-        setMotors(left, left, right, right);
+        setMotors(left, right, left, right);
     }
     
     /**
