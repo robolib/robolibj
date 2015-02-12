@@ -13,19 +13,24 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util.mapper;
+package io.github.robolib.util;
 
-import org.json.JSONArray;
+import java.lang.reflect.Array;
 
 /**
  * 
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface ModuleBuilder<T> {
+public class ArrayUtils {
     
-    T createModule(String key, JSONArray arrayData);
-    
-    String[] getStringIdentifiers();
+    @SuppressWarnings("unchecked")
+    public static final <T> T[] concatenate(T[] a, T[] b) {
+        int l1 = a.length, l2 = b.length;
+        T[] c = (T[]) Array.newInstance(a.getClass().getComponentType(), l1+l2);
+        System.arraycopy(a, 0, c, 0, l1);
+        System.arraycopy(b, 0, c, l1, l2);
+        return c;
+    }
 
 }
