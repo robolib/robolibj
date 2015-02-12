@@ -26,7 +26,6 @@ import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.module.controller.Talon;
 import io.github.robolib.module.controller.TalonSRX;
 import io.github.robolib.module.controller.Victor;
-import io.github.robolib.module.controller.VictorSP;
 import io.github.robolib.module.iface.PWM.PWMChannel;
 import io.github.robolib.util.log.Logger;
 
@@ -38,19 +37,18 @@ import org.json.JSONException;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class SpeedControllerBuilder implements ModuleBuilder<SpeedController> {
+public final class SpeedControllerMapper implements ModuleMapper<SpeedController> {
 
-    private static final Map<String, Class<? extends SpeedController>> CONTROLLER_MAP =
+    private static final Map<String, Class<? extends SpeedController>> m_controllMap =
             new HashMap<String, Class<? extends SpeedController>>();
     
     static{        
-        registerController("Talon", Talon.class);
-        registerController("TalonSR", Talon.class);
-        registerController("TalonSRX", TalonSRX.class);
-        registerController("Victor", Victor.class);
-        registerController("VictorSP", VictorSP.class);
-        registerController("Jaguar", Jaguar.class);
-        registerController("CANJaguar", CANJaguar.class);
+        registerController(Talon.class, "Talon", "TalonSR");
+        registerController(TalonSRX.class, "TalonSRX");
+        // registerController(CANTalon.class, "CANTalon");
+        registerController(Victor.class, "Victor", "VictorSP");
+        registerController(Jaguar.class, "Jaguar", "Jag");
+        registerController(CANJaguar.class, "CANJaguar", "CANJag");
     }
     
     /**
@@ -94,7 +92,7 @@ public final class SpeedControllerBuilder implements ModuleBuilder<SpeedControll
                     
             }
             
-            SpeedController s = CONTROLLER_MAP.get(type).getConstructor(classes).newInstance(args);
+            SpeedController s = m_controllMap.get(type).getConstructor(classes).newInstance(args);
             s.setInverted(invert);
             return s;
             
@@ -107,27 +105,23 @@ public final class SpeedControllerBuilder implements ModuleBuilder<SpeedControll
         return null;
     }
     
-    public static final void registerController(String key, Class<? extends SpeedController> con){
-        if(CONTROLLER_MAP.containsKey(key.toLowerCase())){
-            Logger.get(RobotMap.class).warn(
-                    "SpeedControllerBuilder already contains a an item for key '" + key + "'.");
-        }else{
-            CONTROLLER_MAP.put(key.toLowerCase(), con);
+    public static final void registerController(Class<? extends SpeedController> con, String ... keys){
+        for(String key : keys){
+            if(m_controllMap.containsKey(key.toLowerCase())){
+                Logger.get(RobotMap.class).warn(
+                        "SpeedControllerBuilder already contains a an item for key '" + key + "'.");
+            }else{
+                m_controllMap.put(key.toLowerCase(), con);
+            }
         }
-            
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String[] getStringIdentifiers() {
-        return new String[]{
-                "speed_controller",
-                "speedcontroller",
-                "motor_controller",
-                "motorcontroller"
-        };
+    public String[] getModuleIdentifiers() {
+        return m_controllMap.keySet().toArray(new String[m_controllMap.size()]);
     }
 
 }

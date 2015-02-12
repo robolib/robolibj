@@ -17,13 +17,13 @@ package io.github.robolib.util.mapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.github.robolib.util.log.Logger;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,10 +33,11 @@ import org.json.JSONObject;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
+@SuppressWarnings("unchecked")
 public final class RobotMap {
 
-    private static final Map<String, ModuleBuilder<?>> BUILDER_MAP =
-            new HashMap<String, ModuleBuilder<?>>();
+    private static final Map<String, ModuleMapper<?>> m_builderMap =
+            new HashMap<String, ModuleMapper<?>>();
     
     private static JSONObject m_jMap;
     
@@ -56,33 +57,27 @@ public final class RobotMap {
     }
     
     static{
-        registerModuleBuilder(new SpeedControllerBuilder());
-        registerModuleBuilder(new SolenoidBuilder());
+        registerModuleBuilder(new SpeedControllerMapper());
+        registerModuleBuilder(new SolenoidMapper());
     }
     
     private RobotMap(){}
     
-    public static void registerModuleBuilder(ModuleBuilder<?> builder){
-        for(String s : builder.getStringIdentifiers()){
-            if(BUILDER_MAP.containsKey(s.toLowerCase()))
+    public static void registerModuleBuilder(ModuleMapper<?> builder){
+        for(String s : builder.getModuleIdentifiers()){
+            if(m_builderMap.containsKey(s.toLowerCase()))
                 throw new IllegalArgumentException("A module builder under the key '"
                         + s + "' already exists.");
-            BUILDER_MAP.put(s.toLowerCase(), builder);
+            m_builderMap.put(s.toLowerCase(), builder);
         }
     }
 
-    public static Object get(String key){
+    public static <T> T get(String key){
         if(!m_enabled)
             throw new IllegalStateException(
                     "You must set the map file in the robot constructor before anything else.");
-        JSONObject data = m_jMap.getJSONObject(key);
-        ModuleBuilder<?> builder = BUILDER_MAP.get(data.getString("type").toLowerCase());
-        return builder.createModule(key, data.getJSONArray("data"));
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T> T get(String key, Type a){
-        
-        return (T) get(key);
+        JSONArray data = m_jMap.getJSONArray(key);
+        ModuleMapper<?> builder = m_builderMap.get(data.getString(0));
+        return (T) builder.createModule(key, data);
     }
 }

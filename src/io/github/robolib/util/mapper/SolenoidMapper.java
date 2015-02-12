@@ -31,16 +31,17 @@ import org.json.JSONException;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class SolenoidBuilder implements ModuleBuilder<SolenoidBase> {
+public final class SolenoidMapper implements ModuleMapper<SolenoidBase> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String[] getStringIdentifiers() {
+    public String[] getModuleIdentifiers() {
         return new String[]{
                 "solenoid",
-                "pneumatic"
+                "singlesolenoid",
+                "doublesolenoid",
         };
     }
 
@@ -52,12 +53,10 @@ public final class SolenoidBuilder implements ModuleBuilder<SolenoidBase> {
         try {
             String type = arrayData.getString(0);
             switch(type){
-            case "single":
             case "solenoid":
             case "singlesolenoid":
                 return Solenoid.class.getConstructor(SolenoidChannel.class).newInstance(
                         SolenoidChannel.values()[arrayData.getInt(1)]);
-            case "double":
             case "doublesolenoid":
                 return DoubleSolenoid.class.getConstructor(
                         SolenoidChannel.class, SolenoidChannel.class).newInstance(

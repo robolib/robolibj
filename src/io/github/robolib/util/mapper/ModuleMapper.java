@@ -22,10 +22,10 @@ import org.json.JSONArray;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public interface ModuleBuilder<T> {
+public interface ModuleMapper<T> {
     
     T createModule(String key, JSONArray arrayData);
     
-    String[] getStringIdentifiers();
+    String[] getModuleIdentifiers();
 
 }
