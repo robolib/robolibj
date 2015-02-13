@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.controller;
+package io.github.robolib.module;
 
 /**
  * The Interface MotorSafety.

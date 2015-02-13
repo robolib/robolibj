@@ -17,6 +17,8 @@ package io.github.robolib.module.controller;
 
 import io.github.robolib.SafetyManager;
 import io.github.robolib.module.LimitSystem;
+import io.github.robolib.module.MotorSafety;
+import io.github.robolib.module.MotorSafetyHelper;
 
 /**
  * A SpeedController limited by Boolean Sources.

@@ -16,6 +16,8 @@
 package io.github.robolib.module.controller;
 
 import io.github.robolib.SafetyManager;
+import io.github.robolib.module.MotorSafety;
+import io.github.robolib.module.MotorSafetyHelper;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.PDP.PowerChannel;
 import io.github.robolib.module.iface.PWM;

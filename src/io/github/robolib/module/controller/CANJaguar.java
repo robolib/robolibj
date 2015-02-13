@@ -11,6 +11,8 @@ import io.github.robolib.jni.CANJNI;
 import io.github.robolib.jni.CANUtil;
 import io.github.robolib.lang.CANMessageNotFoundException;
 import io.github.robolib.lang.ResourceAllocationException;
+import io.github.robolib.module.MotorSafety;
+import io.github.robolib.module.MotorSafetyHelper;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.PDP.PowerChannel;
 import io.github.robolib.nettable.ITable;

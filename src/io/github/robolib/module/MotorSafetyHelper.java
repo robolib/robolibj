@@ -13,11 +13,10 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.controller;
+package io.github.robolib.module;
 
 import io.github.robolib.RobotState;
 import io.github.robolib.SafetyManager;
-import io.github.robolib.module.RoboRIO;
 import io.github.robolib.util.log.Logger;
 
 // TODO: Auto-generated Javadoc
