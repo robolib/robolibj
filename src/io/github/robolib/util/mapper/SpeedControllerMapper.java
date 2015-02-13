@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.github.robolib.module.PDP.PowerChannel;
-import io.github.robolib.module.controller.CANJaguar;
 import io.github.robolib.module.controller.Jaguar;
 import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.module.controller.Talon;
@@ -45,10 +44,8 @@ public final class SpeedControllerMapper implements ModuleMapper<SpeedController
     static{        
         registerController(Talon.class, "Talon", "TalonSR");
         registerController(TalonSRX.class, "TalonSRX");
-        // registerController(CANTalon.class, "CANTalon");
         registerController(Victor.class, "Victor", "VictorSP");
         registerController(Jaguar.class, "Jaguar", "Jag");
-        registerController(CANJaguar.class, "CANJaguar", "CANJag");
     }
     
     /**
@@ -60,9 +57,7 @@ public final class SpeedControllerMapper implements ModuleMapper<SpeedController
         try {
             
             String type = arrayData.getString(0).toLowerCase();
-            Object devChan = arrayData.getInt(1);
-            if(!(type == "CANJaguar" || type == "CANTalon"))
-                devChan = PWMChannel.values()[(int)devChan];
+            PWMChannel devChan = PWMChannel.values()[arrayData.getInt(1)];
             
             Class[] classes = null;
             Object[] args = null;
@@ -70,21 +65,21 @@ public final class SpeedControllerMapper implements ModuleMapper<SpeedController
             
             switch(arrayData.length()){
             case 2:
-                classes = new Class[]{devChan.getClass()};
+                classes = new Class[]{PWMChannel.class};
                 args = new Object[]{devChan};
                 break;
             case 3:
-                classes = new Class[]{devChan.getClass(), String.class};
+                classes = new Class[]{PWMChannel.class, String.class};
                 args = new Object[]{devChan, arrayData.getString(2)};
                 break;
             case 4:
-                classes = new Class[]{devChan.getClass(), String.class, PowerChannel.class};
+                classes = new Class[]{PWMChannel.class, String.class, PowerChannel.class};
                 args = new Object[]{devChan, arrayData.getString(2),
                         PowerChannel.values()[arrayData.getInt(3)]};
                 break;
             case 5:
             default:
-                classes = new Class[]{devChan.getClass(), String.class, PowerChannel.class};
+                classes = new Class[]{PWMChannel.class, String.class, PowerChannel.class};
                 args = new Object[]{devChan, arrayData.getString(2),
                         PowerChannel.values()[arrayData.getInt(3)]};
                 invert = arrayData.getBoolean(4);

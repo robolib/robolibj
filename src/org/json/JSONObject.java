@@ -172,6 +172,10 @@ public class JSONObject {
                 throw x.syntaxError("A JSONObject text must end with '}'");
             case '}':
                 return;
+            case '/':
+                x.next('/');
+                x.nextTo('\n');
+                continue;
             default:
                 x.back();
                 key = x.nextValue().toString();

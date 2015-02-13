@@ -15,24 +15,32 @@
 
 package io.github.robolib.util.mapper;
 
-import io.github.robolib.module.iface.DigitalIO;
+import io.github.robolib.module.iface.DigitalIO.DigitalChannel;
+import io.github.robolib.module.sensor.LimitSwitch;
+import io.github.robolib.util.log.Logger;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DigitalIOMapper implements ModuleMapper<DigitalIO>{
-    
-    
+public class LimitSwitchMapper implements ModuleMapper<LimitSwitch> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DigitalIO createModule(String key, JSONArray arrayData) {
+    public LimitSwitch createModule(String key, JSONArray arrayData) {
+        try {
+            return new LimitSwitch(
+                    DigitalChannel.values()[arrayData.getInt(1)],
+                    LimitSwitch.SwitchType.valueOf(arrayData.getString(2).toUpperCase()));
+        } catch (IllegalArgumentException | SecurityException | JSONException e) {
+            Logger.get(RobotMap.class).fatal("Unable to create LimitSwitch for key '" + key + "'", e);
+        }
         return null;
     }
 
@@ -42,10 +50,11 @@ public class DigitalIOMapper implements ModuleMapper<DigitalIO>{
     @Override
     public String[] getModuleIdentifiers() {
         return new String[]{
-                "DigitalIO"
+                "limit_switch",
+                "limitswitch",
+                "lswitch",
+                "switch"
         };
     }
-    
-    
 
 }

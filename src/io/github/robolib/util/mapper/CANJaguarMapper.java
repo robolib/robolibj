@@ -15,7 +15,8 @@
 
 package io.github.robolib.util.mapper;
 
-import io.github.robolib.module.iface.DigitalIO;
+import io.github.robolib.module.PDP.PowerChannel;
+import io.github.robolib.module.controller.CANJaguar;
 
 import org.json.JSONArray;
 
@@ -24,16 +25,20 @@ import org.json.JSONArray;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DigitalIOMapper implements ModuleMapper<DigitalIO>{
-    
-    
+public class CANJaguarMapper implements ModuleMapper<CANJaguar> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DigitalIO createModule(String key, JSONArray arrayData) {
-        return null;
+    public CANJaguar createModule(String key, JSONArray arrayData) {
+        int channel = arrayData.getInt(1);
+        String description = arrayData.getString(2);
+        int pChannel = arrayData.getInt(3);
+        
+        return new CANJaguar(
+                channel, description,
+                PowerChannel.values()[pChannel]);
     }
 
     /**
@@ -42,10 +47,11 @@ public class DigitalIOMapper implements ModuleMapper<DigitalIO>{
     @Override
     public String[] getModuleIdentifiers() {
         return new String[]{
-                "DigitalIO"
+                "canjaguar",
+                "can_jaguar",
+                "canjag",
+                "can_jag"
         };
     }
-    
-    
 
 }

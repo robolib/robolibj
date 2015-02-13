@@ -15,8 +15,6 @@
 
 package io.github.robolib.util.mapper;
 
-import java.lang.reflect.InvocationTargetException;
-
 import io.github.robolib.module.actuator.DoubleSolenoid;
 import io.github.robolib.module.actuator.Solenoid;
 import io.github.robolib.module.actuator.SolenoidBase;
@@ -55,11 +53,9 @@ public final class SolenoidMapper implements ModuleMapper<SolenoidBase> {
             switch(type){
             case "solenoid":
             case "singlesolenoid":
-                return Solenoid.class.getConstructor(SolenoidChannel.class).newInstance(
-                        SolenoidChannel.values()[arrayData.getInt(1)]);
+                return new Solenoid(SolenoidChannel.values()[arrayData.getInt(1)]);
             case "doublesolenoid":
-                return DoubleSolenoid.class.getConstructor(
-                        SolenoidChannel.class, SolenoidChannel.class).newInstance(
+                return new DoubleSolenoid(
                         SolenoidChannel.values()[arrayData.getInt(1)],
                         SolenoidChannel.values()[arrayData.getInt(2)]);
             default:
@@ -67,10 +63,7 @@ public final class SolenoidMapper implements ModuleMapper<SolenoidBase> {
                 break;
             }
                 
-        } catch (NoSuchMethodException | SecurityException
-                | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException
-                | JSONException e) {
+        } catch (SecurityException | IllegalArgumentException | JSONException e) {
             Logger.get(RobotMap.class).fatal("Unable to create Solenoid for '" + key + "'!", e);
         }
         return null;
