@@ -1,6 +1,6 @@
 package io.github.robolib.module.controller;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -332,7 +332,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
     public void free() {
         m_safetyHelper = null;
 
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         status.put(0, 0);
 
         int messageID ;
@@ -1835,7 +1835,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
                 CANJNI.LM_API_ICTRL_T_EN, CANJNI.LM_API_ICTRL_T_SET
         };
 
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         status.put(0, 0);
 
         for(byte i = 0; i < kTrustedMessages.length; i++) {
@@ -1946,12 +1946,12 @@ public final class CANJaguar implements SpeedController, MotorSafety,
         messageID |= m_deviceNumber;
         messageID &= CANJNI.CAN_MSGID_FULL_M;
 
-        IntBuffer targetedMessageID = getLE4IntBuffer();
+        IntBuffer targetedMessageID = allocateInt();
         targetedMessageID.put(0, messageID);
 
         ByteBuffer timeStamp = ByteBuffer.allocateDirect(4);
 
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         status.put(0, 0);
 
         // Get the data.

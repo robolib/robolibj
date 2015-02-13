@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -44,7 +44,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      */
     @Override
     public void setState(boolean value){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         DIOJNI.setDIO(m_port, (short)(value?1:0), status);
         HALUtil.checkStatus(status);
     }
@@ -56,7 +56,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      * @param pulseLength The length of the pulse.
      */
     public final void pulse(double pulseLength){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         DIOJNI.pulse(m_port, pulseLength, status);
         HALUtil.checkStatus(status);
     }
@@ -68,7 +68,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      * @return true if pulsing
      */
     public final boolean isPulsing(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean value = DIOJNI.isPulsing(m_port, status) != 0;
         HALUtil.checkStatus(status);
         return value;
@@ -85,7 +85,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      * @param rate The frequency to output all digital output PWM signals.
      */
     public static final void setPWMRate(double rate){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         PWMJNI.setPWMRate(rate, status);
         HALUtil.checkStatus(status);
     }
@@ -107,7 +107,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
         if(m_pwmGenerator != null)
             return;
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         m_pwmGenerator = PWMJNI.allocatePWM(status);
         HALUtil.checkStatus(status);
         PWMJNI.setPWMDutyCycle(m_pwmGenerator, initialDutyCycle, status);
@@ -124,7 +124,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
         if(m_pwmGenerator == null)
             return;
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         PWMJNI.setPWMOutputChannel(m_pwmGenerator, 26, status);
         HALUtil.checkStatus(status);
         PWMJNI.freePWM(m_pwmGenerator, status);
@@ -143,7 +143,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
         if(m_pwmGenerator == null)
             return;
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         PWMJNI.setPWMDutyCycle(m_pwmGenerator, dutyCycle, status);
         HALUtil.checkStatus(status);
     }

@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -71,7 +71,7 @@ public class SPI extends Interface {
         
         ALLOCATED_PORTS[port.ordinal()] = true;
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         
         m_port = (byte)port.ordinal();
 //        m_devices++;
@@ -158,7 +158,7 @@ public class SPI extends Interface {
      * Configure the chip select line to be active high.
      */
     public final void setChipSelectActiveHigh(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SPIJNI.spiSetChipSelectActiveHigh(m_port, status);
         HALUtil.checkStatus(status);
     }
@@ -167,7 +167,7 @@ public class SPI extends Interface {
      * Configure the chip select line to be active low.
      */
     public final void setChipSelectActiveLow(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SPIJNI.spiSetChipSelectActiveLow(m_port, status);
         HALUtil.checkStatus(status);
     }

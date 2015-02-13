@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -84,7 +84,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
     @Override
     public final void free(){
         if(m_triggerPort != null){
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             AnalogJNI.cleanAnalogTrigger(m_triggerPort, status);
             HALUtil.checkStatus(status);
         }
@@ -101,7 +101,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return A sample straight from this channel.
      */
     public int getValue(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = AnalogJNI.getAnalogValue(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -119,7 +119,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return A sample from the oversample and average engine for this channel.
      */
     public int getAverageValue(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = AnalogJNI.getAnalogAverageValue(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -133,7 +133,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return A scaled sample straight from this channel.
      */
     public double getVoltage(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double value = AnalogJNI.getAnalogVoltage(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -151,7 +151,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      *       engine for this channel.
      */
     public double getAverageVoltage(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double value = AnalogJNI.getAnalogAverageVoltage(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -174,7 +174,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return Least significant bit weight.
      */
     public long getLSBWeight(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         long value = AnalogJNI.getAnalogLSBWeight(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -189,7 +189,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return Offset constant.
      */
     public int getOffset(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = AnalogJNI.getAnalogOffset(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -204,7 +204,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      *          The number of averaging bits.
      */
     public void setAverageBits(final int bits){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAnalogAverageBits(m_port, bits, status);
         HALUtil.checkStatus(status);
     }
@@ -217,7 +217,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return The number of averaging bits.
      */
     public int getAverageBits(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = AnalogJNI.getAnalogAverageBits(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -232,7 +232,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      *          The number of oversample bits.
      */
     public void setOversampleBits(final int bits){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAnalogOversampleBits(m_port, bits, status);
         HALUtil.checkStatus(status);
     }
@@ -245,7 +245,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return The number of oversample bits.
      */
     public int getOversampleBits(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = AnalogJNI.getAnalogOversampleBits(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -263,7 +263,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
                             + ACCUMULATOR_CHANNELS[1]);
         }
         m_accumulatorOffset = 0;
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.initAccumulator(m_port, status);
         HALUtil.checkStatus(status);
     }
@@ -284,7 +284,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * Resets the accumulator to the initial value.
      */
     public void resetAccumulator(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.resetAccumulator(m_port, status);
         HALUtil.checkStatus(status);
         final double sampleTime = 1.0 / getGlobalSampleRate();
@@ -307,7 +307,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @param center the center of the accumulator
      */
     public void setAccumulatorCenter(int center){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAccumulatorCenter(m_port, center, status);
         HALUtil.checkStatus(status);
     }
@@ -317,7 +317,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @param deadband The deadband size in ADC codes (12-bit value)
      */
     public void setAccumulatorDeadband(int deadband){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAccumulatorDeadband(m_port, deadband, status);
         HALUtil.checkStatus(status);
     }
@@ -331,7 +331,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return The 64-bit value accumulated since the last Reset().
      */
     public long getAccumulatorValue(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         long value = AnalogJNI.getAccumulatorValue(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -346,7 +346,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return The number of times samples from the channel were accumulated.
      */
     public long getAccumulatorCount(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         long value = AnalogJNI.getAccumulatorCount(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -367,8 +367,8 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         
         ByteBuffer value = ByteBuffer.allocateDirect(8);
         value.order(ByteOrder.LITTLE_ENDIAN);
-        IntBuffer count = getLE4IntBuffer();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer count = allocateInt();
+        IntBuffer status = allocateInt();
         AnalogJNI.getAccumulatorOutput(m_port, value.asLongBuffer(), count, status);
         result.value = value.asLongBuffer().get(0) + m_accumulatorOffset;
         result.count = count.get(0);
@@ -398,7 +398,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @param samples The number of samples per second.
      */
     public static void setGlobalSampleRate(final double samples){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAnalogSampleRate((float)samples, status);
         HALUtil.checkStatus(status);
     }
@@ -412,15 +412,15 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return Sample rate.
      */
     public static double getGlobalSampleRate(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double value = AnalogJNI.getAnalogSampleRate(status);
         HALUtil.checkStatus(status);
         return value;
     }
     
     public void initTrigger(){
-        IntBuffer status = getLE4IntBuffer();
-        IntBuffer index = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
+        IntBuffer index = allocateInt();
         m_triggerPort = AnalogJNI.initializeAnalogTrigger(m_portPointer, index, status);
         HALUtil.checkStatus(status);
         m_triggerIndex = index.get(0);
@@ -440,7 +440,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         if(lower > upper)
             throw new IllegalArgumentException("Lower bound is greater than upper");
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAnalogTriggerLimitsRaw(m_triggerPort, lower, upper, status);
         HALUtil.checkStatus(status);
     }
@@ -457,7 +457,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         if(lower > upper)
             throw new IllegalArgumentException("Lower bound is greater than upper");
             
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAnalogTriggerLimitsVoltage(m_triggerPort, lower, upper, status);
         HALUtil.checkStatus(status);
     }
@@ -471,7 +471,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      */
     public void setAveraged(boolean useAveraged){
         validateTrigger();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAnalogTriggerAveraged(m_triggerPort, (byte)(useAveraged?1:0), status);
         HALUtil.checkStatus(status);
     }
@@ -486,7 +486,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      */
     public void setFiltered(boolean useFiltered){
         validateTrigger();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAnalogTriggerFiltered(m_triggerPort, (byte)(useFiltered?1:0), status);
         HALUtil.checkStatus(status);
     }
@@ -510,7 +510,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      */
     public boolean getInWindow(){
         validateTrigger();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         byte value = AnalogJNI.getAnalogTriggerInWindow(m_triggerPort, status);
         HALUtil.checkStatus(status);
         return value != 0;
@@ -524,7 +524,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return The TriggerState output of the analog trigger.
      */
     public boolean getTriggerState(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         byte value = AnalogJNI.getAnalogTriggerTriggerState(m_triggerPort, status);
         HALUtil.checkStatus(status);
         return value != 0;
@@ -548,7 +548,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
             }
             @Override
             public boolean getState() {
-                IntBuffer status = getLE4IntBuffer();
+                IntBuffer status = allocateInt();
                 byte value = AnalogJNI.getAnalogTriggerOutput(m_triggerPort, type.ordinal(), status);
                 HALUtil.checkStatus(status);
                 return value != 0;

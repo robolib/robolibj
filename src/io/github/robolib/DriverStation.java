@@ -15,7 +15,7 @@
 
 package io.github.robolib;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -282,7 +282,7 @@ public final class DriverStation {
      * @return Is the system active (i.e. PWM motor outputs, etc. enabled)?
      */
     public static boolean isSysActive() {
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean retVal = NetworkCommunications.HALGetSystemActive(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -294,7 +294,7 @@ public final class DriverStation {
      * @return True if the system is browned out
      */
     public static boolean isBrownedOut() {
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean retVal = NetworkCommunications.HALGetBrownedOut(status);
         HALUtil.checkStatus(status);
         return retVal;

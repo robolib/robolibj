@@ -58,7 +58,6 @@ public class ADXL345_SPI extends SPI implements ADXL345 {
     /**
      * {@inheritDoc}
      */
-    @Override
     public void setAccelRange(AccelRange range) {
         write(new byte[]{
                 DATA_FORMAT_REGISTER,
@@ -70,7 +69,6 @@ public class ADXL345_SPI extends SPI implements ADXL345 {
     /**
      * {@inheritDoc}
      */
-    @Override
     public AccelRange getAccelRange() {
         return m_range;
     }

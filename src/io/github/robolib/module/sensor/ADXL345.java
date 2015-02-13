@@ -64,7 +64,6 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
-    @Override
     default double getAccelerationX() {
         return getAcceleration(Axis.X);
     }
@@ -72,7 +71,6 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
-    @Override
     default double getAccelerationY() {
         return getAcceleration(Axis.Y);
     }
@@ -80,7 +78,6 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
-    @Override
     default double getAccelerationZ() {
         return getAcceleration(Axis.Z);
     }

@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -69,7 +69,7 @@ public class I2C extends Interface {
         m_address = (byte)address;
 
         if(!INITIALIZED_PORTS[port.ordinal()]){
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             I2CJNI.i2CInitialize(m_port, status);
             HALUtil.checkStatus(status);
             INITIALIZED_PORTS[port.ordinal()] = true;

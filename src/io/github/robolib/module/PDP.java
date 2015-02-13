@@ -15,7 +15,7 @@
 
 package io.github.robolib.module;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -152,7 +152,7 @@ public final class PDP implements UpdatingSendable {
      * @return the voltage
      */
     public static double getVoltage(){
-        return PDPJNI.getPDPVoltage(getLE4IntBuffer());
+        return PDPJNI.getPDPVoltage(allocateInt());
     }
     
     /**
@@ -161,7 +161,7 @@ public final class PDP implements UpdatingSendable {
      * @return the temperature
      */
     public static double getTemperature(){
-        return PDPJNI.getPDPTemperature(getLE4IntBuffer());
+        return PDPJNI.getPDPTemperature(allocateInt());
     }
     
     /**
@@ -171,7 +171,7 @@ public final class PDP implements UpdatingSendable {
      * @return the current
      */
     public static double getCurrent(PowerChannel channel){
-        return PDPJNI.getPDPChannelCurrent((byte)channel.ordinal(), getLE4IntBuffer());
+        return PDPJNI.getPDPChannelCurrent((byte)channel.ordinal(), allocateInt());
     }
 
     /**
@@ -181,7 +181,7 @@ public final class PDP implements UpdatingSendable {
      * @return the current
      */
     private double getChannelCurrent(int channel){
-        return PDPJNI.getPDPChannelCurrent((byte)channel, getLE4IntBuffer());
+        return PDPJNI.getPDPChannelCurrent((byte)channel, allocateInt());
     }
     
     /**
@@ -190,7 +190,7 @@ public final class PDP implements UpdatingSendable {
      * @return the total current
      */
     public static double getTotalCurrent(){
-        return PDPJNI.getPDPTotalCurrent(getLE4IntBuffer());
+        return PDPJNI.getPDPTotalCurrent(allocateInt());
     }
     
     /**
@@ -199,7 +199,7 @@ public final class PDP implements UpdatingSendable {
      * @return the total power
      */
     public static double getTotalPower(){
-        return PDPJNI.getPDPTotalPower(getLE4IntBuffer());
+        return PDPJNI.getPDPTotalPower(allocateInt());
     }
     
     /**
@@ -208,21 +208,21 @@ public final class PDP implements UpdatingSendable {
      * @return the total energy
      */
     public static double getTotalEnergy(){
-        return PDPJNI.getPDPTotalEnergy(getLE4IntBuffer());
+        return PDPJNI.getPDPTotalEnergy(allocateInt());
     }
     
     /**
      * Reset total energy.
      */
     public static void resetTotalEnergy(){
-        PDPJNI.resetPDPTotalEnergy(getLE4IntBuffer());   
+        PDPJNI.resetPDPTotalEnergy(allocateInt());   
     }
     
     /**
      * Reset faults.
      */
     public static void resetFaults(){
-        PDPJNI.clearPDPStickyFaults(getLE4IntBuffer());
+        PDPJNI.clearPDPStickyFaults(allocateInt());
     }
     
     /*

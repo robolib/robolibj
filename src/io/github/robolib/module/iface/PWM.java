@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -235,7 +235,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
 
         m_channel = channel;
 
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
 
         m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte) getChannelNumber()), status);
         HALUtil.checkStatus(status);
@@ -269,7 +269,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      */
     public void free() {
         if(freeChannel(getChannel())){
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
 
             PWMJNI.setPWM(m_port, (short) 0, status);
             HALUtil.checkStatus(status);
@@ -359,7 +359,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @param min The minimum PWM pulse in ms
      */
     public final void setBounds(double max, double deadMax, double center, double deadMin, double min){
-        double loopTime = DIOJNI.getLoopTiming(getLE4IntBuffer())/
+        double loopTime = DIOJNI.getLoopTiming(allocateInt())/
                 (SYSTEM_CLOCK_TICKS_PER_MICROSEC*1e3);
         m_boundsPositiveMax = (int) ((max - PWM_DEFAULT_CENTER)/loopTime + PWM_DEFAULT_STEPS_DOWN - 1);
         m_boundsNegativeMin = (int) ((min - PWM_DEFAULT_CENTER)/loopTime + PWM_DEFAULT_STEPS_DOWN - 1);
@@ -468,7 +468,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @param value Raw PWM value.  Range 0 - 255.
      */
     public final void setRaw(int value) {
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         PWMJNI.setPWM(m_port, (short) value, status);
         HALUtil.checkStatus(status);
     }
@@ -481,7 +481,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @return Raw PWM control value.  Range: 0 - 255.
      */
     public final int getRaw() {
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = PWMJNI.getPWM(m_port, status);
         HALUtil.checkStatus(status);
         return value;
@@ -521,7 +521,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @param multi The PeriodMultiplier enum
      */
     public final void setPeriodMultiplier(PeriodMultiplier multi){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         PWMJNI.setPWMPeriodScale(m_port, multi.value, status);
         HALUtil.checkStatus(status);
     }
@@ -530,7 +530,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * Sets the zero latch.
      */
     protected final void setZeroLatch(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         PWMJNI.latchPWMZero(m_port, status);
         HALUtil.checkStatus(status);
     }

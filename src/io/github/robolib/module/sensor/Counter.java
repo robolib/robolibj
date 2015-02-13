@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.sensor;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -76,8 +76,8 @@ public class Counter extends CounterBase implements PIDSource {
      */
     public Counter(){
         
-        IntBuffer status = getLE4IntBuffer();
-        IntBuffer index = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
+        IntBuffer index = allocateInt();
         m_counter = CounterJNI.initializeCounter(0, index, status);
         HALUtil.checkStatus(status);
         m_index = index.get(0);
@@ -147,7 +147,7 @@ public class Counter extends CounterBase implements PIDSource {
         if(eType == EncodingType.k4X)
             throw new IllegalArgumentException("Counters only support 1X and 2X quadreature decoding!");
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean upEdgeA = eType == EncodingType.k1X;
         setSourceEdge(SourceType.UP, true, upEdgeA);
         CounterJNI.setCounterAverageSize(m_counter, eType.ordinal() + 1, status);
@@ -162,7 +162,7 @@ public class Counter extends CounterBase implements PIDSource {
         clearSource(SourceType.UP);
         clearSource(SourceType.DOWN);
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         CounterJNI.freeCounter(m_counter, status);
         HALUtil.checkStatus(status);
         
@@ -197,7 +197,7 @@ public class Counter extends CounterBase implements PIDSource {
      * @param source the digital source to count
      */
     public void setSource(SourceType sType, DigitalIO source){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         switch(sType){
         case UP:
             if(m_upSource != null && m_allocatedUpSource){
@@ -229,7 +229,7 @@ public class Counter extends CounterBase implements PIDSource {
      * @param fallingEdge true to count the falling edge
      */
     public void setSourceEdge(SourceType sType, boolean risingEdge, boolean fallingEdge){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         switch(sType){
         case UP:
             CounterJNI.setCounterUpSourceEdge(m_counter, (byte)(risingEdge?1:0), (byte)(fallingEdge?1:0), status);
@@ -245,7 +245,7 @@ public class Counter extends CounterBase implements PIDSource {
      * @param sType the Source type Up or Down.
      */
     public void clearSource(SourceType sType){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         switch(sType){
         case UP:
             if(m_upSource != null && m_allocatedUpSource){
@@ -268,7 +268,7 @@ public class Counter extends CounterBase implements PIDSource {
     }
     
     private void setMode(CounterMode mode, Object... args){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         switch(mode){
         case kTwoPulse:
             CounterJNI.setCounterUpDownMode(m_counter, status);
@@ -327,7 +327,7 @@ public class Counter extends CounterBase implements PIDSource {
      */
     @Override
     public int getCount(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = CounterJNI.getCounter(m_counter, status);
         HALUtil.checkStatus(status);
         return value;
@@ -350,7 +350,7 @@ public class Counter extends CounterBase implements PIDSource {
      */
     @Override
     public void reset(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         CounterJNI.resetCounter(m_counter, status);
         HALUtil.checkStatus(status);
     }
@@ -366,7 +366,7 @@ public class Counter extends CounterBase implements PIDSource {
      */
     @Override
     public void setMaxPeriod(double maxPeriod){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         CounterJNI.setCounterMaxPeriod(m_counter, maxPeriod, status);
         HALUtil.checkStatus(status);
     }
@@ -388,7 +388,7 @@ public class Counter extends CounterBase implements PIDSource {
      * @param enabled true to continue updating
      */
     public void setUpdateWhenEmpty(boolean enabled){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         CounterJNI.setCounterUpdateWhenEmpty(m_counter, (byte)(enabled?1:0), status);
         HALUtil.checkStatus(status);
     }
@@ -404,7 +404,7 @@ public class Counter extends CounterBase implements PIDSource {
      */
     @Override
     public boolean getStopped(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean value = CounterJNI.getCounterStopped(m_counter, status) != 0;
         HALUtil.checkStatus(status);
         return value;
@@ -417,7 +417,7 @@ public class Counter extends CounterBase implements PIDSource {
      */
     @Override
     public boolean getDirection(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean value = CounterJNI.getCounterDirection(m_counter, status) != 0;
         HALUtil.checkStatus(status);
         return value;
@@ -431,7 +431,7 @@ public class Counter extends CounterBase implements PIDSource {
      * @param reverse true if the value counted should be negated.
      */
     public void setReverseDirection(boolean reverse){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         CounterJNI.setCounterReverseDirection(m_counter, (byte)(reverse?1:0), status);
         HALUtil.checkStatus(status);
     }
@@ -445,7 +445,7 @@ public class Counter extends CounterBase implements PIDSource {
      */
     @Override
     public double getPeriod(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double value = CounterJNI.getCounterPeriod(m_counter, status);
         HALUtil.checkStatus(status);
         return value;
@@ -472,7 +472,7 @@ public class Counter extends CounterBase implements PIDSource {
      */
     public void setSamplesPerAverage(int samples){
         samples = MathUtils.clamp(samples, 1, 127);
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         CounterJNI.setCounterSamplesToAverage(m_counter, samples, status);
         HALUtil.checkStatus(status);
     }
@@ -487,7 +487,7 @@ public class Counter extends CounterBase implements PIDSource {
      * 127)
      */
     public int getSamplesPerAverage(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = CounterJNI.getCounterSamplesToAverage(m_counter, status);
         HALUtil.checkStatus(status);
         return value;
