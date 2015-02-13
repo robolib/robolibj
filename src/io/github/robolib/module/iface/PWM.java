@@ -47,64 +47,64 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     public static enum PWMChannel{
 
         /**  PWM Channel 0 On-board. */
-        Channel0,
+        PWM0,
 
         /**  PWM Channel 1 On-board. */
-        Channel1,
+        PWM1,
 
         /**  PWM Channel 2 On-board. */
-        Channel2,
+        PWM2,
 
         /**  PWM Channel 3 On-board. */
-        Channel3,
+        PWM3,
 
         /**  PWM Channel 4 On-board. */
-        Channel4,
+        PWM4,
 
         /**  PWM Channel 5 On-board. */
-        Channel5,
+        PWM5,
 
         /**  PWM Channel 6 On-board. */
-        Channel6,
+        PWM6,
 
         /**  PWM Channel 7 On-board. */
-        Channel7,
+        PWM7,
 
         /**  PWM Channel 8 On-board. */
-        Channel8,
+        PWM8,
 
         /**  PWM Channel 9 On-board. */
-        Channel9,
+        PWM9,
 
         /**  PWM Channel 10, Channel 0 on MXP. */
-        Channel10(11),
+        PWM10(11),
 
         /**  PWM Channel 11, Channel 1 on MXP. */
-        Channel11(13),
+        PWM11(13),
 
         /**  PWM Channel 12, Channel 2 on MXP. */
-        Channel12(15),
+        PWM12(15),
 
         /**  PWM Channel 13, Channel 3 on MXP. */
-        Channel13(17),
+        PWM13(17),
 
         /**  PWM Channel 14, Channel 4 on MXP. */
-        Channel14(27),
+        PWM14(27),
 
         /**  PWM Channel 15, Channel 5 on MXP. */
-        Channel15(29),
+        PWM15(29),
 
         /**  PWM Channel 16, Channel 6 on MXP. */
-        Channel16(31),
+        PWM16(31),
 
         /**  PWM Channel 17, Channel 7 on MXP. */
-        Channel17(18),
+        PWM17(18),
 
         /**  PWM Channel 18, Channel 8 on MXP. */
-        Channel18(22),
+        PWM18(22),
 
         /**  PWM Channel 19, Channel 9 on MXP. */
-        Channel19(26);
+        PWM19(26);
 
         /** The Pin on the MXP port that this channel is on. */
         public final int m_mxpPin;

@@ -19,7 +19,7 @@ import io.github.robolib.module.LimitSystem;
 import io.github.robolib.module.controller.LimitedController;
 import io.github.robolib.module.controller.SpeedController;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * 
@@ -32,21 +32,21 @@ public class LimitedControllerMapper implements ModuleMapper<LimitedController> 
      * {@inheritDoc}
      */
     @Override
-    public LimitedController createModule(String key, JSONArray arrayData) {
+    public LimitedController createModule(String key, JSONObject data) {
         SpeedController motor;
         LimitSystem system;
 
-        Object o = arrayData.get(1);
-        Object p = arrayData.get(2);
+        Object o = data.get("motor");
+        Object p = data.get("system");
         
-        if(o instanceof JSONArray){
-            motor = RobotMap.getModule(key, (JSONArray) o);
+        if(o instanceof JSONObject){
+            motor = RobotMap.getModule(key, (JSONObject) o);
         }else{
             motor = RobotMap.getModule((String) o);
         }
         
-        if(p instanceof JSONArray){
-            system = RobotMap.getModule(key, (JSONArray) p);
+        if(p instanceof JSONObject){
+            system = RobotMap.getModule(key, (JSONObject) p);
         }else{
             system = RobotMap.getModule((String) p);
         }

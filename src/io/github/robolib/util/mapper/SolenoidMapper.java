@@ -21,8 +21,8 @@ import io.github.robolib.module.actuator.SolenoidBase;
 import io.github.robolib.module.actuator.SolenoidBase.SolenoidChannel;
 import io.github.robolib.util.log.Logger;
 
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 
@@ -47,17 +47,17 @@ public final class SolenoidMapper implements ModuleMapper<SolenoidBase> {
      * {@inheritDoc}
      */
     @Override
-    public SolenoidBase createModule(String key, JSONArray arrayData) {
+    public SolenoidBase createModule(String key, JSONObject data) {
         try {
-            String type = arrayData.getString(0);
+            String type = data.getString("type");
             switch(type){
             case "solenoid":
             case "singlesolenoid":
-                return new Solenoid(SolenoidChannel.values()[arrayData.getInt(1)]);
+                return new Solenoid(SolenoidChannel.values()[data.getInt("channel")]);
             case "doublesolenoid":
                 return new DoubleSolenoid(
-                        SolenoidChannel.values()[arrayData.getInt(1)],
-                        SolenoidChannel.values()[arrayData.getInt(2)]);
+                        SolenoidChannel.values()[data.getInt("forward_channel")],
+                        SolenoidChannel.values()[data.getInt("reverse_channel")]);
             default:
                 Logger.get(RobotMap.class).fatal("Unable to create Solenoid for '" + key + "'! NO type '" + type + "'");
                 break;

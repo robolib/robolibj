@@ -48,10 +48,10 @@ public final class Relay extends Interface {
      * @author noriah Reuland <vix@noriah.dev>
      */
     public static enum RelayChannel {
-        Channel0,
-        Channel1,
-        Channel2,
-        Channel3;
+        RELAY0,
+        RELAY1,
+        RELAY2,
+        RELAY3;
     }
     
     /**

@@ -17,10 +17,10 @@ package io.github.robolib.util.mapper;
 
 import io.github.robolib.identifier.BooleanSource;
 import io.github.robolib.module.LimitSystem;
-import io.github.robolib.module.LimitSystem.SystemType;
 import io.github.robolib.util.log.Logger;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * 
@@ -33,40 +33,40 @@ public class LimitSystemMapper implements ModuleMapper<LimitSystem> {
      * {@inheritDoc}
      */
     @Override
-    public LimitSystem createModule(String key, JSONArray arrayData) {
-        String type = arrayData.getString(0);
+    public LimitSystem createModule(String key, JSONObject data) {
+        String type = data.getString("type");
         switch(type){
         case "singlelimitsystem":
         case "single_limit_system": {
             BooleanSource limit;
 
-            Object o = arrayData.get(1);
+            Object o = data.get("limit");
             
-            if(o instanceof JSONArray){
-                limit = RobotMap.getModule(key, (JSONArray) o);
+            if(o instanceof JSONObject){
+                limit = RobotMap.getModule(key, (JSONObject) o);
             }else{
                 limit = RobotMap.getModule((String)o);
             }
             
             return new LimitSystem(limit,
-                    SystemType.valueOf(arrayData.getString(2)));
+                    LimitSystem.SystemType.valueOf(data.getString("system_type")));
         }
         case "doublelimitsystem":
         case "double_limit_system": {
             BooleanSource topLimit;
             BooleanSource bottomLimit;
 
-            Object o = arrayData.get(1);
-            Object p = arrayData.get(2);
+            Object o = data.get("forward_limit");
+            Object p = data.get("reverse_limit");
             
             if(o instanceof JSONArray){
-                topLimit = RobotMap.getModule(key, (JSONArray) o);
+                topLimit = RobotMap.getModule(key, (JSONObject) o);
             }else{
                 topLimit = RobotMap.getModule((String)o);
             }
             
             if(p instanceof JSONArray){
-                bottomLimit = RobotMap.getModule(key, (JSONArray)p);
+                bottomLimit = RobotMap.getModule(key, (JSONObject)p);
             }else{
                 bottomLimit = RobotMap.getModule((String)p);
             }
