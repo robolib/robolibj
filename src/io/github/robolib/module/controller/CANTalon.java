@@ -12,6 +12,8 @@ import io.github.robolib.identifier.PIDSink;
 import io.github.robolib.jni.CanTalonJNI;
 import io.github.robolib.jni.CanTalonSRX;
 import io.github.robolib.jni.SWIGTYPE_Adapter;
+import io.github.robolib.module.MotorSafety;
+import io.github.robolib.module.MotorSafetyHelper;
 import io.github.robolib.util.Timer;
 
 @SuppressWarnings("unused")

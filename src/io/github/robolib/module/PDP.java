@@ -41,52 +41,52 @@ public final class PDP implements UpdatingSendable {
     public static enum PowerChannel {
         
         /** Channel 0 on the Power Distribution Panel. */
-        Channel0,
+        POWER0,
         
         /** Channel 1 on the Power Distribution Panel. */
-        Channel1,
+        POWER1,
         
         /** Channel 2 on the Power Distribution Panel. */
-        Channel2,
+        POWER2,
         
         /** Channel 3 on the Power Distribution Panel. */
-        Channel3,
+        POWER3,
         
         /** Channel 4 on the Power Distribution Panel. */
-        Channel4,
+        POWER4,
         
         /** Channel 5 on the Power Distribution Panel. */
-        Channel5,
+        POWER5,
         
         /** Channel 6 on the Power Distribution Panel. */
-        Channel6,
+        POWER6,
         
         /** Channel 7 on the Power Distribution Panel. */
-        Channel7,
+        POWER7,
         
         /** Channel 8 on the Power Distribution Panel. */
-        Channel8,
+        POWER8,
         
         /** Channel 9 on the Power Distribution Panel. */
-        Channel9,
+        POWER9,
         
         /** Channel 10 on the Power Distribution Panel. */
-        Channel10,
+        POWER10,
         
         /** Channel 11 on the Power Distribution Panel. */
-        Channel11,
+        POWER11,
         
         /** Channel 12 on the Power Distribution Panel. */
-        Channel12,
+        POWER12,
         
         /** Channel 13 on the Power Distribution Panel. */
-        Channel13,
+        POWER13,
         
         /** Channel 14 on the Power Distribution Panel. */
-        Channel14,
+        POWER14,
         
         /** Channel 15 on the Power Distribution Panel. */
-        Channel15;
+        POWER15;
     }
     
     /** Number of PDP channels. **/

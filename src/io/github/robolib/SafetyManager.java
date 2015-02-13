@@ -18,8 +18,8 @@ package io.github.robolib;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.robolib.module.controller.MotorSafety;
-import io.github.robolib.module.controller.MotorSafetyHelper;
+import io.github.robolib.module.MotorSafety;
+import io.github.robolib.module.MotorSafetyHelper;
 /**
  * The Class SafetyManager.
  *
