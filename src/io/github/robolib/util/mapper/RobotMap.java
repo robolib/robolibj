@@ -81,25 +81,53 @@ public final class RobotMap {
     }
     
     public static boolean getBoolean(String key){
-        return false;
+        return m_jMap.getBoolean(key);
     }
     
     public static boolean getBoolean(String key, boolean def){
-        return false;
+        try{
+            return m_jMap.getBoolean(key);
+        }catch(JSONException e){
+            return def;
+        }
     }
     
     public static String getString(String key){
-        return null;
+        return m_jMap.getString(key);
     }
     
     public static String getString(String key, String def){
-        return null;
+        try{
+            return m_jMap.getString(key);
+        }catch(JSONException e){
+            return def;
+        }
     }
     
     public static int getInt(String key){
-        return 0;
+        return m_jMap.getInt(key);
     }
     
+    public static int getInt(String key, int def){
+        try{
+            return m_jMap.getInt(key);
+        }catch(JSONException e){
+            return def;
+        }
+    }
+    
+    public static double getNumber(String key){
+        return m_jMap.getDouble(key);
+    }
+    
+    public static double getNumber(String key, double def){
+        try{
+            return m_jMap.getDouble(key);
+        }catch(JSONException e){
+            return def;
+        }
+    }
+        
     protected static <T> T getModule(String key, JSONArray data){
         ModuleMapper<?> builder = m_builderMap.get(data.getString(0));
         if(builder == null)
