@@ -284,6 +284,7 @@ public final class Logger extends ILogger {
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
+                errors.write("Stack Trace: \n");
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
                 sendErrMsg(LogLevel.ERROR, errors.toString());
             }else if(o instanceof String){
@@ -303,6 +304,7 @@ public final class Logger extends ILogger {
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
+                errors.write("Stack Trace: \n");
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
                 sendErrMsg(LogLevel.SEVERE, errors.toString());
             }else if(o instanceof String){
@@ -322,6 +324,7 @@ public final class Logger extends ILogger {
         if(o != null){
             if(o instanceof Throwable){
                 StringWriter errors = new StringWriter();
+                errors.write("Stack Trace: \n");
                 ((Throwable)o).printStackTrace(new PrintWriter(errors));
                 sendErrMsg(LogLevel.FATAL, errors.toString());
             }else if(o instanceof String){
@@ -332,17 +335,3 @@ public final class Logger extends ILogger {
         }
     }
 }
-
-/*StringWriter errors = new StringWriter();
-errors.write(s + '\n');
-
-if(o != null){
-    if(o instanceof Throwable){
-        ((Throwable)o).printStackTrace(new PrintWriter(errors));
-    }else if(o instanceof String){
-        errors.write('\t' + (String)o);
-    }else{
-        errors.write('\t' + o.toString());
-    }
-}
-sendErrMsg(LogLevel.FATAL, errors.toString());*/

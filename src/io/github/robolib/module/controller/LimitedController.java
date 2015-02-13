@@ -44,7 +44,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
         m_system = system;
         m_safetyHelper = SafetyManager.addMotor(this);
     }
-
+    
     /**
      * {@inheritDoc}
      */

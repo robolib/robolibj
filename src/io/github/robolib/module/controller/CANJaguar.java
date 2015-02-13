@@ -363,7 +363,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
             return;
         }
 
-        CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, null,
+        CANJNI.CANSessionMuxSendMessage(messageID, null,
             CANJNI.CAN_SEND_PERIOD_STOP_REPEATING, status);
 
         configMaxOutputVoltage(kApproxBusVoltage);
@@ -1853,7 +1853,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
                     trustedBuffer.put(j+2, data[j]);
                 }
 
-                CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, trustedBuffer, period, status);
+                CANJNI.CANSessionMuxSendMessage(messageID, trustedBuffer, period, status);
                 int statusCode = status.get(0);
                 if(statusCode < 0) {
                     CANUtil.checkStatus(statusCode, messageID);
@@ -1878,7 +1878,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
             buffer = null;
         }
 
-        CANJNI.FRCNetworkCommunicationCANSessionMuxSendMessage(messageID, buffer, period, status);
+        CANJNI.CANSessionMuxSendMessage(messageID, buffer, period, status);
 
         int statusCode = status.get(0);
         if(statusCode < 0) {
@@ -1955,7 +1955,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
         status.put(0, 0);
 
         // Get the data.
-        ByteBuffer dataBuffer = CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(
+        ByteBuffer dataBuffer = CANJNI.CANSessionMuxReceiveMessage(
             targetedMessageID, messageMask, timeStamp, status);
 
         if(data != null) dataBuffer.get(data);

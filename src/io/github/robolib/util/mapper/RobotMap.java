@@ -39,6 +39,9 @@ public final class RobotMap {
     private static final Map<String, ModuleMapper<?>> m_builderMap =
             new HashMap<String, ModuleMapper<?>>();
     
+    private static final Map<String, Object> m_objectMap =
+            new HashMap<String, Object>();
+    
     private static JSONObject m_jMap;
     
     private static String m_mapFile;
@@ -58,7 +61,12 @@ public final class RobotMap {
     
     static{
         registerModuleBuilder(new SpeedControllerMapper());
+        registerModuleBuilder(new CANJaguarMapper());
         registerModuleBuilder(new SolenoidMapper());
+        registerModuleBuilder(new LimitSwitchMapper());
+        registerModuleBuilder(new LimitedControllerMapper());
+        registerModuleBuilder(new LimitSystemMapper());
+        registerModuleBuilder(new DigitalIOMapper());
     }
     
     private RobotMap(){}
@@ -71,13 +79,44 @@ public final class RobotMap {
             m_builderMap.put(s.toLowerCase(), builder);
         }
     }
+    
+    public static boolean getBoolean(String key){
+        return false;
+    }
+    
+    public static boolean getBoolean(String key, boolean def){
+        return false;
+    }
+    
+    public static String getString(String key){
+        return null;
+    }
+    
+    public static String getString(String key, String def){
+        return null;
+    }
+    
+    public static int getInt(String key){
+        return 0;
+    }
+    
+    protected static <T> T getModule(String key, JSONArray data){
+        ModuleMapper<?> builder = m_builderMap.get(data.getString(0));
+        if(builder == null)
+            throw new RuntimeException("Unknown Module builder for type '" + data.getString(0) + "'.");
+        return (T) builder.createModule(key, data);
+    }
 
-    public static <T> T get(String key){
+    public static <T> T getModule(String key){
         if(!m_enabled)
             throw new IllegalStateException(
                     "You must set the map file in the robot constructor before anything else.");
-        JSONArray data = m_jMap.getJSONArray(key);
-        ModuleMapper<?> builder = m_builderMap.get(data.getString(0));
-        return (T) builder.createModule(key, data);
+        if(m_objectMap.containsKey(key)){
+            return (T) m_objectMap.get(key);
+        }else{
+            Object x = getModule(key, m_jMap.getJSONArray(key));
+            m_objectMap.put(key, x);
+            return (T) x;
+        }
     }
 }

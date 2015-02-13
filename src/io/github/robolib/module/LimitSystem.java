@@ -33,8 +33,10 @@ public class LimitSystem {
     public static enum SystemType {
         /** System limited at a front limit. */
         SINGLE_FORWARD,
+        FORWARD,
         /** System limited at a back limit. */
         SINGLE_REVERSE,
+        REVERSE,
         /** System limited by back and front limits. */
         DUAL;
     }
@@ -47,8 +49,10 @@ public class LimitSystem {
 
     public LimitSystem(BooleanSource limit, SystemType type){
         switch(type){
+        case FORWARD:
         case SINGLE_FORWARD:
             m_frontLimit = limit;
+        case REVERSE:
         case SINGLE_REVERSE:
             m_backLimit = limit;
         case DUAL:
@@ -62,7 +66,7 @@ public class LimitSystem {
         m_backLimit = backLimit;
         m_systemType = SystemType.DUAL;
     }
-    
+
     /**
      * Can up.
      *
