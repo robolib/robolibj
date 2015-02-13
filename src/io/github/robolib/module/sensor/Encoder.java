@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.sensor;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -304,8 +304,8 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
             break;
         case k4X:
             m_encodingScale = 4;
-            IntBuffer status = getLE4IntBuffer();
-            IntBuffer index = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
+            IntBuffer index = allocateInt();
             m_encoder = EncoderJNI.initializeEncoder(
                     m_aSource.getModuleNumber(), m_aSource.getChannelNumber(),
                     (byte)(m_aSource.isAnalogTrigger()?1:0),
@@ -358,7 +358,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
             m_counter.free();
             m_counter = null;
         }else{
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             EncoderJNI.freeEncoder(m_encoder, status);
             HALUtil.checkStatus(status);
         }
@@ -374,7 +374,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
         if(m_counter != null){
             return m_counter.get();
         }else{
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             int value = EncoderJNI.getEncoder(m_encoder, status);
             HALUtil.checkStatus(status);
             return value;
@@ -414,7 +414,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
         if(m_counter != null){
             m_counter.reset();
         }else{
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             EncoderJNI.resetEncoder(m_encoder, status);
             HALUtil.checkStatus(status);
         }
@@ -433,7 +433,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
         if(m_counter != null){
             measuredPeriod = m_counter.getPeriod() / decodingScaleFactor();
         }else{
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             measuredPeriod = EncoderJNI.getEncoderPeriod(m_encoder, status);
             HALUtil.checkStatus(status);
         }
@@ -456,7 +456,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
         if(m_counter != null){
             m_counter.setMaxPeriod(maxPeriod * decodingScaleFactor());
         }else{
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             EncoderJNI.setEncoderMaxPeriod(m_encoder, maxPeriod, status);
             HALUtil.checkStatus(status);
         }
@@ -475,7 +475,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
         if(m_counter != null){
             return m_counter.getStopped();
         }else{
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             boolean value = EncoderJNI.getEncoderStopped(m_encoder, status) != 0;
             HALUtil.checkStatus(status);
             return value;
@@ -492,7 +492,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
         if(m_counter != null){
             return m_counter.getDirection();
         }else{
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             boolean value = EncoderJNI.getEncoderDirection(m_encoder, status) != 0;
             HALUtil.checkStatus(status);
             return value;
@@ -592,7 +592,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
             m_counter.setSamplesPerAverage(samples);
             break;
         case k4X:
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             EncoderJNI.setEncoderSamplesToAverage(m_encoder, MathUtils.clamp(samples, 1, 127), status);
             HALUtil.checkStatus(status);
         }
@@ -613,7 +613,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
         case k2X:
             return m_counter.getSamplesPerAverage();
         case k4X:
-            IntBuffer status = getLE4IntBuffer();
+            IntBuffer status = allocateInt();
             int value = EncoderJNI.getEncoderSamplesToAverage(m_encoder, status);
             HALUtil.checkStatus(status);
             return value;
@@ -669,7 +669,7 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
      * @param iType The state that will cause the encoder to reset
      */
     public void setIndexSource(DigitalIO source, IndexingType iType){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         
         boolean activeHigh = false, edgeSensitive = false;
         if(iType.ordinal() % 2 == 0)

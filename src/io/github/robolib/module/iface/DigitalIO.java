@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -179,7 +179,7 @@ public abstract class DigitalIO extends InterruptBase {
         
         byte isIn = (byte) (dir.equals(Direction.IN) ? 1 : 0);
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         
         m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte)channel.ordinal()), status);
         HALUtil.checkStatus(status);
@@ -205,7 +205,7 @@ public abstract class DigitalIO extends InterruptBase {
 
         freeChannel(getChannel());
 
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         DIOJNI.freeDIO(m_port, status);
         HALUtil.checkStatus(status);
 

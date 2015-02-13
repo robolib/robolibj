@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.actuator;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -128,7 +128,7 @@ public abstract class SolenoidBase {
      */
     protected synchronized static final ByteBuffer initChannel(SolenoidChannel channel){
         allocateChannel(channel);
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         byte ch = (byte)(channel.ordinal()/8);
         ByteBuffer port = SolenoidJNI.getPortWithModule(ch, (byte) channel.ordinal());
         port = SolenoidJNI.initializeSolenoidPort(port, status);
@@ -185,7 +185,7 @@ public abstract class SolenoidBase {
      * @return The solenoid blacklist of all 8 solenoids on the module.
      */
     public final byte getPCMSolenoidBlacklist(int module){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         byte value = SolenoidJNI.getPCMSolenoidBlackList(MODULE_PORTS[module], status);
         HALUtil.checkStatus(status);
         return value;
@@ -198,7 +198,7 @@ public abstract class SolenoidBase {
      *          most likely a solenoid channel is shorted.
      */
     public final boolean getPCMSolenoidVoltageStickyFault(int module){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean value = SolenoidJNI.getPCMSolenoidVoltageStickyFault(MODULE_PORTS[module], status);
         HALUtil.checkStatus(status);
         return value;
@@ -211,7 +211,7 @@ public abstract class SolenoidBase {
      *          most likely a solenoid channel is shorted.
      */
     public final boolean getPCMSolenoidVoltageFault(int module){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean value = SolenoidJNI.getPCMSolenoidVoltageFault(MODULE_PORTS[module], status);
         HALUtil.checkStatus(status);
         return value;
@@ -229,7 +229,7 @@ public abstract class SolenoidBase {
      * @param module 
      */
     public final void clearAllPCMStickyFaults(int module){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SolenoidJNI.clearAllPCMStickyFaults(MODULE_PORTS[module], status);
         HALUtil.checkStatus(status);
     }
@@ -242,7 +242,7 @@ public abstract class SolenoidBase {
      * @param value the value
      */
     protected static final void set(ByteBuffer port, byte value){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SolenoidJNI.setSolenoid(port, value, status);
         HALUtil.checkStatus(status);
     }
@@ -253,7 +253,7 @@ public abstract class SolenoidBase {
      * @return the value of the solenoid
      */
     protected static final boolean get(ByteBuffer port){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         byte out = SolenoidJNI.getSolenoid(port, status);
         HALUtil.checkStatus(status);
         return out == SOLENOID_ON;

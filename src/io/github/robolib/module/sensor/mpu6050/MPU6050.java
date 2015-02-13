@@ -924,7 +924,6 @@ public class MPU6050 extends I2C implements IAccelerometer {
         return AccelRange.values()[buffer[0]];
     }
     
-    @Override
     public AccelRange getAccelRange(){
         return getFullScaleAccelRange();
     }
@@ -937,7 +936,6 @@ public class MPU6050 extends I2C implements IAccelerometer {
         writeBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, (byte)range.ordinal());
     }
     
-    @Override
     public void setAccelRange(AccelRange range){
         setFullScaleAccelRange(range);
     }

@@ -17,7 +17,6 @@ package io.github.robolib.module.sensor;
 
 import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.jni.AccelerometerJNI;
-import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.nettable.ITable;
 
 /**
@@ -25,19 +24,16 @@ import io.github.robolib.nettable.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
+public final class InternalAccelerometer implements IAccelerometer, LiveWindowSendable {
 
     
     /** The m_table. */
     private ITable m_table;
     
-    private AccelRange m_range;
+    private static AccelRange m_range;
     
-    /**
-     * Instantiates a new RI o_ accelerometer.
-     */
-    public RIO_Accelerometer(){
-        this(AccelRange.k8G);
+    static{
+        setAccelRange(AccelRange.k8G);
     }
     
     /**
@@ -45,16 +41,12 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @param range the range
      */
-    public RIO_Accelerometer(AccelRange range){
-        setAccelRange(range);
-        UsageReporting.report(UsageReporting.ResourceType_Accelerometer, 0, 0, "Built-in accelerometer");
-    }
+    private InternalAccelerometer(){}
     
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void setAccelRange(AccelRange range){
+    public static void setAccelRange(AccelRange range){
         AccelerometerJNI.setAccelerometerActive(false);
         
         if(range == AccelRange.k16G){
@@ -69,8 +61,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public AccelRange getAccelRange(){
+    public static AccelRange getAccelRange(){
         return m_range;
     }
     
@@ -79,7 +70,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the X axis in g-forces
      */
-    public double getAccelerationX() {
+    public static double getAccelerationX() {
         return AccelerometerJNI.getAccelerometerX();
     }
 
@@ -88,7 +79,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the Y axis in g-forces
      */
-    public double getAccelerationY() {
+    public static double getAccelerationY() {
         return AccelerometerJNI.getAccelerometerY();
     }
 
@@ -97,7 +88,7 @@ public class RIO_Accelerometer implements IAccelerometer, LiveWindowSendable {
      *
      * @return The acceleration of the RoboRIO along the Z axis in g-forces
      */
-    public double getAccelerationZ() {
+    public static double getAccelerationZ() {
         return AccelerometerJNI.getAccelerometerZ();
     }
     

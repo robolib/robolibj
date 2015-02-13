@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -142,7 +142,7 @@ public final class Serial extends Interface {
         
         m_port = (byte)port.ordinal();
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialInitializePort(m_port, status);
         HALUtil.checkStatus(status);
         SerialPortJNI.serialSetBaudRate(m_port, baudRate, status);
@@ -181,7 +181,7 @@ public final class Serial extends Interface {
      * @param flowControl the FlowControl value to use
      */
     public void setFlowControl(FlowControl flowControl){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialSetFlowControl(m_port, flowControl.value, status);
         HALUtil.checkStatus(status);
     }
@@ -196,7 +196,7 @@ public final class Serial extends Interface {
      * @param terminator The character to use for termination.
      */
     public void enableTermination(char terminator){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialEnableTermination(m_port, terminator, status);
         HALUtil.checkStatus(status);
     }
@@ -218,7 +218,7 @@ public final class Serial extends Interface {
      * Disable termination behavior.
      */
     public void disableTermination(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialDisableTermination(m_port, status);
         HALUtil.checkStatus(status);
     }
@@ -230,7 +230,7 @@ public final class Serial extends Interface {
      */
     public int getBytesReceived(){
         int retVal = 0;
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         retVal = SerialPortJNI.serialGetBytesRecieved(m_port, status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -268,7 +268,7 @@ public final class Serial extends Interface {
      * @return An array of the read bytes
      */
     public byte[] read(final int count){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         ByteBuffer data = ByteBuffer.allocateDirect(count);
         int got = SerialPortJNI.serialRead(m_port, data, count, status);
         HALUtil.checkStatus(status);
@@ -285,7 +285,7 @@ public final class Serial extends Interface {
      * @return The number of bytes actually written into the port.
      */
     public int write(byte[] buffer, int count){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         ByteBuffer data = ByteBuffer.allocateDirect(count);
         data.put(buffer);
         int retVal = SerialPortJNI.serialWrite(m_port, data, count, status);
@@ -313,7 +313,7 @@ public final class Serial extends Interface {
      * @param timeout The number of seconds to to wait for I/O.
      */
     public void setTimeout(double timeout){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialSetTimeout(m_port, (float) timeout, status);
         HALUtil.checkStatus(status);        
     }
@@ -331,7 +331,7 @@ public final class Serial extends Interface {
      * @param size The read buffer size.
      */
     public void setReadBufferSize(int size){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialSetReadBufferSize(m_port, size, status);
         HALUtil.checkStatus(status);
     }
@@ -345,7 +345,7 @@ public final class Serial extends Interface {
      * @param size The write buffer size.
      */
     public void setWriteBufferSize(int size){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialSetWriteBufferSize(m_port, size, status);
         HALUtil.checkStatus(status);
     }
@@ -362,7 +362,7 @@ public final class Serial extends Interface {
      * @param mode The write buffer mode.
      */
     public void setBufferMode(BufferMode mode){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialSetWriteMode(m_port, mode.value, status);
         HALUtil.checkStatus(status);
     }
@@ -374,7 +374,7 @@ public final class Serial extends Interface {
      * flush before the buffer is full.
      */
     public void flush(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialFlush(m_port, status);
         HALUtil.checkStatus(status);
     }
@@ -385,7 +385,7 @@ public final class Serial extends Interface {
      * Empty the transmit and receive buffers in the device and formatted I/O.
      */
     public void reset(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         SerialPortJNI.serialClear(m_port, status);
         HALUtil.checkStatus(status);
     }

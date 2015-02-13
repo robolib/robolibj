@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.IntBuffer;
 
@@ -53,7 +53,7 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Number
     }
     
     public void setVoltage(double voltage){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         AnalogJNI.setAnalogOutput(m_port, voltage, status);
         HALUtil.checkStatus(status);
     }
@@ -63,7 +63,7 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Number
     }
     
     public double getVoltage(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double value = AnalogJNI.getAnalogOutput(m_port, status);
         HALUtil.checkStatus(status);
         return value;

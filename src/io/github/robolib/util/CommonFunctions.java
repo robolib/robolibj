@@ -19,7 +19,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import io.github.robolib.lang.ChannelIndexException;
 import io.github.robolib.nettable.ITable;
 
 /**
@@ -53,22 +52,11 @@ public class CommonFunctions {
      * Get an IntBuffer of size 4 with Little Endian Byte Order
      * @return an IntBuffer of size 4 with Little Endian byte order
      */
-    public static IntBuffer getLE4IntBuffer(){
+    public static IntBuffer allocateInt(){
         ByteBuffer status = ByteBuffer.allocateDirect(4);
         status.order(ByteOrder.LITTLE_ENDIAN);
         return status.asIntBuffer();
     }
-    
-    public static <T extends Enum<T>> T getChannelFromInt(Class<T> channelType, int channel){
-        try{
-            return channelType.getEnumConstants()[channel];
-        }catch(IndexOutOfBoundsException e){
-            ChannelIndexException t = new ChannelIndexException("No such " + channelType.getSimpleName()+ " '" + channel + "'");
-            t.setStackTrace(e.getStackTrace());
-            throw t;
-        }
-    }
-    
     
     public static ITable getTable(ITable table, String path){
         String[] a = path.split("/");

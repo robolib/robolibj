@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -98,7 +98,7 @@ public class AnalogIO extends Interface {
         super(InterfaceType.ANALOG);
         
         m_portPointer = AnalogJNI.getPort((byte) channel.ordinal());
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
 
         switch(dir){
         case IN:

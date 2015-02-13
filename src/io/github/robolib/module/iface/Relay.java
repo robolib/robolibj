@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -138,7 +138,7 @@ public final class Relay extends Interface {
             throw new ResourceAllocationException("Cannot create '" + desc + "', Relay channel '" + channel.name() + "' already in use.");
         }
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte)channel.ordinal()), status);
         HALUtil.checkStatus(status);
         set(RelayValue.OFF);
@@ -157,7 +157,7 @@ public final class Relay extends Interface {
             Logger.get(Relay.class).error("Relay Channel '" + getChannelName() + "' was not allocated. How did you get here?");
         }
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         set(RelayValue.OFF);
         DIOJNI.freeDIO(m_port, status);
         HALUtil.checkStatus(status);
@@ -187,7 +187,7 @@ public final class Relay extends Interface {
      * @param value The state to set the relay.
      */
     public void set(RelayValue value){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         switch(value){
         case OFF:
             RelayJNI.setRelayForward(m_port, RELAY_OFF, status);
@@ -228,7 +228,7 @@ public final class Relay extends Interface {
      * @return The current state of the relay as a {@link RelayValue}
      */
     public RelayValue get(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int forward = RelayJNI.getRelayForward(m_port, status);
         int reverse = RelayJNI.getRelayReverse(m_port, status) << 1;
         return RelayValue.values()[(forward | reverse)];

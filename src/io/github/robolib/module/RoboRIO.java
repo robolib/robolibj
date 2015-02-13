@@ -15,7 +15,7 @@
 
 package io.github.robolib.module;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.IntBuffer;
 
@@ -55,21 +55,21 @@ public final class RoboRIO implements UpdatingSendable {
     private RoboRIO(){}
     
     public static int getFPGAVersion(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = HALUtil.getFPGAVersion(status);
         HALUtil.checkStatus(status);
         return value;
     }
     
     public static long getFPGARevision(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int value = HALUtil.getFPGARevision(status);
         HALUtil.checkStatus(status);
         return value;
     }
     
     public static long getFPGATime(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         long value = HALUtil.getFPGATime(status);
         HALUtil.checkStatus(status);
         return value;
@@ -85,7 +85,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return The User Button status
      */
     public static boolean getUserButton(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean value = HALUtil.getFPGAButton(status);
         HALUtil.checkStatus(status);
         return value;
@@ -101,7 +101,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return The Vin Voltage
      */
     public static double getVoltage(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double retVal = PowerJNI.getVinVoltage(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -113,7 +113,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return The Vin Current
      */
     public static double getCurrent(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double retVal = PowerJNI.getVinCurrent(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -125,7 +125,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return The 3.3 rail voltage
      */
     public static double get3V3Voltage(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserCurrent3V3(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -137,7 +137,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return The 3.3 rail current
      */
     public static double get3V3Current(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserCurrent3V3(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -149,7 +149,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the comms power enabled
      */
     public static boolean get3V3PowerEnabled(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean retVal = PowerJNI.getUserActive3V3(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -161,7 +161,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the comms fault count
      */
     public static int get3V3FaultCount(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int retVal = PowerJNI.getUserCurrentFaults3V3(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -173,7 +173,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the IO voltage
      */
     public static double get5VVoltage(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserVoltage5V(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -185,7 +185,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the IO current
      */
     public static double get5VCurrent(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserCurrent5V(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -197,7 +197,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the IO power enabled
      */
     public static boolean get5VPowerEnabled(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean retVal = PowerJNI.getUserActive5V(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -209,7 +209,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the IO fault count
      */
     public static int get5VFaultCount(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int retVal = PowerJNI.getUserCurrentFaults5V(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -221,7 +221,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the servo voltage
      */
     public static double get6VVoltage(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserVoltage6V(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -233,7 +233,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the servo current
      */
     public static double get6VCurrent(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserCurrent6V(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -245,7 +245,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the servo power enabled
      */
     public static boolean get6VPowerEnabled(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         boolean retVal = PowerJNI.getUserActive6V(status);
         HALUtil.checkStatus(status);
         return retVal;
@@ -257,7 +257,7 @@ public final class RoboRIO implements UpdatingSendable {
      * @return the servo fault count
      */
     public static int get6VFaultCount(){
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         int retVal = PowerJNI.getUserCurrentFaults6V(status);
         HALUtil.checkStatus(status);
         return retVal;

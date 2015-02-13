@@ -40,29 +40,29 @@ public interface IAccelerometer {
      * @param range The maximum acceleration, positive or negative, that the
      * accelerometer will measure.  Not all accelerometers support all ranges.
      */
-    void setAccelRange(AccelRange range);
+//    void setAccelRange(AccelRange range);
     
-    AccelRange getAccelRange();
+//    AccelRange getAccelRange();
     
     /**
      * Common interface for getting the x axis acceleration
      *
      * @return The acceleration along the x axis in g-forces
      */
-    double getAccelerationX();
+//    double getAccelerationX();
 
     /**
      * Common interface for getting the y axis acceleration
      *
      * @return The acceleration along the y axis in g-forces
      */
-    double getAccelerationY();
+//    double getAccelerationY();
 
     /**
      * Common interface for getting the z axis acceleration
      *
      * @return The acceleration along the z axis in g-forces
      */
-    double getAccelerationZ();
+//    double getAccelerationZ();
 
 }

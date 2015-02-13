@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.iface;
 
-import static io.github.robolib.util.CommonFunctions.getLE4IntBuffer;
+import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -41,7 +41,7 @@ public abstract class InterruptBase extends Interface {
     private static byte m_allocated = 0;
     
     static {
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         InterruptJNI.initializeInterruptJVM(status);
         HALUtil.checkStatus(status);
     }
@@ -98,7 +98,7 @@ public abstract class InterruptBase extends Interface {
         allocateInterrupt(false);
         assert(m_interrupt != null);
 
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         InterruptJNI.attachInterruptHandler(m_interrupt, handler, handler.getParameter(), status);
         HALUtil.checkStatus(status);
     }
@@ -129,7 +129,7 @@ public abstract class InterruptBase extends Interface {
             throw new ResourceAllocationException("No more interrupts available");
         
         m_isSyncInterrupt = watcher;
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         m_interrupt = InterruptJNI.initializeInterrupts(m_allocated++, (byte)(watcher?1:0), status);
         HALUtil.checkStatus(status);
         
@@ -146,7 +146,7 @@ public abstract class InterruptBase extends Interface {
      */
     public final void cancelInterrupt(){
         validateInterrupt();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         InterruptJNI.cleanInterrupts(m_interrupt, status);
         HALUtil.checkStatus(status);
         m_interrupt = null;
@@ -170,7 +170,7 @@ public abstract class InterruptBase extends Interface {
      */
     public final void waitForInterrupt(double timeout, boolean ignorePrevious){
         validateInterrupt();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         InterruptJNI.waitForInterrupt(m_interrupt, timeout, ignorePrevious, status);
         HALUtil.checkStatus(status);
     }
@@ -184,7 +184,7 @@ public abstract class InterruptBase extends Interface {
         validateInterrupt();
         if(m_isSyncInterrupt) return;
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         InterruptJNI.enableInterrupts(m_interrupt, status);
         HALUtil.checkStatus(status);
     }
@@ -197,7 +197,7 @@ public abstract class InterruptBase extends Interface {
         if(m_isSyncInterrupt)
             throw new IllegalStateException("You can not disable synchronous interrupts");
         
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         InterruptJNI.disableInterrupts(m_interrupt, status);
         HALUtil.checkStatus(status);
     }
@@ -211,7 +211,7 @@ public abstract class InterruptBase extends Interface {
      */
     public final double readRisingTimestamp(){
         validateInterrupt();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double timestamp = InterruptJNI.readRisingTimestamp(m_interrupt, status);
         HALUtil.checkStatus(status);
         return timestamp;
@@ -226,7 +226,7 @@ public abstract class InterruptBase extends Interface {
      */
     public final double readFallingTimestamp(){
         validateInterrupt();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         double timestamp = InterruptJNI.readFallingTimestamp(m_interrupt, status);
         HALUtil.checkStatus(status);
         return timestamp;
@@ -240,7 +240,7 @@ public abstract class InterruptBase extends Interface {
      */
     public final void setUpSourceEdge(boolean risingEdge, boolean fallingEdge){
         validateInterrupt();
-        IntBuffer status = getLE4IntBuffer();
+        IntBuffer status = allocateInt();
         InterruptJNI.setInterruptUpSourceEdge(m_interrupt, (byte)(risingEdge?1:0),
                 (byte)(fallingEdge?1:0), status);
         HALUtil.checkStatus(status);

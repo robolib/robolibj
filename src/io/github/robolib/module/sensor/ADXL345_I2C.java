@@ -38,7 +38,6 @@ public class ADXL345_I2C extends I2C implements ADXL345 {
     /**
      * {@inheritDoc}
      */
-    @Override
     public void setAccelRange(AccelRange range) {
         write(DATA_FORMAT_REGISTER, DATA_FORMAT_FULL_RES | range.ordinal());
         m_range = range;
@@ -47,7 +46,6 @@ public class ADXL345_I2C extends I2C implements ADXL345 {
     /**
      * {@inheritDoc}
      */
-    @Override
     public AccelRange getAccelRange() {
         return m_range;
     }
