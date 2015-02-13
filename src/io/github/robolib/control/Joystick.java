@@ -69,6 +69,16 @@ public class Joystick extends GenericHID {
         /** The m_dead band. */
         private double m_deadband = 0.0;
         
+        private double m_backlash = 0.0;
+        
+        private double m_fineConrol = 0.5;
+        
+        private double m_rampEnd = 0.5;
+        
+        private double m_m1;
+        
+        private double m_m2;
+        
         /** The m_channel. */
         private final int m_channel;        
 
@@ -87,8 +97,18 @@ public class Joystick extends GenericHID {
         @Override
         public double get(){
             double out = getStickAxis(m_port, m_channel);
-            out = (Math.abs(out) >= m_deadband ? out : 0.0);
-            return m_inverted ? -out : out;
+            double x = Math.abs(out);
+            
+            if(x < m_deadband)
+                x = 0.0;
+            else if(x < m_rampEnd)
+                x = m_backlash + m_m1 * (x - m_deadband);
+            else
+                x = m_fineConrol + m_m2 * (x - m_rampEnd);
+            
+            if(out < 0)
+                x = -x;
+            return m_inverted ? -x : x;
         }
 
         /**
@@ -105,6 +125,39 @@ public class Joystick extends GenericHID {
         @Override
         public void setDeadband(double value){
             m_deadband = value;
+            calculate();
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setRampEnd(double end){
+            m_rampEnd = end;
+            calculate();
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setBacklash(double value){
+            m_backlash = value;
+            calculate();
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setFineControl(double control){
+            m_fineConrol = control;
+        }
+        
+        private void calculate(){
+            m_m1 = (m_fineConrol - m_backlash) / (m_rampEnd - m_deadband);
+            
+            m_m2 = (1 - m_fineConrol) / (1 - m_rampEnd);
         }
     }
 

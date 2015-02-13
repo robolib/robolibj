@@ -40,4 +40,10 @@ public interface HIDAxis extends NumberSource {
      * @param deadband the deadband value of the axis.
      */
     public void setDeadband(double deadband);
+    
+    public void setRampEnd(double end);
+    
+    public void setBacklash(double value);
+    
+    public void setFineControl(double value);
 }

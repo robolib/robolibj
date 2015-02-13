@@ -79,6 +79,33 @@ public final class NetTableController extends GenericHID {
         public void setDeadband(double value){
             m_deadBand = value;
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setRampEnd(double end) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setBacklash(double value) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setFineControl(double value) {
+            // TODO Auto-generated method stub
+            
+        }
     }
     
     /**

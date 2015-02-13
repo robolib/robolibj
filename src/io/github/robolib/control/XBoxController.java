@@ -449,6 +449,33 @@ public final class XBoxController extends Joystick {
         public void setDeadband(double value){
             m_deadband = value;
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setRampEnd(double end) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setBacklash(double value) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setFineControl(double value) {
+            // TODO Auto-generated method stub
+            
+        }
         
     }
 
