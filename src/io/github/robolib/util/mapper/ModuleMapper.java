@@ -15,7 +15,7 @@
 
 package io.github.robolib.util.mapper;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * 
@@ -24,7 +24,7 @@ import org.json.JSONArray;
  */
 public interface ModuleMapper<T> {
     
-    T createModule(String key, JSONArray arrayData);
+    T createModule(String key, JSONObject data);
     
     String[] getModuleIdentifiers();
 

@@ -28,8 +28,8 @@ import io.github.robolib.module.controller.Victor;
 import io.github.robolib.module.iface.PWM.PWMChannel;
 import io.github.robolib.util.log.Logger;
 
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 
@@ -51,43 +51,22 @@ public final class SpeedControllerMapper implements ModuleMapper<SpeedController
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("rawtypes")
     @Override
-    public SpeedController createModule(String key, JSONArray arrayData) {
+    public SpeedController createModule(String key, JSONObject data) {
         try {
             
-            String type = arrayData.getString(0).toLowerCase();
-            PWMChannel devChan = PWMChannel.values()[arrayData.getInt(1)];
+            String type = data.getString("type").toLowerCase();
+            boolean invert = data.getBoolean("inverted");
             
-            Class[] classes = null;
-            Object[] args = null;
-            boolean invert = false;
-            
-            switch(arrayData.length()){
-            case 2:
-                classes = new Class[]{PWMChannel.class};
-                args = new Object[]{devChan};
-                break;
-            case 3:
-                classes = new Class[]{PWMChannel.class, String.class};
-                args = new Object[]{devChan, arrayData.getString(2)};
-                break;
-            case 4:
-                classes = new Class[]{PWMChannel.class, String.class, PowerChannel.class};
-                args = new Object[]{devChan, arrayData.getString(2),
-                        PowerChannel.values()[arrayData.getInt(3)]};
-                break;
-            case 5:
-            default:
-                classes = new Class[]{PWMChannel.class, String.class, PowerChannel.class};
-                args = new Object[]{devChan, arrayData.getString(2),
-                        PowerChannel.values()[arrayData.getInt(3)]};
-                invert = arrayData.getBoolean(4);
-                break;
-                    
-            }
-            
-            SpeedController s = m_controllMap.get(type).getConstructor(classes).newInstance(args);
+            SpeedController s = m_controllMap.get(type)
+                    .getConstructor(
+                            PWMChannel.class,
+                            String.class,
+                            PowerChannel.class)
+                    .newInstance(
+                            PWMChannel.values()[data.getInt("device_channel")],
+                            data.getString("description"),
+                            PowerChannel.values()[data.getInt("power_channel")]);
             s.setInverted(invert);
             return s;
             

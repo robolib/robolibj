@@ -128,10 +128,10 @@ public final class RobotMap {
         }
     }
         
-    protected static <T> T getModule(String key, JSONArray data){
-        ModuleMapper<?> builder = m_builderMap.get(data.getString(0));
+    protected static <T> T getModule(String key, JSONObject data){
+        ModuleMapper<?> builder = m_builderMap.get(data.getString("type"));
         if(builder == null)
-            throw new RuntimeException("Unknown Module builder for type '" + data.getString(0) + "'.");
+            throw new RuntimeException("Unknown Module builder for type '" + data.getString("type") + "'.");
         return (T) builder.createModule(key, data);
     }
 
@@ -142,7 +142,7 @@ public final class RobotMap {
         if(m_objectMap.containsKey(key)){
             return (T) m_objectMap.get(key);
         }else{
-            Object x = getModule(key, m_jMap.getJSONArray(key));
+            Object x = getModule(key, m_jMap.getJSONObject(key));
             m_objectMap.put(key, x);
             return (T) x;
         }

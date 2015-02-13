@@ -204,6 +204,8 @@ public class Joystick extends GenericHID {
     /** The m_joystick buttons count. */
     private static byte m_joystickButtonsCount[] = new byte[kNumJoysticks];
     
+//    private static final EnumMap<JSID, ? extends Joystick> m_stickMap = 
+    
     /**
      * Sets the joystick data.
      * THIS SHOULD ONLY BE CALLED BY THE DRIVESTATION CLASS!!!
@@ -317,14 +319,6 @@ public class Joystick extends GenericHID {
     private short m_rightRumble;
     
     /**
-     * The RoboLibJ main Joystick.
-     * @param port The Joystick Number
-     */
-    public Joystick(final JSID port){
-        this(port, 6, 12);
-    }
-    
-    /**
      * Instantiates a new joystick.
      *
      * @param port the port
@@ -344,6 +338,10 @@ public class Joystick extends GenericHID {
             m_btns[i] = new JoystickButton(i);
         }
         UsageReporting.report(UsageReporting.ResourceType_Joystick, port.ordinal());
+    }
+    
+    public Joystick getStick(JSID port, int numAxes, int numBtns){
+        return null;
     }
     
     /**

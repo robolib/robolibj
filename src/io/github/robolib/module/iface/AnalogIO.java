@@ -40,28 +40,28 @@ public class AnalogIO extends Interface {
     public static enum AnalogChannel {
         
         /**  AnalogIO Channel 0. */
-        Channel0,
+        AIO0,
         
         /**  AnalogIO Channel 1. */
-        Channel1,
+        AIO1,
         
         /**  AnalogIO Channel 2. */
-        Channel2,
+        AIO2,
         
         /**  AnalogIO Channel 3. */
-        Channel3,
+        AIO3,
         
         /**  AnalogIO Channel 4, Channel 1 on MXP. */
-        Channel4,
+        AIO4,
         
         /**  AnalogIO Channel 5, Channel 2 on MXP. */
-        Channel5,
+        AIO5,
         
         /**  AnalogIO Channel 6, Channel 3 on MXP. */
-        Channel6,
+        AIO6,
         
         /**  AnalogIO Channel 7, Channel 4 on MXP. */
-        Channel7;
+        AIO7;
     }
     /**
      * The Enum Direction.

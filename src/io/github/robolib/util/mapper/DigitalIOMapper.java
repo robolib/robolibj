@@ -17,7 +17,7 @@ package io.github.robolib.util.mapper;
 
 import io.github.robolib.module.iface.DigitalIO;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class DigitalIOMapper implements ModuleMapper<DigitalIO>{
      * {@inheritDoc}
      */
     @Override
-    public DigitalIO createModule(String key, JSONArray arrayData) {
+    public DigitalIO createModule(String key, JSONObject data) {
         return null;
     }
 
