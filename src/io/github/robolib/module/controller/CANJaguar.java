@@ -1960,7 +1960,11 @@ public final class CANJaguar implements SpeedController, MotorSafety,
         ByteBuffer dataBuffer = CANJNI.CANSessionMuxReceiveMessage(
             targetedMessageID, messageMask, timeStamp, status);
 
-        if(data != null) dataBuffer.get(data);
+        if(data != null) {
+            for(int i = 0; i < dataBuffer.capacity(); i++) {
+                data[i] = dataBuffer.get(i);
+            }
+        }
 
         int statusCode = status.get(0);
         
