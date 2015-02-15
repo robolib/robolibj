@@ -13,8 +13,37 @@
  * included in all copies or substantial portions of the Software.
  */
 
+package io.github.robolib.module.hid;
+
+import io.github.robolib.identifier.NumberSource;
+
 /**
- * Classes that provide some sort of control over the robot or control information.
+ * A class representation of a Joystick Axis.
+ *
  * @author noriah Reuland <vix@noriah.dev>
  */
-package io.github.robolib.control;
+public interface HIDAxis extends NumberSource {
+    
+    /**
+     * Get the Value of the Axis.
+     * @return the value of the Axis.
+     */
+    public double get();
+    
+    /**
+     * Invert the Axis.
+     */
+    public void setInverted(boolean inverted);
+    
+    /**
+     * Set the Deadband of the Axis.
+     * @param deadband the deadband value of the axis.
+     */
+    public void setDeadband(double deadband);
+    
+    public void setRampEnd(double end);
+    
+    public void setBacklash(double value);
+    
+    public void setFineControl(double value);
+}

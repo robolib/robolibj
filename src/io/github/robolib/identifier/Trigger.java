@@ -13,11 +13,10 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.control;
+package io.github.robolib.identifier;
 
 import io.github.robolib.command.Command;
 import io.github.robolib.command.Scheduler;
-import io.github.robolib.identifier.BooleanSource;
 
 /**
  * 

@@ -19,7 +19,7 @@ import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.IntBuffer;
 
-import io.github.robolib.control.ButtonTrigger;
+import io.github.robolib.identifier.ButtonTrigger;
 import io.github.robolib.identifier.UpdatingSendable;
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.PowerJNI;

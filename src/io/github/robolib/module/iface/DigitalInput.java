@@ -19,8 +19,8 @@ import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.IntBuffer;
 
-import io.github.robolib.control.Trigger;
 import io.github.robolib.identifier.BooleanSource;
+import io.github.robolib.identifier.Trigger;
 import io.github.robolib.jni.DIOJNI;
 import io.github.robolib.jni.HALUtil;
 
