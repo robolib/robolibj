@@ -60,9 +60,12 @@ public final class LimitedController implements SpeedController, MotorSafety {
      */
     @Override
     public void setSpeed(double speed) {
-        speed = speed > 0 && !m_system.canForward() ? 0.00 : speed;
-        speed = speed < 0 && !m_system.canReverse() ? 0.00 : speed;
-        m_motor.setSpeed(speed);
+        if(speed > 0 && m_system.canForward())
+            m_motor.setSpeed(speed);
+        else if(speed < 0 && m_system.canReverse())
+            m_motor.setSpeed(speed);
+        else
+            m_motor.setSpeed(0);
     }
     
     /**

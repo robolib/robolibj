@@ -89,6 +89,7 @@ public class Joystick extends GenericHID {
          */
         public JoystickAxis(int axis){
             m_channel = axis;
+            calculate();
         }
         
         /**
@@ -97,18 +98,18 @@ public class Joystick extends GenericHID {
         @Override
         public double get(){
             double out = getStickAxis(m_port, m_channel);
-//            double x = Math.abs(out);
-//            
-//            if(x < m_deadband)
-//                x = 0.0;
-//            else if(x < m_rampEnd)
-//                x = m_backlash + m_m1 * (x - m_deadband);
-//            else
-//                x = m_fineConrol + m_m2 * (x - m_rampEnd);
-//            
-//            if(out < 0)
-//                x = -x;
-            double x = Math.abs(out) < m_deadband ? 0 : out;
+            double x = Math.abs(out);
+            
+            if(x < m_deadband)
+                x = 0.0;
+            else if(x < m_rampEnd)
+                x = m_backlash + m_m1 * (x - m_deadband);
+            else
+                x = m_fineConrol + m_m2 * (x - m_rampEnd);
+            
+            if(out < 0)
+                x = -x;
+//            double x = Math.abs(out) < m_deadband ? 0 : out;
             return m_inverted ? -x : x;
         }
 
@@ -153,6 +154,7 @@ public class Joystick extends GenericHID {
         @Override
         public void setFineControl(double control){
             m_fineConrol = control;
+            calculate();
         }
         
         private void calculate(){

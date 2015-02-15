@@ -24,7 +24,6 @@ import io.github.robolib.identifier.UpdatingSendable;
 import io.github.robolib.jni.PDPJNI;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.nettable.ITable;
-import io.github.robolib.util.StringUtils;
 
 /**
  * A class for accessing the Power Distribution Panel.
@@ -255,13 +254,13 @@ public final class PDP implements UpdatingSendable {
     @Override
     public void updateTable() {
         CHANNEL_MAP.forEach((Integer i, String s) ->
-            m_table.putString(s, StringUtils.getNumber2DWithUnits(getChannelCurrent(i), "A")));
+            m_table.putNumber(s, getChannelCurrent(i)));
         
-        m_table.putString("Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
-        m_table.putString("TotalCurrent", StringUtils.getNumber2DWithUnits(getTotalCurrent(), "A"));
-        m_table.putString("Temperature", StringUtils.getNumber2DWithUnits(getTemperature(), "C"));
-        m_table.putString("Total Energy Usage", StringUtils.getNumber2DWithUnits(getTotalEnergy(), "J"));
-        m_table.putString("Total Power Usage", StringUtils.getNumber2DWithUnits(getTotalPower(), "A"));
-        
+        m_table.putNumber("Voltage", getVoltage());
+        m_table.putNumber("TotalCurrent", getTotalCurrent());
+        m_table.putNumber("Temperature", getTemperature());
+        m_table.putNumber("Total Energy Usage", getTotalEnergy());
+        m_table.putNumber("Total Power Usage", getTotalPower());
+             
     }
 }

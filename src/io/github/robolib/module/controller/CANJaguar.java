@@ -4,6 +4,7 @@ import static io.github.robolib.util.CommonFunctions.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.BitSet;
 
 import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.identifier.RateSource;
@@ -40,7 +41,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
     private static final int kFullMessageIDMask = CANJNI.CAN_MSGID_API_M | CANJNI.CAN_MSGID_MFR_M | CANJNI.CAN_MSGID_DTYPE_M;
     private static final int kSendMessagePeriod = 20;
 
-    private static boolean m_allocated[] = new boolean[64];
+    private static BitSet m_allocated = new BitSet(64);
     
     // Control Mode tags
     private static class EncoderTag {};
@@ -162,7 +163,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
     private short m_faults = (short)0;
     private int m_firmwareVersion = 0;
     private byte m_hardwareVersion = (byte)0;
-    private int m_inverted = 1;
+    private boolean m_inverted;
 
     // Which periodic status messages have we received at least once?
     private boolean m_receivedStatusMessage0 = false;
@@ -171,6 +172,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
     
     private ITable m_table = null;
     private ITableListener m_table_listener = null;
+    private ITableListener m_listener = null;
     
     
     /**
@@ -254,11 +256,11 @@ public final class CANJaguar implements SpeedController, MotorSafety,
      * @see CANJaguar#setVoltageMode(QuadEncoderTag, int)
      */
     public CANJaguar(int deviceNumber, String desc, PowerChannel pwChannel) {
-        if(m_allocated[deviceNumber]) throw new ResourceAllocationException("CAN Jaguar allready allocated");
+        if(m_allocated.get(deviceNumber)) throw new ResourceAllocationException("CAN Jaguar allready allocated");
         
         m_description = desc;
         
-        m_allocated[deviceNumber] = true;
+        m_allocated.set(deviceNumber);
         
         m_deviceNumber = (byte)deviceNumber;
         m_controlMode = ControlMode.PercentVbus;
@@ -325,6 +327,25 @@ public final class CANJaguar implements SpeedController, MotorSafety,
         if(pwChannel != null){
             PDP.claimChannel(pwChannel, desc);
         }
+        
+        m_listener = (ITable table, String key,
+                Object value, boolean isNew) -> {
+            if (key.equals("p") || key.equals("d") || key.equals("d")) {
+                if (getP() != table.getNumber("p", 0.0) || getI() != table.getNumber("i", 0.0) || getD() != table.getNumber("d", 0.0))
+                    setPID(table.getNumber("p", 0.0), table.getNumber("i", 0.0), table.getNumber("d", 0.0));
+            } else if (key.equals("setpoint")) {
+                if (get() != ((Double) value).doubleValue())
+                    set(((Double) value).doubleValue());
+            } else if (key.equals("disabled")) {
+                if (m_controlEnabled != ((Boolean) value).booleanValue()) {
+                    if (((Boolean) value).booleanValue()) {
+                        enableControl(m_position);
+                    } else {
+                        disableControl();
+                    }
+                }
+            }
+        };
     }
 
     /**
@@ -391,7 +412,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
      * @return The most recently set outputValue set point.
      */
     public double get() {
-        return m_value * m_inverted;
+        return m_value;
     }
     
     /**
@@ -435,8 +456,8 @@ public final class CANJaguar implements SpeedController, MotorSafety,
             switch(m_controlMode) {
             case PercentVbus:
                 messageID = CANJNI.LM_API_VOLT_T_SET;
-                dataSize = packPercentage(data, outputValue * m_inverted);
-                break;
+                dataSize = packPercentage(data, m_inverted ? -outputValue : outputValue);
+                break; 
 
             case Speed:
                 messageID = CANJNI.LM_API_SPD_T_SET;
@@ -518,7 +539,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
      */
     @Override
     public void setInverted(boolean inverted) {
-        m_inverted = inverted ? -1 : 1;
+        m_inverted = inverted;
     }
 
     /**
@@ -2190,7 +2211,7 @@ public final class CANJaguar implements SpeedController, MotorSafety,
      */
     @Override
     public String getSmartDashboardType() {
-        return "CAN Jaguar";
+        return "PIDController";
     }
 
 
@@ -2199,8 +2220,17 @@ public final class CANJaguar implements SpeedController, MotorSafety,
      */
     @Override
     public void initTable(ITable subtable) {
+        if(m_table!=null)
+            m_table.removeTableListener(m_listener);
         m_table = subtable;
-        updateTable();
+        if(m_table!=null) {
+            subtable.putNumber("p", getP());
+            subtable.putNumber("i", getI());
+            subtable.putNumber("d", getD());
+            subtable.putNumber("setpoint", get());
+            subtable.putBoolean("disabled", m_controlEnabled);
+            subtable.addTableListener(m_listener, false);
+        }
     }
 
     /**
@@ -2208,9 +2238,6 @@ public final class CANJaguar implements SpeedController, MotorSafety,
      */
     @Override
     public void updateTable() {
-        if (m_table != null) {
-            m_table.putNumber("Value", get());
-        }
     }
 
     /**
@@ -2226,11 +2253,11 @@ public final class CANJaguar implements SpeedController, MotorSafety,
      */
     @Override
     public void startLiveWindowMode() {
-        set(0); // Stop for safety
-        m_table_listener = (ITable itable, String key,
-                            Object value, boolean bln) -> set(((Double) value).doubleValue());
-                            
-        m_table.addTableListener("Value", m_table_listener, true);
+//        set(0); // Stop for safety
+//        m_table_listener = (ITable itable, String key,
+//                            Object value, boolean bln) -> set(((Double) value).doubleValue());
+//                            
+//        m_table.addTableListener("Value", m_table_listener, true);
     }
 
     /**
@@ -2238,8 +2265,8 @@ public final class CANJaguar implements SpeedController, MotorSafety,
      */
     @Override
     public void stopLiveWindowMode() {
-        set(0); // Stop for safety
-        // TODO: Broken, should only remove the listener from "Value" only.
-        m_table.removeTableListener(m_table_listener);
+//        set(0); // Stop for safety
+//        // TODO: Broken, should only remove the listener from "Value" only.
+//        m_table.removeTableListener(m_table_listener);
     }
 }

@@ -34,13 +34,13 @@ public class LimitSwitch extends DigitalInput {
     public static enum SwitchType {
         
         /** Normally Open Switch. */
-        OPEN(false),
+        OPEN(true),
         
         /** Normally Closed Switch. */
-        CLOSED(true);
+        CLOSED(false);
         
         /** The open. */
-        public boolean value;
+        public final boolean value;
         
         /**
          * Instantiates a new e switch type.
