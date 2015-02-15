@@ -23,7 +23,6 @@ import java.util.Map;
 
 import io.github.robolib.util.log.Logger;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

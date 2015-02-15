@@ -34,10 +34,10 @@ public class LimitSwitch extends DigitalInput {
     public static enum SwitchType {
         
         /** Normally Open Switch. */
-        OPEN(true),
+        OPEN(false),
         
         /** Normally Closed Switch. */
-        CLOSED(false);
+        CLOSED(true);
         
         /** The open. */
         public boolean value;
@@ -75,7 +75,7 @@ public class LimitSwitch extends DigitalInput {
      */
     @Override
     public boolean getState() {
-        return m_type.value && super.getState();
+        return m_type.value == super.getState();
     }
 
     /**
