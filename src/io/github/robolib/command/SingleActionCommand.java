@@ -34,17 +34,7 @@ public abstract class SingleActionCommand extends Command {
      * {@inheritDoc}
      */
     @Override
-    protected void initialize() {
-        doAction();
-    }
-    
-    protected abstract void doAction();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void execute() {}
+    protected void initialize() {}
 
     /**
      * {@inheritDoc}

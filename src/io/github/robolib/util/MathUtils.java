@@ -22,6 +22,8 @@ package io.github.robolib.util;
  */
 public class MathUtils {
     
+    private MathUtils(){}
+    
     /**
      * 
      */
