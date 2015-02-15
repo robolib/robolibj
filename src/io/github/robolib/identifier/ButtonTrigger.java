@@ -13,37 +13,38 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.control;
+package io.github.robolib.identifier;
 
-import io.github.robolib.identifier.NumberSource;
+import io.github.robolib.command.Command;
 
 /**
- * A class representation of a Joystick Axis.
- *
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public interface HIDAxis extends NumberSource {
+public interface ButtonTrigger extends Trigger {
     
-    /**
-     * Get the Value of the Axis.
-     * @return the value of the Axis.
-     */
-    public double get();
+    public default void runWhenPressed(final Command command){
+        runWhenActive(command);
+    }
     
-    /**
-     * Invert the Axis.
-     */
-    public void setInverted(boolean inverted);
+    public default void runWhileHeld(final Command command){
+        runWhileActive(command);
+    }
     
-    /**
-     * Set the Deadband of the Axis.
-     * @param deadband the deadband value of the axis.
-     */
-    public void setDeadband(double deadband);
+    public default void runWhenReleased(final Command command){
+        runWhenInactive(command);
+    }
     
-    public void setRampEnd(double end);
+    public default void runWhileReleased(final Command command){
+        runWhileInactive(command);
+    }
     
-    public void setBacklash(double value);
+    public default void togglenWhenPressed(final Command command){
+        toggleWhenActive(command);
+    }
     
-    public void setFineControl(double value);
+    public default void cancelWhenPressed(final Command command){
+        cancelWhenActive(command);
+    }
+
 }

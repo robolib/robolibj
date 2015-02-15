@@ -20,8 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import io.github.robolib.control.Trigger.ButtonScheduler;
 import io.github.robolib.identifier.NamedSendable;
+import io.github.robolib.identifier.Trigger.ButtonScheduler;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.nettable.ITable;
 import io.github.robolib.nettable.entry.NumberArray;

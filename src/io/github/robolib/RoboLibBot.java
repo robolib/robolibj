@@ -73,6 +73,8 @@ public class RoboLibBot {
     /** The Constant PATCH_VERSION. */
     public static final int PATCH_VERSION = 3;
     
+    public static final String FRC_JAVA_VERSION = "2015 Java 1.1.0";
+    
     /** The Constant NETTABLE_CURRENT_MODE. */
     private static final String NETTABLE_CURRENT_MODE = "mode";
     
@@ -442,7 +444,7 @@ public class RoboLibBot {
         if(!file.exists()){
             writeVersionFile(file);
         }else{
-            byte[] data = "2015 Java 1.0.0".getBytes();
+            byte[] data = FRC_JAVA_VERSION.getBytes();
             try{
                 FileInputStream input = new FileInputStream(file);
                 input.read(data);
@@ -450,7 +452,7 @@ public class RoboLibBot {
             }catch (IOException ex){
                 ex.printStackTrace();
             }
-            if(!data.equals("2015 Java 1.0.0".getBytes())){
+            if(!data.equals(FRC_JAVA_VERSION.getBytes())){
                 file.delete();
                 writeVersionFile(file);
             }
@@ -467,7 +469,7 @@ public class RoboLibBot {
         try {
             file.createNewFile();
             output = new FileOutputStream(file);
-            output.write("2015 Java 1.0.0".getBytes());
+            output.write(FRC_JAVA_VERSION.getBytes());
 
         } catch (IOException ex) {
             ex.printStackTrace();

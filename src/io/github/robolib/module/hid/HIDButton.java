@@ -13,7 +13,9 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.control;
+package io.github.robolib.module.hid;
+
+import io.github.robolib.identifier.ButtonTrigger;
 
 
 /**
