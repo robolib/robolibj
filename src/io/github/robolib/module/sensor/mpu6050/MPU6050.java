@@ -3521,7 +3521,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
         readByte(MPU6050_RA_FIFO_R_W, buffer);
         return buffer[0];
     }
-    public void getFIFOBytes(byte[] data, byte length) {
+    public void getFIFOBytes(byte[] data, short length) {
         readBytes(MPU6050_RA_FIFO_R_W, data, length);
     }
     /**
@@ -3645,8 +3645,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
         readBytes(MPU6050_RA_XA_OFFS_H, buffer, 2);
         return (short)((buffer[0] << 8) | buffer[1]);
     }
-    public void setXAccelOffset(short offset) {
-        writeWord(MPU6050_RA_XA_OFFS_H, offset);
+    public void setXAccelOffset(int offset) {
+        writeWord(MPU6050_RA_XA_OFFS_H, (short)offset);
     }
 
     // YA_OFFS_* register
@@ -3656,8 +3656,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
         readBytes(MPU6050_RA_YA_OFFS_H, buffer, 2);
         return (short)((buffer[0] << 8) | buffer[1]);
     }
-    public void setYAccelOffset(short offset) {
-        writeWord(MPU6050_RA_YA_OFFS_H, offset);
+    public void setYAccelOffset(int offset) {
+        writeWord(MPU6050_RA_YA_OFFS_H, (short)offset);
     }
 
     // ZA_OFFS_* register
@@ -3667,8 +3667,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
         readBytes(MPU6050_RA_ZA_OFFS_H, buffer, 2);
         return (short)((buffer[0] << 8) | buffer[1]);
     }
-    public void setZAccelOffset(short offset) {
-        writeWord(MPU6050_RA_ZA_OFFS_H, offset);
+    public void setZAccelOffset(int offset) {
+        writeWord(MPU6050_RA_ZA_OFFS_H, (short)offset);
     }
 
     // XG_OFFS_USR* registers
@@ -3678,8 +3678,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
         readBytes(MPU6050_RA_XG_OFFS_USRH, buffer, 2);
         return (short)((buffer[0] << 8) | buffer[1]);
     }
-    public void setXGyroOffset(short offset) {
-        writeWord(MPU6050_RA_XG_OFFS_USRH, offset);
+    public void setXGyroOffset(int offset) {
+        writeWord(MPU6050_RA_XG_OFFS_USRH, (short) offset);
     }
 
     // YG_OFFS_USR* register
@@ -3689,8 +3689,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
         readBytes(MPU6050_RA_YG_OFFS_USRH, buffer, 2);
         return (short)((buffer[0] << 8) | buffer[1]);
     }
-    public void setYGyroOffset(short offset) {
-        writeWord(MPU6050_RA_YG_OFFS_USRH, offset);
+    public void setYGyroOffset(int offset) {
+        writeWord(MPU6050_RA_YG_OFFS_USRH, (short)offset);
     }
 
     // ZG_OFFS_USR* register
@@ -3700,8 +3700,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
         readBytes(MPU6050_RA_ZG_OFFS_USRH, buffer, 2);
         return (short)((buffer[0] << 8) | buffer[1]);
     }
-    public void setZGyroOffset(short offset) {
-        writeWord(MPU6050_RA_ZG_OFFS_USRH, offset);
+    public void setZGyroOffset(int offset) {
+        writeWord(MPU6050_RA_ZG_OFFS_USRH, (short)offset);
     }
 
     // INT_ENABLE register (DMP functions)

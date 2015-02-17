@@ -41,7 +41,7 @@ public class Gyro extends AnalogInput implements PIDSource, LiveWindowSendable,
     
     public static final double CALIBRATE_SAMPLE_TIME = 5.0;
     
-    public static final double DEF_VOLTAGE_PER_DEGREE = 0.007;
+    public static final double DEF_VOLTAGE_PER_DEGREE = 0.0072;
     
     private double m_VperDperS;
     private double m_offset;

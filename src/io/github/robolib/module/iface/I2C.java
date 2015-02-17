@@ -107,7 +107,7 @@ public class I2C extends Interface {
         success = I2CJNI.i2CTransaction(m_port, m_address, dataSendBuffer, (byte)sendSize, dataReceiveBuffer, (byte)receiveSize) > 0;
         
         if(receiveSize > 0 && dataReceived != null)
-            dataReceiveBuffer.get(dataReceived);
+            dataReceiveBuffer.get(dataReceived,0,receiveSize);
         
         return success;
         
