@@ -171,7 +171,6 @@ public final class CANJaguar implements SpeedController, MotorSafety,
     private boolean m_receivedStatusMessage2 = false;
     
     private ITable m_table = null;
-    private ITableListener m_table_listener = null;
     private ITableListener m_listener = null;
     
     

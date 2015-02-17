@@ -57,6 +57,8 @@ public final class Scheduler implements NamedSendable {
     /** The m_disabled counter. */
     private static byte m_disabledCounter = 0;
     
+    private static boolean m_running = false;
+    
     /** The m_subsystems. */
     private static final Vector<Subsystem> m_subsystems = new Vector<Subsystem>();
     
@@ -178,6 +180,12 @@ public final class Scheduler implements NamedSendable {
      * Defaults </li> </ol>
      */
     public static void run(){
+        if(m_running){
+            m_log.warn("Scheduler already running");
+            return;
+        }
+        
+        m_running = true;
         m_runningCommandsChanged = false;
         
         if(m_disabled){
@@ -214,6 +222,7 @@ public final class Scheduler implements NamedSendable {
         m_subsystems.forEach(Subsystem::iterationRun);
         
         updateTable();
+        m_running = false;
     }
     
     /**
