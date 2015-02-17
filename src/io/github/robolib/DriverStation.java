@@ -33,7 +33,7 @@ import io.github.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  *
  */
-public final class DriverStation {
+public final class DriverStation implements Runnable {
 
     private final Thread m_thread;
     private final Object m_dataSem;
@@ -68,7 +68,7 @@ public final class DriverStation {
         NetworkCommunications.setNewDataSem(m_packetDataAvailableSem);
         
         //WOO lookie here. Lambda functions ^_^
-        m_thread = new Thread(() -> commTask(), "DriverStation JSThread");
+        m_thread = new Thread(this, "DriverStation JSThread");
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
         m_thread.setDaemon(true);
     }
@@ -76,7 +76,7 @@ public final class DriverStation {
     /**
      * Task run by the Robot to get DS data.
      */
-    private void commTask(){
+    public void run(){
         m_log.info("Communications thread started.");
         byte safetyCounter = 0;
         byte tableCounter = 0;

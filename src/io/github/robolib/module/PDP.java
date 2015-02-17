@@ -102,6 +102,9 @@ public final class PDP implements UpdatingSendable {
     private ITable m_table;
     
     public static void initialize(){
+        if(m_instance != null)
+            throw new IllegalStateException("PDP already initialized.");
+        
         m_instance = new PDP();
     }
     
