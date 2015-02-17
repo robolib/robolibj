@@ -357,7 +357,7 @@ public class DriveBase implements MotorSafety {
     public void mecanum_polar(double magnitude, double direction, double rotation){
         
         magnitude = MathUtils.clamp(magnitude, -1.0, 1.0) * sqrt2;
-        direction = (direction + 45.0) * MathUtils.PI_180;
+        direction = (direction + 45.0) * MathUtils.PI_OVER_180;
         double cosD = Math.cos(direction) * magnitude;
         double sinD = Math.sin(direction) * magnitude;
         
@@ -425,7 +425,7 @@ public class DriveBase implements MotorSafety {
      * @return an array of doubles [x, y]
      */
     protected static double[] rotateVector(double x, double y, double angle){
-        double tmp = angle * MathUtils.PI_180;
+        double tmp = angle * MathUtils.PI_OVER_180;
         double cosA = Math.cos(tmp);
         double sinA = Math.sin(tmp);
         return new double[]{

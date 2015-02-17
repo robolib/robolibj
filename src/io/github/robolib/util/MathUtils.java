@@ -27,7 +27,8 @@ public class MathUtils {
     /**
      * 
      */
-    public static final double PI_180 = Math.PI / 180.0;
+    public static final double PI_OVER_180 = Math.PI / 180.0;
+    public static final double M_180_OVER_PI = 180.0 / Math.PI;
     
     /**
      * 

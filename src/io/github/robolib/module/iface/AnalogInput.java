@@ -255,7 +255,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * Initialize the accumulator.
      */
     public void initAccumulator(){
-        if(isAccumulatorChannel()){
+        if(!isAccumulatorChannel()){
             throw new ResourceAllocationException(
                     "Accumulators or only available on slot"
                             + ACCUMULATOR_SLOT + " on channels "
@@ -381,10 +381,8 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      * @return The analog channel is attached to an accumulator.
      */
     public boolean isAccumulatorChannel(){
-        int chNum = m_channel.ordinal();
-        for(int i : ACCUMULATOR_CHANNELS){
-            if(i == chNum) return true;
-        }
+        if(m_channel.ordinal() == 0 || m_channel.ordinal() == 1)
+            return true;
         
         return false;
     }
