@@ -28,9 +28,16 @@ public final class SystemMonitor implements Runnable {
     private static double m_voltWarn;
     private static double m_voltCrit;
     private static double m_voltDisable;
-    
+        
     private static double m_memWarn;
     private static double m_memCrit;
+    
+    private static volatile boolean m_enabled = true;
+    private static volatile boolean m_enableVoltage = true;
+    private static volatile boolean m_enableMemory = true;
+    private static volatile boolean m_enablePDP = true;
+    private static volatile boolean m_enablePCM = true;
+    private static volatile boolean m_enableRIO = true;
     
     private static final ILogger m_log = Logger.get(SystemMonitor.class);
     
@@ -124,6 +131,9 @@ public final class SystemMonitor implements Runnable {
     }
     
     public void run(){
+        while(true){
+            
+        }
         
     }
     
