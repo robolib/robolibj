@@ -81,6 +81,11 @@ public abstract class Command implements NamedSendable {
         m_name = getClass().getName().substring(m_name.lastIndexOf('.') + 1);
     }
     
+    public Command(Subsystem system){
+        this();
+        requires(system);
+    }
+    
     /**
      * Instantiates a new command.
      *
@@ -506,6 +511,10 @@ public abstract class Command implements NamedSendable {
             table.putBoolean("isParented", m_parent != null);
             table.addTableListener("running", listener, false);
         }
+    }
+    
+    protected static final Command Wait(double timeout){
+        return new WaitCommand(timeout);
     }
 
     /**

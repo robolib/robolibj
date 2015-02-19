@@ -114,7 +114,7 @@ public final class Logger extends ILogger {
      * @param label the label
      */
     private Logger(String label){
-        m_outs = new ArrayList<>();
+        m_outs = new ArrayList<LogOutput>();
         m_outs.addAll(DEFAULT_OUTS);
         m_label = "(" + label + ")";
     }
@@ -214,8 +214,8 @@ public final class Logger extends ILogger {
      */
     private void sendMsg(LogLevel l, String s){
         String sout = "[" + RoboRIO.getFPGATimestamp() + "] " + l.m_name + " <" + RoboLibBot.getGameMode().getName() + "> " + m_label + ": " + s;
-        DriverStation.reportError(sout + "\n");
         TERM_OUT.sendMsg(sout);
+        DriverStation.reportError(sout + "\n");
         m_outs.forEach(lo -> lo.sendMsg(sout));
     }
 
