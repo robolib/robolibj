@@ -43,7 +43,7 @@ public class ArrayData extends ComplexData{
         return data.length;
     }
 
-    Object[] getDataArray() {
+    public Object[] getDataArray() {
         return data;
     }
 }

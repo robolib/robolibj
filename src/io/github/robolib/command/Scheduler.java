@@ -16,7 +16,6 @@
 package io.github.robolib.command;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -35,6 +34,14 @@ import io.github.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  */
 public final class Scheduler implements NamedSendable {
+    
+    private static class NullCommand extends Command{
+        protected void initialize() {}
+        protected void execute(){}
+        protected boolean isFinished(){return false;}
+        protected void end(){}
+        protected void interrupted(){}
+    }
     
     /** The m_instance. */
     private static Scheduler m_instance;
@@ -70,8 +77,9 @@ public final class Scheduler implements NamedSendable {
     
     private static final Vector<Binding> m_binds = new Vector<Binding>();
     
-    /** The m_command list. */
-    private static final List<Command> m_commandList = new LinkedList<Command>();
+    private static final Command m_firstCommand = new NullCommand();
+    
+    private static final Command m_lastCommand = new NullCommand();
     
     public synchronized static void initialize(){
         if(m_instance != null)
@@ -97,6 +105,9 @@ public final class Scheduler implements NamedSendable {
      * Instantiates a new scheduler.
      */
     private Scheduler(){
+        
+        m_firstCommand.m_nextCommand = m_lastCommand;
+        m_lastCommand.m_previousCommand = m_firstCommand;
 //        initTable(NetworkTable.getTable("Scheduler"));
 //        SmartDashboard.putData(this);
     }
@@ -142,7 +153,7 @@ public final class Scheduler implements NamedSendable {
             return;
         }
         
-        if(!m_commandList.contains(command)){
+        if(!command.m_running){
             List<Subsystem> requires = command.getRequirements();
             if(requires.stream().anyMatch(Subsystem::getCurrentCommandNotInterruptable))
                 return;
@@ -155,19 +166,19 @@ public final class Scheduler implements NamedSendable {
                     cmd.cancel();
                     cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
                     cmd.removed();
-                    m_commandList.remove(cmd);
                 }
                 system.setCurrentCommand(command);
             }
+            
+            command.m_previousCommand = m_lastCommand.m_previousCommand;
+            command.m_nextCommand = m_lastCommand;
+            m_lastCommand.m_previousCommand = command;
 
             m_adding = false;
-            
-            m_commandList.add(command);
             
             m_runningCommandsChanged = true;
             command.startRunning();
         }
-        
     }
     
     /**
@@ -201,27 +212,60 @@ public final class Scheduler implements NamedSendable {
         m_binds.forEach(Binding::updateValue);
         
         Command cmd = null;
-        for(Iterator<Command> iter = m_commandList.iterator();iter.hasNext();){
-            cmd = iter.next();
-            if(!cmd.run()){
-                cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
-                cmd.removed();
-                iter.remove();
-                m_runningCommandsChanged = true;
-            }
-        }
+        Command nextCmd = m_firstCommand.m_nextCommand;
+        
+//        if(m_table != null){
+//            m_table.retrieveValue("Cancel", toCancel);
+//            
+//            commands.setSize(0);
+//            ids.setSize(0);
+//            
+//            while(nextCmd != m_lastCommand){
+//                cmd = nextCmd;
+//                nextCmd = cmd.m_nextCommand;
+//                if
+//                if(!cmd.run()){
+//                    cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
+//                    cmd.removed();
+//
+//                    m_runningCommandsChanged = true;
+//                }else{
+//                    commands.add(cmd.getName());
+//                    ids.add(cmd.hashCode());
+//                }
+//            }
+//
+//            toCancel.setSize(0);
+//            m_table.putValue("Cancel", toCancel);
+//            
+//            if(m_runningCommandsChanged){
+//                m_table.putValue("Names", commands);
+//                m_table.putValue("Ids", ids);
+//            }
+//            
+//        }else{
+//            
+            while(nextCmd != m_lastCommand){
+                cmd = nextCmd;
+                nextCmd = cmd.m_nextCommand;
+                if(!cmd.run()){
+                    cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
+                    cmd.removed();
 
-//        iter = m_additions.iterator();
-//        for(;iter.hasNext();){
-//            add_impl(iter.next());
+                    m_runningCommandsChanged = true;
+                }
+            }
 //        }
+        
+        cmd = null;
+        nextCmd = null;
         
         m_additions.forEach(Scheduler::add_internal);
         m_additions.removeAllElements();
         
         m_subsystems.forEach(Subsystem::iterationRun);
         
-        updateTable();
+//        updateTable();
         m_running = false;
     }
     
@@ -242,12 +286,19 @@ public final class Scheduler implements NamedSendable {
      */
     public static void removeAll(){
         Command cmd;
-        for(Iterator<Command> iter = m_commandList.iterator(); iter.hasNext();){
-            cmd = iter.next();            
+        Command nextCmd = m_firstCommand.m_nextCommand;
+        while(nextCmd != m_lastCommand){
+            cmd = nextCmd;
+            nextCmd = cmd.m_nextCommand;
             cmd.removed();
-            iter.remove();
         }
-        m_subsystems.forEach(Subsystem::nullifyCurrentCommand);
+        
+        cmd = null;
+        nextCmd = null;
+        
+        for(Iterator<Subsystem> iter = m_subsystems.iterator(); iter.hasNext();){
+            iter.next().nullifyCurrentCommand();
+        }
     }
     
     /**
@@ -313,33 +364,22 @@ public final class Scheduler implements NamedSendable {
         return m_table;
     }
     
-    public static void updateTable(){
-        if(m_table != null){
-            m_table.retrieveValue("Cancel", toCancel);
-
-            if(toCancel.size() > 0){
-                m_commandList.forEach(cmd -> {
-                    for(int i = 0; i < toCancel.size(); i++){
-                        if(cmd.hashCode() == toCancel.get(i)){
-                            cmd.cancel();
-                            return;
-                        }
-                    }
-                });
-            }
-            toCancel.setSize(0);
-            m_table.putValue("Cancel", toCancel);
-            
-            if(m_runningCommandsChanged){
-                commands.setSize(0);
-                ids.setSize(0);
-                m_commandList.forEach(cmd -> {
-                    commands.add(cmd.getName());
-                    ids.add(cmd.hashCode());
-                });
-                m_table.putValue("Names", commands);
-                m_table.putValue("Ids", ids);
-            }
-        }
-    }
+//    public static void updateTable(){
+//        if(m_table != null){
+//            m_table.retrieveValue("Cancel", toCancel);
+//
+//            if(toCancel.size() > 0){
+//                m_commandList.forEach(cmd -> {
+//                    for(int i = 0; i < toCancel.size(); i++){
+//                        if(cmd.hashCode() == toCancel.get(i)){
+//                            cmd.cancel();
+//                            return;
+//                        }
+//                    }
+//                });
+//            }
+//            toCancel.setSize(0);
+//            m_table.putValue("Cancel", toCancel);
+//        }
+//    }
 }

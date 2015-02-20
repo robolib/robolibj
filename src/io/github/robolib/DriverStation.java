@@ -69,7 +69,7 @@ public final class DriverStation implements Runnable {
         
         //WOO lookie here. Lambda functions ^_^
         m_thread = new Thread(this, "DriverStation JSThread");
-        m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
+        m_thread.setPriority(8);
         m_thread.setDaemon(true);
     }
     
