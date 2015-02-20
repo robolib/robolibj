@@ -38,6 +38,7 @@ public final class SystemMonitor implements Runnable {
     private static volatile boolean m_enablePDP = true;
     private static volatile boolean m_enablePCM = true;
     private static volatile boolean m_enableRIO = true;
+    private static volatile boolean m_enableNetwork = true;
     
     private static final ILogger m_log = Logger.get(SystemMonitor.class);
     
@@ -51,7 +52,7 @@ public final class SystemMonitor implements Runnable {
      * @param enabled
      */
     public static void enableVoltageMonitoring(boolean enabled){
-        
+        m_enableVoltage = enabled;
     }
     
     /**
@@ -59,7 +60,7 @@ public final class SystemMonitor implements Runnable {
      * @param enabled
      */
     public static void enablePDPFaultMonitoring(boolean enabled){
-        
+        m_enablePDP = enabled;
     }
     
     /**
@@ -67,7 +68,7 @@ public final class SystemMonitor implements Runnable {
      * @param enabled
      */
     public static void enablePCMFaultMonitoring(boolean enabled){
-        
+        m_enablePCM = enabled;
     }
     
     /**
@@ -75,7 +76,7 @@ public final class SystemMonitor implements Runnable {
      * @param enabled
      */
     public static void enableRIOFaultMonitoring(boolean enabled){
-        
+        m_enableRIO = enabled;
     }
     
     /**
@@ -83,7 +84,7 @@ public final class SystemMonitor implements Runnable {
      * @param enabled
      */
     public static void enableNetworkMonitoring(boolean enabled){
-        
+        m_enableNetwork = enabled;
     }
     
     /**
