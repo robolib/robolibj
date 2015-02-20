@@ -48,7 +48,7 @@ public abstract class Command implements NamedSendable {
     private List<Subsystem> m_requirements = new ArrayList<Subsystem>(4);
     
     /** The m_running. */
-    private boolean m_running = false;
+    protected boolean m_running = false;
     
     /** The m_interruptible. */
     private boolean m_interruptible = true;
@@ -64,6 +64,10 @@ public abstract class Command implements NamedSendable {
     
     /** The m_cancel on mode switched */
     private boolean m_cancelOnModeSwitched = true;
+    
+    protected Command m_previousCommand;
+    
+    protected Command m_nextCommand;
     
     /** The m_parent. */
     private CommandGroup m_parent;
@@ -187,6 +191,12 @@ public abstract class Command implements NamedSendable {
             m_initialized = false;
             m_canceled = false;
             m_running = false;
+            
+            m_previousCommand.m_nextCommand = m_nextCommand;
+            m_nextCommand.m_previousCommand = m_previousCommand;
+            m_previousCommand = null;
+            m_nextCommand = null;
+            
             if(m_table != null){
                 m_table.putBoolean("running", false);
             }

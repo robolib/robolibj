@@ -270,6 +270,7 @@ public class RoboLibBot {
      */
     public static final void main(String args[]) {
         Thread.currentThread().setName("Framework Thread");
+//        Thread.currentThread().setPriority(9);
         NetworkCommunications.NetworkCommunicationReserve();
         ILogger log = Logger.get(RoboLibBot.class, "Framework");
 
