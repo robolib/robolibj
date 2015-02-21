@@ -37,22 +37,22 @@ package io.github.robolib.util.log;
 public enum LogLevel {
    
     /** The info. */
-    INFO("[INFO]"),
+    INFO("INFO"),
     
     /** The debug. */
-    DEBUG("[DEBUG]"),
+    DEBUG("DEBUG"),
     
     /** The warn. */
-    WARN("[WARNING]"),
+    WARN("WARNING"),
     
     /** The error. */
-    ERROR("[ERROR]"),
+    ERROR("ERROR"),
     
     /** The severe. */
-    SEVERE("[SEVERE]"),
+    SEVERE("SEVERE"),
     
     /** The fatal. */
-    FATAL("[FATALITY]");
+    FATAL("FATALITY");
     
     /** The m_name. */
     public final String m_name;

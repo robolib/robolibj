@@ -13,39 +13,13 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.util.mapper;
-
-import io.github.robolib.module.iface.DigitalIO;
-
-import org.json.JSONObject;
+package io.github.robolib.util;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DigitalIOMapper implements ModuleMapper<DigitalIO>{
-    
-    
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DigitalIO createModule(String key, JSONObject data) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String[] getModuleIdentifiers() {
-        return new String[]{
-                "digitalio"
-        };
-    }
-    
-    
+public class IntMap<T> {
 
 }

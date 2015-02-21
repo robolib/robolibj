@@ -1,6 +1,6 @@
 package io.github.robolib.module.controller;
 
-import static io.github.robolib.util.CommonFunctions.allocateInt;
+import static io.github.robolib.util.Utility.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

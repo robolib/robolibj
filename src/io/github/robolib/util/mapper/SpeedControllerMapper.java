@@ -42,10 +42,10 @@ public final class SpeedControllerMapper implements ModuleMapper<SpeedController
             new HashMap<String, Class<? extends SpeedController>>();
     
     static{        
-        registerController(Talon.class, "Talon", "TalonSR");
-        registerController(TalonSRX.class, "TalonSRX");
-        registerController(Victor.class, "Victor", "VictorSP");
-        registerController(Jaguar.class, "Jaguar", "Jag");
+        registerController(Talon.class, "talon", "talonsr");
+        registerController(TalonSRX.class, "talonsrx");
+        registerController(Victor.class, "victor", "victorsp");
+        registerController(Jaguar.class, "jaguar", "jag");
     }
     
     /**

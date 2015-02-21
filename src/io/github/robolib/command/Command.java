@@ -45,7 +45,7 @@ public abstract class Command implements NamedSendable {
     private boolean m_initialized = false;
     
     /** The m_requirements. */
-    private List<Subsystem> m_requirements = new ArrayList<Subsystem>(4);
+    private List<Subsystem> m_requirements;
     
     /** The m_running. */
     protected boolean m_running = false;
@@ -82,7 +82,7 @@ public abstract class Command implements NamedSendable {
      * Instantiates a new command.
      */
     public Command(){
-        m_name = getClass().getName().substring(m_name.lastIndexOf('.') + 1);
+        m_name = getClass().getCanonicalName();
     }
     
     public Command(Subsystem system){
@@ -164,11 +164,11 @@ public abstract class Command implements NamedSendable {
         if(m_locked)
             throw new IllegalStateException("Cannot add new requirement to command after being started or added to a command group.");
         if(subsys == null) return;
-//        if(m_requirements == null){
-//            synchronized(this){
-//                m_requirements = new ArrayList<Subsystem>(4);
-//            }
-//        }
+        if(m_requirements == null){
+            synchronized(this){
+                m_requirements = new ArrayList<Subsystem>(1);
+            }
+        }
         synchronized (m_requirements) {
             m_requirements.add(subsys);
         }
@@ -182,10 +182,10 @@ public abstract class Command implements NamedSendable {
             if(m_initialized){
                 if(isCanceled()){
                     interrupted();
-                    interrupted_impl();
+                    _interrupted();
                 }else{
                     end();
-                    end_impl();
+                    _end();
                 }
             }
             m_initialized = false;
@@ -217,11 +217,11 @@ public abstract class Command implements NamedSendable {
             if(!m_initialized){
                 m_initialized = true;
                 startTiming();
-                initialize_impl();
+                _initialize();
                 initialize();
             }
             
-            execute_impl();
+            _execute();
             execute();
             
             return !isFinished();
@@ -237,7 +237,7 @@ public abstract class Command implements NamedSendable {
     /**
      * Initialize_impl.
      */
-    void initialize_impl(){}
+    void _initialize(){}
     
     /**
      * The execute method is called repeatedly until this Command either finishes
@@ -248,7 +248,7 @@ public abstract class Command implements NamedSendable {
     /**
      * Execute_impl.
      */
-    void execute_impl(){}
+    void _execute(){}
     
     /**
      * Returns whether this command is finished.
@@ -272,7 +272,7 @@ public abstract class Command implements NamedSendable {
     /**
      * End_impl.
      */
-    void end_impl(){}
+    void _end(){}
     
     /**
      * Called when the command ends because somebody called {@link Command#cancel() cancel()}
@@ -291,7 +291,7 @@ public abstract class Command implements NamedSendable {
     /**
      * Interrupted_impl.
      */
-    void interrupted_impl(){}
+    void _interrupted(){}
     
     /**
      * Start timing.
@@ -318,7 +318,8 @@ public abstract class Command implements NamedSendable {
      */
     List<Subsystem> getRequirements(){
         synchronized(m_requirements){
-            return m_requirements;
+            return m_requirements == null ?
+                    m_requirements = new ArrayList<Subsystem>(1) : m_requirements;
         }
     }
 
@@ -383,13 +384,13 @@ public abstract class Command implements NamedSendable {
             if(m_parent != null)
                 throw new IllegalStateException("Cannot stop command that is in a command group.");
         }
-        cancel_impl();
+        _cancel();
     }
     
     /**
      * Cancel_impl.
      */
-    void cancel_impl(){
+    void _cancel(){
         synchronized(this){
             if(m_running)
                 m_canceled = true;
@@ -436,6 +437,8 @@ public abstract class Command implements NamedSendable {
      * @return true, if successful
      */
     public boolean doesRequire(Subsystem system){
+        if(m_requirements == null)
+            return false;
         synchronized(m_requirements){
             return m_requirements.contains(system);
         }
@@ -521,10 +524,6 @@ public abstract class Command implements NamedSendable {
             table.putBoolean("isParented", m_parent != null);
             table.addTableListener("running", listener, false);
         }
-    }
-    
-    protected static final Command Wait(double timeout){
-        return new WaitCommand(timeout);
     }
 
     /**

@@ -47,7 +47,7 @@ public class NetworkCommunications extends JNIWrapper {
 	 * @param status 
 	 * @return ai calibration lsb weight
 	 */
-	public static native int AICalibrationGetLSBWeight(int aiSystemIndex, int channel, Integer status);
+	public static native int AICalibrationGetLSBWeight(int aiSystemIndex, int channel, int status);
 	/**
 	 * Original signature : <code>int32_t FRC_NetworkCommunication_nAICalibration_getOffset(const uint32_t, const uint32_t, int32_t*)</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\AICalibration.h:8</i>
@@ -56,7 +56,7 @@ public class NetworkCommunications extends JNIWrapper {
 	 * @param status 
 	 * @return ai calibration offset
 	 */
-	public static native int AICalibrationGetOffset(int aiSystemIndex, int channel, Integer status);
+	public static native int AICalibrationGetOffset(int aiSystemIndex, int channel, int status);
 	/**
 	 * Original signature : <code>tTargetClass getTargetClass()</code><br>
 	 * <i>native declaration : src\main\include\NetworkCommunication\LoadOut.h:25</i>
