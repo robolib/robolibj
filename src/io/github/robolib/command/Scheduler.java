@@ -35,14 +35,6 @@ import io.github.robolib.util.log.Logger;
  */
 public final class Scheduler implements NamedSendable {
     
-    private static class NullCommand extends Command{
-        protected void initialize() {}
-        protected void execute(){}
-        protected boolean isFinished(){return false;}
-        protected void end(){}
-        protected void interrupted(){}
-    }
-    
     /** The m_instance. */
     private static Scheduler m_instance;
     
@@ -170,6 +162,7 @@ public final class Scheduler implements NamedSendable {
                 system.setCurrentCommand(command);
             }
             
+            m_lastCommand.m_previousCommand.m_nextCommand = command;
             command.m_previousCommand = m_lastCommand.m_previousCommand;
             command.m_nextCommand = m_lastCommand;
             m_lastCommand.m_previousCommand = command;

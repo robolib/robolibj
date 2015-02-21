@@ -56,7 +56,7 @@ public class TableSender {
 //    }
     
     public static void addFramework(UpdatingSendable sendable, String tableName){
-        sendable.initTable(CommonFunctions.getTable(RoboLibBot.getRobotTable(), tableName));
+        sendable.initTable(Utility.getTable(RoboLibBot.getRobotTable(), tableName));
         m_framework.addElement(sendable);
         
     }

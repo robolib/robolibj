@@ -25,6 +25,7 @@ import io.github.robolib.util.log.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 
 /**
@@ -52,7 +53,7 @@ public final class RobotMap {
         m_enabled = true;
         File f = new File(m_mapFile);
         try {
-            m_jMap = new JSONObject(new String(Files.readAllBytes(f.toPath()), "UTF-8"));
+            m_jMap = new JSONObject(new JSONTokener(Files.newBufferedReader(f.toPath())));
         } catch (JSONException | IOException e) {
             Logger.get(RobotMap.class).fatal("Failed to load config file", e);
         }
@@ -72,10 +73,10 @@ public final class RobotMap {
     
     public static void registerModuleBuilder(ModuleMapper<?> builder){
         for(String s : builder.getModuleIdentifiers()){
-            if(m_builderMap.containsKey(s.toLowerCase()))
+            if(m_builderMap.containsKey(s))
                 throw new IllegalArgumentException("A module builder under the key '"
                         + s + "' already exists.");
-            m_builderMap.put(s.toLowerCase(), builder);
+            m_builderMap.put(s, builder);
         }
     }
     

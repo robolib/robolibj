@@ -15,10 +15,7 @@
 
 package io.github.robolib.module;
 
-import static io.github.robolib.util.CommonFunctions.allocateInt;
-
-import java.util.HashMap;
-import java.util.Map;
+import static io.github.robolib.util.Utility.allocateInt;
 
 import io.github.robolib.identifier.UpdatingSendable;
 import io.github.robolib.jni.PDPJNI;
@@ -95,8 +92,8 @@ public final class PDP implements UpdatingSendable {
     private static PDP m_instance;
     
     /** The m_update channels. */
-    private static final Map<Integer, String> CHANNEL_MAP =
-            new HashMap<Integer, String>(MAX_POWER_CHANNELS);
+    
+    private static final String[] m_channelMap = new String[MAX_POWER_CHANNELS];
     
     /** The m_table. */
     private ITable m_table;
@@ -129,7 +126,7 @@ public final class PDP implements UpdatingSendable {
      * @return the channel name
      */
     public static String getChannelName(PowerChannel channel){
-        return CHANNEL_MAP.get(channel.ordinal());
+        return m_channelMap[channel.ordinal()];
     }
     
     /**
@@ -140,12 +137,12 @@ public final class PDP implements UpdatingSendable {
      */
     public static void claimChannel(PowerChannel channel, String name){
 
-        if(CHANNEL_MAP.containsKey(channel.ordinal()))
+        if(m_channelMap[channel.ordinal()] != null)
             throw new ResourceAllocationException("PDP channel '"
                     + channel.name() + "' already claimed by '"
-                    + CHANNEL_MAP.get(channel.ordinal()) + "'.");
+                    + m_channelMap[channel.ordinal()] + "'.");
         
-        CHANNEL_MAP.put(channel.ordinal(),  name);
+        m_channelMap[channel.ordinal()] = name;
     }
     
     /**
@@ -256,8 +253,9 @@ public final class PDP implements UpdatingSendable {
      */
     @Override
     public void updateTable() {
-        CHANNEL_MAP.forEach((Integer i, String s) ->
-            m_table.putNumber(s, getChannelCurrent(i)));
+        for(int i = 0; i < MAX_POWER_CHANNELS; i++){
+            m_table.putNumber(m_channelMap[i], getChannelCurrent(i));
+        }
         
         m_table.putNumber("Voltage", getVoltage());
         m_table.putNumber("TotalCurrent", getTotalCurrent());

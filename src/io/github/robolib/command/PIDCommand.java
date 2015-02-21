@@ -96,17 +96,17 @@ public abstract class PIDCommand extends Command implements Sendable {
     }
     
     @Override
-    final void initialize_impl(){
+    final void _initialize(){
         m_controller.enable();
     }
     
     @Override
-    final void end_impl(){
+    final void _end(){
         m_controller.disable();
     }
     
     @Override
-    final void interrupted_impl(){
+    final void _interrupted(){
         m_controller.disable();
     }
     

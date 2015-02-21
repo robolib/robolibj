@@ -177,7 +177,7 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    final void initialize_impl(){
+    final void _initialize(){
         m_currentCommandIndex = -1;
     }
     
@@ -185,7 +185,7 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    final void execute_impl(){
+    final void _execute(){
         Command entry = null;
         Command cmd = null;
         boolean firstRun = false;
@@ -196,7 +196,7 @@ public class CommandGroup extends Command {
         
         while(m_currentCommandIndex < m_commands.size()){
             if(cmd != null){
-                if(cmd.isTimedOut()) cmd.cancel_impl();
+                if(cmd.isTimedOut()) cmd._cancel();
                 if(cmd.run()){
                     break;
                 }else{
@@ -233,7 +233,7 @@ public class CommandGroup extends Command {
             }
             
             m_children.forEach(child -> {
-                if(child.isTimedOut()) child.cancel_impl();
+                if(child.isTimedOut()) child._cancel();
                 if(!child.run()){
                     child.removed();
                     m_children.remove(child);
@@ -247,15 +247,15 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    final void end_impl(){
+    final void _end(){
         if(m_currentCommandIndex != -1 && m_currentCommandIndex < m_commands.size()){
             Command cmd = m_commands.get(m_currentCommandIndex);
-            cmd.cancel_impl();
+            cmd._cancel();
             cmd.removed();
         }
         
         m_children.forEach(ce -> {
-            ce.cancel_impl();
+            ce._cancel();
             ce.removed();
         });
         m_children.removeAllElements();
@@ -265,8 +265,8 @@ public class CommandGroup extends Command {
      * {@inheritDoc}
      */
     @Override
-    final void interrupted_impl(){
-        end_impl();
+    final void _interrupted(){
+        _end();
     }
     
     /**
@@ -324,6 +324,10 @@ public class CommandGroup extends Command {
         return true;
     }
     
+    protected static final Command Wait(double timeout){
+        return new WaitCommand(timeout);
+    }
+    
     /**
      * Cancel conflicts.
      *
@@ -333,7 +337,7 @@ public class CommandGroup extends Command {
         m_children.forEach(ce -> {
             List<Subsystem> requires = command.getRequirements();
             if(requires.stream().anyMatch(system -> ce.doesRequire(system))){
-                ce.cancel_impl();
+                ce._cancel();
                 ce.removed();
                 m_children.remove(ce);
             }
