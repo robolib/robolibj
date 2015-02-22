@@ -270,9 +270,15 @@ public class RoboLibBot {
      */
     public static final void main(String args[]) {
         Thread.currentThread().setName("Framework Thread");
+//        System.out.println("waiting 30 seconds");
+        
 //        Thread.currentThread().setPriority(9);
         NetworkCommunications.NetworkCommunicationReserve();
         ILogger log = Logger.get(RoboLibBot.class, "Framework");
+        
+//        long time = System.currentTimeMillis();
+        
+//        while(System.currentTimeMillis() - time < 30000){}
 
         log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
         
