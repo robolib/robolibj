@@ -28,7 +28,7 @@ import io.github.robolib.util.Timer;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Gyro extends AnalogInput implements PIDSource, LiveWindowSendable, 
+public class AnalogGyro extends AnalogInput implements PIDSource, LiveWindowSendable, 
         AngleSource, RateSource {
     
     public static final int OVERSAMPLE_BITS = 10;
@@ -50,7 +50,7 @@ public class Gyro extends AnalogInput implements PIDSource, LiveWindowSendable,
     private AccumulatorResult m_results;
     private PIDSourceType m_sType;
     
-    public Gyro(AnalogChannel channel){
+    public AnalogGyro(AnalogChannel channel){
         super(channel);
         m_results = new AccumulatorResult();
         m_VperDperS = DEF_VOLTAGE_PER_DEGREE;

@@ -13,13 +13,36 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.sensor;
+package io.github.robolib.util.mapper;
+
+import io.github.robolib.module.sensor.Counter;
+
+import org.json.JSONObject;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class EncoderBuilder {
+public class CounterMapper implements ModuleMapper<Counter> {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Counter createModule(String key, JSONObject data) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String[] getModuleIdentifiers() {
+        return new String[]{
+                "counter"
+        };
+    }
 
 }
