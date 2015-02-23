@@ -67,6 +67,8 @@ public final class RobotMap {
         registerModuleBuilder(new LimitedControllerMapper());
         registerModuleBuilder(new LimitSystemMapper());
         registerModuleBuilder(new DigitalIOMapper());
+        registerModuleBuilder(new EncoderMapper());
+        registerModuleBuilder(new CounterMapper());
     }
     
     private RobotMap(){}
@@ -129,7 +131,7 @@ public final class RobotMap {
     }
         
     protected static <T> T getModule(String key, JSONObject data){
-        ModuleMapper<?> builder = m_builderMap.get(data.getString("type"));
+        ModuleMapper<?> builder = m_builderMap.get(data.getString("type").toLowerCase());
         if(builder == null)
             throw new RuntimeException("Unknown Module builder for type '" + data.getString("type") + "'.");
         return (T) builder.createModule(key, data);
