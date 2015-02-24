@@ -68,12 +68,13 @@ public class RoboLibBot {
     public static final int MAJOR_VERSION = 2;
     
     /** The Constant MINOR_VERSION. */
-    public static final int MINOR_VERSION = 0;
+    public static final int MINOR_VERSION = 1;
     
     /** The Constant PATCH_VERSION. */
-    public static final int PATCH_VERSION = 3;
+    public static final int PATCH_VERSION = 0;
     
-    public static final String FRC_JAVA_VERSION = "2015 Java 1.1.0";
+    public static final String FRC_JAVA_VERSION = "RoboLibJ "
+            + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION;
     
     /** The Constant NETTABLE_CURRENT_MODE. */
     private static final String NETTABLE_CURRENT_MODE = "mode";
