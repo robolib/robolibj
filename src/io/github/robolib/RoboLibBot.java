@@ -64,13 +64,13 @@ import io.github.robolib.util.log.Logger;
  */
 public class RoboLibBot {
 
-    /** The Constant MAJOR_VERSION. */
+    /** RoboLibJ Major Version */
     public static final int MAJOR_VERSION = 2;
     
-    /** The Constant MINOR_VERSION. */
+    /** RoboLibJ Minor Version */
     public static final int MINOR_VERSION = 1;
     
-    /** The Constant PATCH_VERSION. */
+    /** RoboLibJ Patch Version */
     public static final int PATCH_VERSION = 2;
     
     public static final String FRC_JAVA_VERSION = "RoboLibJ "
