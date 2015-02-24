@@ -45,7 +45,8 @@ import io.github.robolib.util.log.Logger;
  * to be zeroed before use.
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Encoder extends CounterBase implements PIDSource, RateSource {
+public class Encoder extends CounterBase implements SensorModule,
+        PIDSource, RateSource {
     
     /**
      * The different types of indexing available
@@ -704,6 +705,24 @@ public class Encoder extends CounterBase implements PIDSource, RateSource {
      */
     public void setIndexSource(DigitalIO source){
         setIndexSource(source, IndexingType.RESET_EDGE_RISING);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

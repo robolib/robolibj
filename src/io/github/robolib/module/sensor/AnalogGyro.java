@@ -28,8 +28,8 @@ import io.github.robolib.util.Timer;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogGyro extends AnalogInput implements PIDSource, LiveWindowSendable, 
-        AngleSource, RateSource {
+public class AnalogGyro extends AnalogInput implements SensorModule, 
+        PIDSource, LiveWindowSendable, AngleSource, RateSource {
     
     public static final int OVERSAMPLE_BITS = 10;
     
@@ -195,6 +195,24 @@ public class AnalogGyro extends AnalogInput implements PIDSource, LiveWindowSend
         if (m_table != null) {
             m_table.putNumber("Value", getAngle());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
     }
     
 }

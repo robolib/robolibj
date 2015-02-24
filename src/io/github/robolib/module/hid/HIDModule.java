@@ -13,31 +13,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.sensor;
+package io.github.robolib.module.hid;
+
+import io.github.robolib.module.Module;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Ultrasonic implements SensorModule {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void enableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void disableModule() {
-        // TODO Auto-generated method stub
-        
-    }
+public interface HIDModule extends Module {
 
 }

@@ -29,8 +29,8 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class Solenoid extends SolenoidBase implements LiveWindowSendable, BooleanSink,
-        BooleanSource {
+public final class Solenoid extends SolenoidBase implements ActuatorModule,
+        LiveWindowSendable, BooleanSink, BooleanSource {
     
     private final ByteBuffer m_port;
     private final SolenoidChannel m_channel;
@@ -162,6 +162,33 @@ public final class Solenoid extends SolenoidBase implements LiveWindowSendable, 
     public void stopLiveWindowMode() {
         setState(false);
         m_table.removeTableListener(m_table_listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

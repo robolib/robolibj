@@ -13,31 +13,30 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.sensor;
+package io.github.robolib.module.actuator;
+
+import io.github.robolib.module.Module;
 
 /**
  * 
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Ultrasonic implements SensorModule {
+public interface ActuatorModule extends Module {
 
     /**
-     * {@inheritDoc}
+     * Make this actuator safe.
+     *  
+     * This should disable the module and keep it disabled.
+     * There should be no way to recover from a "safe" state.
+     * 
+     * This is here to allow for exceptions in function, to keep
+     * the code resetting (switching game mode) from affecting
+     * the state, in case an external sensor detects that the module
+     * will cause damage to itself or others (or even people)
+     * 
+     * To recover from this state, the code should need to be restarted.
      */
-    @Override
-    public void enableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void disableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
+    void makeSafe();
+    
 }

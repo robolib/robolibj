@@ -22,7 +22,7 @@ import io.github.robolib.module.iface.DigitalInput;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class LimitSwitch extends DigitalInput {
+public class LimitSwitch extends DigitalInput implements SensorModule {
     
     /**
      * The type of switch this is
@@ -85,5 +85,23 @@ public class LimitSwitch extends DigitalInput {
      */
     public SwitchType getType() {
         return m_type;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
     }
 }

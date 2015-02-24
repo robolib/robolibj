@@ -1,4 +1,4 @@
-package io.github.robolib.module.controller;
+package io.github.robolib.module.actuator;
 
 import static io.github.robolib.util.Utility.allocateInt;
 
@@ -16,6 +16,7 @@ import io.github.robolib.module.MotorSafety;
 import io.github.robolib.module.MotorSafetyHelper;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.PDP.PowerChannel;
+import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.nettable.ITable;
 import io.github.robolib.nettable.ITableListener;
 import io.github.robolib.util.Timer;
@@ -26,8 +27,8 @@ import io.github.robolib.util.log.Logger;
  *
  * @author Thomas Clark
  */
-public final class CANJaguar implements SpeedController, MotorSafety,
-        RateSource, LiveWindowSendable {
+public final class CANJaguar implements ActuatorModule, SpeedController,
+        MotorSafety, RateSource, LiveWindowSendable {
 
 
     public static final int kMaxMessageDataSize = 8;
@@ -2267,5 +2268,32 @@ public final class CANJaguar implements SpeedController, MotorSafety,
 //        set(0); // Stop for safety
 //        // TODO: Broken, should only remove the listener from "Value" only.
 //        m_table.removeTableListener(m_table_listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
     }
 }

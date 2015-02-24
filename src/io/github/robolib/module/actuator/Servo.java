@@ -25,7 +25,8 @@ import io.github.robolib.util.MathUtils;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Servo extends PWM implements AngleSink, AngleSource {
+public class Servo extends PWM implements ActuatorModule,
+        AngleSink, AngleSource {
     
     private static final double SERVO_MAX_ANGLE = 180.0;
     private static final double SERVO_MIN_ANGLE = 0.0;
@@ -96,5 +97,32 @@ public class Servo extends PWM implements AngleSink, AngleSource {
      */
     public final double getAngle() {
         return getPosition() * SERVO_ANGLE_RANGE + SERVO_MIN_ANGLE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
     }
 }

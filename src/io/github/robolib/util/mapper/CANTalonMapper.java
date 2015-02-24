@@ -15,8 +15,7 @@
 
 package io.github.robolib.util.mapper;
 
-import io.github.robolib.module.PDP.PowerChannel;
-import io.github.robolib.module.actuator.CANJaguar;
+import io.github.robolib.module.actuator.CANTalon;
 
 import org.json.JSONObject;
 
@@ -25,20 +24,15 @@ import org.json.JSONObject;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class CANJaguarMapper implements ModuleMapper<CANJaguar> {
+public class CANTalonMapper implements ModuleMapper<CANTalon> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public CANJaguar createModule(String key, JSONObject data) {
-        int channel = data.getInt("device_channel");
-        String description = data.getString("description");
-        int pChannel = data.getInt("power_channel");
-        
-        return new CANJaguar(
-                channel, description,
-                PowerChannel.values()[pChannel]);
+    public CANTalon createModule(String key, JSONObject data) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -47,10 +41,8 @@ public class CANJaguarMapper implements ModuleMapper<CANJaguar> {
     @Override
     public String[] getModuleIdentifiers() {
         return new String[]{
-                "canjaguar",
-                "can_jaguar",
-                "canjag",
-                "can_jag"
+                "cantalon",
+                "cantalonsrx"
         };
     }
 

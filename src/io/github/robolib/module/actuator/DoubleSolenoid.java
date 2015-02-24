@@ -27,7 +27,8 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class DoubleSolenoid extends SolenoidBase implements LiveWindowSendable {
+public final class DoubleSolenoid extends SolenoidBase
+        implements ActuatorModule, LiveWindowSendable {
     
     private final SolenoidChannel m_forwardChannel;
     private final SolenoidChannel m_reverseChannel;
@@ -183,6 +184,33 @@ public final class DoubleSolenoid extends SolenoidBase implements LiveWindowSend
     public void stopLiveWindowMode() {
         set(Value.OFF);
         m_table.removeTableListener(m_table_listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
     }
     
     

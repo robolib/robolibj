@@ -24,7 +24,7 @@ import java.util.Arrays;
  * @see Joystick
  */
 
-public abstract class GenericHID {
+public abstract class GenericHID implements HIDModule {
     
     /** The m_axes. */
     protected HIDAxis m_axes[];

@@ -168,14 +168,20 @@ public final class NetTableController extends GenericHID {
     }
 
     /**
-     * Get the direction of the vector formed by the joystick and its origin
-     * in radians
-     * 
-     * From WPILibJ package edu.wpi.first.wpilibj.Joystick
-     *
-     * @return The direction of the vector in radians
-     *//*
-    public double getDirectionRadians() {
-        return Math.atan2(getX(), getY());
-    }*/
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
 }

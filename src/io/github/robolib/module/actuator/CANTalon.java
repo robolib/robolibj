@@ -5,7 +5,7 @@
  * Do not make changes to this file unless you know what you are doing--modify
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
-package io.github.robolib.module.controller;
+package io.github.robolib.module.actuator;
 
 import io.github.robolib.SafetyManager;
 import io.github.robolib.identifier.PIDSink;
@@ -14,10 +14,12 @@ import io.github.robolib.jni.CanTalonSRX;
 import io.github.robolib.jni.SWIGTYPE_Adapter;
 import io.github.robolib.module.MotorSafety;
 import io.github.robolib.module.MotorSafetyHelper;
+import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.util.Timer;
 
 @SuppressWarnings("unused")
-public final class CANTalon implements MotorSafety, PIDSink, SpeedController {
+public final class CANTalon implements ActuatorModule, MotorSafety,
+        PIDSink, SpeedController {
 
     private MotorSafetyHelper m_safetyHelper;
     
@@ -890,5 +892,29 @@ public final class CANTalon implements MotorSafety, PIDSink, SpeedController {
     @Override
     public String getDescription() {
         return m_description;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
     }
 }

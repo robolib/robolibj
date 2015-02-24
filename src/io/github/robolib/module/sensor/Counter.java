@@ -33,7 +33,7 @@ import io.github.robolib.util.MathUtils;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Counter extends CounterBase implements PIDSource {
+public class Counter extends CounterBase implements SensorModule, PIDSource {
     
     /**
      * Modes for the counter to count in?
@@ -533,6 +533,24 @@ public class Counter extends CounterBase implements PIDSource {
         default:
             return 0.0;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
     }
     
 }

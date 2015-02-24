@@ -27,7 +27,7 @@ import io.github.robolib.nettable.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class ADXL345_SPI extends SPI implements ADXL345 {
+public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
 
     private AccelRange m_range;
     
@@ -126,6 +126,51 @@ public class ADXL345_SPI extends SPI implements ADXL345 {
      */
     @Override
     public void updateTable() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void startLiveWindowMode() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stopLiveWindowMode() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getSmartDashboardType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
         // TODO Auto-generated method stub
         
     }

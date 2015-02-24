@@ -24,7 +24,7 @@ import io.github.robolib.module.iface.AnalogInput;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Potentiometer extends AnalogInput implements AngleSource {
+public class Potentiometer extends AnalogInput implements SensorModule, AngleSource {
     
     /**
      * Instantiates a new potentiometer.
@@ -49,6 +49,24 @@ public class Potentiometer extends AnalogInput implements AngleSource {
     @Override
     public String getSmartDashboardType() {
         return "Potentiometer";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

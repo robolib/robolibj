@@ -13,41 +13,44 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.controller;
+package io.github.robolib.module.actuator;
 
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.module.PDP.PowerChannel;
+import io.github.robolib.module.controller.PWMController;
 
 /**
- * Texas Instruments / VEX Robotics Jaguar Speed Controller.
+ * VEX Robotics Victor 888 Speed Controller
+ * 
+ * The Vex Robotics Victor 884 Speed Controller can also be used with this
+ * class but may need to be calibrated per the Victor 884 user manual.
  * 
  * @author noriah Reuland <vix@noriah.dev>
- *
  */
-public final class Jaguar extends PWMController {
-
+public final class Victor extends PWMController implements ActuatorModule {
+    
     /**
-     * Instantiates a new Jaguar motor controller.
+     * Instantiates a new Victor motor controller.
      *
      * @param channel the pwm channel this controller operates on
      */
-    public Jaguar(PWMChannel channel) {
-        this(channel, "PWM Jaguar Ch" + channel.ordinal(), null);
+    public Victor(PWMChannel channel) {
+        this(channel, "PWM Victor Ch" + channel.ordinal(), null);
     }
     
     /**
-     * Instantiates a new Jaguar motor controller.
+     * Instantiates a new Victor motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.
      *
      * @param channel the pwm channel this controller operates on
      * @param desc the description of this motor controller
      */
-    public Jaguar(PWMChannel channel, String desc){
+    public Victor(PWMChannel channel, String desc){
         this(channel, desc, null);
     }
     
     /**
-     * Instantiates a new Jaguar motor controller.
+     * Instantiates a new Victor motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.
      * Giving a power channel will help with power logging. It will be shown as this
      * controllers power channel on power log outputs.
@@ -56,9 +59,45 @@ public final class Jaguar extends PWMController {
      * @param desc the description of this motor controller
      * @param pwChannel The PDP(Power Distribution Panel) Channel
      */
-    public Jaguar(PWMChannel channel, String desc, PowerChannel pwChannel){
-        super(channel, desc, pwChannel, 2.31, 1.55, 1.507, 1.454, 0.697, PeriodMultiplier.k1X);
-        UsageReporting.report(UsageReporting.ResourceType_Jaguar, channel.ordinal());
+    public Victor(PWMChannel channel, String desc, PowerChannel pwChannel){
+        super(channel, desc, pwChannel, 2.027, 1.525, 1.507, 1.49, 1.026, PeriodMultiplier.k2X);
+        UsageReporting.report(UsageReporting.ResourceType_Victor, channel.ordinal());
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void pidWrite(double output) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

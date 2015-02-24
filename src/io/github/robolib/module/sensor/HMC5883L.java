@@ -44,7 +44,7 @@ import io.github.robolib.util.Timer;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class HMC5883L extends I2C implements LiveWindowSendable {
+public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     
     /** Device I2C Address */
     public static final byte HMC_I2C_ADDR = (byte)0x1e;
@@ -652,4 +652,22 @@ public class HMC5883L extends I2C implements LiveWindowSendable {
      */
     @Override
     public void stopLiveWindowMode() {}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
 }
