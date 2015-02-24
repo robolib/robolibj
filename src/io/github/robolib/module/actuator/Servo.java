@@ -104,8 +104,7 @@ public class Servo extends PWM implements ActuatorModule,
      */
     @Override
     public void enableModule() {
-        // TODO Auto-generated method stub
-        
+        setDisabled(false);
     }
 
     /**
@@ -113,8 +112,8 @@ public class Servo extends PWM implements ActuatorModule,
      */
     @Override
     public void disableModule() {
-        // TODO Auto-generated method stub
-        
+        setRaw(PWM_DISABLED_WIDTH);
+        setDisabled(true);
     }
     
     /**
@@ -122,8 +121,7 @@ public class Servo extends PWM implements ActuatorModule,
      */
     @Override
     public boolean getModuleEnabled() {
-        // TODO Auto-generated method stub
-        return true;
+        return !getDisabled();
     }
 
     /**

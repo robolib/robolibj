@@ -157,8 +157,8 @@ public class PWMController extends PWM implements ControllerModule,
      */
     @Override
     public void enableModule() {
-        // TODO Auto-generated method stub
-        
+        setDisabled(false);
+        setSpeed(0.0);
     }
 
     /**
@@ -166,8 +166,8 @@ public class PWMController extends PWM implements ControllerModule,
      */
     @Override
     public void disableModule() {
-        // TODO Auto-generated method stub
-        
+        stopMotor();
+        setDisabled(true);
     }
 
     /**
@@ -175,8 +175,7 @@ public class PWMController extends PWM implements ControllerModule,
      */
     @Override
     public boolean getModuleEnabled() {
-        // TODO Auto-generated method stub
-        return true;
+        return !getDisabled();
     }
     
     /**
