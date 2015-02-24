@@ -205,6 +205,9 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     /** The full range bounds scaling factor. */
     private int m_scaleFactorFull;
     
+    /** The disabled status. */
+    private boolean m_disabled;
+    
     protected final String m_description;
 
     /** The The RoboRIO port identifier. */
@@ -350,6 +353,27 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     }
 
     /**
+     * Set the disabled state of the PWM.
+     * 
+     * Disabling the PWM will send the disabled with pulse,
+     * and stop all output.
+     * @param disabled true: yes
+     */
+    protected final void setDisabled(boolean disabled){
+        if(disabled) setRaw(PWM_DISABLED_WIDTH);
+        m_disabled = disabled;
+    }
+    
+    /**
+     * Get the disabled status of the PWM.
+     * 
+     * @return the disabled status of the PWM.
+     */
+    protected final boolean getDisabled(){
+        return m_disabled;
+    }
+    
+    /**
      * Set the bounds on pulse widths for this PWM.
      *
      * @param max The maximum PWM pulse in ms
@@ -398,6 +422,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @param angle the servo position
      */
     public void setPosition(double angle){
+        if(m_disabled) return;
         angle = MathUtils.clamp(angle, 0.0, 1.0);
         int raw;
         raw = (int) ((angle * m_scaleFactorFull) + m_boundsNegativeMin);
@@ -426,6 +451,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @param speed the new speed
      */
     public void setSpeed(double speed){
+        if(m_disabled) return;
         speed = MathUtils.clamp(speed, -1.0, 1.0);
 
         int raw;
@@ -467,7 +493,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      *
      * @param value Raw PWM value.  Range 0 - 255.
      */
-    public final void setRaw(int value) {
+    protected final void setRaw(int value) {
         IntBuffer status = allocateInt();
         PWMJNI.setPWM(m_port, (short) value, status);
         HALUtil.checkStatus(status);
@@ -481,6 +507,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      * @return Raw PWM control value.  Range: 0 - 255.
      */
     public final int getRaw() {
+//        if(m_disabled) return m_boundsCenter;
         IntBuffer status = allocateInt();
         int value = PWMJNI.getPWM(m_port, status);
         HALUtil.checkStatus(status);
