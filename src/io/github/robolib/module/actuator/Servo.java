@@ -116,6 +116,15 @@ public class Servo extends PWM implements ActuatorModule,
         // TODO Auto-generated method stub
         
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 
     /**
      * {@inheritDoc}
@@ -124,14 +133,5 @@ public class Servo extends PWM implements ActuatorModule,
     public void makeSafe() {
         // TODO Auto-generated method stub
         
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getModuleEnabled() {
-        // TODO Auto-generated method stub
-        return true;
     }
 }
