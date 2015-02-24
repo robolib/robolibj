@@ -41,6 +41,11 @@ public class HALUtil extends JNIWrapper {
 		return getHALstrerror(getHALErrno());
 	}
 
+	public static native void setRadioLED(char value, IntBuffer status);
+	public static native void setCommLED(char value, IntBuffer status);
+	public static native void setModeLED(char value, IntBuffer status);
+	public static native void setRSLLED(boolean value, IntBuffer status);
+
 	public static void checkStatus(IntBuffer status)
 	{
 		int s = status.get(0);
