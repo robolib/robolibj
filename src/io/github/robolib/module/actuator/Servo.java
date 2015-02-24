@@ -31,7 +31,7 @@ public class Servo extends PWM implements ActuatorModule,
     private static final double SERVO_MAX_ANGLE = 180.0;
     private static final double SERVO_MIN_ANGLE = 0.0;
     
-    private static final double SERVO_ANGLE_RANGE = SERVO_MAX_ANGLE - SERVO_MIN_ANGLE;
+    private static final double SERVO_ANGLE_RANGE = 180.0;
 
     protected static final double SERVO_PWM_DEFAULT_MAX = 2.4;
     protected static final double SERVO_PWM_DEFAULT_MIN = 0.6;
@@ -95,7 +95,7 @@ public class Servo extends PWM implements ActuatorModule,
      * Assume that the servo angle is linear with respect to the PWM value (big assumption, need to test).
      * @return The angle in degrees to which the servo is set.
      */
-    public final double getAngle() {
+    public final double getAngle(){
         return getPosition() * SERVO_ANGLE_RANGE + SERVO_MIN_ANGLE;
     }
 
@@ -103,7 +103,7 @@ public class Servo extends PWM implements ActuatorModule,
      * {@inheritDoc}
      */
     @Override
-    public void enableModule() {
+    public void enableModule(){
         m_disabled = false;
     }
 
@@ -111,8 +111,5 @@ public class Servo extends PWM implements ActuatorModule,
      * {@inheritDoc}
      */
     @Override
-    public void makeSafe() {
-        // TODO Auto-generated method stub
-        
-    }
+    public void makeSafe(){}
 }
