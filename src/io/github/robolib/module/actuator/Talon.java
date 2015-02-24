@@ -24,7 +24,7 @@ import io.github.robolib.module.controller.PWMController;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class Talon extends PWMController implements ActuatorModule {
+public final class Talon extends PWMController {
     
     /**
      * Instantiates a new Talon motor controller.
@@ -60,41 +60,4 @@ public final class Talon extends PWMController implements ActuatorModule {
         super(channel, desc, pwChannel, 2.037, 1.539, 1.513, 1.487, 0.989, PeriodMultiplier.k1X);
         UsageReporting.report(UsageReporting.ResourceType_Talon, channel.ordinal());
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void enableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void disableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void makeSafe() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getModuleEnabled() {
-        // TODO Auto-generated method stub
-        return true;
-    }
-
 }

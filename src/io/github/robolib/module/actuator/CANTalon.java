@@ -14,12 +14,13 @@ import io.github.robolib.jni.CanTalonSRX;
 import io.github.robolib.jni.SWIGTYPE_Adapter;
 import io.github.robolib.module.MotorSafety;
 import io.github.robolib.module.MotorSafetyHelper;
+import io.github.robolib.module.controller.ControllerModule;
 import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.util.Timer;
 
 @SuppressWarnings("unused")
-public final class CANTalon implements ActuatorModule, MotorSafety,
-        PIDSink, SpeedController {
+public final class CANTalon implements ActuatorModule, ControllerModule,
+        MotorSafety, PIDSink, SpeedController {
 
     private MotorSafetyHelper m_safetyHelper;
     

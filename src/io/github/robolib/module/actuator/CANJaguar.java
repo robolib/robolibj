@@ -16,6 +16,7 @@ import io.github.robolib.module.MotorSafety;
 import io.github.robolib.module.MotorSafetyHelper;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.PDP.PowerChannel;
+import io.github.robolib.module.controller.ControllerModule;
 import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.nettable.ITable;
 import io.github.robolib.nettable.ITableListener;
@@ -27,8 +28,8 @@ import io.github.robolib.util.log.Logger;
  *
  * @author Thomas Clark
  */
-public final class CANJaguar implements ActuatorModule, SpeedController,
-        MotorSafety, RateSource, LiveWindowSendable {
+public final class CANJaguar implements ActuatorModule, ControllerModule,
+        SpeedController, MotorSafety, RateSource, LiveWindowSendable {
 
 
     public static final int kMaxMessageDataSize = 8;

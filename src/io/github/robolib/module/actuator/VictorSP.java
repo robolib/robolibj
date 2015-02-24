@@ -25,7 +25,7 @@ import io.github.robolib.module.controller.PWMController;
  * @author noriah Reuland <vix@noriah.dev>
  *
  */
-public final class VictorSP extends PWMController implements ActuatorModule {
+public final class VictorSP extends PWMController {
     
     /**
      * Instantiates a new VictorSP motor controller.
@@ -61,41 +61,4 @@ public final class VictorSP extends PWMController implements ActuatorModule {
         super(channel, desc, pwChannel, 2.004, 1.52, 1.50, 1.48, 0.997, PeriodMultiplier.k1X);
         UsageReporting.report(UsageReporting.ResourceType_Talon, channel.ordinal());
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void enableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void disableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void makeSafe() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getModuleEnabled() {
-        // TODO Auto-generated method stub
-        return true;
-    }
-
 }

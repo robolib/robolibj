@@ -20,13 +20,15 @@ import io.github.robolib.module.MotorSafety;
 import io.github.robolib.module.MotorSafetyHelper;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.PDP.PowerChannel;
+import io.github.robolib.module.actuator.ActuatorModule;
 import io.github.robolib.module.iface.PWM;
 
 /**
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWMController extends PWM implements SpeedController, MotorSafety {
+public class PWMController extends PWM implements ControllerModule,
+        ActuatorModule, SpeedController, MotorSafety {
     
     protected final MotorSafetyHelper m_safetyHelper;
     
@@ -148,5 +150,41 @@ public class PWMController extends PWM implements SpeedController, MotorSafety {
     @Override
     public final String getDescription() {
         return m_description;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
     }
 }
