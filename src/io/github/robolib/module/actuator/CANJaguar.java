@@ -2276,8 +2276,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      */
     @Override
     public void enableModule() {
-        // TODO Auto-generated method stub
-        
+        enableControl();
     }
 
     /**
@@ -2285,17 +2284,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      */
     @Override
     public void disableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void makeSafe() {
-        // TODO Auto-generated method stub
-        
+        disableControl();
     }
 
     /**
@@ -2303,7 +2292,14 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      */
     @Override
     public boolean getModuleEnabled() {
-        // TODO Auto-generated method stub
-        return true;
+        return m_controlEnabled;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        
     }
 }

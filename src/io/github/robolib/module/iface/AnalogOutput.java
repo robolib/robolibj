@@ -23,6 +23,7 @@ import io.github.robolib.identifier.LiveWindowSendable;
 import io.github.robolib.identifier.NumberSink;
 import io.github.robolib.jni.AnalogJNI;
 import io.github.robolib.jni.HALUtil;
+import io.github.robolib.module.Module;
 import io.github.robolib.nettable.ITable;
 
 /**
@@ -30,9 +31,12 @@ import io.github.robolib.nettable.ITable;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class AnalogOutput extends AnalogIO implements LiveWindowSendable, NumberSink {
+public class AnalogOutput extends AnalogIO implements Module,
+        LiveWindowSendable, NumberSink {
     
     private ITable m_table;
+    
+    private boolean m_disabled;
     
     /**
      * Construct an analog output on a specified AnalogChannel
@@ -53,6 +57,7 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Number
     }
     
     public void setVoltage(double voltage){
+        if(m_disabled) return;
         IntBuffer status = allocateInt();
         AnalogJNI.setAnalogOutput(m_port, voltage, status);
         HALUtil.checkStatus(status);
@@ -63,6 +68,7 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Number
     }
     
     public double getVoltage(){
+        if(m_disabled) return 0.0D;
         IntBuffer status = allocateInt();
         double value = AnalogJNI.getAnalogOutput(m_port, status);
         HALUtil.checkStatus(status);
@@ -121,9 +127,30 @@ public class AnalogOutput extends AnalogIO implements LiveWindowSendable, Number
     @Override
     public void stopLiveWindowMode() {
     }
-    
-    
-    
-    
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        m_disabled = false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        setVoltage(0.0);
+        m_disabled = true;
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        return !m_disabled;
+    }
 }

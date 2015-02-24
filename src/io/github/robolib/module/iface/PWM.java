@@ -27,6 +27,7 @@ import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.PWMJNI;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
+import io.github.robolib.module.Module;
 import io.github.robolib.nettable.ITable;
 import io.github.robolib.nettable.ITableListener;
 import io.github.robolib.util.MathUtils;
@@ -37,7 +38,8 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class PWM extends Interface implements LiveWindowSendable, NumberSink {
+public class PWM extends Interface implements Module,
+        LiveWindowSendable, NumberSink {
 
     /**
      * The PWM Channel enum.
@@ -206,7 +208,7 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     private int m_scaleFactorFull;
     
     /** The disabled status. */
-    private boolean m_disabled;
+    protected boolean m_disabled;
     
     protected final String m_description;
 
@@ -350,27 +352,6 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
      */
     public final String getChannelName(){
         return m_channel.name();
-    }
-
-    /**
-     * Set the disabled state of the PWM.
-     * 
-     * Disabling the PWM will send the disabled with pulse,
-     * and stop all output.
-     * @param disabled true: yes
-     */
-    protected final void setDisabled(boolean disabled){
-        if(disabled) setRaw(PWM_DISABLED_WIDTH);
-        m_disabled = disabled;
-    }
-    
-    /**
-     * Get the disabled status of the PWM.
-     * 
-     * @return the disabled status of the PWM.
-     */
-    protected final boolean getDisabled(){
-        return m_disabled;
     }
     
     /**
@@ -622,5 +603,31 @@ public class PWM extends Interface implements LiveWindowSendable, NumberSink {
     public final void stopLiveWindowMode() {
         setSpeed(0);
         m_table.removeTableListener(m_table_listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        m_disabled = false;
+        setRaw(m_boundsCenter);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        setRaw(PWM_DISABLED_WIDTH);
+        m_disabled = true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        return !m_disabled;
     }
 }

@@ -151,39 +151,12 @@ public class PWMController extends PWM implements ControllerModule,
     public final String getDescription() {
         return m_description;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void enableModule() {
-        setDisabled(false);
-        setSpeed(0.0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void disableModule() {
-        stopMotor();
-        setDisabled(true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getModuleEnabled() {
-        return !getDisabled();
-    }
     
     /**
      * {@inheritDoc}
      */
     @Override
     public void makeSafe() {
-        // TODO Auto-generated method stub
         
     }
 }

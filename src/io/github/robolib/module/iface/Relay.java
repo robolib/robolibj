@@ -25,6 +25,7 @@ import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.RelayJNI;
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
+import io.github.robolib.module.Module;
 import io.github.robolib.util.log.Logger;
 
 
@@ -40,7 +41,7 @@ import io.github.robolib.util.log.Logger;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class Relay extends Interface {
+public final class Relay extends Interface implements Module {
     
     /**
      * Enum representation of Relay channels on the RIO
@@ -96,6 +97,9 @@ public final class Relay extends Interface {
     
     /** The Direction this Relay is allowed to operate in */
     private RelayDirection m_direction;
+    
+    /** The disabled state. */
+    private boolean m_disabled;
     
     /** Keep track of already used channels. */
     private static final boolean USED_CHANNELS[] = new boolean[MAX_RELAY_CHANNELS];
@@ -163,6 +167,8 @@ public final class Relay extends Interface {
         HALUtil.checkStatus(status);
     }
     
+    
+    
     /**
      * 
      * @param value
@@ -187,6 +193,7 @@ public final class Relay extends Interface {
      * @param value The state to set the relay.
      */
     public void set(RelayValue value){
+        if(m_disabled) return;
         IntBuffer status = allocateInt();
         switch(value){
         case OFF:
@@ -228,6 +235,7 @@ public final class Relay extends Interface {
      * @return The current state of the relay as a {@link RelayValue}
      */
     public RelayValue get(){
+        if(m_disabled) return RelayValue.OFF;
         IntBuffer status = allocateInt();
         int forward = RelayJNI.getRelayForward(m_port, status);
         int reverse = RelayJNI.getRelayReverse(m_port, status) << 1;
@@ -274,6 +282,32 @@ public final class Relay extends Interface {
      */
     public String getChannelName(){
         return m_channel.name();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        m_disabled = false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        set(RelayValue.OFF);
+        m_disabled = true;
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        return !m_disabled;
     }
 
 }
