@@ -29,5 +29,7 @@
 #.classpath
 #.project
 
+.settings/org.eclipse.jdt.ui.prefs
+
 /bin/
 /bin/
