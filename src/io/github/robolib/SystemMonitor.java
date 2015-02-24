@@ -23,6 +23,7 @@ import io.github.robolib.util.log.Logger;
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
+@SuppressWarnings("unused")
 public final class SystemMonitor implements Runnable {
     
     private static double m_voltWarn;

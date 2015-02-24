@@ -51,7 +51,7 @@ public final class Scheduler implements NamedSendable {
     private static boolean m_disabled = false;
     
     /** The m_running commands changed. */
-    private static boolean m_runningCommandsChanged;
+//    private static boolean m_runningCommandsChanged;
     
     /** The m_disabled counter. */
     private static byte m_disabledCounter = 0;
@@ -169,7 +169,7 @@ public final class Scheduler implements NamedSendable {
 
             m_adding = false;
             
-            m_runningCommandsChanged = true;
+//            m_runningCommandsChanged = true;
             command.startRunning();
         }
     }
@@ -190,7 +190,7 @@ public final class Scheduler implements NamedSendable {
         }
         
         m_running = true;
-        m_runningCommandsChanged = false;
+//        m_runningCommandsChanged = false;
         
         if(m_disabled){
             if(++m_disabledCounter >= 32){
@@ -245,7 +245,7 @@ public final class Scheduler implements NamedSendable {
                     cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
                     cmd.removed();
 
-                    m_runningCommandsChanged = true;
+//                    m_runningCommandsChanged = true;
                 }
             }
 //        }

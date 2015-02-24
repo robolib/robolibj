@@ -24520,7 +24520,7 @@ public class NIVision {
             int count = rv_buf.getInt(0);
             videoModeArray = new IMAQdxEnumItem[count];
             for (int i=0, off=0; i<count; i++, off += 520) {
-                videoModeArray[i] = new IMAQdxEnumItem(videoModeArray_buf, off);
+                videoModeArray[i] = new IMAQdxEnumItem(this.videoModeArray_buf, off);
                 videoModeArray[i].read();
             }
             currentMode = rv_buf.getInt(8);
