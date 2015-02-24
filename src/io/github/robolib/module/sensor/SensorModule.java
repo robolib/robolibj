@@ -15,29 +15,13 @@
 
 package io.github.robolib.module.sensor;
 
+import io.github.robolib.module.Module;
+
 /**
  * 
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class Ultrasonic implements SensorModule {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void enableModule() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void disableModule() {
-        // TODO Auto-generated method stub
-        
-    }
+public interface SensorModule extends Module {
 
 }

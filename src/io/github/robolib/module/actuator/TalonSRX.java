@@ -13,40 +13,41 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.controller;
+package io.github.robolib.module.actuator;
 
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.module.PDP.PowerChannel;
+import io.github.robolib.module.controller.PWMController;
 
 /**
- * Cross the Road Electronics (CTRE) Talon and Talon SR Speed Controller
- *
+ * Cross the Road Electronics (CTRE) Talon SRX Speed Controller with PWM control
+ * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public final class Talon extends PWMController {
-    
+public final class TalonSRX extends PWMController implements ActuatorModule {
+
     /**
-     * Instantiates a new Talon motor controller.
+     * Instantiates a new TalonSRX motor controller.
      *
      * @param channel the pwm channel this controller operates on
      */
-    public Talon(PWMChannel channel) {
-        this(channel, "PWM Talon Ch" + channel.ordinal(), null);
+    public TalonSRX(PWMChannel channel) {
+        this(channel, "PWM TalonSRX Ch" + channel.ordinal(), null);
     }
     
     /**
-     * Instantiates a new Talon motor controller.
+     * Instantiates a new TalonSRX motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.
      *
      * @param channel the pwm channel this controller operates on
      * @param desc the description of this motor controller
      */
-    public Talon(PWMChannel channel, String desc){
+    public TalonSRX(PWMChannel channel, String desc){
         this(channel, desc, null);
     }
     
     /**
-     * Instantiates a new Talon motor controller.
+     * Instantiates a new TalonSRX motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.
      * Giving a power channel will help with power logging. It will be shown as this
      * controllers power channel on power log outputs.
@@ -55,9 +56,45 @@ public final class Talon extends PWMController {
      * @param desc the description of this motor controller
      * @param pwChannel The PDP(Power Distribution Panel) Channel
      */
-    public Talon(PWMChannel channel, String desc, PowerChannel pwChannel){
-        super(channel, desc, pwChannel, 2.037, 1.539, 1.513, 1.487, 0.989, PeriodMultiplier.k1X);
+    public TalonSRX(PWMChannel channel, String desc, PowerChannel pwChannel){
+        super(channel, desc, pwChannel, 2.004, 1.52, 1.50, 1.48, 0.997, PeriodMultiplier.k1X);
         UsageReporting.report(UsageReporting.ResourceType_Talon, channel.ordinal());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void pidWrite(double output) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
+    }
+    
 }

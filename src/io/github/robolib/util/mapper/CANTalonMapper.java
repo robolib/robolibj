@@ -13,31 +13,37 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.sensor;
+package io.github.robolib.util.mapper;
+
+import io.github.robolib.module.actuator.CANTalon;
+
+import org.json.JSONObject;
 
 /**
  * 
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public class Ultrasonic implements SensorModule {
+public class CANTalonMapper implements ModuleMapper<CANTalon> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void enableModule() {
+    public CANTalon createModule(String key, JSONObject data) {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void disableModule() {
-        // TODO Auto-generated method stub
-        
+    public String[] getModuleIdentifiers() {
+        return new String[]{
+                "cantalon",
+                "cantalonsrx"
+        };
     }
 
 }

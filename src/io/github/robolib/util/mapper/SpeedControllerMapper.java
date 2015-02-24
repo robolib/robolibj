@@ -20,11 +20,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.github.robolib.module.PDP.PowerChannel;
-import io.github.robolib.module.controller.Jaguar;
+import io.github.robolib.module.actuator.Jaguar;
+import io.github.robolib.module.actuator.Talon;
+import io.github.robolib.module.actuator.TalonSRX;
+import io.github.robolib.module.actuator.Victor;
 import io.github.robolib.module.controller.SpeedController;
-import io.github.robolib.module.controller.Talon;
-import io.github.robolib.module.controller.TalonSRX;
-import io.github.robolib.module.controller.Victor;
 import io.github.robolib.module.iface.PWM.PWMChannel;
 import io.github.robolib.util.log.Logger;
 

@@ -16,7 +16,7 @@
 package io.github.robolib.util.mapper;
 
 import io.github.robolib.module.PDP.PowerChannel;
-import io.github.robolib.module.controller.CANJaguar;
+import io.github.robolib.module.actuator.CANJaguar;
 
 import org.json.JSONObject;
 

@@ -69,6 +69,7 @@ public final class RobotMap {
         registerModuleBuilder(new DigitalIOMapper());
         registerModuleBuilder(new EncoderMapper());
         registerModuleBuilder(new CounterMapper());
+        registerModuleBuilder(new CANTalonMapper());
     }
     
     private RobotMap(){}

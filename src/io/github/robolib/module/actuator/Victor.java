@@ -13,10 +13,11 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module.controller;
+package io.github.robolib.module.actuator;
 
 import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.module.PDP.PowerChannel;
+import io.github.robolib.module.controller.PWMController;
 
 /**
  * VEX Robotics Victor 888 Speed Controller
@@ -26,7 +27,7 @@ import io.github.robolib.module.PDP.PowerChannel;
  * 
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public final class Victor extends PWMController {
+public final class Victor extends PWMController implements ActuatorModule {
     
     /**
      * Instantiates a new Victor motor controller.
@@ -61,6 +62,42 @@ public final class Victor extends PWMController {
     public Victor(PWMChannel channel, String desc, PowerChannel pwChannel){
         super(channel, desc, pwChannel, 2.027, 1.525, 1.507, 1.49, 1.026, PeriodMultiplier.k2X);
         UsageReporting.report(UsageReporting.ResourceType_Victor, channel.ordinal());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void pidWrite(double output) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

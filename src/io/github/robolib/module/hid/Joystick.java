@@ -412,4 +412,22 @@ public class Joystick extends GenericHID {
         NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }
