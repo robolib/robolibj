@@ -430,4 +430,13 @@ public class Joystick extends GenericHID {
         
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
 }

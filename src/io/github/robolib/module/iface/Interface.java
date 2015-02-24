@@ -15,9 +15,6 @@
 
 package io.github.robolib.module.iface;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.log.Logger;
 
@@ -117,8 +114,7 @@ public abstract class Interface {
     protected final InterfaceType m_ifaceType;
 
     /** Keep a mapping of MXP pins to InterfaceTypes. */
-    private static final Map<Integer, InterfaceType> MXP_MAP =
-            new HashMap<Integer, InterfaceType>();
+    private static final InterfaceType[] m_mxpArr = new InterfaceType[34];
 
     /**
      * Instantiates a new interface.
@@ -136,10 +132,10 @@ public abstract class Interface {
      */
     protected final void allocateMXPPin(int pin){
         if(pin > 0){
-            if(MXP_MAP.containsKey(pin)){
-                throw new ResourceAllocationException("MXP pin '" + pin + "' already allocated as '" + MXP_MAP.get(pin).name() + "'.");
+            if(m_mxpArr[pin] != null){
+                throw new ResourceAllocationException("MXP pin '" + pin + "' already allocated as '" + m_mxpArr[pin].name() + "'.");
             }else{
-                MXP_MAP.put(pin, m_ifaceType);
+                m_mxpArr[pin] = m_ifaceType;
             }
         }
     }
@@ -151,12 +147,12 @@ public abstract class Interface {
      */
     protected final void freeMXPPin(int pin){
         if(pin > 0){
-            if(MXP_MAP.containsKey(pin)){
-                if(MXP_MAP.get(pin).equals(m_ifaceType)){
-                    MXP_MAP.remove(pin);
+            if(m_mxpArr[pin] != null){
+                if(m_mxpArr[pin] == m_ifaceType){
+                    m_mxpArr[pin] = null;
                 }else{
-                    Logger.get(Interface.class).warn("Attempt to release MXP pin '" + pin + "' (" + MXP_MAP.get(pin).name() + ")  failed. Type");
-                    Logger.get(Interface.class).warn("Allocated Type: " + MXP_MAP.get(pin).name() + ", Releasing type: " + m_ifaceType.name() + ".");
+                    Logger.get(Interface.class).warn("Attempt to release MXP pin '" + pin + "' (" + m_mxpArr[pin].name() + ")  failed. Type");
+                    Logger.get(Interface.class).warn("Allocated Type: " + m_mxpArr[pin].name() + ", Releasing type: " + m_ifaceType.name() + ".");
                 }
             }else{
                 Logger.get(Interface.class).warn("MXP pin '" + pin + "' Was not allocated. Should have been type: '" + m_ifaceType.name() + "'.");

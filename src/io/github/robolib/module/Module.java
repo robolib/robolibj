@@ -22,8 +22,16 @@ package io.github.robolib.module;
  */
 public interface Module {
     
+    /**
+     * Enable the module
+     */
     void enableModule();
     
+    /**
+     * Disable the module
+     */
     void disableModule();
+    
+    boolean getModuleEnabled();
 
 }

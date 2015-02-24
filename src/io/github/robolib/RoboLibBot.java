@@ -71,7 +71,7 @@ public class RoboLibBot {
     public static final int MINOR_VERSION = 1;
     
     /** The Constant PATCH_VERSION. */
-    public static final int PATCH_VERSION = 0;
+    public static final int PATCH_VERSION = 1;
     
     public static final String FRC_JAVA_VERSION = "RoboLibJ "
             + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION;

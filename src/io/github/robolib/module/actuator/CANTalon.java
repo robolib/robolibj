@@ -917,4 +917,12 @@ public final class CANTalon implements ActuatorModule, MotorSafety,
         // TODO Auto-generated method stub
         
     }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

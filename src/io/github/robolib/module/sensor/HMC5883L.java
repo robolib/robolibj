@@ -670,4 +670,13 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         // TODO Auto-generated method stub
         
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

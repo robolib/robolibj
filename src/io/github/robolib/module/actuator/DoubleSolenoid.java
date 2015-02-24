@@ -212,6 +212,15 @@ public final class DoubleSolenoid extends SolenoidBase
         // TODO Auto-generated method stub
         
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
     
     
     
