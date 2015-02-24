@@ -137,4 +137,13 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
         // TODO Auto-generated method stub
         
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

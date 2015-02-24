@@ -566,4 +566,13 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 noriah <vix@noriah.dev>.
+\ * Copyright (c) 2015 noriah <vix@noriah.dev>.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -189,6 +189,15 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
     public void makeSafe() {
         // TODO Auto-generated method stub
         
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
     }
 
 }

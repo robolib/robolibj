@@ -184,4 +184,13 @@ public final class NetTableController extends GenericHID {
         // TODO Auto-generated method stub
         
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

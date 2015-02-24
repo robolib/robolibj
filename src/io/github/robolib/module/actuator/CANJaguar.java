@@ -1,6 +1,6 @@
 package io.github.robolib.module.actuator;
 
-import static io.github.robolib.util.Utility.allocateInt;
+import static io.github.robolib.util.Common.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -2295,5 +2295,14 @@ public final class CANJaguar implements ActuatorModule, SpeedController,
     public void makeSafe() {
         // TODO Auto-generated method stub
         
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
     }
 }

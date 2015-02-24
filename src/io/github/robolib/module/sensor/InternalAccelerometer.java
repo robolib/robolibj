@@ -24,7 +24,8 @@ import io.github.robolib.nettable.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class InternalAccelerometer implements SensorModule, IAccelerometer, LiveWindowSendable {
+public final class InternalAccelerometer implements SensorModule,
+        IAccelerometer, LiveWindowSendable {
 
     
     /** The m_table. */
@@ -162,5 +163,14 @@ public final class InternalAccelerometer implements SensorModule, IAccelerometer
     public void disableModule() {
         // TODO Auto-generated method stub
         
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
     }
 }

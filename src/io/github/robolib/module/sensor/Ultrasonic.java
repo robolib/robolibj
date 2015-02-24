@@ -40,4 +40,13 @@ public class Ultrasonic implements SensorModule {
         
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
 }

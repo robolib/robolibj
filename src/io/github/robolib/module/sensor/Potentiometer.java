@@ -69,4 +69,13 @@ public class Potentiometer extends AnalogInput implements SensorModule, AngleSou
         
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
 }

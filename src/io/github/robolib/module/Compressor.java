@@ -15,7 +15,7 @@
 
 package io.github.robolib.module;
 
-import static io.github.robolib.util.Utility.allocateInt;
+import static io.github.robolib.util.Common.allocateInt;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -31,7 +31,7 @@ import io.github.robolib.util.StringUtils;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public final class Compressor implements UpdatingSendable {
+public final class Compressor implements Module, UpdatingSendable {
     
     /** The m_table. */
     private ITable m_table;
@@ -227,5 +227,31 @@ public final class Compressor implements UpdatingSendable {
     @Override
     public String getSmartDashboardType() {
         return "Compressor";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        enableCompressor(true);
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        enableCompressor(false);
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        return getCompressorEnabled();
     }
 }

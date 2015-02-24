@@ -28,7 +28,7 @@ import io.github.robolib.nettable.ITable;
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class Utility {
+public class Common {
     
     
     public static String getTeamNumber(){

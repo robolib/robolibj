@@ -84,7 +84,7 @@ public final class VictorSP extends PWMController implements ActuatorModule {
      * {@inheritDoc}
      */
     @Override
-    public void pidWrite(double output) {
+    public void makeSafe() {
         // TODO Auto-generated method stub
         
     }
@@ -93,9 +93,9 @@ public final class VictorSP extends PWMController implements ActuatorModule {
      * {@inheritDoc}
      */
     @Override
-    public void makeSafe() {
+    public boolean getModuleEnabled() {
         // TODO Auto-generated method stub
-        
+        return true;
     }
 
 }

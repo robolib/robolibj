@@ -104,4 +104,13 @@ public class LimitSwitch extends DigitalInput implements SensorModule {
         // TODO Auto-generated method stub
         
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getModuleEnabled() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

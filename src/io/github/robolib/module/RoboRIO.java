@@ -15,7 +15,7 @@
 
 package io.github.robolib.module;
 
-import static io.github.robolib.util.Utility.allocateInt;
+import static io.github.robolib.util.Common.allocateInt;
 
 import java.nio.IntBuffer;
 
