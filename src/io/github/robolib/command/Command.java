@@ -317,7 +317,7 @@ public abstract class Command implements NamedSendable {
      * @return the requirements
      */
     List<Subsystem> getRequirements(){
-        synchronized(m_requirements){
+        synchronized(this){
             return m_requirements == null ?
                     m_requirements = new ArrayList<Subsystem>(1) : m_requirements;
         }
