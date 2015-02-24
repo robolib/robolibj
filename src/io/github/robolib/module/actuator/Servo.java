@@ -104,24 +104,7 @@ public class Servo extends PWM implements ActuatorModule,
      */
     @Override
     public void enableModule() {
-        setDisabled(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void disableModule() {
-        setRaw(PWM_DISABLED_WIDTH);
-        setDisabled(true);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getModuleEnabled() {
-        return !getDisabled();
+        m_disabled = false;
     }
 
     /**
