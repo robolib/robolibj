@@ -13,13 +13,14 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.module;
+package io.github.robolib.module.actuator;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 import io.github.robolib.SafetyManager;
-import io.github.robolib.module.actuator.Victor;
+import io.github.robolib.module.MotorSafety;
+import io.github.robolib.module.MotorSafetyHelper;
 import io.github.robolib.module.controller.NullController;
 import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.module.iface.PWM.PWMChannel;
@@ -29,7 +30,7 @@ import io.github.robolib.util.MathUtils;
  * 
  * @author noriah Reuland <vix@noriah.dev>
  */
-public class DriveBase implements MotorSafety {
+public class DriveBase implements ActuatorModule, MotorSafety {
     
     /**
      * Enum representation of each motor
@@ -114,8 +115,8 @@ public class DriveBase implements MotorSafety {
         m_rearLeftMotor = rearLeft;
         m_rearRightMotor = rearRight;
         
-        m_frontLeftMotor.setInverted(true);
-        m_rearLeftMotor.setInverted(true);
+//        m_frontLeftMotor.setInverted(true);
+//        m_rearLeftMotor.setInverted(true);
         
         m_wheelSpeeds = new double[4];
 
@@ -148,11 +149,11 @@ public class DriveBase implements MotorSafety {
         case FRONT_LEFT:
             m_frontLeftMotor.setInverted(inverted);
         case FRONT_RIGHT:
-            m_frontRightMotor.setInverted(false & inverted);
+            m_frontRightMotor.setInverted(inverted);
         case REAR_LEFT:
             m_rearLeftMotor.setInverted(inverted);
         case REAR_RIGHT:
-            m_rearRightMotor.setInverted(false & inverted);
+            m_rearRightMotor.setInverted(inverted);
         }
     }
     
@@ -536,6 +537,33 @@ public class DriveBase implements MotorSafety {
     @Override
     public String getDescription() {
         return "Robot DriveBase";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeSafe() {
+        // TODO Auto-generated method stub
+        
     }
 
 }
