@@ -42,11 +42,6 @@ import io.github.robolib.util.log.ILogger;
 import io.github.robolib.util.log.Logger;
 
 /**
- * A better version of the WPILib IterativeRobot class.
- * It replaces RobotBase and handles much of the robots functions.
- * It also handles any compressor the robot may have, Loading the
- * robot and sending NetworkTable values about the current state.
- * 
  * This Class handles switching of Game Modes better than the default
  * IterativeRobot. It has a more complex program flow, however it runs faster
  * and uses less memory.
@@ -62,25 +57,19 @@ import io.github.robolib.util.log.Logger;
  * @author noriah Reuland <vix@noriah.dev>
  * @since 0.1.0
  */
-public class RoboLibBot {
+public class RoboLib {
 
     /** RoboLibJ Major Version */
-    public static final int MAJOR_VERSION = 2;
+    public static final int MAJOR_VERSION = 3;
     
     /** RoboLibJ Minor Version */
-    public static final int MINOR_VERSION = 1;
+    public static final int MINOR_VERSION = 0;
     
     /** RoboLibJ Patch Version */
-    public static final int PATCH_VERSION = 2;
+    public static final int PATCH_VERSION = 0;
     
-    public static final String FRC_JAVA_VERSION = "RoboLibJ "
+    public static final String FRC_JAVA_VERSION = "RoboLibJ v"
             + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION;
-    
-    /** The Constant NETTABLE_CURRENT_MODE. */
-    private static final String NETTABLE_CURRENT_MODE = "mode";
-    
-    /** The Constant NETTABLE_CURRENT_MODE_STRING. */
-    private static final String NETTABLE_CURRENT_MODE_STRING = "mode-string";
     
     /** The m_current mode. */
     private static GameMode m_currentMode = GameMode.NONE;
@@ -114,7 +103,7 @@ public class RoboLibBot {
     /**
      * Robot Class Method.
      */
-    protected RoboLibBot(){
+    protected RoboLib(){
         this("RoboLibBot", "1.0.0");
     }
 
@@ -123,7 +112,7 @@ public class RoboLibBot {
      *
      * @param name Name of the Robot
      */
-    protected RoboLibBot(String name){
+    protected RoboLib(String name){
         this(name, "1.0.0");
     }
     
@@ -133,7 +122,7 @@ public class RoboLibBot {
      * @param name Name of the Robot
      * @param version Version number of the robot code
      */
-    protected RoboLibBot(String name, String version){
+    protected RoboLib(String name, String version){
         m_name = name;
         m_version = version;
         m_log = Logger.get(this.getClass());
@@ -275,13 +264,13 @@ public class RoboLibBot {
         
 //        Thread.currentThread().setPriority(9);
         NetworkCommunications.NetworkCommunicationReserve();
-        ILogger log = Logger.get(RoboLibBot.class, "Framework");
+        ILogger log = Logger.get(RoboLib.class, "Framework");
         
 //        long time = System.currentTimeMillis();
         
 //        while(System.currentTimeMillis() - time < 30000){}
 
-        log.info("RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION);
+        log.info(FRC_JAVA_VERSION);
         
         log.info("Initializing Network Tables");
         
@@ -310,7 +299,7 @@ public class RoboLibBot {
         
         
         String robotName = "";
-        InputStream is = RoboLibBot.class.getResourceAsStream("/META-INF/MANIFEST.MF");
+        InputStream is = RoboLib.class.getResourceAsStream("/META-INF/MANIFEST.MF");
         Manifest manifest;
         try {
             manifest = new Manifest(is);
@@ -322,9 +311,9 @@ public class RoboLibBot {
         if(robotName == null)
             log.fatal("No 'Robot-Class' in manifest file.");
 
-        RoboLibBot robot;
+        RoboLib robot;
         try {
-            robot = (RoboLibBot) Class.forName(robotName).newInstance();
+            robot = (RoboLib) Class.forName(robotName).newInstance();
         } catch (Throwable t) {
             log.fatal("Could not instantiate robot " + robotName + "!", t);
             System.exit(1);
@@ -387,8 +376,8 @@ public class RoboLibBot {
         }
         m_currentMode = GameMode.DISABLED;
         m_currentRobotMode = MODES_MAP.get(m_currentMode);
-        m_table.putNumber(NETTABLE_CURRENT_MODE, m_currentMode.ordinal());
-        m_table.putString(NETTABLE_CURRENT_MODE_STRING, m_currentRobotMode.getName());
+        m_table.putNumber("mode", m_currentMode.ordinal());
+        m_table.putString("mode-string", m_currentRobotMode.getName());
 
         PDP.resetFaults();
         Compressor.clearCompressorStickyFaults();
@@ -406,27 +395,28 @@ public class RoboLibBot {
         try{
             while(m_thread_keepAlive){
                 ds.waitForData();
-                gMode = DriverStation.getGameMode();
-                
-                if(m_currentMode != gMode){
-                    log.info("Switching to " + gMode.getName());
-
-                    try{
-                        m_currentRobotMode.modeEnd();
-                    }catch(Throwable e){
-                        Logger.get(m_currentRobotMode).fatal("Fatal error in RobotMode end method", e);
-                    }
-                    
-                    m_currentMode = gMode;
-                    m_currentRobotMode = MODES_MAP.get(m_currentMode);
-                    m_table.putNumber(NETTABLE_CURRENT_MODE, gMode.ordinal());
-                    m_table.putString(NETTABLE_CURRENT_MODE_STRING, m_currentRobotMode.getName());
-                    System.gc();
-                    
-                    try{
-                        m_currentRobotMode.modeInit();
-                    }catch(Throwable e){
-                        Logger.get(m_currentRobotMode).fatal("Fatal error in RobotMode init method", e);
+                if(ds.modeChanged()){
+                    gMode = DriverStation.getGameMode();
+                    if(m_currentMode != gMode){
+                        log.info("Switching to " + gMode.getName());
+    
+                        try{
+                            m_currentRobotMode.modeEnd();
+                        }catch(Throwable e){
+                            Logger.get(m_currentRobotMode).fatal("Fatal error in RobotMode end method", e);
+                        }
+                        
+                        m_currentMode = gMode;
+                        m_currentRobotMode = MODES_MAP.get(m_currentMode);
+                        m_table.putNumber("mode", gMode.ordinal());
+                        m_table.putString("mode-string", m_currentRobotMode.getName());
+                        System.gc();
+                        
+                        try{
+                            m_currentRobotMode.modeInit();
+                        }catch(Throwable e){
+                            Logger.get(m_currentRobotMode).fatal("Fatal error in RobotMode init method", e);
+                        }
                     }
                 }
                 
@@ -582,24 +572,6 @@ public class RoboLibBot {
             return StationID.NONE;
         }
         return StationID.values()[sID];
-    }
-
-    /**
-     * Checks if is simulation.
-     *
-     * @return If the robot is running in simulation.
-     */
-    public static final boolean isSimulation() {
-        return false;
-    }
-
-    /**
-     * Checks if is real.
-     *
-     * @return If the robot is running in the real world.
-     */
-    public static final boolean isReal() {
-        return true;
     }
 
     /**

@@ -15,7 +15,7 @@
 
 package io.github.robolib.module.hid;
 
-import io.github.robolib.RoboLibBot;
+import io.github.robolib.RoboLib;
 import io.github.robolib.nettable.ITable;
 
 /**
@@ -159,7 +159,7 @@ public final class NetTableController extends GenericHID {
     public NetTableController(String name, int numAxes, int numBtns){
         super(numAxes, numBtns);
         
-        m_table = RoboLibBot.getRobotTable().getSubTable("Joystick").getSubTable(name);
+        m_table = RoboLib.getRobotTable().getSubTable("Joystick").getSubTable(name);
         for(int i = 0; i < numAxes; i++)
             m_axes[i] = new NetTableAxis(i + 1);
         
