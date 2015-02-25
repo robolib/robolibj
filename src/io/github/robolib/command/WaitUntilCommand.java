@@ -15,7 +15,7 @@
 
 package io.github.robolib.command;
 
-import io.github.robolib.RoboLibBot;
+import io.github.robolib.RoboLib;
 
 /**
  * 
@@ -38,7 +38,7 @@ public final class WaitUntilCommand extends Command {
     public void initialize() {}
     public void execute() {}
     public boolean isFinished() {
-        return RoboLibBot.getMatchTime() >= m_time;
+        return RoboLib.getMatchTime() >= m_time;
     }
     public void end() {}
     public void interrupted() {}

@@ -68,7 +68,7 @@ public abstract class RobotMode {
     protected RobotMode(GameMode mode, String name, boolean active){
         m_mode = mode;
         m_name = name;
-        if(active || !RoboLibBot.hasMode(mode))
+        if(active || !RoboLib.hasMode(mode))
             setActive();
         Logger.get(this, m_name);
     }
@@ -97,14 +97,14 @@ public abstract class RobotMode {
      * @return is this the active RobotMode for its {@link GameMode}
      */
     public final boolean getActive(){
-        return RoboLibBot.getRobotMode(m_mode).equals(this);
+        return RoboLib.getRobotMode(m_mode).equals(this);
     }
     
     /**
      * Set this RobotMode as the active robot mode for its {@link GameMode}.
      */
     public final void setActive(){
-        RoboLibBot.set(m_mode, this);
+        RoboLib.set(m_mode, this);
     }
     
     /**

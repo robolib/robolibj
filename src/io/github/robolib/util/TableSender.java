@@ -17,7 +17,7 @@ package io.github.robolib.util;
 
 import java.util.Vector;
 
-import io.github.robolib.RoboLibBot;
+import io.github.robolib.RoboLib;
 import io.github.robolib.identifier.UpdatingSendable;
 
 /**
@@ -56,7 +56,7 @@ public class TableSender {
 //    }
     
     public static void addFramework(UpdatingSendable sendable, String tableName){
-        sendable.initTable(Common.getTable(RoboLibBot.getRobotTable(), tableName));
+        sendable.initTable(Common.getTable(RoboLib.getRobotTable(), tableName));
         m_framework.addElement(sendable);
         
     }

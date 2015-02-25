@@ -200,6 +200,19 @@ public final class DriverStation implements Runnable {
         }
     }
     
+    private int m_modeInt = 0;
+    private int m_modeNewInt = 0;
+    
+    
+    protected boolean modeChanged(){
+        m_modeNewInt = NetworkCommunications.HALGetRobotStatus();
+        if(m_modeNewInt != m_modeInt){
+            m_modeInt = m_modeNewInt;
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * Determine if the Robot is currently disabled.
      *

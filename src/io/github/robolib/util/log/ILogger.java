@@ -16,7 +16,7 @@
 
 package io.github.robolib.util.log;
 
-import io.github.robolib.RoboLibBot;
+import io.github.robolib.RoboLib;
 
 /**
  * A Logging class.
@@ -548,7 +548,7 @@ public abstract class ILogger {
     private final void severe_imp(String s, Object o){
         severe(s, o);
         if(o instanceof Error || o instanceof RuntimeException)
-            RoboLibBot.die();
+            RoboLib.die();
     }
     
     /**
@@ -657,7 +657,7 @@ public abstract class ILogger {
      */
     private final void fatal_imp(String s, Object o){
         fatal(s, o);
-        RoboLibBot.die();
+        RoboLib.die();
     }
     
     /**
