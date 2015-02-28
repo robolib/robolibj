@@ -78,8 +78,7 @@ public class RoboLib {
     private static RobotMode m_currentRobotMode;
     
     /** The m_modes. */
-    private static final EnumMap<GameMode, RobotMode> MODES_MAP =
-            new EnumMap<GameMode, RobotMode>(GameMode.class);
+    private static RobotMode[] m_modesArr = new RobotMode[GameMode.values().length];
 
     //private final RobotMode m_modes[];
     
@@ -224,6 +223,54 @@ public class RoboLib {
         debug("Default Robot.robotInit() method... Overload me!");
     }
 
+    protected void disabledInit(){
+
+    }
+
+    protected void disabledPeriodic(){
+
+    }
+
+    protected void disabledEnd(){
+
+    }
+
+    protected void testInit(){
+
+    }
+
+    protected void testPeriodic(){
+
+    }
+
+    protected void testEnd(){
+
+    }
+
+    protected void autonomousInit(){
+
+    }
+
+    protected void autonomousPeriodic(){
+
+    }
+
+    protected void autonomousEnd(){
+
+    }
+
+    protected void teleopInit(){
+
+    }
+
+    protected void teleopPeriodic(){
+
+    }
+
+    protected void teleopEnd(){
+
+    }
+
     /**
      * The Main method for the robot.
      * 
@@ -351,32 +398,48 @@ public class RoboLib {
 
         log.info("Initializing Robot Modes");
 
-        if(!MODES_MAP.containsKey(GameMode.DISABLED)){
+        if(m_modesArr[GameMode.DISABLED.value] == null){
             log.debug("No Disabled Robot Mode Defined");
             log.debug("Creating Empty Disabled Mode");
-            new DisabledMode(){};
+            new DisabledMode(){
+                protected void init(){ robot.disabledInit(); }
+                protected void run(){ robot.disabledPeriodic(); }
+                protected void end(){ robot.disabledEnd(); }
+            };
         }
         
-        if(!MODES_MAP.containsKey(GameMode.TEST)){
+        if(m_modesArr[GameMode.TEST.value] == null){
             log.debug("No Test Robot Mode Defined");
             log.debug("Creating Empty Test Mode");
-            new TestMode(){};
+            new TestMode(){
+                protected void init(){ robot.testInit(); }
+                protected void run(){ robot.testPeriodic(); }
+                protected void end(){ robot.testEnd(); }
+            };
         }
         
-        if(!MODES_MAP.containsKey(GameMode.AUTON)){
+        if(m_modesArr[GameMode.AUTON.value] == null){
             log.debug("No Autonomous Robot Mode Defined");
             log.debug("Creating Empty Autonomous Mode");
-            new AutonMode(){};
+            new AutonMode(){
+                protected void init(){ robot.autonomousInit(); }
+                protected void run(){ robot.autonomousPeriodic(); }
+                protected void end(){ robot.autonomousEnd(); }
+            };
         }
         
-        if(!MODES_MAP.containsKey(GameMode.TELEOP)){
+        if(m_modesArr[GameMode.TELEOP.value] == null){
             log.debug("No Teleop Robot Mode Defined");
             log.debug("Creating Empty Teleop Mode");
-            new TeleopMode(){};
+            new TeleopMode(){
+                protected void init(){ robot.teleopInit(); }
+                protected void run(){ robot.teleopPeriodic(); }
+                protected void end(){ robot.teleopEnd(); }
+            };
         }
         m_currentMode = GameMode.DISABLED;
-        m_currentRobotMode = MODES_MAP.get(m_currentMode);
-        m_table.putNumber("mode", m_currentMode.ordinal());
+        m_currentRobotMode = m_modesArr[m_currentMode.value];
+        m_table.putNumber("mode", m_currentMode.value);
         m_table.putString("mode-string", m_currentRobotMode.getName());
 
         PDP.resetFaults();
@@ -395,7 +458,7 @@ public class RoboLib {
         try{
             while(m_thread_keepAlive){
                 ds.waitForData();
-                if(ds.modeChanged()){
+                if(ds.hasModeChanged()){
                     gMode = DriverStation.getGameMode();
                     if(m_currentMode != gMode){
                         log.info("Switching to " + gMode.getName());
@@ -407,8 +470,8 @@ public class RoboLib {
                         }
                         
                         m_currentMode = gMode;
-                        m_currentRobotMode = MODES_MAP.get(m_currentMode);
-                        m_table.putNumber("mode", gMode.ordinal());
+                        m_currentRobotMode = m_modesArr[m_currentMode.value];
+                        m_table.putNumber("mode", gMode.value);
                         m_table.putString("mode-string", m_currentRobotMode.getName());
                         System.gc();
                         
@@ -500,8 +563,8 @@ public class RoboLib {
      * @see RobotMode
      */
     protected static final void set(GameMode gMode, RobotMode rMode){
-        if(!getGameMode().equals(gMode)){
-            MODES_MAP.put(gMode, rMode);
+        if(m_currentMode != gMode){
+            m_modesArr[gMode.value] = rMode;
         }
     }
     
@@ -533,10 +596,10 @@ public class RoboLib {
      * @return {@link RobotMode}
      */
     public static final RobotMode getRobotMode(GameMode mode){
-        if(!MODES_MAP.containsKey(mode))
+        if(m_modesArr[mode.value] == null)
             return new RobotMode(){};
 
-        return MODES_MAP.get(mode);
+        return m_modesArr[mode.value];
     }
 
     /**
@@ -546,7 +609,7 @@ public class RoboLib {
      * @return boolean do we have it?
      */
     public static final boolean hasMode(GameMode mode){
-        return MODES_MAP.containsKey(mode);
+        return m_modesArr[mode.value] != null;
     }
     
     /**

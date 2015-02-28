@@ -44,6 +44,8 @@ public enum GameMode {
     
     /** The m_abbr. */
     private final String m_abbr;
+
+    public final int value;
     
     /**
      * Instantiates a new game mode.
@@ -54,6 +56,7 @@ public enum GameMode {
     private GameMode(String modeName, String abbr){
     	m_name = modeName;
     	m_abbr = abbr;
+        value = ordinal();
     }
     
     /**
