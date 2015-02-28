@@ -15,9 +15,9 @@
 
 package io.github.robolib.module.hid;
 
+import io.github.robolib.DriverStation;
 import io.github.robolib.jni.NetworkCommunications;
 import io.github.robolib.jni.UsageReporting;
-import io.github.robolib.module.RoboRIO;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.log.Logger;
 
@@ -97,7 +97,7 @@ public class Joystick extends GenericHID {
          */
         @Override
         public double get(){
-            double out = getStickAxis(m_port, m_channel);
+            double out = DriverStation.getStickAxis(m_port, m_channel);
             double x = Math.abs(out);
             
             if(x < m_deadband)
@@ -188,115 +188,11 @@ public class Joystick extends GenericHID {
          */
         @Override
         public boolean getState() {
-            return getStickButton(m_port, m_channel);
+            return DriverStation.getStickButton(m_port, m_channel);
         }
     }
-    
-    /** The Constant kNumJoysticks. */
-    public static final int kNumJoysticks = 6;
-    
-    /** The m_joystick axes. */
-    private static short m_joystickAxes[][] = new short[kNumJoysticks][NetworkCommunications.MAX_JS_AXES];
-    
-    /** The m_joystick po vs. */
-    private static short m_joystickPOVs[][] = new short[kNumJoysticks][NetworkCommunications.MAX_JS_POVS];
-    
-    /** The m_joystick buttons. */
-    private static int m_joystickButtons[] = new int[kNumJoysticks];
-    
-    /** The m_joystick buttons count. */
-    private static byte m_joystickButtonsCount[] = new byte[kNumJoysticks];
-    
+
 //    private static final EnumMap<JSID, ? extends Joystick> m_stickMap = 
-    
-    /**
-     * Sets the joystick data.
-     * THIS SHOULD ONLY BE CALLED BY THE DRIVESTATION CLASS!!!
-     * TEAMS SHOULD NOT BE CALLING THIS!!!
-     *
-     * @param stick the stick
-     * @param axes the axes
-     * @param povs the povs
-     * @param buttons the buttons
-     * @param numBtns the num btns
-     */
-    public static final void setJoystickData(int stick, short[] axes, short[] povs, int buttons, byte numBtns){
-        synchronized(m_joystickAxes){
-            m_joystickAxes[stick] = axes;
-        }
-        synchronized(m_joystickPOVs){
-            m_joystickPOVs[stick] = povs;
-        }
-        synchronized(m_joystickButtons){
-            m_joystickButtons[stick] = buttons;
-        }
-        synchronized(m_joystickButtonsCount){
-            m_joystickButtonsCount[stick] = numBtns;
-        }
-    }
-    
-    private static double m_nextComplainTime = 0.0;
-    
-    protected synchronized static final void complainJoystickMissing(String msg){
-        double c = RoboRIO.getFPGATimestamp();
-        if(c > m_nextComplainTime){
-            Logger.get(Joystick.class).error(msg);
-            m_nextComplainTime = c + 5.0;
-        }
-    }
-    
-    /**
-     * Gets the stick axis.
-     *
-     * @param stick the stick
-     * @param axis the axis
-     * @return the stick axis
-     */
-    protected synchronized static final double getStickAxis(JSID stick, int axis){
-        if(m_joystickAxes[stick.ordinal()].length <= axis){
-            complainJoystickMissing("Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
-            return 0.0;
-        }
-        
-        double value = m_joystickAxes[stick.ordinal()][axis];
-        if(value < 0){
-            return value / 128.0;
-        }else{
-            return value / 127.0;
-        }
-    }
-    
-    /**
-     * Gets the stick button.
-     *
-     * @param stick the stick
-     * @param button the button
-     * @return the stick button
-     */
-    protected synchronized static final boolean getStickButton(JSID stick, int button){
-        if(m_joystickButtonsCount[stick.ordinal()] <= button){
-            complainJoystickMissing("Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
-            return false;
-        }
-        
-        return ((1 << button) & m_joystickButtons[stick.ordinal()]) != 0;
-    }
-    
-    /**
-     * Gets the stick pov.
-     *
-     * @param stick the stick
-     * @param pov the pov
-     * @return the stick pov
-     */
-    protected synchronized static final int getStickPOV(JSID stick, int pov){
-        if(m_joystickButtonsCount[stick.ordinal()] <= pov){
-            complainJoystickMissing("Button '" + pov + "' on stick '" + stick + "' is invalid. Is it plugged in?");
-            return 0;
-        }
-        
-        return m_joystickPOVs[stick.ordinal()][pov];
-    }
     
     /**
      * Check stick.
@@ -304,7 +200,7 @@ public class Joystick extends GenericHID {
      * @param stick the stick
      */
     protected static void checkStick(int stick){
-        if(stick < 0 || stick > kNumJoysticks){
+        if(stick < 0 || stick > 6){
             throw new RuntimeException("Invalid Joystick '" + stick + "'.");
         }
     }
@@ -352,7 +248,7 @@ public class Joystick extends GenericHID {
      */
     @Override
     public final int getPOV(int pov){
-        return getStickPOV(m_port, pov);
+        return DriverStation.getStickPOV(m_port, pov);
     }
     
     /**
