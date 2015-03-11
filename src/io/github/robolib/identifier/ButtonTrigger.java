@@ -16,6 +16,7 @@
 package io.github.robolib.identifier;
 
 import io.github.robolib.command.Command;
+import io.github.robolib.module.RoboRIO;
 
 /**
  * 
@@ -46,5 +47,35 @@ public interface ButtonTrigger extends Trigger {
     public default void cancelWhenPressed(final Command command){
         cancelWhenActive(command);
     }
-
+    
+    public default void runWhenDoublePressed(final Command command, final double timeout){
+        new ButtonScheduler(){
+            boolean pressed = false;
+            boolean pressedFirst = false;
+            double time = 0;
+            @Override
+            public void execute() {
+                if(getState()){
+                    if(!pressed){
+                        if(!pressedFirst){
+                            pressedFirst = true;
+                            time = RoboRIO.getFPGATimestamp();
+                        }else{
+                            if(RoboRIO.getFPGATimestamp() - time <= timeout){
+                                command.start();
+                                pressedFirst = false;
+                            }
+                        }
+                    }
+                    pressed = true;
+                }else{
+                    pressed = false;
+                    if(pressedFirst){
+                        if(RoboRIO.getFPGATimestamp() - time <= timeout)
+                            pressedFirst = false;
+                    }
+                }
+            }
+        };
+    }
 }

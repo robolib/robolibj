@@ -20,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.EnumMap;
 import java.util.jar.Manifest;
 
 import io.github.robolib.command.Scheduler;
