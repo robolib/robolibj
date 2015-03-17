@@ -13,43 +13,52 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.robot;
+package io.github.robolib.modes;
 
+import io.github.robolib.LiveWindow;
 import io.github.robolib.RobotMode;
-import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
 
 /**
- * The Class TeleopMode.
+ * The Class TestMode.
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-public abstract class TeleopMode extends RobotMode {
+public abstract class TestMode extends RobotMode {
     
     /**
-     * Constructor for a Tele-Operative Robot mode.
+     * Constructor for a Test Robot mode.
      */
-    protected TeleopMode(){
-        super(GameMode.TELEOP);
+    protected TestMode(){
+        super(GameMode.TEST);
     }
     
     /**
-     * Constructor for a Tele-Operative Robot mode.
+     * Constructor for a Test Robot mode.
      *
-     * @param name The name for this Teleop mode
+     * @param name The name for this Test mode
      */
-    protected TeleopMode(String name){
-        super(GameMode.TELEOP, name);
+    protected TestMode(String name){
+        super(GameMode.TEST, name);
     }
     
     /**
-     * Constructor for a Tele-Operative Robot mode.
+     * Constructor for a Test Robot mode.
      *
-     * @param name The name for this Teleop mode
+     * @param name The name for this Test mode
      * @param active Set this mode as the active mode by default
      */
-    protected TeleopMode(String name, boolean active){
-        super(GameMode.TELEOP, name, active);
+    protected TestMode(String name, boolean active){
+        super(GameMode.TEST, name, active);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected final void modeInit(){
+        LiveWindow.setEnabled(true);
+        init();
     }
     
     /**
@@ -57,8 +66,17 @@ public abstract class TeleopMode extends RobotMode {
      */
     @Override
     protected final void modeRun(){
-        NetworkCommunications.ObserveUserProgramTeleop();
+        NetworkCommunications.ObserveUserProgramTest();
         run();
-        Scheduler.run();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected final void modeEnd(){
+        LiveWindow.setEnabled(false);
+        end();
+    }
+
 }

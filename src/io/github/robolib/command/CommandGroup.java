@@ -168,6 +168,8 @@ public class CommandGroup extends Command {
                 command.setParent(this);
                 command.m_state = state;
                 command.getRequirements().forEach(this::requires);
+                if(timeout > -1)
+                    command.setTimeout(timeout);
             }
             m_commands.add(command);
         }
@@ -343,7 +345,4 @@ public class CommandGroup extends Command {
             }
         });
     }
-    
-    
-    
 }

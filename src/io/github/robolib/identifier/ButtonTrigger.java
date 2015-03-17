@@ -17,6 +17,7 @@ package io.github.robolib.identifier;
 
 import io.github.robolib.command.Command;
 import io.github.robolib.module.RoboRIO;
+import io.github.robolib.util.log.Logger;
 
 /**
  * 
@@ -71,8 +72,9 @@ public interface ButtonTrigger extends Trigger {
                 }else{
                     pressed = false;
                     if(pressedFirst){
-                        if(RoboRIO.getFPGATimestamp() - time <= timeout)
+                        if(RoboRIO.getFPGATimestamp() - time > timeout){
                             pressedFirst = false;
+                        }
                     }
                 }
             }

@@ -21,9 +21,9 @@ import java.nio.IntBuffer;
 
 import io.github.robolib.jni.HALUtil;
 import io.github.robolib.jni.NetworkCommunications;
+import io.github.robolib.modes.GameMode;
 import io.github.robolib.module.RoboRIO;
 import io.github.robolib.module.hid.Joystick;
-import io.github.robolib.robot.GameMode;
 import io.github.robolib.util.Common;
 import io.github.robolib.util.TableSender;
 import io.github.robolib.util.log.ILogger;

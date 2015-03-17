@@ -15,13 +15,12 @@
 
 package io.github.robolib.command;
 
-import static io.github.robolib.module.RoboRIO.getFPGATimestamp;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import io.github.robolib.DriverStation;
 import io.github.robolib.identifier.NamedSendable;
+import io.github.robolib.module.RoboRIO;
 import io.github.robolib.nettable.ITable;
 import io.github.robolib.nettable.ITableListener;
 
@@ -151,7 +150,7 @@ public abstract class Command implements NamedSendable {
      */
     public final double timeSinceInitialized(){
         synchronized(this){
-            return m_startTime < 0 ? 0 : getFPGATimestamp() - m_startTime;
+            return m_startTime < 0 ? 0 : RoboRIO.getFPGATimestamp() - m_startTime;
         }
     }
     
@@ -191,11 +190,6 @@ public abstract class Command implements NamedSendable {
             m_initialized = false;
             m_canceled = false;
             m_running = false;
-            
-            m_previousCommand.m_nextCommand = m_nextCommand;
-            m_nextCommand.m_previousCommand = m_previousCommand;
-            m_previousCommand = null;
-            m_nextCommand = null;
             
             if(m_table != null){
                 m_table.putBoolean("running", false);
@@ -297,7 +291,7 @@ public abstract class Command implements NamedSendable {
      * Start timing.
      */
     private void startTiming(){
-        m_startTime = getFPGATimestamp();
+        m_startTime = RoboRIO.getFPGATimestamp();
     }
     
     /**
@@ -307,7 +301,7 @@ public abstract class Command implements NamedSendable {
      */
     protected boolean isTimedOut(){
         synchronized(this){
-            return m_timeout != -1 && (m_startTime < 0 ? 0 : getFPGATimestamp() - m_startTime) >= m_timeout;
+            return m_timeout != -1 && (m_startTime < 0 ? 0 : RoboRIO.getFPGATimestamp() - m_startTime) >= m_timeout;
         }
     }
     

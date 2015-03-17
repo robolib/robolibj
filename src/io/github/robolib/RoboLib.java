@@ -25,16 +25,16 @@ import java.util.jar.Manifest;
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
 import io.github.robolib.jni.UsageReporting;
+import io.github.robolib.modes.AutonMode;
+import io.github.robolib.modes.DisabledMode;
+import io.github.robolib.modes.GameMode;
+import io.github.robolib.modes.TeleopMode;
+import io.github.robolib.modes.TestMode;
 import io.github.robolib.module.Compressor;
 import io.github.robolib.module.PDP;
 import io.github.robolib.module.RoboRIO;
 import io.github.robolib.nettable.ITable;
 import io.github.robolib.nettable.NetworkTable;
-import io.github.robolib.robot.AutonMode;
-import io.github.robolib.robot.DisabledMode;
-import io.github.robolib.robot.GameMode;
-import io.github.robolib.robot.TeleopMode;
-import io.github.robolib.robot.TestMode;
 import io.github.robolib.util.MathUtils;
 import io.github.robolib.util.TableSender;
 import io.github.robolib.util.log.ILogger;
@@ -65,10 +65,12 @@ public class RoboLib {
     public static final int MINOR_VERSION = 0;
     
     /** RoboLibJ Patch Version */
-    public static final int PATCH_VERSION = 0;
+    public static final int PATCH_VERSION = 2;
     
     public static final String FRC_JAVA_VERSION = "RoboLibJ v"
-            + MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION;
+            + MAJOR_VERSION + "."
+            + MINOR_VERSION + "."
+            + PATCH_VERSION;
     
     /** The m_current mode. */
     private static GameMode m_currentMode = GameMode.NONE;
@@ -218,56 +220,8 @@ public class RoboLib {
      * 
      * This is run before the robot runs through its modes.
      */
-    public void robotInit(){
+    protected void robotInit(){
         debug("Default Robot.robotInit() method... Overload me!");
-    }
-
-    protected void disabledInit(){
-
-    }
-
-    protected void disabledPeriodic(){
-
-    }
-
-    protected void disabledEnd(){
-
-    }
-
-    protected void testInit(){
-
-    }
-
-    protected void testPeriodic(){
-
-    }
-
-    protected void testEnd(){
-
-    }
-
-    protected void autonomousInit(){
-
-    }
-
-    protected void autonomousPeriodic(){
-
-    }
-
-    protected void autonomousEnd(){
-
-    }
-
-    protected void teleopInit(){
-
-    }
-
-    protected void teleopPeriodic(){
-
-    }
-
-    protected void teleopEnd(){
-
     }
 
     /**
@@ -306,15 +260,9 @@ public class RoboLib {
      */
     public static final void main(String args[]) {
         Thread.currentThread().setName("Framework Thread");
-//        System.out.println("waiting 30 seconds");
-        
-//        Thread.currentThread().setPriority(9);
+
         NetworkCommunications.NetworkCommunicationReserve();
         ILogger log = Logger.get(RoboLib.class, "Framework");
-        
-//        long time = System.currentTimeMillis();
-        
-//        while(System.currentTimeMillis() - time < 30000){}
 
         log.info(FRC_JAVA_VERSION);
         
@@ -331,10 +279,15 @@ public class RoboLib {
         NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
 
         try {
+//            log.debug("Initializing Driver Station");
             DriverStation.initialize();
+//            log.debug("Initializing Scheduler");
             Scheduler.initialize();
+//            log.debug("Initializing Power Distribution Board");
             PDP.initialize();
+//            log.debug("Initializing Compressor");
             Compressor.initialize();
+//            log.debug("Initializing roboRIO");
             RoboRIO.initialize();
             TableSender.addFramework(PDP.getInstance(), "Power/PDP");
             TableSender.addFramework(RoboRIO.getInstance(), "Power/RIO");
@@ -356,6 +309,8 @@ public class RoboLib {
         
         if(robotName == null)
             log.fatal("No 'Robot-Class' in manifest file.");
+        else
+            log.debug("Found " + robotName + " robot class. Attempting to start.");
 
         RoboLib robot;
         try {
@@ -369,6 +324,7 @@ public class RoboLib {
         
         log.info("Starting '" + m_name + "'");
 
+        log.debug("Using Java Language");
         UsageReporting.report(UsageReporting.ResourceType_Language, UsageReporting.Language_Java);
         
             
@@ -391,7 +347,41 @@ public class RoboLib {
             return;
         }
 
-        checkVersionFile(new File("/tmp/frc_versions/FRC_Lib_Version.ini"));
+        File versionFile = new File("/tmp/frc_versions/FRC_Lib_Version.ini");
+        boolean writeFile = !versionFile.exists();
+        byte[] vData = FRC_JAVA_VERSION.getBytes();
+        try{
+            FileInputStream fInput = new FileInputStream(versionFile);
+            byte[] d = new byte[vData.length];
+            fInput.read(d);
+            fInput.close();
+            if(!d.equals(vData)){
+            versionFile.delete();
+            writeFile = true;
+        }
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
+        
+        if(writeFile){
+            FileOutputStream fOutput = null;
+            try {
+                versionFile.createNewFile();
+                fOutput = new FileOutputStream(versionFile);
+                fOutput.write(vData);
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                if (fOutput != null) {
+                    try {
+                        fOutput.close();
+                    } catch (IOException ex) {
+                    }
+                }
+            }
+        }
+
         UsageReporting.report(UsageReporting.ResourceType_Framework, UsageReporting.Framework_Iterative);
         LiveWindow.setEnabled(false);
 
@@ -400,41 +390,25 @@ public class RoboLib {
         if(m_modesArr[GameMode.DISABLED.value] == null){
             log.debug("No Disabled Robot Mode Defined");
             log.debug("Creating Empty Disabled Mode");
-            new DisabledMode(){
-                protected void init(){ robot.disabledInit(); }
-                protected void run(){ robot.disabledPeriodic(); }
-                protected void end(){ robot.disabledEnd(); }
-            };
+            new DisabledMode(){};
         }
         
         if(m_modesArr[GameMode.TEST.value] == null){
             log.debug("No Test Robot Mode Defined");
             log.debug("Creating Empty Test Mode");
-            new TestMode(){
-                protected void init(){ robot.testInit(); }
-                protected void run(){ robot.testPeriodic(); }
-                protected void end(){ robot.testEnd(); }
-            };
+            new TestMode(){};
         }
         
         if(m_modesArr[GameMode.AUTON.value] == null){
             log.debug("No Autonomous Robot Mode Defined");
             log.debug("Creating Empty Autonomous Mode");
-            new AutonMode(){
-                protected void init(){ robot.autonomousInit(); }
-                protected void run(){ robot.autonomousPeriodic(); }
-                protected void end(){ robot.autonomousEnd(); }
-            };
+            new AutonMode(){};
         }
         
         if(m_modesArr[GameMode.TELEOP.value] == null){
             log.debug("No Teleop Robot Mode Defined");
             log.debug("Creating Empty Teleop Mode");
-            new TeleopMode(){
-                protected void init(){ robot.teleopInit(); }
-                protected void run(){ robot.teleopPeriodic(); }
-                protected void end(){ robot.teleopEnd(); }
-            };
+            new TeleopMode(){};
         }
         m_currentMode = GameMode.DISABLED;
         m_currentRobotMode = m_modesArr[m_currentMode.value];
@@ -443,10 +417,16 @@ public class RoboLib {
 
         PDP.resetFaults();
         Compressor.clearCompressorStickyFaults();
-        
+
+        if(Compressor.getNoConnectionFault() || Compressor.getNoConnectionStickyFault()){
+            log.severe("Compressor not connected?");
+        }
+
+        log.debug("Sending 'program running' signal to Driver Station");
         NetworkCommunications.ObserveUserProgramStarting();
         
         DriverStation ds = DriverStation.getInstance();
+        log.debug("Starting DriverStation thread");
         ds.startThread();
 
         log.info(m_name + ", Version " + m_version + " Running");
@@ -491,55 +471,6 @@ public class RoboLib {
         }finally{
             log.fatal("ROBOTS DON'T QUIT!!!", "Exited Main Loop");
             System.exit(1);
-        }
-    }
-    
-    /**
-     * Check version file.
-     *
-     * @param file the file
-     */
-    private static final void checkVersionFile(File file){
-        
-        if(!file.exists()){
-            writeVersionFile(file);
-        }else{
-            byte[] data = FRC_JAVA_VERSION.getBytes();
-            try{
-                FileInputStream input = new FileInputStream(file);
-                input.read(data);
-                input.close();
-            }catch (IOException ex){
-                ex.printStackTrace();
-            }
-            if(!data.equals(FRC_JAVA_VERSION.getBytes())){
-                file.delete();
-                writeVersionFile(file);
-            }
-        }   
-    }
-    
-    /**
-     * Write version file.
-     *
-     * @param file the file
-     */
-    private static final void writeVersionFile(File file){
-        FileOutputStream output = null;
-        try {
-            file.createNewFile();
-            output = new FileOutputStream(file);
-            output.write(FRC_JAVA_VERSION.getBytes());
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException ex) {
-                }
-            }
         }
     }
     

@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.robot;
+package io.github.robolib.modes;
 
 import io.github.robolib.command.Command;
 

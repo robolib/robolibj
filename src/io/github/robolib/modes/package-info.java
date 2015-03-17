@@ -17,4 +17,4 @@
  *
  * @author noriah Reuland <vix@noriah.dev>
  */
-package io.github.robolib.robot;
+package io.github.robolib.modes;
