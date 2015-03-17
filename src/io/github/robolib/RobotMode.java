@@ -16,7 +16,7 @@
 package io.github.robolib;
 
 import io.github.robolib.jni.NetworkCommunications;
-import io.github.robolib.robot.GameMode;
+import io.github.robolib.modes.GameMode;
 import io.github.robolib.util.log.Logger;
 
 /**

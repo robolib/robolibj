@@ -17,6 +17,7 @@ package io.github.robolib.command;
 
 import io.github.robolib.identifier.NamedSendable;
 import io.github.robolib.nettable.ITable;
+import io.github.robolib.util.log.Logger;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -143,8 +144,9 @@ public abstract class Subsystem implements NamedSendable {
     }
     
     void iterationRun(){
-        if(m_currentCommand == null)
+        if(m_currentCommand == null){
             Scheduler.add_internal(getDefaultCommand());
+        }
         
         confirmCommand();
             

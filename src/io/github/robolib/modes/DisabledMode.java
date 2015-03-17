@@ -13,7 +13,7 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.robot;
+package io.github.robolib.modes;
 
 import io.github.robolib.RobotMode;
 import io.github.robolib.command.Scheduler;
@@ -21,36 +21,40 @@ import io.github.robolib.jni.NetworkCommunications;
 
 
 /**
- * The Class AutonMode.
+ * The Class DisabledMode.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public abstract class AutonMode extends RobotMode {
-
+public abstract class DisabledMode extends RobotMode {
+    
     /**
-     * Constructor for a Autonomous Robot mode.
+     * Constructor for a Disable Robot mode.
      */
-    protected AutonMode() {
-        super(GameMode.AUTON);
+    protected DisabledMode(){
+        super(GameMode.DISABLED);
     }
     
     /**
-     * Constructor for a Autonomous Robot mode.
-     *
-     * @param name The name for this Auton mode
+     * Constructor for a Disable Robot mode
+     * Although, why would you be naming this,
+     * You should really only have one.
+     * @param name The name for this Disable mode
      */
-    protected AutonMode(String name){
-        super(GameMode.AUTON, name);
+    protected DisabledMode(String name){
+        super(GameMode.DISABLED, name);
     }
     
     /**
-     * Constructor for a Autonomous Robot mode.
+     * Constructor for a Disable Robot mode
+     * Although, why would you be naming this?
+     * And why are you setting this as active?
+     * Do you really have more than one disabled mode?.
      *
-     * @param name The name for this Auton mode
+     * @param name The name for this Disable mode
      * @param active Set this mode as the active mode by default
      */
-    protected AutonMode(String name, boolean active){
-        super(GameMode.AUTON, name, active);
+    protected DisabledMode(String name, boolean active){
+        super(GameMode.DISABLED, name, active);
     }
     
     /**
@@ -58,7 +62,7 @@ public abstract class AutonMode extends RobotMode {
      */
     @Override
     protected final void modeRun(){
-        NetworkCommunications.ObserveUserProgramAutonomous();
+        NetworkCommunications.ObserveUserProgramDisabled();
         run();
         Scheduler.run();
     }

@@ -17,4 +17,4 @@
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-package io.github.robolib.robot;
+package io.github.robolib.modes;

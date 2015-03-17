@@ -26,10 +26,16 @@ import io.github.robolib.util.log.Logger;
 @SuppressWarnings("unused")
 public final class SystemMonitor implements Runnable {
     
+    private static double m_interval = 0.1;
+    
     private static double m_voltWarn;
     private static double m_voltCrit;
     private static double m_voltDisable;
         
+    private static double m_sysCurrentWarn;
+    private static double m_sysCurrentCrit;
+    private static double m_sysCurrentDisable;
+    
     private static double m_memWarn;
     private static double m_memCrit;
     
@@ -46,6 +52,10 @@ public final class SystemMonitor implements Runnable {
     
     private SystemMonitor(){
         
+    }
+    
+    public static void setMonitoringInterval(double interval){
+        m_interval = interval;
     }
     
     /**
@@ -122,6 +132,12 @@ public final class SystemMonitor implements Runnable {
         m_voltWarn = warnLevel;
         m_voltCrit = critLevel;
         m_voltDisable = disableLevel;
+    }
+    
+    public static void monitorSystemCurrent(double warnLevel, double critLevel, double disableLevel){
+        m_sysCurrentWarn = warnLevel;
+        m_sysCurrentCrit = critLevel;
+        m_sysCurrentDisable = disableLevel;
     }
     
     /**

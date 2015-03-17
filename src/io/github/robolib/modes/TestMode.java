@@ -13,48 +13,52 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.robot;
+package io.github.robolib.modes;
 
+import io.github.robolib.LiveWindow;
 import io.github.robolib.RobotMode;
-import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
 
-
 /**
- * The Class DisabledMode.
+ * The Class TestMode.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public abstract class DisabledMode extends RobotMode {
+public abstract class TestMode extends RobotMode {
     
     /**
-     * Constructor for a Disable Robot mode.
+     * Constructor for a Test Robot mode.
      */
-    protected DisabledMode(){
-        super(GameMode.DISABLED);
+    protected TestMode(){
+        super(GameMode.TEST);
     }
     
     /**
-     * Constructor for a Disable Robot mode
-     * Although, why would you be naming this,
-     * You should really only have one.
-     * @param name The name for this Disable mode
-     */
-    protected DisabledMode(String name){
-        super(GameMode.DISABLED, name);
-    }
-    
-    /**
-     * Constructor for a Disable Robot mode
-     * Although, why would you be naming this?
-     * And why are you setting this as active?
-     * Do you really have more than one disabled mode?.
+     * Constructor for a Test Robot mode.
      *
-     * @param name The name for this Disable mode
+     * @param name The name for this Test mode
+     */
+    protected TestMode(String name){
+        super(GameMode.TEST, name);
+    }
+    
+    /**
+     * Constructor for a Test Robot mode.
+     *
+     * @param name The name for this Test mode
      * @param active Set this mode as the active mode by default
      */
-    protected DisabledMode(String name, boolean active){
-        super(GameMode.DISABLED, name, active);
+    protected TestMode(String name, boolean active){
+        super(GameMode.TEST, name, active);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected final void modeInit(){
+        LiveWindow.setEnabled(true);
+        init();
     }
     
     /**
@@ -62,8 +66,17 @@ public abstract class DisabledMode extends RobotMode {
      */
     @Override
     protected final void modeRun(){
-        NetworkCommunications.ObserveUserProgramDisabled();
+        NetworkCommunications.ObserveUserProgramTest();
         run();
-        Scheduler.run();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected final void modeEnd(){
+        LiveWindow.setEnabled(false);
+        end();
+    }
+
 }

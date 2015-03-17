@@ -13,43 +13,45 @@
  * included in all copies or substantial portions of the Software.
  */
 
-package io.github.robolib.robot;
+package io.github.robolib.modes;
 
 import io.github.robolib.RobotMode;
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
+import io.github.robolib.util.log.Logger;
+
 
 /**
- * The Class TeleopMode.
+ * The Class AutonMode.
  *
  * @author Austin Reuland <amreuland@gmail.com>
  */
-public abstract class TeleopMode extends RobotMode {
-    
+public abstract class AutonMode extends RobotMode {
+
     /**
-     * Constructor for a Tele-Operative Robot mode.
+     * Constructor for a Autonomous Robot mode.
      */
-    protected TeleopMode(){
-        super(GameMode.TELEOP);
+    protected AutonMode() {
+        super(GameMode.AUTON);
     }
     
     /**
-     * Constructor for a Tele-Operative Robot mode.
+     * Constructor for a Autonomous Robot mode.
      *
-     * @param name The name for this Teleop mode
+     * @param name The name for this Auton mode
      */
-    protected TeleopMode(String name){
-        super(GameMode.TELEOP, name);
+    protected AutonMode(String name){
+        super(GameMode.AUTON, name);
     }
     
     /**
-     * Constructor for a Tele-Operative Robot mode.
+     * Constructor for a Autonomous Robot mode.
      *
-     * @param name The name for this Teleop mode
+     * @param name The name for this Auton mode
      * @param active Set this mode as the active mode by default
      */
-    protected TeleopMode(String name, boolean active){
-        super(GameMode.TELEOP, name, active);
+    protected AutonMode(String name, boolean active){
+        super(GameMode.AUTON, name, active);
     }
     
     /**
@@ -57,7 +59,7 @@ public abstract class TeleopMode extends RobotMode {
      */
     @Override
     protected final void modeRun(){
-        NetworkCommunications.ObserveUserProgramTeleop();
+        NetworkCommunications.ObserveUserProgramAutonomous();
         run();
         Scheduler.run();
     }
