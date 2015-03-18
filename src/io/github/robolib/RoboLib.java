@@ -279,15 +279,15 @@ public class RoboLib {
         NetworkTable.getTable("LiveWindow").getSubTable("~STATUS~").putBoolean("LW Enabled", false);
 
         try {
-//            log.debug("Initializing Driver Station");
+            log.info("Initializing Driver Station");
             DriverStation.initialize();
-//            log.debug("Initializing Scheduler");
+            log.info("Initializing Scheduler");
             Scheduler.initialize();
-//            log.debug("Initializing Power Distribution Board");
+            log.info("Initializing Power Distribution Board");
             PDP.initialize();
-//            log.debug("Initializing Compressor");
+            log.info("Initializing Compressor");
             Compressor.initialize();
-//            log.debug("Initializing roboRIO");
+            log.info("Initializing roboRIO");
             RoboRIO.initialize();
             TableSender.addFramework(PDP.getInstance(), "Power/PDP");
             TableSender.addFramework(RoboRIO.getInstance(), "Power/RIO");
@@ -412,8 +412,8 @@ public class RoboLib {
         }
         m_currentMode = GameMode.DISABLED;
         m_currentRobotMode = m_modesArr[m_currentMode.value];
-        m_table.putNumber("mode", m_currentMode.value);
-        m_table.putString("mode-string", m_currentRobotMode.getName());
+//        m_table.putNumber("mode", m_currentMode.value);
+//        m_table.putString("mode-string", m_currentRobotMode.getName());
 
         PDP.resetFaults();
         Compressor.clearCompressorStickyFaults();
@@ -450,8 +450,8 @@ public class RoboLib {
                         
                         m_currentMode = gMode;
                         m_currentRobotMode = m_modesArr[m_currentMode.value];
-                        m_table.putNumber("mode", gMode.value);
-                        m_table.putString("mode-string", m_currentRobotMode.getName());
+//                        m_table.putNumber("mode", gMode.value);
+//                        m_table.putString("mode-string", m_currentRobotMode.getName());
                         System.gc();
                         
                         try{
