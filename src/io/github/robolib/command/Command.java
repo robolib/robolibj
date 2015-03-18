@@ -438,6 +438,32 @@ public abstract class Command implements NamedSendable {
         }
     }
     
+    public boolean requiresAny(Command command){
+        return requiresAny(command.getRequirements());
+    }
+    
+    public boolean requiresAny(List<Subsystem> systems){
+        if(systems.isEmpty()){
+            return false;
+        }
+        
+        if(m_requirements == null){
+            return false;
+        }
+        
+        synchronized(m_requirements){
+            for(Subsystem s : systems){
+                if(m_requirements.contains(s)){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+        
+        
+    }
+    
     /**
      * Returns the {@link CommandGroup} that this command is a part of.
      * Will return null if this {@link Command} is not in a group.

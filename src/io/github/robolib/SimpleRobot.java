@@ -17,7 +17,6 @@ package io.github.robolib;
 
 import io.github.robolib.modes.AutonMode;
 import io.github.robolib.modes.DisabledMode;
-import io.github.robolib.modes.GameMode;
 import io.github.robolib.modes.TeleopMode;
 import io.github.robolib.modes.TestMode;
 
@@ -43,7 +42,7 @@ public abstract class SimpleRobot extends RoboLib {
         initModes();
     }
 
-    private void initModes(){
+    private final void initModes(){
         new DisabledMode(){
             protected void init(){ disabledInit(); }
             protected void run(){ disabledPeriodic(); }
@@ -69,27 +68,63 @@ public abstract class SimpleRobot extends RoboLib {
         };
     }
     
+    /**
+     * Run every time the robot enter disabled mode.
+     */
     protected abstract void disabledInit();
-
+    
+    /**
+     * Run every 20ms during disabled period.
+     */
     protected abstract void disabledPeriodic();
 
+    /**
+     * Run every time the robot leaves disabled mode.
+     */
     protected abstract void disabledEnd();
 
+    /**
+     * Run every time the robot enter test mode.
+     */
     protected abstract void testInit();
 
+    /**
+     * Run every 20ms during test period.
+     */
     protected abstract void testPeriodic();
 
+    /**
+     * Run every time the robot leaves test mode.
+     */
     protected abstract void testEnd();
 
+    /**
+     * Run every time the robot enter autonomous mode.
+     */
     protected abstract void autonomousInit();
 
+    /**
+     * Run every 20ms during autonomous period.
+     */
     protected abstract void autonomousPeriodic();
 
+    /**
+     * Run every time the robot leaves autonomous mode.
+     */
     protected abstract void autonomousEnd();
 
+    /**
+     * Run every time the robot enter teleop mode.
+     */
     protected abstract void teleopInit();
 
+    /**
+     * Run every 20ms during teleop period.
+     */
     protected abstract void teleopPeriodic();
 
+    /**
+     * Run every time the robot leaves teleop mode.
+     */
     protected abstract void teleopEnd();
 }

@@ -18,7 +18,6 @@ package io.github.robolib.modes;
 import io.github.robolib.RobotMode;
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
-import io.github.robolib.util.log.Logger;
 
 
 /**

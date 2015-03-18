@@ -17,7 +17,6 @@ package io.github.robolib.identifier;
 
 import io.github.robolib.command.Command;
 import io.github.robolib.module.RoboRIO;
-import io.github.robolib.util.log.Logger;
 
 /**
  * 

@@ -51,7 +51,7 @@ public final class Scheduler implements NamedSendable {
     private static boolean m_disabled = false;
     
     /** The m_running commands changed. */
-    private static boolean m_runningCommandsChanged;
+//    private static boolean m_runningCommandsChanged;
     
     /** The m_disabled counter. */
     private static byte m_disabledCounter = 0;
@@ -173,7 +173,7 @@ public final class Scheduler implements NamedSendable {
             command.m_nextCommand = m_lastCommand;
             m_lastCommand.m_previousCommand = command;
             
-            m_runningCommandsChanged = true;
+//            m_runningCommandsChanged = true;
             command.startRunning();
         }
     }
@@ -194,7 +194,7 @@ public final class Scheduler implements NamedSendable {
         }
         
         m_running = true;
-        m_runningCommandsChanged = false;
+//        m_runningCommandsChanged = false;
         
         if(m_disabled){
             if(++m_disabledCounter >= 32){
@@ -248,12 +248,12 @@ public final class Scheduler implements NamedSendable {
                 if(!cmd.run()){
                     cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
                     cmd.removed();
-                    cmd.m_previousCommand.m_nextCommand = nextCmd;
-                    nextCmd.m_previousCommand = cmd.m_previousCommand;
+                    cmd.m_previousCommand.m_nextCommand = cmd.m_nextCommand;
+                    cmd.m_nextCommand.m_previousCommand = cmd.m_previousCommand;
                     cmd.m_previousCommand = null;
                     cmd.m_nextCommand = null;
 
-                    m_runningCommandsChanged = true;
+//                    m_runningCommandsChanged = true;
                 }
             }
 //        }
@@ -262,9 +262,22 @@ public final class Scheduler implements NamedSendable {
         nextCmd = null;
         
         m_additions.forEach(Scheduler::add_internal);
-        m_additions.removeAllElements();
+        for(Iterator<Command> iter = m_additions.iterator(); iter.hasNext();){
+            add_internal(iter.next());
+            iter.remove();            
+        }
         
-        m_subsystems.forEach(Subsystem::iterationRun);
+        Iterator<Subsystem> iter = m_subsystems.iterator();
+        Subsystem sys;
+        while(iter.hasNext()){
+            sys = iter.next();
+            if(sys.getCurrentCommand() == null){
+                add_internal(sys.getDefaultCommand());
+            }
+            sys.confirmCommand();
+        }
+        iter = null;
+        sys = null;
         
 //        updateTable();
         m_running = false;
@@ -292,8 +305,8 @@ public final class Scheduler implements NamedSendable {
             cmd = nextCmd;
             nextCmd = cmd.m_nextCommand;
             cmd.removed();
-            cmd.m_previousCommand.m_nextCommand = nextCmd;
-            nextCmd.m_previousCommand = cmd.m_previousCommand;
+            cmd.m_previousCommand.m_nextCommand = cmd.m_nextCommand;
+            cmd.m_nextCommand.m_previousCommand = cmd.m_previousCommand;
             cmd.m_previousCommand = null;
             cmd.m_nextCommand = null;
         }
