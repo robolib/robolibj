@@ -16,6 +16,7 @@
 package io.github.robolib.command;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -250,17 +251,23 @@ public class CommandGroup extends Command {
      */
     @Override
     final void _end(){
+        Command cmd;
         if(m_currentCommandIndex != -1 && m_currentCommandIndex < m_commands.size()){
-            Command cmd = m_commands.get(m_currentCommandIndex);
+            cmd = m_commands.get(m_currentCommandIndex);
             cmd._cancel();
             cmd.removed();
         }
+        cmd = null;
         
-        m_children.forEach(ce -> {
-            ce._cancel();
-            ce.removed();
-        });
-        m_children.removeAllElements();
+        Iterator<Command> iter = m_children.iterator();
+        while(iter.hasNext()){
+            cmd = iter.next();
+            cmd._cancel();
+            cmd.removed();
+            iter.remove();
+        }
+        iter = null;
+        cmd = null;
     }
     
     /**
@@ -336,13 +343,19 @@ public class CommandGroup extends Command {
      * @param command the command
      */
     private final void cancelConflicts(Command command){
-        m_children.forEach(ce -> {
-            List<Subsystem> requires = command.getRequirements();
-            if(requires.stream().anyMatch(system -> ce.doesRequire(system))){
-                ce._cancel();
-                ce.removed();
-                m_children.remove(ce);
+        Command cmd;
+        List<Subsystem> requires = command.getRequirements();
+        Iterator<Command> iter = m_children.iterator();
+        while(iter.hasNext()){
+            cmd = iter.next();
+            if(cmd.requiresAny(requires)){
+                cmd._cancel();
+                cmd.removed();
+                iter.remove();
             }
-        });
+        }
+        iter = null;
+        cmd = null;
+        requires = null;
     }
 }
