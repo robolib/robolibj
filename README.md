@@ -20,3 +20,7 @@ Goals:
   * Save log files for each match - USB drive will be used.
   * Complete power monitoring
  * Versatile
+
+An example usage of this library can be found here:
+
+https://github.com/WestwoodRobotics/robot-recyclerush
