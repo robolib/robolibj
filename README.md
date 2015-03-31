@@ -1,6 +1,8 @@
 RoboLibJ - An FRC library
 ==
 
+***Because of school, and exams, I will not be able to work on this as much as I would like. Normal development will continue after May 24th.***
+
 Documentation
 http://robolib.github.io/robolibj/
 

@@ -71,7 +71,7 @@ public final class DriverStation implements Runnable {
         m_instance = new DriverStation();
     }
     
-    public static final DriverStation getInstance(){
+    public static DriverStation getInstance(){
         return m_instance;
     }
     
@@ -167,12 +167,15 @@ public final class DriverStation implements Runnable {
 
     private static double m_nextComplainTime = 0.0;
     
-    protected synchronized static final void complainJoystickMissing(String msg){
-        double c = RoboRIO.getFPGATimestamp();
-        if(c > m_nextComplainTime){
-            Logger.get(Joystick.class).error(msg);
-            m_nextComplainTime = c + 5.0;
+    protected static void complainJoystickMissing(String msg){
+        synchronized(m_instance) {
+            double c = RoboRIO.getFPGATimestamp();
+            if(c > m_nextComplainTime){
+                Logger.get(Joystick.class).error(msg);
+                m_nextComplainTime = c + 5.0;
+            }
         }
+        
     }
 
     /**
@@ -182,7 +185,7 @@ public final class DriverStation implements Runnable {
      * @param axis the axis
      * @return the stick axis
      */
-    public static final double getStickAxis(Joystick.JSID stick, int axis){
+    public static double getStickAxis(Joystick.JSID stick, int axis){
         synchronized(m_jsSem){
             if(m_joystickAxes[stick.ordinal()].length <= axis){
                 complainJoystickMissing("Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
@@ -205,7 +208,7 @@ public final class DriverStation implements Runnable {
      * @param button the button
      * @return the stick button
      */
-    public static final boolean getStickButton(Joystick.JSID stick, int button){
+    public static boolean getStickButton(Joystick.JSID stick, int button){
         synchronized(m_jsSem){    
             if(m_joystickNBtn[stick.ordinal()] <= button){
                 complainJoystickMissing("Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
@@ -223,7 +226,7 @@ public final class DriverStation implements Runnable {
      * @param pov the pov
      * @return the stick pov
      */
-    public static final int getStickPOV(Joystick.JSID stick, int pov){
+    public static int getStickPOV(Joystick.JSID stick, int pov){
         synchronized(m_jsSem){
             if(m_joystickPOVs[stick.ordinal()].length <= pov){
                 complainJoystickMissing("Button '" + pov + "' on stick '" + stick + "' is invalid. Is it plugged in?");

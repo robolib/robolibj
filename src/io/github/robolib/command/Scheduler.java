@@ -188,14 +188,6 @@ public final class Scheduler implements NamedSendable {
      * Defaults </li> </ol>
      */
     public static void run(){
-        if(m_running){
-            m_log.warn("Scheduler already running");
-            return;
-        }
-        
-        m_running = true;
-//        m_runningCommandsChanged = false;
-        
         if(m_disabled){
             if(++m_disabledCounter >= 32){
                 m_log.warn("Scheduler is being called, but is disabled.");
@@ -204,12 +196,23 @@ public final class Scheduler implements NamedSendable {
             return;
         }
         
+        if(m_running){
+            m_log.warn("Scheduler already running");
+            return;
+        }
+        
+        m_running = true;
+//        m_runningCommandsChanged = false;
+        
+        
+        
         m_buttons.forEach(ButtonScheduler::execute);
         
         m_binds.forEach(Binding::updateValue);
         
         Command cmd = null;
         Command nextCmd = m_firstCommand.m_nextCommand;
+        
         
 //        if(m_table != null){
 //            m_table.retrieveValue("Cancel", toCancel);
@@ -245,6 +248,7 @@ public final class Scheduler implements NamedSendable {
             while(nextCmd != m_lastCommand){
                 cmd = nextCmd;
                 nextCmd = cmd.m_nextCommand;
+//                cmd.
                 if(!cmd.run()){
                     cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
                     cmd.removed();
@@ -261,23 +265,19 @@ public final class Scheduler implements NamedSendable {
         cmd = null;
         nextCmd = null;
         
-        m_additions.forEach(Scheduler::add_internal);
         for(Iterator<Command> iter = m_additions.iterator(); iter.hasNext();){
             add_internal(iter.next());
             iter.remove();            
         }
         
-        Iterator<Subsystem> iter = m_subsystems.iterator();
-        Subsystem sys;
-        while(iter.hasNext()){
-            sys = iter.next();
+//        Iterator<Subsystem> iter = m_subsystems.iterator();
+//        Subsystem sys;
+        for(Subsystem sys : m_subsystems){
             if(sys.getCurrentCommand() == null){
                 add_internal(sys.getDefaultCommand());
             }
             sys.confirmCommand();
         }
-        iter = null;
-        sys = null;
         
 //        updateTable();
         m_running = false;
