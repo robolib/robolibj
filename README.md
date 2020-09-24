@@ -1,26 +1,12 @@
+### This project is unmaintained
+It has been over 5 years and I do not see a future for it.
+
+you can poke it with a stick tho.
+
 RoboLibJ - An FRC library
 ==
-
-***Because of school, and exams, I will not be able to work on this as much as I would like. Normal development will continue after May 24th.***
-
-Documentation
-http://robolib.github.io/robolibj/
-
-***NOTE***
-This project is in development. That means that anything can change
-including package structure, class names, method names, or anything
-else that I feel needs changing.
-
-The point of this project is to completely replace WPILib, with a more complete library.
-
-Goals:
- * Verbose
- * Efficient
- * Built-in, Extensive logging functions
-  * Save log files for each match - USB drive will be used.
-  * Complete power monitoring
- * Versatile
+aka my 2 weeks of frustration with wpilib, manifested.
 
 An example usage of this library can be found here:
 
-https://github.com/WestwoodRobotics/robot-recyclerush
+https://github.com/noriah/robolib-bot2583

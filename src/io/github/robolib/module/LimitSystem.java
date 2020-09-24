@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 Austin Reuland <amreuland@gmail.com>.
- * 
+ * Copyright (c) 2015-2020 noriah reuland <code@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -21,14 +21,14 @@ import io.github.robolib.identifier.BooleanSource;
 /**
  * The Limit Switch System Interface.
  *
- * @author Austin Reuland <amreuland@gmail.com>
+ * @author noriah reuland <code@noriah.dev>
  */
 public class LimitSystem {
 
     /**
      * Type of limit system
-     * 
-     * @author Austin Reuland <amreuland@gmail.com>
+     *
+     * @author noriah reuland <code@noriah.dev>
      */
     public static enum SystemType {
         /** System limited at a front limit. */
@@ -76,15 +76,15 @@ public class LimitSystem {
         if(m_systemType == SystemType.SINGLE_REVERSE) return true;
         return !m_frontLimit.getState();
     }
-    
+
     /**
      * Can down.
      *
      * @return Can we go Down
-     */ 
+     */
     public boolean canReverse(){
         if(m_systemType == SystemType.SINGLE_FORWARD) return true;
         return !m_backLimit.getState();
     }
-    
+
 }

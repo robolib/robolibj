@@ -1,4 +1,4 @@
-Copyright (c) 2015 Austin Reuland <amreuland@gmail.com>
+Copyright (c) 2015-2020 noriah reuland <code@noriah.dev>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

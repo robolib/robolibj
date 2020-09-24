@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 Austin Reuland <amreuland@gmail.com>.
- * 
+ * Copyright (c) 2015-2020 noriah reuland <code@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -21,18 +21,18 @@ import io.github.robolib.lang.CANMessageNotFoundException;
 import io.github.robolib.lang.CANNotInitializedException;
 
 /**
- * 
  *
- * @author Austin Reuland <amreuland@gmail.com>
+ *
+ * @author noriah reuland <code@noriah.dev>
  */
 public class CANUtil {
-    
+
     // FRC Error codes
     static final int ERR_CANSessionMux_InvalidBuffer = -44086;
     static final int ERR_CANSessionMux_MessageNotFound = -44087;
     static final int ERR_CANSessionMux_NotAllowed = -44088;
     static final int ERR_CANSessionMux_NotInitialized = -44089;
-    
+
     public static void checkStatus(int status, int messageID) throws
     CANInvalidBufferException, CANMessageNotAllowedException,
     CANNotInitializedException {
