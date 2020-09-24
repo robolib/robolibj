@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -18,33 +18,33 @@ package io.github.robolib.module;
 /**
  * The Interface MotorSafety.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public interface MotorSafety {
-    
+
     /** The Constant SAFETY_TIMEOUT_DEFAULT. */
     public static final double SAFETY_TIMEOUT_DEFAULT = 0.1;
-    
+
     /** The Constant SAFETY_TIMEOUT_STRICT. */
     public static final double SAFETY_TIMEOUT_STRICT = 0.05;
-    
+
     /** The Constant SAFETY_TIMEOUT_LOOSE. */
     public static final double SAFETY_TIMEOUT_LOOSE = 0.5;
-    
+
     /**
      * Return the MotorSafetyHelper object for this MotorSafety Object
-     * 
+     *
      * @return the motor safety helper
      */
     MotorSafetyHelper getSafetyHelper();
-    
+
     /**
      * Feed the safety helper
      */
     public default void feed(){
         getSafetyHelper().feed();
     }
-    
+
     /**
      * Checks if is alive.
      *
@@ -53,7 +53,7 @@ public interface MotorSafety {
     public default boolean isAlive(){
         return getSafetyHelper().isAlive();
     }
-    
+
     /**
      * Sets the safety expiration.
      *
@@ -62,7 +62,7 @@ public interface MotorSafety {
     public default void setSafetyExpiration(double timeout){
         getSafetyHelper().setExpiration(timeout);
     }
-    
+
     /**
      * Gets the safety expiration.
      *
@@ -71,12 +71,12 @@ public interface MotorSafety {
     public default double getSafetyExpiration(){
         return getSafetyHelper().getExpiration();
     }
-    
+
     /**
      * Stop motor.
      */
     void stopMotor();
-    
+
     /**
      * Enable safety.
      *
@@ -85,7 +85,7 @@ public interface MotorSafety {
     public default void setSafetyEnabled(boolean enabled){
         getSafetyHelper().setSafetyEnabled(enabled);
     }
-    
+
     /**
      * Checks if is safety enabled.
      *
@@ -94,7 +94,7 @@ public interface MotorSafety {
     public default boolean isSafetyEnabled(){
         return getSafetyHelper().isSafetyEnabled();
     }
-    
+
     /**
      * Gets the description.
      *

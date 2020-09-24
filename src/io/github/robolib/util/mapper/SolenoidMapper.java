@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -25,9 +25,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public final class SolenoidMapper implements ModuleMapper<SolenoidBase> {
 
@@ -62,7 +62,7 @@ public final class SolenoidMapper implements ModuleMapper<SolenoidBase> {
                 Logger.get(RobotMap.class).fatal("Unable to create Solenoid for '" + key + "'! NO type '" + type + "'");
                 break;
             }
-                
+
         } catch (SecurityException | IllegalArgumentException | JSONException e) {
             Logger.get(RobotMap.class).fatal("Unable to create Solenoid for '" + key + "'!", e);
         }

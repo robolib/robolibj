@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -38,15 +38,15 @@ import io.github.robolib.util.log.Logger;
  * forward, or full reverse control of motors without variable speed. It also
  * allows the two channels (forward and reverse) to be used independently for
  * something that does not care about voltage polarity (like a solenoid).
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public final class Relay extends Interface implements Module {
-    
+
     /**
      * Enum representation of Relay channels on the RIO
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum RelayChannel {
         RELAY0,
@@ -54,11 +54,11 @@ public final class Relay extends Interface implements Module {
         RELAY2,
         RELAY3;
     }
-    
+
     /**
      * Set the state of the relay
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum RelayValue {
         OFF,
@@ -66,11 +66,11 @@ public final class Relay extends Interface implements Module {
         REVERSE,
         ON;
     }
-    
+
     /**
      * Set the direction the relay can go in
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum RelayDirection {
         FORWARD(1),
@@ -82,28 +82,28 @@ public final class Relay extends Interface implements Module {
             value = (byte)val;
         }
     }
-    
+
     private static final byte RELAY_ON = (byte) 1;
     private static final byte RELAY_OFF = (byte) 0;
-    
-    
+
+
     protected final String m_description;
-    
+
     /** The The RoboRIO port identifier. */
     private final ByteBuffer m_port;
 
     /** The Relay Channel this Relay is operating on. */
     private RelayChannel m_channel;
-    
+
     /** The Direction this Relay is allowed to operate in */
     private RelayDirection m_direction;
-    
+
     /** The disabled state. */
     private boolean m_disabled;
-    
+
     /** Keep track of already used channels. */
     private static final boolean USED_CHANNELS[] = new boolean[MAX_RELAY_CHANNELS];
-    
+
     /**
      * Relay constructor given a channel, allowing both directions.
      *
@@ -112,7 +112,7 @@ public final class Relay extends Interface implements Module {
     public Relay(RelayChannel channel) {
         this(channel, RelayDirection.BOTH, "Relay Ch" + channel.ordinal());
     }
-    
+
     /**
      * Relay constructor given a channel.
      *
@@ -128,29 +128,29 @@ public final class Relay extends Interface implements Module {
      *
      * @param channel The {@link RelayChannel} for this relay.
      * @param dir The direction that the Relay object will control.
-     * @param desc Description of this relay for debugging, dash-board, 
+     * @param desc Description of this relay for debugging, dash-board,
      * and power monitoring purposes
      */
     public Relay(RelayChannel channel, RelayDirection dir, String desc){
         super(InterfaceType.RELAY);
         m_description = desc;
         m_direction = dir;
-        
+
         if(USED_CHANNELS[channel.ordinal()] == false){
             USED_CHANNELS[channel.ordinal()] = true;
         }else{
             throw new ResourceAllocationException("Cannot create '" + desc + "', Relay channel '" + channel.name() + "' already in use.");
         }
-        
+
         IntBuffer status = allocateInt();
         m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte)channel.ordinal()), status);
         HALUtil.checkStatus(status);
         set(RelayValue.OFF);
-        
+
         UsageReporting.report(UsageReporting.ResourceType_Relay, channel.ordinal());
-        
+
     }
-    
+
     /**
      * Free the Relay channel.
      */
@@ -160,23 +160,23 @@ public final class Relay extends Interface implements Module {
         }else{
             Logger.get(Relay.class).error("Relay Channel '" + getChannelName() + "' was not allocated. How did you get here?");
         }
-        
+
         IntBuffer status = allocateInt();
         set(RelayValue.OFF);
         DIOJNI.freeDIO(m_port, status);
         HALUtil.checkStatus(status);
     }
-    
-    
-    
+
+
+
     /**
-     * 
+     *
      * @param value
      */
     public void set(boolean value){
         set(value?RelayValue.ON:RelayValue.OFF);
     }
-    
+
     /**
      * Set the relay state.
      *
@@ -223,7 +223,7 @@ public final class Relay extends Interface implements Module {
         }
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Get the Relay State
      *
@@ -241,7 +241,7 @@ public final class Relay extends Interface implements Module {
         int reverse = RelayJNI.getRelayReverse(m_port, status) << 1;
         return RelayValue.values()[(forward | reverse)];
     }
-    
+
     /**
      * Set the Relay Direction
      *
@@ -256,7 +256,7 @@ public final class Relay extends Interface implements Module {
         set(RelayValue.OFF);
         m_direction = dir;
     }
-    
+
     /**
      * The channel this Relay is operating on.
      *
@@ -299,7 +299,7 @@ public final class Relay extends Interface implements Module {
     public void disableModule() {
         set(RelayValue.OFF);
         m_disabled = true;
-        
+
     }
 
     /**

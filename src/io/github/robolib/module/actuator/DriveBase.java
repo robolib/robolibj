@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -27,15 +27,15 @@ import io.github.robolib.module.iface.PWM.PWMChannel;
 import io.github.robolib.util.MathUtils;
 
 /**
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class DriveBase implements ActuatorModule, MotorSafety {
-    
+
     /**
      * Enum representation of each motor
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum MotorType {
         FRONT_LEFT,
@@ -43,22 +43,22 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         REAR_LEFT,
         REAR_RIGHT;
     }
-    
+
     protected MotorSafetyHelper m_safetyHelper;
-    
+
     protected SpeedController m_frontLeftMotor;
     protected SpeedController m_frontRightMotor;
     protected SpeedController m_rearLeftMotor;
     protected SpeedController m_rearRightMotor;
-    
+
     protected boolean m_allocatedFrontMotors = false;
     protected boolean m_allocatedRearMotors = false;
 
     protected byte m_syncGroup = 0;
     protected double[] m_wheelSpeeds;
-    
+
     /**
-     * 
+     *
      * @param left
      * @param right
      */
@@ -71,9 +71,9 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         m_allocatedFrontMotors = true;
         m_allocatedRearMotors = true;
     }
-    
+
     /**
-     * 
+     *
      * @param left
      * @param right
      */
@@ -81,9 +81,9 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         this(left, right, new NullController(), new NullController());
         m_allocatedRearMotors = true;
     }
-    
+
     /**
-     * 
+     *
      * @param frontLeft
      * @param frontRight
      * @param rearLeft
@@ -98,11 +98,11 @@ public class DriveBase implements ActuatorModule, MotorSafety {
                 new Victor(rearLeft, "DriveBase Rear Right"));
         m_allocatedFrontMotors = true;
         m_allocatedRearMotors = true;
-        
+
     }
-    
+
     /**
-     * 
+     *
      * @param frontLeft
      * @param frontRight
      * @param rearLeft
@@ -114,28 +114,28 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         m_frontRightMotor = frontRight;
         m_rearLeftMotor = rearLeft;
         m_rearRightMotor = rearRight;
-        
+
 //        m_frontLeftMotor.setInverted(true);
 //        m_rearLeftMotor.setInverted(true);
-        
+
         m_wheelSpeeds = new double[4];
 
         m_safetyHelper = SafetyManager.addMotor(this);
         m_safetyHelper.setSafetyEnabled(true);
-        
+
     }
-    
+
     public void free(){
         if(m_allocatedFrontMotors){
-            
+
         }
-        
+
         if(m_allocatedRearMotors){
-            
+
         }
-        
+
     }
-    
+
     /**
      * Invert a motor direction.
      * This is used when a motor should run in the opposite direction as the drive
@@ -156,11 +156,11 @@ public class DriveBase implements ActuatorModule, MotorSafety {
             m_rearRightMotor.setInverted(inverted);
         }
     }
-    
+
     public <T extends Object> void bind(T o, BiConsumer<DriveBase, T> q){
-        
+
     }
-    
+
     /**
      * Arcade drive implements single stick driving.
      * This function lets you directly provide joystick values from any source.
@@ -170,13 +170,13 @@ public class DriveBase implements ActuatorModule, MotorSafety {
     public void arcade(double forward, double rotation){
         forward = MathUtils.clamp(forward, -1.0, 1.0);
         rotation = MathUtils.clamp(rotation, -1.0, 1.0);
-        
+
 //        setMotors(forward - rotation);
         setMotors(forward + rotation, forward - rotation);
-        
+
         /*double left;
         double right;
-        
+
         if(forward > 0){
             if(rotation > 0){
                 left = forward - rotation;
@@ -194,10 +194,10 @@ public class DriveBase implements ActuatorModule, MotorSafety {
                 right = -Math.max(forward, rotation);
             }
         }
-        
+
         setMotors(left, right);*/
     }
-    
+
     /**
      * Arcade drive implements single stick driving.
      * This function lets you directly provide joystick values from any source.
@@ -210,7 +210,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
             forward = squareInput(forward);
             rotation = squareInput(rotation);
         }
-        
+
         arcade(forward, rotation);
     }
 
@@ -223,7 +223,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
     public void tank(double left, double right){
         setMotors(left, right);
     }
-    
+
     /**
      * Provide tank steering using the stored robot configuration.
      * This function lets you directly provide joystick values from any source.
@@ -238,7 +238,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         }
         setMotors(left, right);
     }
-    
+
     /**
      * Drive method for Mecanum wheeled robots.
      *
@@ -255,17 +255,17 @@ public class DriveBase implements ActuatorModule, MotorSafety {
      * the translation. [-1.0..1.0]
      */
     public void mecanum(double x, double y, double rotation){
-        
+
         m_wheelSpeeds[0] = x + y + rotation;
         m_wheelSpeeds[1] = -x + y - rotation;
         m_wheelSpeeds[2] = -x + y + rotation;
         m_wheelSpeeds[3] = x + y - rotation;
-        
+
         normalize();
-        
+
         setMotors();
     }
-    
+
     /**
      * Drive method for Mecanum wheeled robots.
      *
@@ -288,10 +288,10 @@ public class DriveBase implements ActuatorModule, MotorSafety {
             y = squareInput(y);
             rotation = squareInput(rotation);
         }
-        
+
         mecanum(x, y, rotation);
     }
-    
+
     /**
      * Drive method for Mecanum wheeled robots.
      *
@@ -312,7 +312,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         double[] rotated = rotateVector(x, y, gyro);
         mecanum(rotated[0], rotated[1], rotation);
     }
-    
+
     /**
      * Drive method for Mecanum wheeled robots.
      *
@@ -339,9 +339,9 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         double[] rotated = rotateVector(x, y, gyro);
         mecanum(rotated[0], rotated[1], rotation);
     }
-    
+
     private static final double sqrt2 = Math.sqrt(2.0);
-    
+
     /**
      * Drive method for Mecanum wheeled robots.
      *
@@ -356,22 +356,22 @@ public class DriveBase implements ActuatorModule, MotorSafety {
      * the magnitute or direction. [-1.0..1.0]
      */
     public void mecanum_polar(double magnitude, double direction, double rotation){
-        
+
         magnitude = MathUtils.clamp(magnitude, -1.0, 1.0) * sqrt2;
         direction = (direction + 45.0) * MathUtils.PI_OVER_180;
         double cosD = Math.cos(direction) * magnitude;
         double sinD = Math.sin(direction) * magnitude;
-        
+
         m_wheelSpeeds[0] = sinD + rotation;
         m_wheelSpeeds[1] = cosD - rotation;
         m_wheelSpeeds[2] = cosD + rotation;
         m_wheelSpeeds[3] = sinD - rotation;
-        
+
         normalize();
-        
-        setMotors();        
+
+        setMotors();
     }
-    
+
     /**
      * Drive method for Mecanum wheeled robots.
      *
@@ -392,7 +392,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
             direction = squareInput(direction);
             rotation = squareInput(rotation);
         }
-        
+
         mecanum_polar(magnitude, direction, rotation);
     }
 
@@ -405,7 +405,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         if(input < 0) return -(input*input);
         return input * input;
     }
-    
+
     /**
      * Normalize all wheel speeds if the magnitude of any wheel is greater than 1.0.
      */
@@ -419,7 +419,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
 
     /**
      * Rotate a vector in Cartesian space.
-     * 
+     *
      * @param x the x component
      * @param y the y component
      * @param angle the angle of rotation
@@ -437,7 +437,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
 
     /**
      * Set the speed of the left motors.
-     * 
+     *
      * The motors on the left side of the robot are set to "speed".
      * @param speed The speed to send to the left side of the robot.
      */
@@ -446,10 +446,10 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         m_rearLeftMotor.setSpeed(speed);
         m_safetyHelper.feed();
     }
-    
+
     /**
      * Set the speed of the right motors.
-     * 
+     *
      * The motors on the right side of the robot are set to "speed".
      * @param speed The speed to send to the right side of the robot.
      */
@@ -458,20 +458,20 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         m_rearRightMotor.setSpeed(speed);
         m_safetyHelper.feed();
     }
-    
+
     /**
      * Set the speed of all the motors to a single value.
-     * 
+     *
      * The motors are set to "speed".
      * @param speed The speed to send to all the motors.
      */
     public void setMotors(double speed){
         setMotors(speed, speed, speed, speed);
     }
-    
+
     /**
      * Set the speed of the right and left motors.
-     * 
+     *
      * The motors are set to "left" and "right".
      * @param left The speed to send to the left side of the robot.
      * @param right The speed to send to the right side of the robot.
@@ -479,10 +479,10 @@ public class DriveBase implements ActuatorModule, MotorSafety {
     public void setMotors(double left, double right){
         setMotors(left, right, left, right);
     }
-    
+
     /**
      * Set the speed of all the motors.
-     * 
+     *
      * @param frontLeft The speed to send to the front left motor.
      * @param frontRight The speed to send to the front right motor.
      * @param rearLeft The speed to send to the rear left motor.
@@ -495,10 +495,10 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         m_rearRightMotor.setSpeed(rearRight);
         m_safetyHelper.feed();
     }
-    
+
     /**
      * Set the speed of the motors to the values in m_wheelSpeeds.
-     * 
+     *
      * Set all the motors to their respective values in the
      * m_wheelSpeeds array.
      */
@@ -509,7 +509,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         m_rearRightMotor.setSpeed(m_wheelSpeeds[3]);
         m_safetyHelper.feed();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -527,10 +527,10 @@ public class DriveBase implements ActuatorModule, MotorSafety {
         m_frontRightMotor.stopMotor();
         m_rearLeftMotor.stopMotor();
         m_rearRightMotor.stopMotor();
-        
+
         // m_safetyHelper.feed();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -545,7 +545,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -554,7 +554,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -563,7 +563,7 @@ public class DriveBase implements ActuatorModule, MotorSafety {
     @Override
     public void makeSafe() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

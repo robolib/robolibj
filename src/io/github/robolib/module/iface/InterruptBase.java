@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -26,35 +26,35 @@ import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.module.iface.AnalogInput.AnalogTriggerType;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public abstract class InterruptBase extends Interface {
-    
+
     protected ByteBuffer m_interrupt = null;
-    
+
     protected boolean m_isSyncInterrupt = false;
-    
+
     protected int m_interruptIndex;
-    
+
     private static byte m_allocated = 0;
-    
+
     static {
         IntBuffer status = allocateInt();
         InterruptJNI.initializeInterruptJVM(status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Construct a new interrupt
-     * 
+     *
      * @param iType the InterfaceType of this Interrupt
      */
     protected InterruptBase(InterfaceType iType) {
         super(iType);
     }
-    
+
     /**
      * Get whether this interrupt is an analog trigger or not
      * @return true if this interrupt is an AnalogTrigger
@@ -64,22 +64,22 @@ public abstract class InterruptBase extends Interface {
      * @see AnalogTriggerType
      */
     abstract boolean isAnalogTrigger();
-    
+
     /**
      * Get the channel number for this interrupt.
-     * 
+     *
      * @return channel number
      */
     abstract int getChannelNumber();
-    
+
     /**
      * Get the module number for this interrupt.
-     * 
+     *
      * @return module number
      */
     abstract byte getModuleNumber();
-    
-    
+
+
     /**
      * Request one of the 8 interrupts asynchronously on this digital input.
      *
@@ -94,7 +94,7 @@ public abstract class InterruptBase extends Interface {
     public final void requestInterrupt(InterruptHandlerFunction<?> handler){
         if(m_interrupt != null)
             throw new ResourceAllocationException("Interrupt already allocated");
-        
+
         allocateInterrupt(false);
         assert(m_interrupt != null);
 
@@ -102,22 +102,22 @@ public abstract class InterruptBase extends Interface {
         InterruptJNI.attachInterruptHandler(m_interrupt, handler, handler.getParameter(), status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Request one of the 8 interrupts synchronously on this digital input. Request
      * interrupts in synchronous mode where the user program will have to
-     * explicitly wait for the interrupt to occur using {@link #waitForInterrupt}. 
+     * explicitly wait for the interrupt to occur using {@link #waitForInterrupt}.
      * The default is interrupt on rising edges only.
      */
     public final void requestInterrupt(){
         if(m_interrupt != null)
             throw new ResourceAllocationException("Interrupt already allocated");
-        
+
         allocateInterrupt(true);
 
         assert(m_interrupt != null);
     }
-    
+
     /**
      * Allocate the interrupt
      *
@@ -127,19 +127,19 @@ public abstract class InterruptBase extends Interface {
     protected final void allocateInterrupt(boolean watcher){
         if(m_allocated >= 8)
             throw new ResourceAllocationException("No more interrupts available");
-        
+
         m_isSyncInterrupt = watcher;
         IntBuffer status = allocateInt();
         m_interrupt = InterruptJNI.initializeInterrupts(m_allocated++, (byte)(watcher?1:0), status);
         HALUtil.checkStatus(status);
-        
+
         InterruptJNI.requestInterrupts(m_interrupt, getModuleNumber(), getChannelNumber(),
                 (byte)(isAnalogTrigger() ? 1 : 0), status);
         HALUtil.checkStatus(status);
         InterruptJNI.setInterruptUpSourceEdge(m_interrupt, (byte)1, (byte)0, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Cancel interrupts on this device. This deallocates all the chipobject
      * structures and disables any interrupts.
@@ -160,7 +160,7 @@ public abstract class InterruptBase extends Interface {
     public final void waitForInterrupt(double timeout){
         waitForInterrupt(timeout, true);
     }
-    
+
     /**
      * In synchronous mode, wait for the defined interrupt to occur.
      *
@@ -174,7 +174,7 @@ public abstract class InterruptBase extends Interface {
         InterruptJNI.waitForInterrupt(m_interrupt, timeout, ignorePrevious, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Enable interrupts to occur on this input. Interrupts are disabled when
      * the RequestInterrupt call is made. This gives time to do the setup of the
@@ -183,12 +183,12 @@ public abstract class InterruptBase extends Interface {
     public final void enableInterrupts(){
         validateInterrupt();
         if(m_isSyncInterrupt) return;
-        
+
         IntBuffer status = allocateInt();
         InterruptJNI.enableInterrupts(m_interrupt, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Disable Interrupts without without deallocating structures.
      */
@@ -196,12 +196,12 @@ public abstract class InterruptBase extends Interface {
         validateInterrupt();
         if(m_isSyncInterrupt)
             throw new IllegalStateException("You can not disable synchronous interrupts");
-        
+
         IntBuffer status = allocateInt();
         InterruptJNI.disableInterrupts(m_interrupt, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Return the timestamp for the rising interrupt that occurred most
      * recently. This is in the same time domain as getClock().
@@ -216,7 +216,7 @@ public abstract class InterruptBase extends Interface {
         HALUtil.checkStatus(status);
         return timestamp;
     }
-    
+
     /**
      * Return the timestamp for the falling interrupt that occurred most
      * recently. This is in the same time domain as getClock().
@@ -231,7 +231,7 @@ public abstract class InterruptBase extends Interface {
         HALUtil.checkStatus(status);
         return timestamp;
     }
-    
+
     /**
      * Set which edge to trigger interrupts on
      *
@@ -245,7 +245,7 @@ public abstract class InterruptBase extends Interface {
                 (byte)(fallingEdge?1:0), status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Make sure that the interrupt is not null.
      */
@@ -253,6 +253,6 @@ public abstract class InterruptBase extends Interface {
         if(m_interrupt == null)
             throw new IllegalStateException("Interrupt not allocated.");
     }
-    
+
 
 }

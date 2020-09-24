@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -22,7 +22,7 @@ import io.github.robolib.util.Timer;
 
 /**
  * Honeywell HMC5883L I2C 3-axis compass class
- * 
+ *
  * <p>The Honeywell HMC5883L magnetoresistive sensor circuit is a trio of sensors and application specific support circuits to
  * measure magnetic fields. With power supply applied, the sensor converts any incident magnetic field in the sensitive axis
  * directions to a differential voltage output. The magnetoresistive sensors are made of a nickel-iron (Permalloy) thin-film and
@@ -32,7 +32,7 @@ import io.github.robolib.util.Timer;
  * diagram) that will provide positive voltage change with magnetic fields increasing in the sensitive direction. Because the
  * output is only proportional to the magnetic field component along its axis, additional sensor bridges are placed at
  * orthogonal directions to permit accurate measurement of magnetic field in any orientation.</p>
- * 
+ *
  * <p>To check the HMC5883L for proper operation, a self test feature in incorporated in which the sensor is internally excited
  * with a nominal magnetic field (in either positive or negative bias configuration). This field is then measured and reported.
  * This function is enabled and the polarity is set by bits MS[n] in the configuration register A. An internal current source
@@ -42,10 +42,10 @@ import io.github.robolib.util.Timer;
  * function, the manufacturer can quickly verify the sensor’s full functionality after the assembly without additional test setup.
  * The self test results can also be used to estimate/compensate the sensor’s sensitivity drift due to temperature.</p>
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
-    
+
     /** Device I2C Address */
     public static final byte HMC_I2C_ADDR = (byte)0x1e;
 
@@ -53,14 +53,14 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public static final byte HMC_SCALE = (byte)0.92;
 
     /** Configuration Register A */
-    
+
     /**
      * Measurement Configuration Bits.
      * These bits define the measurement flow of the device,
      * specifically whether or not to incorporate an applied
      * bias into the measurement.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum MeasurementMode {
         /**
@@ -84,20 +84,20 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         kNEGBIAS(0x02),
         /** Reserved */
         MODE_RES(0x03);
-        
+
         public byte value;
-        
+
         MeasurementMode(int val){
             value = (byte)val;
         }
     }
-    
+
     /**
      * Data Output Rate Bits
      * These bits set the rate at which data is written to
      * all three data output registers.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum OutputRate {
         /** 0.75Hz */
@@ -116,9 +116,9 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         k75Hz(0x18),
         /** Reserved */
         RATE_RES(0x1c);
-        
+
         public byte value;
-        
+
         OutputRate(int val){
             value = (byte)val;
         }
@@ -127,8 +127,8 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     /**
      * Select number of samples averaged (1 to 8) per measurement output.
      * 00 = 1(Default); 01 = 2; 10 = 4; 11 = 8
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum Averaging {
         /** 1 Sample (Default) */
@@ -139,22 +139,22 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         k3SAMPLES(0x40),
         /** 8 Samples */
         k4SAMPLES(0x60);
-        
+
         public byte value;
-        
+
         Averaging(int val){
             value = (byte)val;
         }
     }
 
     /** Configuration Register B */
-    
+
     /**
      * Gain Configuration Bits
      * These bits configure the gain for the device.
      * The gain configuration is common for all channels.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum Gain {
         /** +/- 0.88 Ga / 1370 Gain LSb/Gauss */
@@ -173,22 +173,22 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         k330(0xc0),
         /** +/- 8.10 Ga / 230 Gain LSb/Gauss */
         k230(0xe0);
-        
+
         public byte value;
-        
+
         Gain(int val){
             value = (byte)val;
         }
     }
 
     /** Mode Register */
-    
+
     /**
      * Mode Select Bits.
      * These bits select the operation mode of this device.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
-     */    
+     *
+     * @author noriah <vix@noriah.dev>
+     */
     public static enum OperatingMode {
         /**
          * Continuous-Measurement Mode
@@ -203,14 +203,14 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
          * output.
          */
         kCONTINUOUS(0x00),
-        /** 
+        /**
          * Single-Measurement Mode (Default)
          * When single-measurement mode is selected, device performs
          * a single measurement, sets RDY high and returned to idle
          * mode. Mode register returns to idle mode bit values. The
          * measurement remains in the data output register and RDY
          * remains high until the data output register is read or
-         * another measurement is performed. 
+         * another measurement is performed.
          */
         kSINGLE(0x01),
         /**
@@ -220,9 +220,9 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         kIDLE(0x02),
         /** Reserved */
         MODE_RES(0x03);
-        
+
         public byte value;
-        
+
         OperatingMode(int val){
             value = (byte)val;
         }
@@ -239,7 +239,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
 
     /** Registers */
-     
+
     /** Configuration Register A */
     public static final byte HMC_REG_CFG_A = (byte)0x00;
     /** Configuration Register B */
@@ -266,11 +266,11 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public static final byte HMC_REG_IDB = (byte)0x0B;
     /** Identification Register C */
     public static final byte HMC_REG_IDC = (byte)0x0C;
-    
+
     /**
      * Enum representation of each of the three Axes.
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum Axis{
         X(0),
@@ -287,11 +287,11 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     private Averaging m_averaging = Averaging.k1SAMPLES;
     private Gain m_gain = Gain.k1090;
     private OperatingMode m_oMode = OperatingMode.kCONTINUOUS;
-    
+
     private boolean m_highSpeed = false;
-    
+
     private ITable m_table;
-    
+
     /**
      * Create a new HMC5883L compass on I2C Port.
      * @param port
@@ -303,7 +303,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         writeModeRegister();
         Timer.delay(0.7);
     }
-    
+
     /**
      * Get the heading around the X axis in radians.
      * This is not the direction the X axis is pointing,
@@ -315,7 +315,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         double head = Math.atan2(mags[1], mags[2]);
         return head < 0.0 ? head + Math.PI * 2 : head;
     }
-    
+
     /**
      * Get the heading around the X axis in degrees.
      * This is not the direction the X axis is pointing,
@@ -325,7 +325,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public double getHeadingXDeg(){
         return Math.toDegrees(getHeadingXRad());
     }
-    
+
     /**
      * Get magnitude for the X Axis.
      * @return the X axis magnitude value.
@@ -333,7 +333,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public double getXMagnitude(){
         return getMagnitude(Axis.X);
     }
-    
+
     /**
      * Get the heading around the Y axis in radians.
      * This is not the direction the Y axis is pointing,
@@ -345,7 +345,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         double head = Math.atan2(mags[0], mags[2]);
         return head < 0.0 ? head + Math.PI * 2 : head;
     }
-    
+
     /**
      * Get the heading around the Y axis in degrees.
      * This is not the direction the Y axis is pointing,
@@ -355,7 +355,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public double getHeadingYDeg(){
         return Math.toDegrees(getHeadingYRad());
     }
-    
+
     /**
      * Get magnitude for the Y Axis.
      * @return the Y axis magnitude value.
@@ -363,7 +363,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public double getYMagnitude(){
         return getMagnitude(Axis.Y);
     }
-    
+
     /**
      * Get the heading around the Z axis in radians.
      * This is not the direction the Z axis is pointing,
@@ -375,7 +375,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         double head = Math.atan2(mags[1], mags[0]);
         return head < 0.0 ? head + Math.PI * 2 : head;
     }
-    
+
     /**
      * Get the heading around the Z axis in degrees.
      * This is not the direction the Z axis is pointing,
@@ -385,7 +385,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public double getHeadingZDeg(){
         return Math.toDegrees(getHeadingZRad());
     }
-    
+
     /**
      * Get magnitude for the Z Axis.
      * @return the Z axis magnitude value.
@@ -393,7 +393,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public double getZMagnitude(){
         return getMagnitude(Axis.Z);
     }
-    
+
     /**
      * Get magnitude for givien {@link Axis}
      * @see Axis
@@ -406,7 +406,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         byte addr = axis.value;
         return magnitudeFromBytes(regs[addr], regs[addr+1]);
     }
-    
+
     /**
      * Get all magnitude values. Headings are in the order of X, Y, Z.
      * @return all magnitude values.
@@ -420,7 +420,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
                 magnitudeFromBytes(regs[2], regs[3])
                 };
     }
-    
+
     /**
      * Data output register lock bit status.
      * <p>This bit is set when: <ol><li>some but not all for of the six
@@ -436,7 +436,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public boolean getLock(){
         return readBit(HMC_REG_STATUS, HMC_LOCK_BIT);
     }
-    
+
     /**
      * Get the status of the Ready Bit.
      * Set when data is written to all six data registers.
@@ -451,7 +451,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public boolean getReady(){
         return readBit(HMC_REG_STATUS, HMC_READY_BIT);
     }
-    
+
     /**
      * Turn two bytes into a magnitude
      * @param first the MSB byte
@@ -461,7 +461,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     private double magnitudeFromBytes(byte first, byte second){
         return ((first << 8) | second);
     }
-    
+
     /**
      * Write the A configuration register
      */
@@ -472,7 +472,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         val |= m_averaging.value;
         write(HMC_REG_CFG_A, val);
     }
-    
+
     /**
      * Write the B configuration register
      */
@@ -481,7 +481,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         val |= m_gain.value;
         write(HMC_REG_CFG_B, val);
     }
-    
+
     /**
      * Write the Mode configuration register
      */
@@ -491,7 +491,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         val |= m_oMode.value;
         write(HMC_REG_CFG_MODE, val);
     }
-    
+
     /**
      * Set the {@link MeasurementMode} to use
      * @see MeasurementMode
@@ -501,7 +501,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         m_mMode = mode;
         writeRegisterA();
     }
-    
+
     /**
      * Get the {@link MeasurementMode} being used.
      * @see MeasurementMode
@@ -510,7 +510,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public MeasurementMode getMeasurementMode(){
         return m_mMode;
     }
-    
+
     /**
      * Set the {@link OutputRate} to used.
      * @see OutputRate
@@ -520,7 +520,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         m_rate = rate;
         writeRegisterA();
     }
-    
+
     /**
      * Get the {@link OutputRate} being used.
      * @see OutputRate
@@ -529,7 +529,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public OutputRate getOutputRate(){
         return m_rate;
     }
-    
+
     /**
      * Set the {@link Averaging} mode to use.
      * @see Averaging
@@ -539,7 +539,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         m_averaging = avg;
         writeRegisterA();
     }
-    
+
     /**
      * Get the {@link Averaging} mode being used.
      * @see Averaging
@@ -548,7 +548,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public Averaging getSamplesPerAverage(){
         return m_averaging;
     }
-    
+
     /**
      * Set the {@link Gain} to use for measurement.
      * @see Gain
@@ -558,7 +558,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         m_gain = gain;
         writeRegisterB();
     }
-    
+
     /**
      * Get the {@link Gain} used for measurements.
      * @see Gain
@@ -567,7 +567,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public Gain getGain(){
         return m_gain;
     }
-    
+
     /**
      * Set the {@link OperatingMode} to run in.
      * @see OperatingMode
@@ -577,7 +577,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         m_oMode = mode;
         writeModeRegister();
     }
-    
+
     /**
      * Get the {@link OperatingMode} being run.
      * @see OperatingMode
@@ -586,7 +586,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     public OperatingMode getOperatingMode(){
         return m_oMode;
     }
-    
+
     /**
      * Set whether or not to use High Speed I2C mode (3400kHz)
      * @param highSpeed use high speed or not
@@ -595,7 +595,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
         m_highSpeed = highSpeed;
         writeModeRegister();
     }
-    
+
     /**
      * Get whether or not we are using High Speed I2C mode (3400kHz)
      * @return using high speed or not
@@ -659,7 +659,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -668,7 +668,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

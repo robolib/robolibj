@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -36,15 +36,15 @@ import io.github.robolib.util.log.Logger;
 /**
  * The PWM Interface class.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public class PWM extends Interface implements Module,
         LiveWindowSendable, NumberSink {
 
     /**
      * The PWM Channel enum.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum PWMChannel{
 
@@ -127,11 +127,11 @@ public class PWM extends Interface implements Module,
             m_mxpPin = mxpPin;
         }
     }
-    
+
     /**
      * The PeriodMultiplier enumeration
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum PeriodMultiplier {
 
@@ -168,7 +168,7 @@ public class PWM extends Interface implements Module,
 
     /** The default disable value for a PWM. */
     public static final int PWM_DISABLED_WIDTH = 0;
-    
+
     public static final int SYSTEM_CLOCK_TICKS_PER_MICROSEC = 40;
 
     /** Keep track of already used channels. */
@@ -206,10 +206,10 @@ public class PWM extends Interface implements Module,
 
     /** The full range bounds scaling factor. */
     private int m_scaleFactorFull;
-    
+
     /** The disabled status. */
     protected boolean m_disabled;
-    
+
     protected final String m_description;
 
     /** The The RoboRIO port identifier. */
@@ -230,7 +230,7 @@ public class PWM extends Interface implements Module,
      * Instantiates a new pwm.
      *
      * @param channel the channel for this pwm
-     * @param desc 
+     * @param desc
      */
     public PWM(PWMChannel channel, String desc) {
         super(InterfaceType.PWM);
@@ -259,7 +259,7 @@ public class PWM extends Interface implements Module,
         UsageReporting.report(UsageReporting.ResourceType_PWM, channel.ordinal());
 
     }
-    
+
     public PWM(PWMChannel channel, String desc, double boundsPosMax, double boundsPosMin,
             double boundsCenter, double boundsNegMax, double boundsNegMin, PeriodMultiplier multi){
         this(channel, desc);
@@ -353,7 +353,7 @@ public class PWM extends Interface implements Module,
     public final String getChannelName(){
         return m_channel.name();
     }
-    
+
     /**
      * Set the bounds on pulse widths for this PWM.
      *
@@ -494,7 +494,7 @@ public class PWM extends Interface implements Module,
         HALUtil.checkStatus(status);
         return value;
     }
-    
+
     /**
      * Sets the speed.
      *
@@ -504,7 +504,7 @@ public class PWM extends Interface implements Module,
     public void set(double value){
         setSpeed(value);
     }
-    
+
     /**
      * Gets the speed.
      *
@@ -513,10 +513,10 @@ public class PWM extends Interface implements Module,
     public double get(){
         return getSpeed();
     }
-    
+
     /**
      * Get the center PWM value.
-     * 
+     *
      * @return the center pwm value
      */
     public final int getCenterPWM(){
@@ -545,7 +545,7 @@ public class PWM extends Interface implements Module,
 
     protected ITable m_table;
     protected ITableListener m_table_listener;
-    
+
     /**
      * {@inheritDoc}
      */

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -23,16 +23,16 @@ import io.github.robolib.module.iface.SPI;
 import io.github.robolib.nettable.ITable;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
 
     private AccelRange m_range;
-    
+
     /**
-     * 
+     *
      * @param port
      * @param range
      */
@@ -52,7 +52,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
         setAccelRange(range);
 
         UsageReporting.report(UsageReporting.ResourceType_ADXL345, UsageReporting.ADXL345_SPI);
-        
+
     }
 
     /**
@@ -85,7 +85,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
         raw.order(ByteOrder.LITTLE_ENDIAN);
         return raw.getShort() * GS_PER_LSB;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -102,14 +102,14 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
                 raw.getShort() * GS_PER_LSB
         };
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void initTable(ITable subtable) {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -127,7 +127,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
     @Override
     public void updateTable() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -136,7 +136,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
     @Override
     public void startLiveWindowMode() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -145,7 +145,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
     @Override
     public void stopLiveWindowMode() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -163,7 +163,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -172,7 +172,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

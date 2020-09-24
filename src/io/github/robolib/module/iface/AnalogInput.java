@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -31,15 +31,15 @@ import io.github.robolib.nettable.ITable;
 import io.github.robolib.util.Timer;
 
 /**
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberSource {
-    
+
     /**
      * Analog Trigger Type Enum
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum AnalogTriggerType {
         IN_WINDOW,
@@ -47,28 +47,28 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         RISING_PULSE,
         FALLING_PULSE;
     }
-    
+
     /**
-     * Accumulator class 
+     * Accumulator class
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public class AccumulatorResult {
         public long value;
         public long count;
     }
-    
+
     private static final int ACCUMULATOR_SLOT = 1;
     private static final int[] ACCUMULATOR_CHANNELS = { 0, 1 };
 
     protected ITable m_table;
 
     private long m_accumulatorOffset;
-    
+
     private ByteBuffer m_triggerPort;
     private int m_triggerIndex;
-    
-    
+
+
     /**
      * Construct an analog channel.
      *
@@ -77,7 +77,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
     public AnalogInput(AnalogChannel channel){
         super(channel, Direction.IN);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -156,7 +156,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         HALUtil.checkStatus(status);
         return value;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -279,7 +279,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
     public void setAccumulatorInitialValue(long initialValue){
         m_accumulatorOffset = initialValue;
     }
-    
+
     /**
      * Resets the accumulator to the initial value.
      */
@@ -292,7 +292,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         final double averageSamples = 1 << getAverageBits();
         Timer.delay(sampleTime * overSamples * averageSamples);
     }
-    
+
     /**
      * Set the center value of the accumulator.
      *
@@ -311,7 +311,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         AnalogJNI.setAccumulatorCenter(m_port, center, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Set the accumulator's deadband.
      * @param deadband The deadband size in ADC codes (12-bit value)
@@ -321,7 +321,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         AnalogJNI.setAccumulatorDeadband(m_port, deadband, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Read the accumulated value.
      *
@@ -336,7 +336,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         HALUtil.checkStatus(status);
         return value;
     }
-    
+
     /**
      * Read the number of accumulated values.
      *
@@ -351,7 +351,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         HALUtil.checkStatus(status);
         return value;
     }
-    
+
     /**
      * Read the accumulated value and the number of accumulated values
      * atomically.
@@ -364,7 +364,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
     public void getAccumulatorOutput(AccumulatorResult result){
         if(result == null) throw new IllegalArgumentException("Result cannot be NULL!");
         if(!isAccumulatorChannel()) throw new IllegalArgumentException(m_channel.name() + " is not an accumulator channel.");
-        
+
         ByteBuffer value = ByteBuffer.allocateDirect(8);
         value.order(ByteOrder.LITTLE_ENDIAN);
         IntBuffer count = allocateInt();
@@ -374,7 +374,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         result.count = count.get(0);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Is the channel attached to an accumulator.
      *
@@ -383,7 +383,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
     public boolean isAccumulatorChannel(){
         if(m_channel.ordinal() == 0 || m_channel.ordinal() == 1)
             return true;
-        
+
         return false;
     }
 
@@ -400,7 +400,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         AnalogJNI.setAnalogSampleRate((float)samples, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Get the current sample rate.
      *
@@ -415,7 +415,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         HALUtil.checkStatus(status);
         return value;
     }
-    
+
     public void initTrigger(){
         IntBuffer status = allocateInt();
         IntBuffer index = allocateInt();
@@ -424,7 +424,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         m_triggerIndex = index.get(0);
         UsageReporting.report(UsageReporting.ResourceType_AnalogTrigger, m_channel.ordinal());
     }
-    
+
     /**
      * Set the upper and lower limits of the analog trigger. The limits are
      * given in ADC codes. If oversampling is used, the units must be scaled
@@ -437,12 +437,12 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         validateTrigger();
         if(lower > upper)
             throw new IllegalArgumentException("Lower bound is greater than upper");
-        
+
         IntBuffer status = allocateInt();
         AnalogJNI.setAnalogTriggerLimitsRaw(m_triggerPort, lower, upper, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Set the upper and lower limits of the analog trigger. The limits are
      * given as floating point voltage values.
@@ -454,12 +454,12 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         validateTrigger();
         if(lower > upper)
             throw new IllegalArgumentException("Lower bound is greater than upper");
-            
+
         IntBuffer status = allocateInt();
         AnalogJNI.setAnalogTriggerLimitsVoltage(m_triggerPort, lower, upper, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Configure the analog trigger to use the averaged vs. raw values. If the
      * value is true, then the averaged value is selected for the analog
@@ -473,7 +473,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         AnalogJNI.setAnalogTriggerAveraged(m_triggerPort, (byte)(useAveraged?1:0), status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Configure the analog trigger to use a filtered value. The analog trigger
      * will operate with a 3 point average rejection filter. This is designed to
@@ -488,7 +488,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         AnalogJNI.setAnalogTriggerFiltered(m_triggerPort, (byte)(useFiltered?1:0), status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Return the index of the analog trigger. This is the FPGA index of this
      * analog trigger instance.
@@ -499,7 +499,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         validateTrigger();
         return m_triggerIndex;
     }
-    
+
     /**
      * Return the InWindow output of the analog trigger. True if the analog
      * input is between the upper and lower limits.
@@ -513,7 +513,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         HALUtil.checkStatus(status);
         return value != 0;
     }
-    
+
     /**
      * Return the TriggerState output of the analog trigger. True if above upper
      * limit. False if below lower limit. If in Hysteresis, maintain previous
@@ -527,7 +527,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         HALUtil.checkStatus(status);
         return value != 0;
     }
-    
+
     /**
      * Creates an AnalogTriggerOutput object. Gets an output object that can be
      * used for routing. Caller is responsible for deleting the
@@ -553,7 +553,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
             }
         };
     }
-    
+
     /**
      * validate that the trigger pointer is not null
      */
@@ -561,7 +561,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
         if(m_triggerPort == null)
             throw new IllegalStateException("Trigger not initialized. Call \"initTrigger()\" first.");
     }
-    
+
     /**
      * Get the average voltage for use with PIDController
      *
@@ -571,7 +571,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
     //public double pidGet(){
     //    return getAverageVoltage();
     //}
-    
+
     /**
      * Live Window code, only does anything if live window is activated.
      */
@@ -579,7 +579,7 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
     public String getSmartDashboardType() {
         return "Analog Input";
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -622,6 +622,6 @@ public class AnalogInput extends AnalogIO implements LiveWindowSendable, NumberS
      */
     @Override
     public void stopLiveWindowMode() {}
-    
+
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -21,14 +21,14 @@ import io.github.robolib.util.log.Logger;
 /**
  * The Class Interface.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public abstract class Interface {
-    
+
     /**
      * Enum representation of interfaces.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     protected static enum InterfaceType {
         ANALOG,

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -27,14 +27,14 @@ import io.github.robolib.lang.ResourceAllocationException;
 
 /**
  * SPI bus interface class.
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public class SPI extends Interface {
 
     /**
      * Valid SPI ports on the RIO
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum Port {
         ONBOARD_CS0,
@@ -43,14 +43,14 @@ public class SPI extends Interface {
         ONBOARD_CS3,
         MXP;
     };
-    
+
     private int m_bitOrder;
     private final byte m_port;
     private int m_clockPolarity;
     private int m_dataOnTrailing;
-    
+
     private static final boolean[] ALLOCATED_PORTS = new boolean[5];
-    
+
     /**
      * Constructor
      *
@@ -58,7 +58,7 @@ public class SPI extends Interface {
      */
     public SPI(Port port) {
         super(InterfaceType.SPI);
-        
+
         if(ALLOCATED_PORTS[port.ordinal()])
             throw new ResourceAllocationException("Cannot allocate spi port '" + port.name() + "', already in use.");
 
@@ -68,27 +68,27 @@ public class SPI extends Interface {
             allocateMXPPin(23);
             allocateMXPPin(25);
         }
-        
+
         ALLOCATED_PORTS[port.ordinal()] = true;
-        
+
         IntBuffer status = allocateInt();
-        
+
         m_port = (byte)port.ordinal();
 //        m_devices++;
-        
+
         SPIJNI.spiInitialize(m_port, status);
-        HALUtil.checkStatus(status);        
-        
+        HALUtil.checkStatus(status);
+
         UsageReporting.report(UsageReporting.ResourceType_SPI, port.ordinal());
     }
-    
+
     /**
      * Free the resources used by this object
      */
     public final void free(){
         SPIJNI.spiClose(m_port);
     }
-    
+
     /**
      * Configure the rate of the generated clock signal.
      * The default value is 500,000 Hz.
@@ -99,7 +99,7 @@ public class SPI extends Interface {
     public final void setClockRate(int hz){
         SPIJNI.spiSetSpeed(m_port, hz);
     }
-    
+
     /**
      * Configure the order that bits are sent and received on the wire
      * to be most significant bit first.
@@ -108,7 +108,7 @@ public class SPI extends Interface {
         m_bitOrder = 1;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
-    
+
     /**
      * Configure the order that bits are sent and received on the wire
      * to be least significant bit first.
@@ -117,7 +117,7 @@ public class SPI extends Interface {
         m_bitOrder = 0;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
-    
+
     /**
      * Configure the clock output line to be active low.
      * This is sometimes called clock polarity high or clock idle high.
@@ -126,7 +126,7 @@ public class SPI extends Interface {
         m_clockPolarity = 1;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
-    
+
     /**
      * Configure the clock output line to be active high.
      * This is sometimes called clock polarity low or clock idle low.
@@ -135,7 +135,7 @@ public class SPI extends Interface {
         m_clockPolarity = 0;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
-    
+
     /**
      * Configure that the data is stable on the falling edge and the data
      * changes on the rising edge.
@@ -144,7 +144,7 @@ public class SPI extends Interface {
         m_dataOnTrailing = 1;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
-    
+
     /**
      * Configure that the data is stable on the rising edge and the data
      * changes on the falling edge.
@@ -153,7 +153,7 @@ public class SPI extends Interface {
         m_dataOnTrailing = 0;
         SPIJNI.spiSetOpts(m_port, m_bitOrder, m_dataOnTrailing, m_clockPolarity);
     }
-    
+
     /**
      * Configure the chip select line to be active high.
      */
@@ -162,7 +162,7 @@ public class SPI extends Interface {
         SPIJNI.spiSetChipSelectActiveHigh(m_port, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Configure the chip select line to be active low.
      */
@@ -171,14 +171,14 @@ public class SPI extends Interface {
         SPIJNI.spiSetChipSelectActiveLow(m_port, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Write data to the slave device.  Blocks until there is space in the
      * output FIFO.
      *
      * If not running in output only mode, also saves the data received
      * on the MISO input during the transfer into the receive FIFO.
-     * 
+     *
      * @param data the data to write
      * @param size the number of bytes to send
      */
@@ -189,7 +189,7 @@ public class SPI extends Interface {
         retVal = SPIJNI.spiWrite(m_port, dB, (byte) size);
         return retVal;
     }
-    
+
     /**
      * Read a word from the receive FIFO.
      *
@@ -208,8 +208,8 @@ public class SPI extends Interface {
     public final int read(Boolean initiate, byte[] data, int size){
         int retVal = 0;
         ByteBuffer dRB = ByteBuffer.allocateDirect(size);
-        
-        
+
+
         if(initiate){
             ByteBuffer dSB = ByteBuffer.allocateDirect(size);
             retVal = SPIJNI.spiTransaction(m_port, dSB, dRB, (byte) size);
@@ -219,7 +219,7 @@ public class SPI extends Interface {
         dRB.get(data);
         return retVal;
     }
-    
+
     /**
      * Perform a simultaneous read/write transaction with the device
      *
@@ -236,6 +236,6 @@ public class SPI extends Interface {
         dRB.get(dataGet);
         return retVal;
     }
-    
+
 
 }

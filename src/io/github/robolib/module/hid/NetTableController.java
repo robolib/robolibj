@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -21,29 +21,29 @@ import io.github.robolib.nettable.ITable;
 /**
  * The Class NetTableController.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public final class NetTableController extends GenericHID {
 
     /** The m_table. */
     private final ITable m_table;
-    
+
     /**
      * The Class NetTableAxis.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public final class NetTableAxis implements HIDAxis {
 
         /** The m_invert. */
         private boolean m_invert = false;
-        
+
         /** The m_dead band. */
         private double m_deadBand = 0.00;
-        
+
         /** The m_channel. */
         private final int m_channel;
-        
+
         /**
          * Instantiates a new net table axis.
          *
@@ -53,7 +53,7 @@ public final class NetTableController extends GenericHID {
             m_channel = channel;
             m_table.putNumber("axis-" + channel, 0.00);
         }
-        
+
         /**
          * {@inheritDoc}
          */
@@ -86,7 +86,7 @@ public final class NetTableController extends GenericHID {
         @Override
         public void setRampEnd(double end) {
             // TODO Auto-generated method stub
-            
+
         }
 
         /**
@@ -95,7 +95,7 @@ public final class NetTableController extends GenericHID {
         @Override
         public void setBacklash(double value) {
             // TODO Auto-generated method stub
-            
+
         }
 
         /**
@@ -104,23 +104,23 @@ public final class NetTableController extends GenericHID {
         @Override
         public void setFineControl(double value) {
             // TODO Auto-generated method stub
-            
+
         }
     }
-    
+
     /**
      * The Class NetTableButton.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public final class NetTableButton implements HIDButton {
-        
+
         /** The m_invert. */
         private boolean m_invert = false;
-        
+
         /** The m_channel. */
         private final int m_channel;
-        
+
         /**
          * Instantiates a new net table button.
          *
@@ -130,7 +130,7 @@ public final class NetTableController extends GenericHID {
             m_channel = channel;
             m_table.putBoolean("button-" + channel, false);
         }
-        
+
         /**
          * {@inheritDoc}
          */
@@ -139,7 +139,7 @@ public final class NetTableController extends GenericHID {
             return m_table.getBoolean("button-" + m_channel, false) & !m_invert;
         }
     }
-    
+
     /**
      * Create a NetworkJoystick Instance.
      *
@@ -148,7 +148,7 @@ public final class NetTableController extends GenericHID {
     public NetTableController(String name){
         this(name, 6, 12);
     }
-    
+
     /**
      * Create a NetworkJoystick Instance.
      *
@@ -158,11 +158,11 @@ public final class NetTableController extends GenericHID {
      */
     public NetTableController(String name, int numAxes, int numBtns){
         super(numAxes, numBtns);
-        
+
         m_table = RoboLib.getRobotTable().getSubTable("Joystick").getSubTable(name);
         for(int i = 0; i < numAxes; i++)
             m_axes[i] = new NetTableAxis(i + 1);
-        
+
         for(int i = 0; i < numBtns; i++)
             m_btns[i] = new NetTableButton(i + 1);
     }
@@ -173,7 +173,7 @@ public final class NetTableController extends GenericHID {
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -182,7 +182,7 @@ public final class NetTableController extends GenericHID {
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

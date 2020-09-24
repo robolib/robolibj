@@ -3,9 +3,9 @@
 package io.github.robolib.module.sensor.mpu6050;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class VectorDouble {
     public double x;
@@ -17,7 +17,7 @@ public class VectorDouble {
         y = 0;
         z = 0;
     }
-    
+
     public VectorDouble(double nx, double ny, double nz) {
         x = nx;
         y = ny;
@@ -34,13 +34,13 @@ public class VectorDouble {
         y /= m;
         z /= m;
     }
-    
+
     public VectorDouble getNormalized() {
         VectorDouble r = new VectorDouble(x, y, z);
         r.normalize();
         return r;
     }
-    
+
     public void rotate(Quaternion q) {
         Quaternion p = new Quaternion(0, x, y, z);
 

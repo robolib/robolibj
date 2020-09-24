@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -18,16 +18,16 @@ package io.github.robolib.module.sensor;
 import io.github.robolib.identifier.LiveWindowSendable;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
-    
+
     /**
      * Axis representation
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     static enum Axis{
         X(0),
@@ -38,7 +38,7 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
             value = (byte)val;
         }
     }
-    
+
     static final int POWER_CONTROL_REGISTER = 0x2D;
     static final int DATA_FORMAT_REGISTER = 0x31;
     static final int DATA_REGISTER = 0x32;
@@ -58,7 +58,7 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
     static final int DATA_FORMAT_SELF_TEST = 0x80;
 
     static final byte ADDRESS_READ_MULTI_REG = (byte) (ADDRESS_READ | ADDRESS_MULTI_BYTE | DATA_FORMAT_REGISTER);
-    
+
     static final double GS_PER_LSB = 0.00390625;
 
     /**
@@ -81,7 +81,7 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
     default double getAccelerationZ() {
         return getAcceleration(Axis.Z);
     }
-    
+
     /**
      * Get the acceleration of one axis in Gs.
      *
@@ -89,7 +89,7 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
      * @return Acceleration of the ADXL345 in Gs.
      */
     double getAcceleration(Axis axis);
-    
+
     /**
      * Get the acceleration of all axes in Gs.
      *
@@ -97,7 +97,7 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
      * acceleration measured on each axis of the ADXL345 in Gs.
      */
     double[] getAccelerations();
-    
+
     /**
      * {@inheritDoc}
      */
@@ -105,13 +105,13 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
     default String getSmartDashboardType(){
         return "3AxisAccelerometer";
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     default void startLiveWindowMode() {}
-    
+
     /**
      * {@inheritDoc}
      */

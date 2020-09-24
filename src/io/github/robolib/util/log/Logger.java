@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -30,10 +30,10 @@ import io.github.robolib.module.RoboRIO;
 
 /**
  * A Logging class for the robot.
- * 
+ *
  * <p>Each Class that wishes to log must call the {@code Logger.get} method with itself
  * as the only argument. This will return a new Logger object.</p>
- * 
+ *
  * <p>To log something, the Calling class must call the desired level method
  * {@code info, debug, warn, error, fatal} with the message to be logged. If the
  * calling the err or fatal classes, a Throwable object must be passed as a second
@@ -41,7 +41,7 @@ import io.github.robolib.module.RoboRIO;
  * error stack trace. However, calling the {@code fatal} method will print the
  * stack trace, and kill the robot.</p>
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  * @see ILogger
  * @see LogOutput
  * @see LogLevel
@@ -49,29 +49,29 @@ import io.github.robolib.module.RoboRIO;
 
 @SuppressWarnings("rawtypes")
 public final class Logger extends ILogger {
-    
-    
+
+
 	/** The Constant m_loggers. */
 	private static final Map<Object, Logger> LOGGERS =
 	        new HashMap<Object, Logger>();
-    
+
     /** The Constant m_defOuts. */
     private static final List<LogOutput> DEFAULT_OUTS =
             new ArrayList<LogOutput>();
-    
+
     /** The m_debugEnabled. */
     private static boolean m_debugEnabled = false;
-    
+
     /** The m_outs. */
     private final List<LogOutput> m_outs;
-    
+
     /** The m_label. */
     private final String m_label;
-    
+
     /** The m_acceptGlobals. */
     private boolean m_acceptGlobals = true;
-    
-    
+
+
     /**
      * Get an ILogger instance for o.
      *
@@ -102,11 +102,11 @@ public final class Logger extends ILogger {
     public static Logger get(Object o, String s){
         if(!LOGGERS.containsKey(o))
             LOGGERS.put(o, new Logger(s));
-        
+
         return LOGGERS.get(o);
     }
-    
-    
+
+
 
     /**
      * Instantiates a new logger.
@@ -118,7 +118,7 @@ public final class Logger extends ILogger {
         m_outs.addAll(DEFAULT_OUTS);
         m_label = label;
     }
-    
+
     /** The Constant TERM_OUT. */
     public static final LogOutput TERM_OUT = System.out::println;
 
@@ -133,7 +133,7 @@ public final class Logger extends ILogger {
      */
     @SuppressWarnings("resource")
     public static LogOutput fileOutput(final String s){
-        
+
         final PrintWriter mWriter;
         try {
             mWriter = new PrintWriter(s, "UTF-8");
@@ -144,18 +144,18 @@ public final class Logger extends ILogger {
             get(LogOutput.class).warn("What the Heck? - PrintWriter Rejected UTF-8 Encoding...");
             return null;
         }
-        
+
         return (String msg) -> {
             mWriter.println(msg);
             mWriter.flush();
         };
     }
-    
+
     /**
      * Adds a {@link LogOutput} to the list of default outputs.
      * Also adds the output to all of the current Loggers.
      * (If they don't already have it)
-     * 
+     *
      * @param out a {@link LogOutput} instance
      */
     public static void registerDefaultOutput(LogOutput out){
@@ -171,7 +171,7 @@ public final class Logger extends ILogger {
     public static void registerDefaultFileOutput(String s){
         registerDefaultOutput(fileOutput(s));
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -180,7 +180,7 @@ public final class Logger extends ILogger {
         if(!m_outs.contains(out) && (!out.equals(TERM_OUT) || !out.equals(TERM_ERR)))
             m_outs.add(out);
     }
-    
+
     public void clearOutputs(){
         m_acceptGlobals = false;
         m_outs.clear();
@@ -205,7 +205,7 @@ public final class Logger extends ILogger {
                 l.registerOutput(out);
         });
     }
-    
+
     /**
      * Log a message.
      *
@@ -231,7 +231,7 @@ public final class Logger extends ILogger {
         TERM_ERR.sendMsg(sout);
         m_outs.forEach(lo -> lo.sendMsg(sout));
     }
-    
+
     /**
      * {@inheritDoc}
      */

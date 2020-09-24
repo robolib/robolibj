@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -29,26 +29,26 @@ import io.github.robolib.util.StringUtils;
 /**
  * A better class for accessing the Pneumatics Control Module.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public final class Compressor implements Module, UpdatingSendable {
-    
+
     /** The m_table. */
     private ITable m_table;
-    
+
     /** The m_pcm_compressor. */
     private static final ByteBuffer COMPRESSOR =
             CompressorJNI.initializeCompressor((byte) 0);
-    
+
     /** The Constant m_instance. */
     private static Compressor m_instance;
-    
+
     public static void initialize(){
         if(m_instance != null)
             throw new IllegalStateException("Compressor has already been initialized.");
         m_instance = new Compressor();
     }
-    
+
     /**
      * Gets the single instance of PCM.
      *
@@ -57,16 +57,16 @@ public final class Compressor implements Module, UpdatingSendable {
     public static Compressor getInstance(){
         return m_instance;
     }
-    
+
     /**
      * Instantiates a new pcm.
      */
     private Compressor(){}
-    
+
     public void free(){
-        
+
     }
-    
+
     /**
      * Gets the compressor current.
      *
@@ -75,10 +75,10 @@ public final class Compressor implements Module, UpdatingSendable {
     public static double getCompressorCurrent(){
         IntBuffer status = allocateInt();
         float current = CompressorJNI.getCompressorCurrent(COMPRESSOR, status);
-        HALUtil.checkStatus(status);   
+        HALUtil.checkStatus(status);
         return current;
     }
-    
+
     /**
      * Enable compressor.
      *
@@ -89,7 +89,7 @@ public final class Compressor implements Module, UpdatingSendable {
         CompressorJNI.setClosedLoopControl(COMPRESSOR, on, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Gets the compressor enabled.
      *
@@ -101,7 +101,7 @@ public final class Compressor implements Module, UpdatingSendable {
         HALUtil.checkStatus(status);
         return on;
     }
-    
+
     /**
      * Gets the pressure switch.
      *
@@ -113,7 +113,7 @@ public final class Compressor implements Module, UpdatingSendable {
         HALUtil.checkStatus(status);
         return on;
     }
-    
+
     /**
      * Gets the current fault.
      *
@@ -125,7 +125,7 @@ public final class Compressor implements Module, UpdatingSendable {
         HALUtil.checkStatus(status);
         return retval;
     }
-    
+
     /**
      * Gets the current sticky fault.
      *
@@ -137,7 +137,7 @@ public final class Compressor implements Module, UpdatingSendable {
         HALUtil.checkStatus(status);
         return retval;
     }
-    
+
     /**
      * Gets the short fault.
      *
@@ -149,7 +149,7 @@ public final class Compressor implements Module, UpdatingSendable {
         HALUtil.checkStatus(status);
         return retval;
     }
-    
+
     /**
      * Gets the short sticky fault.
      *
@@ -161,7 +161,7 @@ public final class Compressor implements Module, UpdatingSendable {
         HALUtil.checkStatus(status);
         return retval;
     }
-    
+
     /**
      * Gets the no connection fault.
      *
@@ -173,7 +173,7 @@ public final class Compressor implements Module, UpdatingSendable {
         HALUtil.checkStatus(status);
         return retval;
     }
-    
+
     /**
      * Gets the no connection sticky fault.
      *
@@ -185,7 +185,7 @@ public final class Compressor implements Module, UpdatingSendable {
         HALUtil.checkStatus(status);
         return retval;
     }
-    
+
     /**
      * Clear compressor sticky faults.
      */
@@ -235,7 +235,7 @@ public final class Compressor implements Module, UpdatingSendable {
     @Override
     public void enableModule() {
         enableCompressor(true);
-        
+
     }
 
     /**
@@ -244,7 +244,7 @@ public final class Compressor implements Module, UpdatingSendable {
     @Override
     public void disableModule() {
         enableCompressor(false);
-        
+
     }
 
     /**

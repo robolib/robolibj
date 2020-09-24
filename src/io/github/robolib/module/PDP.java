@@ -1,6 +1,6 @@
 /*
-' * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+' * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -24,86 +24,86 @@ import io.github.robolib.util.Common;
 /**
  * A class for accessing the Power Distribution Panel.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public final class PDP implements UpdatingSendable {
-    
+
     /**
      * The Enum PowerChannel.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum PowerChannel {
-        
+
         /** Channel 0 on the Power Distribution Panel. */
         POWER0,
-        
+
         /** Channel 1 on the Power Distribution Panel. */
         POWER1,
-        
+
         /** Channel 2 on the Power Distribution Panel. */
         POWER2,
-        
+
         /** Channel 3 on the Power Distribution Panel. */
         POWER3,
-        
+
         /** Channel 4 on the Power Distribution Panel. */
         POWER4,
-        
+
         /** Channel 5 on the Power Distribution Panel. */
         POWER5,
-        
+
         /** Channel 6 on the Power Distribution Panel. */
         POWER6,
-        
+
         /** Channel 7 on the Power Distribution Panel. */
         POWER7,
-        
+
         /** Channel 8 on the Power Distribution Panel. */
         POWER8,
-        
+
         /** Channel 9 on the Power Distribution Panel. */
         POWER9,
-        
+
         /** Channel 10 on the Power Distribution Panel. */
         POWER10,
-        
+
         /** Channel 11 on the Power Distribution Panel. */
         POWER11,
-        
+
         /** Channel 12 on the Power Distribution Panel. */
         POWER12,
-        
+
         /** Channel 13 on the Power Distribution Panel. */
         POWER13,
-        
+
         /** Channel 14 on the Power Distribution Panel. */
         POWER14,
-        
+
         /** Channel 15 on the Power Distribution Panel. */
         POWER15;
     }
-    
+
     /** Number of PDP channels. **/
     public static final int MAX_POWER_CHANNELS = 16;
-    
+
     /** The Constant m_instance. */
     private static PDP m_instance;
-    
+
     /** The m_update channels. */
-    
+
     private static final String[] m_channelMap = new String[MAX_POWER_CHANNELS];
-    
+
     /** The m_table. */
     private ITable m_table;
-    
+
     public static void initialize(){
         if(m_instance != null)
             throw new IllegalStateException("PDP already initialized.");
-        
+
         m_instance = new PDP();
     }
-    
+
     /**
      * Gets the single instance of PDP.
      *
@@ -112,12 +112,12 @@ public final class PDP implements UpdatingSendable {
     public static PDP getInstance(){
         return m_instance;
     }
-    
+
     /**
      * Instantiates a PDP.
      */
     private PDP(){}
-    
+
     /**
      * Gets the channel name.
      *
@@ -127,7 +127,7 @@ public final class PDP implements UpdatingSendable {
     public static String getChannelName(PowerChannel channel){
         return m_channelMap[channel.ordinal()];
     }
-    
+
     /**
      * Sets the channel name.
      *
@@ -140,10 +140,10 @@ public final class PDP implements UpdatingSendable {
             throw new ResourceAllocationException("PDP channel '"
                     + channel.name() + "' already claimed by '"
                     + m_channelMap[channel.ordinal()] + "'.");
-        
+
         m_channelMap[channel.ordinal()] = name;
     }
-    
+
     /**
      * Gets the voltage.
      *
@@ -152,7 +152,7 @@ public final class PDP implements UpdatingSendable {
     public static double getVoltage(){
         return PDPJNI.getPDPVoltage(Common.allocateInt());
     }
-    
+
     /**
      * Gets the temperature.
      *
@@ -161,7 +161,7 @@ public final class PDP implements UpdatingSendable {
     public static double getTemperature(){
         return PDPJNI.getPDPTemperature(Common.allocateInt());
     }
-    
+
     /**
      * Gets the current.
      *
@@ -181,7 +181,7 @@ public final class PDP implements UpdatingSendable {
     private double getChannelCurrent(int channel){
         return PDPJNI.getPDPChannelCurrent((byte)channel, Common.allocateInt());
     }
-    
+
     /**
      * Gets the total current.
      *
@@ -190,7 +190,7 @@ public final class PDP implements UpdatingSendable {
     public static double getTotalCurrent(){
         return PDPJNI.getPDPTotalCurrent(Common.allocateInt());
     }
-    
+
     /**
      * Gets the total power.
      *
@@ -199,7 +199,7 @@ public final class PDP implements UpdatingSendable {
     public static double getTotalPower(){
         return PDPJNI.getPDPTotalPower(Common.allocateInt());
     }
-    
+
     /**
      * Gets the total energy.
      *
@@ -208,21 +208,21 @@ public final class PDP implements UpdatingSendable {
     public static double getTotalEnergy(){
         return PDPJNI.getPDPTotalEnergy(Common.allocateInt());
     }
-    
+
     /**
      * Reset total energy.
      */
     public static void resetTotalEnergy(){
-        PDPJNI.resetPDPTotalEnergy(Common.allocateInt());   
+        PDPJNI.resetPDPTotalEnergy(Common.allocateInt());
     }
-    
+
     /**
      * Reset faults.
      */
     public static void resetFaults(){
         PDPJNI.clearPDPStickyFaults(Common.allocateInt());
     }
-    
+
     /*
      * Live Window code, only does anything if live window is activated.
      */
@@ -230,7 +230,7 @@ public final class PDP implements UpdatingSendable {
     public String getSmartDashboardType() {
         return "Power Distribution Panel";
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -246,7 +246,7 @@ public final class PDP implements UpdatingSendable {
     public ITable getTable() {
         return m_table;
     }
-    
+
     /**
      * Update the table for this object with the latest values.
      */
@@ -255,12 +255,12 @@ public final class PDP implements UpdatingSendable {
         for(int i = 0; i < MAX_POWER_CHANNELS; i++){
             m_table.putNumber(m_channelMap[i], getChannelCurrent(i));
         }
-        
+
         m_table.putNumber("Voltage", getVoltage());
         m_table.putNumber("TotalCurrent", getTotalCurrent());
         m_table.putNumber("Temperature", getTemperature());
         m_table.putNumber("Total Energy Usage", getTotalEnergy());
         m_table.putNumber("Total Power Usage", getTotalPower());
-             
+
     }
 }

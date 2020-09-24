@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -19,14 +19,14 @@ import io.github.robolib.module.iface.I2C;
 import io.github.robolib.nettable.ITable;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
 
     private AccelRange m_range;
-    
+
     /**
      * @param port
      * @param address
@@ -49,13 +49,13 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
     public AccelRange getAccelRange() {
         return m_range;
     }
-    
+
     public double getAcceleration(Axis axis){
         short[] buffer = new short[1];
         readWord(DATA_FORMAT_REGISTER + axis.value, buffer);
         return buffer[0] * GS_PER_LSB;
     }
-    
+
     public double[] getAccelerations(){
         short[] buffer = new short[3];
         readWords(DATA_FORMAT_REGISTER, buffer, 3);
@@ -65,14 +65,14 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
                 buffer[0] * GS_PER_LSB
         };
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void initTable(ITable subtable) {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -90,7 +90,7 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
     @Override
     public void updateTable() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -99,7 +99,7 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
     @Override
     public void startLiveWindowMode() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -108,7 +108,7 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
     @Override
     public void stopLiveWindowMode() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -126,7 +126,7 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -135,7 +135,7 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

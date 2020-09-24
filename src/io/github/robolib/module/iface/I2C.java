@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -28,30 +28,30 @@ import io.github.robolib.util.MathUtils;
 
 /**
  * I2C bus interface class.
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class I2C extends Interface {
 
     /**
      * Enum representation of I2C ports on the RIO
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum Port {
         ONBOARD,
         MXP;
     };
-    
+
     public I2C(int address){
         this(Port.ONBOARD, address);
     }
-    
+
     protected final byte m_port;
     protected final byte m_address;
     private static final boolean INITIALIZED_PORTS[] = new boolean[2];
-    
-    
+
+
     /**
      * Constructor.
      *
@@ -64,7 +64,7 @@ public class I2C extends Interface {
             allocateMXPPin(32);
             allocateMXPPin(34);
         }
-        
+
         m_port = (byte)port.ordinal();
         m_address = (byte)address;
 
@@ -74,18 +74,18 @@ public class I2C extends Interface {
             HALUtil.checkStatus(status);
             INITIALIZED_PORTS[port.ordinal()] = true;
         }
-        
+
         UsageReporting.report(UsageReporting.ResourceType_I2C, address);
 
     }
-    
+
     /**
      * Destructor.
      */
     public void free(){
-        
+
     }
-    
+
     /**
      * Generic transaction.
      *
@@ -103,16 +103,16 @@ public class I2C extends Interface {
         ByteBuffer dataSendBuffer = ByteBuffer.allocateDirect(sendSize);
         dataSendBuffer.put(dataToSend);
         ByteBuffer dataReceiveBuffer = ByteBuffer.allocateDirect(receiveSize);
-        
+
         success = I2CJNI.i2CTransaction(m_port, m_address, dataSendBuffer, (byte)sendSize, dataReceiveBuffer, (byte)receiveSize) > 0;
-        
+
         if(receiveSize > 0 && dataReceived != null)
             dataReceiveBuffer.get(dataReceived,0,receiveSize);
-        
+
         return success;
-        
+
     }
-    
+
     /**
      * Attempt to address a device on the I2C bus.
      *
@@ -122,9 +122,9 @@ public class I2C extends Interface {
      * @return Status of operation (true = success)
      */
     public final boolean checkAddress(){
-        return transaction(null, 0, null, 0); 
+        return transaction(null, 0, null, 0);
     }
-    
+
     /**
      * Execute a write transaction with the device.
      *
@@ -141,7 +141,7 @@ public class I2C extends Interface {
 
         return I2CJNI.i2CWrite(m_port, m_address, dataToSendBuffer, (byte)2) > 0;
     }
-    
+
     /**
      * Execute a write transaction with the device.
      *
@@ -156,7 +156,7 @@ public class I2C extends Interface {
         b.put(data);
         return I2CJNI.i2CWrite(m_port, m_address, b, (byte)data.length) > 0;
     }
-    
+
     /**
      * write a single bit in an 8-bit device register.
      *
@@ -219,7 +219,7 @@ public class I2C extends Interface {
 
     /**
      * Write single word to a 16-bit device register.
-     * 
+     *
      * @param reg Register address to write to
      * @param data New word value to write
      * @return Status of operation (true = success)
@@ -230,7 +230,7 @@ public class I2C extends Interface {
 
     /**
      * Write multiple bytes to an 8-bit device register.
-     * 
+     *
      * @param reg First register address to write to
      * @param data Buffer to copy new data from
      * @param length Number of bytes to write
@@ -245,7 +245,7 @@ public class I2C extends Interface {
 
     /**
      * Write multiple words to a 16-bit device register.
-     * 
+     *
      * @param reg First register address to write to
      * @param data Buffer to copy new data from
      * @param length Number of words to write
@@ -271,9 +271,9 @@ public class I2C extends Interface {
     public synchronized final boolean readBit(int reg, int bit, byte[] data){
         boolean a = readByte(reg, data);
         data[0] = (byte) (data[0] & (1 << bit));
-        return a; 
+        return a;
     }
-    
+
     /**
      * Read a single bit from an 8-bit device register.
      *
@@ -307,7 +307,7 @@ public class I2C extends Interface {
         }
         return false;
     }
-    
+
     /**
      * Read single byte from an 8-bit device register.
      *
@@ -320,7 +320,7 @@ public class I2C extends Interface {
     }
 
     /** Read single word from a 16-bit device register.
-     * 
+     *
      * @param reg Register regAddr to read from
      * @param data Container for word value read from device
      * @return Status of read operation (true = success)
@@ -343,7 +343,7 @@ public class I2C extends Interface {
 
     /**
      * Read multiple words from a 16-bit device register.
-     * 
+     *
      * @param reg First register regAddr to read from
      * @param data Buffer to store read data in
      * @param length Number of words to read
@@ -377,10 +377,10 @@ public class I2C extends Interface {
     public final boolean read(int reg, byte[] buffer, int count){
         /*if(!MathUtils.inBounds(count, 1, 7))
             throw new IllegalArgumentException("Count must be between 1 and 7");*/
-                
+
         return transaction(new byte[]{(byte)reg}, 1, buffer, count);
     }
-        
+
     /**
      * Execute a read only transaction with the device.
      *
@@ -395,14 +395,14 @@ public class I2C extends Interface {
     public final boolean readOnly(byte[] buffer, int count){
         if(!MathUtils.inBounds(count, 1, 7))
             throw new IllegalArgumentException("Count must be between 1 and 7");
-        
+
         ByteBuffer b = ByteBuffer.allocateDirect(count);
-        
+
         int value = I2CJNI.i2CRead(m_port, m_address, b, (byte)count);
         b.get(buffer);
         return value > 0;
     }
-    
+
     /**
      * Send a broadcast write to all devices on the I2C bus.
      *
@@ -412,9 +412,9 @@ public class I2C extends Interface {
      * @param data The value to write to the devices.
      */
     public final void broadcast(int reg, int data){
-        
+
     }
-    
+
     /**
      * Verify that a device's registers contain expected values.
      *
@@ -429,13 +429,13 @@ public class I2C extends Interface {
      */
     public final boolean verifySensor(int reg, int count, byte[] expected){
         byte[] devData = new byte[4];
-        
+
         for(int i = 0, currentAddress = reg; i < count; i += 4, currentAddress += 4){
             int toRead = count - i < 4 ? count - i : 4;
-            
+
             if(!read(currentAddress, devData, toRead))
                 return false;
-            
+
             for(byte j = 0; j < toRead; j++){
                 if(devData[j] != expected[i + j]){
                     return false;

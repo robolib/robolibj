@@ -3,9 +3,9 @@
 package io.github.robolib.module.sensor.mpu6050;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class VectorInt16 {
     public short x;
@@ -17,7 +17,7 @@ public class VectorInt16 {
         y = 0;
         z = 0;
     }
-    
+
     public VectorInt16(short nx, short ny, short nz) {
         x = nx;
         y = ny;
@@ -34,19 +34,19 @@ public class VectorInt16 {
         y /= m;
         z /= m;
     }
-    
+
     public VectorInt16 getNormalized() {
         VectorInt16 r = new VectorInt16(x, y, z);
         r.normalize();
         return r;
     }
-    
+
     public void rotate(Quaternion q) {
         // http://www.cprogramming.com/tutorial/3d/quaternions.html
         // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/index.htm
         // http://content.gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation
         // ^ or: http://webcache.googleusercontent.com/search?q=cache:xgJAp3bDNhQJ:content.gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation&hl=en&gl=us&strip=1
-    
+
         // P_out = q * P_in * conj(q)
         // - P_out is the output vector
         // - q is the orientation quaternion

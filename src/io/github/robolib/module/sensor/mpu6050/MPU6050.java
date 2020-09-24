@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2012 Jeff Rowberg
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -9,7 +9,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -26,13 +26,13 @@ import io.github.robolib.util.log.Logger;
 
 /**
  * MPU6050 Accelerometer/Gyroscope class.
- * 
+ *
  * Converted from C++ to Java
  * Original file part of i2cdevlib project
  * https://github.com/jrowberg/i2cdevlib/blob/master/Arduino/MPU6050/MPU6050.cpp
  *
  * @author Jeff Rowberg <jeff@rowberg.net>
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 @SuppressWarnings("unused")
 public class MPU6050 extends I2C implements IAccelerometer {
@@ -55,11 +55,11 @@ public class MPU6050 extends I2C implements IAccelerometer {
     private static final byte MPU6050_RA_YA_OFFS_L_TC = 0x09;
     private static final byte MPU6050_RA_ZA_OFFS_H = 0x0A;
     private static final byte MPU6050_RA_ZA_OFFS_L_TC = 0x0B;
-    private static final byte MPU6050_RA_XG_OFFS_USRH = 0x13; 
+    private static final byte MPU6050_RA_XG_OFFS_USRH = 0x13;
     private static final byte MPU6050_RA_XG_OFFS_USRL = 0x14;
-    private static final byte MPU6050_RA_YG_OFFS_USRH = 0x15; 
+    private static final byte MPU6050_RA_YG_OFFS_USRH = 0x15;
     private static final byte MPU6050_RA_YG_OFFS_USRL = 0x16;
-    private static final byte MPU6050_RA_ZG_OFFS_USRH = 0x17; 
+    private static final byte MPU6050_RA_ZG_OFFS_USRH = 0x17;
     private static final byte MPU6050_RA_ZG_OFFS_USRL = 0x18;
     private static final byte MPU6050_RA_SMPLRT_DIV = 0x19;
     private static final byte MPU6050_RA_CONFIG = 0x1A;
@@ -163,8 +163,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     private static final int MPU6050_VDDIO_LEVEL_VDD = 1;
 
     private static final int MPU6050_CFG_EXT_SYNC_SET_BIT = 5;
-    private static final int MPU6050_CFG_EXT_SYNC_SET_LENGTH = 3;    
-    
+    private static final int MPU6050_CFG_EXT_SYNC_SET_LENGTH = 3;
+
     /**
      * Configures the external Frame Synchronization (FSYNC) pin sampling. An
      * external signal connected to the FSYNC pin can be sampled by configuring
@@ -189,8 +189,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 6            | ACCEL_YOUT_L[0]
      * 7            | ACCEL_ZOUT_L[0]
      * </pre>
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum EXTFrameSyncBitLocation {
         /** Input disabled */
@@ -210,13 +210,13 @@ public class MPU6050 extends I2C implements IAccelerometer {
         /** ACCEL_ZOUT_L[0] */
         SYNC_ACCEL_ZOUT_L;
     }
-    
+
     private static final int MPU6050_CFG_DLPF_CFG_BIT = 2;
     private static final int MPU6050_CFG_DLPF_CFG_LENGTH = 3;
-    
+
     /**
      * Enum representation of Low-Pass Filter values
-     * 
+     *
      * The DLPF_CFG parameter sets the digital low pass filter configuration. It
      * also determines the internal sampling rate used by the device as shown in
      * the table below.
@@ -238,8 +238,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 6        | 5Hz       | 19.0ms | 5Hz       | 18.6ms | 1kHz
      * 7        |   -- Reserved --   |   -- Reserved --   | Reserved
      * </pre>
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum DLPFilterMode {
         /** Bandwidth 256Hz */
@@ -258,15 +258,15 @@ public class MPU6050 extends I2C implements IAccelerometer {
         BW_5Hz,
         /** Reserved */
         RESERVED;
-        
+
     }
 
     private static final int MPU6050_GCONFIG_FS_SEL_BIT = 4;
     private static final int MPU6050_GCONFIG_FS_SEL_LENGTH = 2;
-    
+
     /**
      * Enum representation of Gyro range values.
-     * 
+     *
      * The FS_SEL parameter allows setting the full-scale range of the gyro sensors,
      * as described in the table below.
      *
@@ -277,7 +277,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 3 = +/- 2000 degrees/sec
      * </pre>
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum GyroRange {
         /** +/- 250 degrees/sec */
@@ -302,14 +302,14 @@ public class MPU6050 extends I2C implements IAccelerometer {
     private static final byte MPU6050_ACCEL_FS_4 = 0x01;
     private static final byte MPU6050_ACCEL_FS_8 = 0x02;
     private static final byte MPU6050_ACCEL_FS_16 = 0x03;
-    
+
     /**
      * Enum representation of High-Pass filter values.
      * The DHPF is a filter module in the path leading to motion detectors (Free
      * Fall, Motion threshold, and Zero Motion). The high pass filter output is not
      * available to the data registers (see Figure in Section 8 of the MPU-6000/
      * MPU-6050 Product Specification document).
-     * 
+     *
      * The high pass filter has three modes:
      *
      * <pre>
@@ -334,8 +334,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 4         | On          | 0.63Hz
      * 7         | Hold        | None
      * </pre>
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum DHPFilterMode {
         /** Cut-off Frequency: None  */
@@ -388,7 +388,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
 //    private static final byte MPU6050_CLOCK_DIV_400 = 0xD;
 //    private static final byte MPU6050_CLOCK_DIV_381 = 0xE;
 //    private static final byte MPU6050_CLOCK_DIV_364 = 0xF;
-    
+
     /**
      * I2C_MST_CLK is a 4 bit unsigned value which configures a divider on the
      * MPU-60X0 internal 8MHz clock. It sets the I2C master clock speed according to
@@ -414,11 +414,11 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 14          | 381kHz                 | 21
      * 15          | 364kHz                 | 22
      * </pre>
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum ClockSpeed {
-        
+
         k348kHz,
         k333kHz,
         k320kHz,
@@ -583,8 +583,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * 6       | Reserved
      * 7       | Stops the clock and keeps the timing generator in reset
      * </pre>
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum GyroClockSource {
         /** Internal oscillator */
@@ -605,7 +605,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
         RESET;
     }
 
-    
+
     private static final int MPU6050_PWR2_LP_WAKE_CTRL_BIT = 7;
     private static final int MPU6050_PWR2_LP_WAKE_CTRL_LENGTH = 2;
     private static final int MPU6050_PWR2_STBY_XA_BIT = 5;
@@ -632,7 +632,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     private static final int MPU6050_DMP_MEMORY_BANK_SIZE = 256;
     private static final int MPU6050_DMP_MEMORY_CHUNK_SIZE = 16;
 
-    
+
     /**
      * Default constructor, uses default I2C address.
      * @param port the I2C port on the RIO
@@ -780,7 +780,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Get digital low-pass filter configuration.
-     * 
+     *
      * The DLPF_CFG parameter sets the digital low pass filter configuration. It
      * also determines the internal sampling rate used by the device as shown in
      * the table below.
@@ -788,7 +788,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * Note: The accelerometer output rate is 1kHz. This means that for a Sample
      * Rate greater than 1kHz, the same accelerometer sample may be output to the
      * FIFO, DMP, and sensor registers more than once.
-     * 
+     *
      *
      * @return DLFP configuration
      * @see #MPU6050_RA_CONFIG
@@ -923,7 +923,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
         readBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, buffer);
         return AccelRange.values()[buffer[0]];
     }
-    
+
     public AccelRange getAccelRange(){
         return getFullScaleAccelRange();
     }
@@ -935,7 +935,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     public void setFullScaleAccelRange(AccelRange range) {
         writeBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, (byte)range.ordinal());
     }
-    
+
     public void setAccelRange(AccelRange range){
         setFullScaleAccelRange(range);
     }
@@ -1459,11 +1459,11 @@ public class MPU6050 extends I2C implements IAccelerometer {
     public void setSlaveReadWriteTransitionEnabled(boolean enabled) {
         writeBit(MPU6050_RA_I2C_MST_CTRL, MPU6050_I2C_MST_P_NSR_BIT, enabled);
     }
-    
+
     /**
      * Get I2C master clock speed.
      * I2C_MST_CLK is a 4 bit unsigned value which configures a divider on the
-     * MPU-60X0 internal 8MHz clock. It sets the I2C master clock speed.     * 
+     * MPU-60X0 internal 8MHz clock. It sets the I2C master clock speed.     *
      *
      * @return Current I2C master clock speed
      * @see #MPU6050_RA_I2C_MST_CTRL
@@ -1490,7 +1490,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
      * operation, and if it is cleared, then it's a write operation. The remaining
      * bits (6-0) are the 7-bit device address of the slave device.
      *
-     * In read mode, the result of the read is placed in the lowest available 
+     * In read mode, the result of the read is placed in the lowest available
      * EXT_SENS_DATA register. For further information regarding the allocation of
      * read results, please refer to the EXT_SENS_DATA register description
      * (Registers 73 - 96).
@@ -3396,9 +3396,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Get X-axis gyroscope standby enabled status.
-     * 
+     *
      * If enabled, the X-axis will not gather or report data (or use power).
-     * 
+     *
      * @return Current X-axis standby enabled status
      * @see #MPU6050_RA_PWR_MGMT_2
      * @see #MPU6050_PWR2_STBY_XG_BIT
@@ -3410,7 +3410,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set X-axis gyroscope standby enabled status.
-     * 
+     *
      * @param enabled New X-axis standby enabled status
      * @see #getStandbyXGyroEnabled()
      * @see #MPU6050_RA_PWR_MGMT_2
@@ -3421,9 +3421,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Get Y-axis gyroscope standby enabled status.
-     * 
+     *
      * If enabled, the Y-axis will not gather or report data (or use power).
-     * 
+     *
      * @return Current Y-axis standby enabled status
      * @see #MPU6050_RA_PWR_MGMT_2
      * @see #MPU6050_PWR2_STBY_YG_BIT
@@ -3435,7 +3435,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set Y-axis gyroscope standby enabled status.
-     * 
+     *
      * @param enabled New Y-axis standby enabled status
      * @see #getStandbyYGyroEnabled()
      * @see #MPU6050_RA_PWR_MGMT_2
@@ -3446,9 +3446,9 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Get Z-axis gyroscope standby enabled status.
-     * 
+     *
      * If enabled, the Z-axis will not gather or report data (or use power).
-     * 
+     *
      * @return Current Z-axis standby enabled status
      * @see #MPU6050_RA_PWR_MGMT_2
      * @see #MPU6050_PWR2_STBY_ZG_BIT
@@ -3460,7 +3460,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     }
     /**
      * Set Z-axis gyroscope standby enabled status.
-     * 
+     *
      * @param enabled New Z-axis standby enabled status
      * @see #getStandbyZGyroEnabled()
      * @see #MPU6050_RA_PWR_MGMT_2
@@ -3474,12 +3474,12 @@ public class MPU6050 extends I2C implements IAccelerometer {
 
     /**
      * Get current FIFO buffer size.
-     * 
+     *
      * This value indicates the number of bytes stored in the FIFO buffer. This
      * number is in turn the number of bytes that can be read from the FIFO buffer
      * and it is directly proportional to the number of samples available given the
      * set of sensor data bound to be stored in the FIFO (register 35 and 36).
-     * 
+     *
      * @return Current FIFO buffer size
      */
     public short getFIFOCount() {
@@ -3799,7 +3799,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     public void setMemoryBank(byte bank){
         setMemoryBank(bank, false, false);
     }
-    
+
     // MEM_START_ADDR register
 
     public void setMemoryStartAddress(byte address) {
@@ -3816,7 +3816,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     public void writeMemoryByte(byte data) {
         writeByte(MPU6050_RA_MEM_R_W, data);
     }
-    
+
     public void readMemoryBlock(byte[] data, short dataSize, byte bank, byte address) {
         ByteBuffer buff = ByteBuffer.allocateDirect(dataSize);
         byte[] buff2;
@@ -3837,7 +3837,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
             buff2 = new byte[chunkSize];
             readBytes(MPU6050_RA_MEM_R_W, buff2, chunkSize);
             buff.put(buff2);
-            
+
             // increase byte index by [chunkSize]
             i += chunkSize;
 
@@ -3853,7 +3853,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
         }
         buff.get(data);
     }
-    
+
     public boolean writeMemoryBlock(final byte[] data, short dataSize, byte bank, byte address, boolean verify) {
         setMemoryBank(bank);
         setMemoryStartAddress(address);
@@ -3873,7 +3873,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
 
             // make sure this chunk doesn't go past the bank boundary (256 bytes)
             if (chunkSize > (256 - address)) chunkSize = (byte) (256 - address);
-            
+
             progBuffer = Arrays.copyOfRange(data, i, i + chunkSize);
 
             writeBytes(MPU6050_RA_MEM_R_W, progBuffer, chunkSize);
@@ -3884,7 +3884,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
                 setMemoryStartAddress(address);
                 verifyBuffer = new byte[chunkSize];
                 readBytes(MPU6050_RA_MEM_R_W, verifyBuffer, chunkSize);
-                
+
                 pass = true;
                 for(int qw = 0; qw < progBuffer.length; qw++){
                     if(progBuffer[qw] != verifyBuffer[qw]){
@@ -3892,11 +3892,11 @@ public class MPU6050 extends I2C implements IAccelerometer {
                         break;
                     }
                 }
-                
+
                 if (!pass) {
                     Logger.get(this).error(
                             String.format("Block write verification error, bank %d, address %02x!", bank, address));
-                    
+
                     String a = "";
                     for (j = 0; j < chunkSize; j++) {
                         a += String.format(" 0x%02x", progBuffer[j]);
@@ -3908,7 +3908,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
                     }
 
                     Logger.get(this).error("Received:" + a);
-                    
+
                     verifyBuffer = null;
                     return false; // uh oh.
                 }
@@ -3966,7 +3966,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
                 Serial.println(" found...");*/
                 if (special == 0x01) {
                     // enable DMP-related interrupts
-                    
+
                     //setIntZeroMotionEnabled(true);
                     //setIntFIFOBufferOverflowEnabled(true);
                     //setIntDMPEnabled(true);
@@ -3978,7 +3978,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
                     success = false;
                 }
             }
-            
+
             if (!success) {
                 return false; // uh oh
             }
@@ -3988,7 +3988,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     public boolean writeProgDMPConfigurationSet(final byte[] data, short dataSize) {
         return writeDMPConfigurationSet(data, dataSize);
     }
-    
+
     /**
      * Source is from the InvenSense MotionApps v2 demo code. Original source is
      * unavailable, unless you happen to be amazing as decompiling binary by
@@ -4011,8 +4011,8 @@ public class MPU6050 extends I2C implements IAccelerometer {
     private static final short MPU6050_DMP_UPDATES_SIZE = 47;     // dmpUpdates[]
 
     private byte[] dmpPacketBuffer;
-    private short dmpPacketSize; 
-    
+    private short dmpPacketSize;
+
     /* ================================================================================================ *
      | Default MotionApps v2.0 42-byte FIFO packet structure:                                           |
      |                                                                                                  |
@@ -4566,7 +4566,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
     public byte dmpGetLinearAccelInWorld(VectorInt16 v, VectorInt16 vReal, Quaternion q) {
         // rotate measured 3D acceleration vector into original state
         // frame of reference based on orientation quaternion
-        
+
         v.x = vReal.x;
         v.y = vReal.y;
         v.z = vReal.z;
@@ -4627,7 +4627,7 @@ public class MPU6050 extends I2C implements IAccelerometer {
 
             // process packet
             if ((status = dmpProcessFIFOPacket(buf)) > 0) return status;
-            
+
             // increment external process count variable, if supplied
             if (processed != 0) processed++;
         }

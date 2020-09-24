@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -38,26 +38,26 @@ import io.github.robolib.util.log.Logger;
  *   http://www.ni.com/pdf/manuals/370423a.pdf
  * and the NI-VISA Programmer's Reference Manual here:
  *   http://www.ni.com/pdf/manuals/370132c.pdf
- *   
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public final class Serial extends Interface {
 
     /**
      * Valid ports for the serial port.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum Port {
         ONBOARD,
         MXP,
         USB;
     }
-    
+
     /**
      * Represents the parity to use for serial communications
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum Parity {
         NONE,
@@ -66,11 +66,11 @@ public final class Serial extends Interface {
         MARK,
         SPACE;
     }
-    
+
     /**
      * Represents what type of flow control to use for serial communication
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum FlowControl{
         NONE(0),
@@ -82,27 +82,27 @@ public final class Serial extends Interface {
             value = (byte) val;
         }
     }
-    
+
     /**
      * Represents the number of stop bits to use for Serial Communication
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum StopBits{
         ONE(10),
         ONEPOINTFIVE(15),
         TWO(20);
-        
+
         public byte value;
         StopBits(int val){
             value = (byte) val;
         }
     }
-    
+
     /**
      * Represents which type of buffer mode to use when writing to a serial port
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum BufferMode{
         FLUSH_ON_ACCESS(1),
@@ -112,12 +112,12 @@ public final class Serial extends Interface {
             value = (byte) val;
         }
     }
-    
+
     private static final boolean[] m_allocated = new boolean[3];
-    
+
     private byte m_port;
 
-    
+
     /**
      * Create an instance of a Serial Port class.
      *
@@ -129,19 +129,19 @@ public final class Serial extends Interface {
      */
     public Serial(Port port, final int baudRate, final int dataBits, Parity parity, StopBits stopBits) {
         super(InterfaceType.SERIAL);
-        
+
         if(m_allocated[port.ordinal()])
             throw new ResourceAllocationException("Cannot allocate serial port '" + port.name() + "', already in use.");
-        
+
         if(port == Port.MXP){
             allocateMXPPin(14);
             allocateMXPPin(10);
         }
-        
+
         m_allocated[port.ordinal()] = true;
-        
+
         m_port = (byte)port.ordinal();
-        
+
         IntBuffer status = allocateInt();
         SerialPortJNI.serialInitializePort(m_port, status);
         HALUtil.checkStatus(status);
@@ -153,27 +153,27 @@ public final class Serial extends Interface {
         HALUtil.checkStatus(status);
         SerialPortJNI.serialSetStopBits(m_port, stopBits.value, status);
         HALUtil.checkStatus(status);
-        
-        
+
+
         setReadBufferSize(1);
-        
+
         setTimeout(5.0f);
-        
+
         setBufferMode(BufferMode.FLUSH_ON_ACCESS);
-        
+
         disableTermination();
-        
-        
+
+
         UsageReporting.report(UsageReporting.ResourceType_SerialPort, port.ordinal());
     }
-    
+
     /**
      * Destructor.
      */
     public void free(){
-        
+
     }
-    
+
     /**
      * Set the type of flow control to enable on this port.
      *
@@ -185,7 +185,7 @@ public final class Serial extends Interface {
         SerialPortJNI.serialSetFlowControl(m_port, flowControl.value, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Enable termination and specify the termination character.
      *
@@ -200,7 +200,7 @@ public final class Serial extends Interface {
         SerialPortJNI.serialEnableTermination(m_port, terminator, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Enable termination with the default terminator '\n'
      *
@@ -213,7 +213,7 @@ public final class Serial extends Interface {
     public void enableTermination(){
         enableTermination('\n');
     }
-    
+
     /**
      * Disable termination behavior.
      */
@@ -222,7 +222,7 @@ public final class Serial extends Interface {
         SerialPortJNI.serialDisableTermination(m_port, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Get the number of bytes currently available to read from the serial port.
      *
@@ -235,7 +235,7 @@ public final class Serial extends Interface {
         HALUtil.checkStatus(status);
         return retVal;
     }
-    
+
     /**
      * Read a string out of the buffer. Reads the entire contents of the buffer
      *
@@ -244,7 +244,7 @@ public final class Serial extends Interface {
     public String readString(){
         return readString(getBytesReceived());
     }
-    
+
     /**
      * Read a string out of the buffer. Reads the entire contents of the buffer
      *
@@ -260,7 +260,7 @@ public final class Serial extends Interface {
             return new String();
         }
     }
-    
+
     /**
      * Read raw bytes out of the buffer.
      *
@@ -274,9 +274,9 @@ public final class Serial extends Interface {
         HALUtil.checkStatus(status);
         byte[] retVal = new byte[got];
         data.get(retVal);
-        return retVal;        
+        return retVal;
     }
-    
+
     /**
      * Write raw bytes to the serial port.
      *
@@ -292,7 +292,7 @@ public final class Serial extends Interface {
         HALUtil.checkStatus(status);
         return retVal;
     }
-    
+
     /**
      * Write a string to the serial port
      *
@@ -302,7 +302,7 @@ public final class Serial extends Interface {
     public int writeString(String data){
         return write(data.getBytes(), data.length());
     }
-    
+
     /**
      * Configure the timeout of the serial port.
      *
@@ -315,9 +315,9 @@ public final class Serial extends Interface {
     public void setTimeout(double timeout){
         IntBuffer status = allocateInt();
         SerialPortJNI.serialSetTimeout(m_port, (float) timeout, status);
-        HALUtil.checkStatus(status);        
+        HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Specify the size of the input buffer.
      *
@@ -335,7 +335,7 @@ public final class Serial extends Interface {
         SerialPortJNI.serialSetReadBufferSize(m_port, size, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Specify the size of the output buffer.
      *
@@ -349,7 +349,7 @@ public final class Serial extends Interface {
         SerialPortJNI.serialSetWriteBufferSize(m_port, size, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Specify the flushing behavior of the output buffer.
      *
@@ -366,7 +366,7 @@ public final class Serial extends Interface {
         SerialPortJNI.serialSetWriteMode(m_port, mode.value, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Force the output buffer to be written to the port.
      *
@@ -378,7 +378,7 @@ public final class Serial extends Interface {
         SerialPortJNI.serialFlush(m_port, status);
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Reset the serial port driver to a known state.
      *

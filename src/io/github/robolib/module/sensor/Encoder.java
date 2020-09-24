@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -43,16 +43,16 @@ import io.github.robolib.util.log.Logger;
  *
  * All encoders will immediately start counting - reset() them if you need them
  * to be zeroed before use.
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public class Encoder extends CounterBase implements SensorModule,
         PIDSource, RateSource {
-    
+
     /**
      * The different types of indexing available
-     * 
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum IndexingType{
         /** Reset when the signal is high */
@@ -64,7 +64,7 @@ public class Encoder extends CounterBase implements SensorModule,
         /** Reset on falling edge */
         RESET_EDGE_FALLING;
     }
-    
+
     /** The a source */
     protected DigitalIO m_aSource;
     /** The b source */
@@ -73,7 +73,7 @@ public class Encoder extends CounterBase implements SensorModule,
     protected DigitalIO m_indexSource = null;
     private ByteBuffer m_encoder;
     private double m_distancePerPulse;
-    
+
     private Counter m_counter;
     private EncodingType m_encodingType;
     private int m_encodingScale;
@@ -81,8 +81,8 @@ public class Encoder extends CounterBase implements SensorModule,
     private boolean m_allocatedB = false;
     private boolean m_allocatedI = false;
     private PIDSourceType m_pidSType;
-    
-    
+
+
     /**
      * Encoder constructor. Construct a Encoder given a and b channels.
      *
@@ -96,7 +96,7 @@ public class Encoder extends CounterBase implements SensorModule,
         m_allocatedA = true;
         m_allocatedB = true;
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a and b channels as
      * digital inputs. This is used in the case where the digital inputs are
@@ -111,7 +111,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public Encoder(DigitalIO aSource, DigitalIO bSource){
         this(aSource, bSource, null, false, EncodingType.k4X);
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a and b channels.
      *
@@ -130,7 +130,7 @@ public class Encoder extends CounterBase implements SensorModule,
         m_allocatedA = true;
         m_allocatedB = true;
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a and b channels as
      * digital inputs. This is used in the case where the digital inputs are
@@ -149,7 +149,7 @@ public class Encoder extends CounterBase implements SensorModule,
             boolean reverseDirection){
         this(aSource, bSource, null, reverseDirection, EncodingType.k4X);
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a and b channels.
      * Using an index pulse forces 4x encoding
@@ -167,7 +167,7 @@ public class Encoder extends CounterBase implements SensorModule,
         m_allocatedB = true;
         m_allocatedI = true;
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a, b and index channels as
      * digital inputs. This is used in the case where the digital inputs are
@@ -183,7 +183,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public Encoder(DigitalIO aSource, DigitalIO bSource, DigitalIO iSource){
         this(aSource, bSource, iSource, false, EncodingType.k4X);
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a and b channels.
      *
@@ -208,7 +208,7 @@ public class Encoder extends CounterBase implements SensorModule,
         m_allocatedA = true;
         m_allocatedB = true;
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a and b channels as
      * digital inputs. This is used in the case where the digital inputs are
@@ -233,7 +233,7 @@ public class Encoder extends CounterBase implements SensorModule,
             boolean reverseDirection, EncodingType eType){
         this(aSource, bSource, null, reverseDirection, eType);
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a and b channels.
      * Using an index pulse forces 4x encoding
@@ -255,7 +255,7 @@ public class Encoder extends CounterBase implements SensorModule,
         m_allocatedB = true;
         m_allocatedI = true;
     }
-    
+
     /**
      * Encoder constructor. Construct a Encoder given a, b and index channels as
      * digital inputs. This is used in the case where the digital inputs are
@@ -275,7 +275,7 @@ public class Encoder extends CounterBase implements SensorModule,
             boolean reverseDirection){
         this(aSource, bSource, iSource, reverseDirection, EncodingType.k4X);
     }
-    
+
     /**
      * Encoder constructor.
      *
@@ -319,17 +319,17 @@ public class Encoder extends CounterBase implements SensorModule,
             setMaxPeriod(0.5);
             break;
         }
-        
+
         if(iSource != null){
             setIndexSource(iSource);
         }
-        
+
         m_distancePerPulse = 1.0;
         m_pidSType = PIDSourceType.DISTANCE;
-        
+
         UsageReporting.report(UsageReporting.ResourceType_Encoder, m_index, eType.ordinal());
     }
-    
+
     /**
      * @return the encoding scale factor 1x, 2x, or 4x, per the requested
      * encodingType. Used to divide raw edge counts down to spec'd counts.
@@ -337,7 +337,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public int getEncodingScale(){
         return m_encodingScale;
     }
-    
+
     public void free(){
         if(m_aSource != null && m_allocatedA){
             m_aSource.free();
@@ -351,7 +351,7 @@ public class Encoder extends CounterBase implements SensorModule,
             m_indexSource.free();
             m_allocatedI = false;
         }
-        
+
         m_aSource = null;
         m_bSource = null;
         m_indexSource = null;
@@ -364,7 +364,7 @@ public class Encoder extends CounterBase implements SensorModule,
             HALUtil.checkStatus(status);
         }
     }
-    
+
     /**
      * Gets the raw value from the encoder. The raw value is the actual count
      * unscaled by the 1x, 2x, or 4x scale factor.
@@ -379,9 +379,9 @@ public class Encoder extends CounterBase implements SensorModule,
             int value = EncoderJNI.getEncoder(m_encoder, status);
             HALUtil.checkStatus(status);
             return value;
-        }   
+        }
     }
-    
+
     /**
      * Gets the current count. Returns the current count on the Encoder. This
      * method compensates for the decoding type.
@@ -393,7 +393,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public int get(){
         return getCount();
     }
-    
+
     /**
      * Gets the current count. Returns the current count on the Encoder. This
      * method compensates for the decoding type.
@@ -405,7 +405,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public int getCount(){
         return (int)(getRaw() * decodingScaleFactor());
     }
-    
+
     /**
      * Reset the Encoder distance to zero. Resets the current count to zero on
      * the encoder.
@@ -420,7 +420,7 @@ public class Encoder extends CounterBase implements SensorModule,
             HALUtil.checkStatus(status);
         }
     }
-    
+
     /**
      * Returns the period of the most recent pulse. Returns the period of the
      * most recent Encoder pulse in seconds. This method compensates for the
@@ -440,7 +440,7 @@ public class Encoder extends CounterBase implements SensorModule,
         }
         return measuredPeriod;
     }
-    
+
     /**
      * Sets the maximum period for stopped detection. Sets the value that
      * represents the maximum period of the Encoder before it will assume that
@@ -462,7 +462,7 @@ public class Encoder extends CounterBase implements SensorModule,
             HALUtil.checkStatus(status);
         }
     }
-    
+
     /**
      * Determine if the encoder is stopped. Using the MaxPeriod value, a boolean
      * is returned that is true if the encoder is considered stopped and false
@@ -482,7 +482,7 @@ public class Encoder extends CounterBase implements SensorModule,
             return value;
         }
     }
-    
+
     /**
      * The last direction the encoder value changed.
      *
@@ -499,7 +499,7 @@ public class Encoder extends CounterBase implements SensorModule,
             return value;
         }
     }
-    
+
     /**
      * The scale needed to convert a raw counter value into a number of encoder
      * pulses.
@@ -515,7 +515,7 @@ public class Encoder extends CounterBase implements SensorModule,
         }
         return 0.0;
     }
-    
+
     /**
      * Get the distance the robot has driven since the last reset.
      *
@@ -525,7 +525,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public double getDistance(){
         return getRaw() * decodingScaleFactor() * m_distancePerPulse;
     }
-    
+
     /**
      * Get the current rate of the encoder. Units are distance per second as
      * scaled by the value from setDistancePerPulse().
@@ -535,7 +535,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public double getRate(){
         return m_distancePerPulse / getPeriod();
     }
-    
+
     /**
      * Set the minimum rate of the device before the hardware reports it
      * stopped.
@@ -546,7 +546,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public void setMinRate(double minRate){
         setMaxPeriod(m_distancePerPulse / minRate);
     }
-    
+
     /**
      * Set the distance per pulse for this encoder. This sets the multiplier
      * used to determine the distance driven based on the count value from the
@@ -562,7 +562,7 @@ public class Encoder extends CounterBase implements SensorModule,
     public void setDistancePerPulse(double distance){
         m_distancePerPulse = distance;
     }
-    
+
     /**
      * Set the direction sensing for this encoder. This sets the direction
      * sensing on the encoder so that it could count in the correct software
@@ -577,13 +577,13 @@ public class Encoder extends CounterBase implements SensorModule,
             Logger.get(Encoder.class).warn("4X Encoders... dont use this");
         }
     }
-    
+
     /**
      * Set the Samples to Average which specifies the number of samples of the
      * timer to average when calculating the period. Perform averaging to
      * account for mechanical imperfections or as oversampling to increase
      * resolution.
-     * 
+     *
      * @param samples The number of samples to average from 1 to 127.
      */
     public void setSamplesPerAverage(int samples){
@@ -598,7 +598,7 @@ public class Encoder extends CounterBase implements SensorModule,
             HALUtil.checkStatus(status);
         }
     }
-    
+
     /**
      * Get the Samples to Average which specifies the number of samples of the
      * timer to average when calculating the period. Perform averaging to
@@ -621,7 +621,7 @@ public class Encoder extends CounterBase implements SensorModule,
         }
         return 1;
     }
-    
+
     /**
      * Set which parameter of the encoder you are using as a process control
      * variable. The encoder class supports the rate and distance parameters.
@@ -631,10 +631,10 @@ public class Encoder extends CounterBase implements SensorModule,
     public void setPIDSourceType(PIDSourceType sType){
         if(sType == PIDSourceType.ANGLE)
             throw new IllegalArgumentException("Cant use Angle here!");
-        
+
         m_pidSType = sType;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -649,7 +649,7 @@ public class Encoder extends CounterBase implements SensorModule,
             return 0.0;
         }
     }
-    
+
     /**
      * Set the index source for the encoder.
      * When this source rises, the encoder count automatically resets.
@@ -661,7 +661,7 @@ public class Encoder extends CounterBase implements SensorModule,
         setIndexSource(new DigitalInput(channel), iType);
         m_allocatedI = true;
     }
-    
+
     /**
      * Set the index source for the encoder.
      * When this source rises, the encoder count automatically resets.
@@ -671,21 +671,21 @@ public class Encoder extends CounterBase implements SensorModule,
      */
     public void setIndexSource(DigitalIO source, IndexingType iType){
         IntBuffer status = allocateInt();
-        
+
         boolean activeHigh = false, edgeSensitive = false;
         if(iType.ordinal() % 2 == 0)
             activeHigh = true;
         else
             edgeSensitive = true;
-        
+
         EncoderJNI.setEncoderIndexSource(
                 m_encoder,
                 source.getChannelNumber(), source.isAnalogTrigger(),
                 activeHigh, edgeSensitive, status);
-        
+
         HALUtil.checkStatus(status);
     }
-    
+
     /**
      * Set the index source for the encoder.
      * When this source is activated, the encoder count automatically resets.
@@ -696,7 +696,7 @@ public class Encoder extends CounterBase implements SensorModule,
         setIndexSource(new DigitalInput(channel), IndexingType.RESET_EDGE_RISING);
         m_allocatedI = true;
     }
-    
+
     /**
      * Set the index source for the encoder.
      * When this source is activated, the encoder count automatically resets.
@@ -713,7 +713,7 @@ public class Encoder extends CounterBase implements SensorModule,
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -722,7 +722,7 @@ public class Encoder extends CounterBase implements SensorModule,
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

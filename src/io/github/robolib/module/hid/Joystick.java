@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -24,63 +24,63 @@ import io.github.robolib.util.log.Logger;
 /**
  * The RoboLibJ main Joystick.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
-public class Joystick extends GenericHID {   
+public class Joystick extends GenericHID {
 
-    
+
     /**
      * The Enum JSID.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum JSID{
-        
+
         /** The first Joystick input device. */
         JS0,
-        
+
         /** The second Joystick input device. */
         JS1,
-        
+
         /** The thrid Joystick input device. */
         JS2,
-        
+
         /** The fourth Joystick input device. */
         JS3,
-        
+
         /** The fifth Joystick input device. */
         JS4,
-        
+
         /** The sixth Joystick input device. */
         JS5;
     }
-    
-    
+
+
     /**
      * The Class JoystickAxis.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     protected final class JoystickAxis implements HIDAxis {
 
         /** The m_invert. */
         private boolean m_inverted = false;
-        
+
         /** The m_dead band. */
         private double m_deadband = 0.0;
-        
+
         private double m_backlash = 0.0;
-        
+
         private double m_fineConrol = 0.75;
-        
+
         private double m_rampEnd = 0.5;
-        
+
         private double m_m1;
-        
+
         private double m_m2;
-        
+
         /** The m_channel. */
-        private final int m_channel;        
+        private final int m_channel;
 
         /**
          * Instantiates a new joystick axis.
@@ -91,7 +91,7 @@ public class Joystick extends GenericHID {
             m_channel = axis;
             calculate();
         }
-        
+
         /**
          * {@inheritDoc}
          */
@@ -99,14 +99,14 @@ public class Joystick extends GenericHID {
         public double get(){
             double out = DriverStation.getStickAxis(m_port, m_channel);
             double x = Math.abs(out);
-            
+
             if(x < m_deadband)
                 x = 0.0;
             else if(x < m_rampEnd)
                 x = m_backlash + m_m1 * (x - m_deadband);
             else
                 x = m_fineConrol + m_m2 * (x - m_rampEnd);
-            
+
             if(out < 0)
                 x = -x;
 //            double x = Math.abs(out) < m_deadband ? 0 : out;
@@ -129,7 +129,7 @@ public class Joystick extends GenericHID {
             m_deadband = value;
             calculate();
         }
-        
+
         /**
          * {@inheritDoc}
          */
@@ -138,7 +138,7 @@ public class Joystick extends GenericHID {
             m_rampEnd = end;
             calculate();
         }
-        
+
         /**
          * {@inheritDoc}
          */
@@ -147,7 +147,7 @@ public class Joystick extends GenericHID {
             m_backlash = value;
             calculate();
         }
-        
+
         /**
          * {@inheritDoc}
          */
@@ -156,24 +156,24 @@ public class Joystick extends GenericHID {
             m_fineConrol = control;
             calculate();
         }
-        
+
         private void calculate(){
             m_m1 = (m_fineConrol - m_backlash) / (m_rampEnd - m_deadband);
-            
+
             m_m2 = (1 - m_fineConrol) / (1 - m_rampEnd);
         }
     }
 
     /**
      * The Class JoystickButton.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     protected final class JoystickButton implements HIDButton {
-        
+
         /** The m_channel. */
         private final int m_channel;
-        
+
         /**
          * Instantiates a new joystick button.
          *
@@ -182,7 +182,7 @@ public class Joystick extends GenericHID {
         public JoystickButton(int channel){
             m_channel = channel;
         }
-        
+
         /**
          * {@inheritDoc}
          */
@@ -192,8 +192,8 @@ public class Joystick extends GenericHID {
         }
     }
 
-//    private static final EnumMap<JSID, ? extends Joystick> m_stickMap = 
-    
+//    private static final EnumMap<JSID, ? extends Joystick> m_stickMap =
+
     /**
      * Check stick.
      *
@@ -204,19 +204,19 @@ public class Joystick extends GenericHID {
             throw new RuntimeException("Invalid Joystick '" + stick + "'.");
         }
     }
-    
+
     /** The m_port. */
     private final JSID m_port;
-    
+
     /** The m_portByte. */
     private final byte m_portByte;
-    
+
     /** The m_outputs. */
     private int m_outputs;
-    
+
     private short m_leftRumble;
     private short m_rightRumble;
-    
+
     /**
      * Instantiates a new joystick.
      *
@@ -232,17 +232,17 @@ public class Joystick extends GenericHID {
         for(int i = 0; i < numAxes; i++){
             m_axes[i] = new JoystickAxis(i);
         }
-        
+
         for(int i = 0; i < numBtns; i++){
             m_btns[i] = new JoystickButton(i);
         }
         UsageReporting.report(UsageReporting.ResourceType_Joystick, port.ordinal());
     }
-    
+
     public Joystick getStick(JSID port, int numAxes, int numBtns){
         return null;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -250,7 +250,7 @@ public class Joystick extends GenericHID {
     public final int getPOV(int pov){
         return DriverStation.getStickPOV(m_port, pov);
     }
-    
+
     /**
      * Get the Port JSID that this Joystick is on
      * @return the stick this joystick is on
@@ -258,18 +258,18 @@ public class Joystick extends GenericHID {
     public final JSID getStickPort(){
         return m_port;
     }
-    
+
     /**
      * Rumble control enum
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
     public static enum RumbleSide{
         LEFT,
         RIGHT,
         BOTH;
     }
-    
+
     /**
      * Set the rumble output for the joystick. The DS currently supports 2 rumble values,
      * left rumble and right rumble
@@ -292,7 +292,7 @@ public class Joystick extends GenericHID {
         }
         NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }
-    
+
     public final void setOutput(int outputNumber, boolean value){
         if(MathUtils.inBounds(outputNumber, 0, 31)){
             m_outputs = (m_outputs & ~(1 << outputNumber)) | ((value?1:0) << outputNumber);
@@ -300,9 +300,9 @@ public class Joystick extends GenericHID {
         }else{
             Logger.get(Joystick.class).warn("No such Output number '" + outputNumber + "' on joysticks.");
         }
-            
+
     }
-    
+
     public final void setOutputs(int value){
         m_outputs = value;
         NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
@@ -314,7 +314,7 @@ public class Joystick extends GenericHID {
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -323,7 +323,7 @@ public class Joystick extends GenericHID {
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

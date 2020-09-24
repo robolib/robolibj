@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -24,16 +24,16 @@ import io.github.robolib.module.actuator.ActuatorModule;
 import io.github.robolib.module.iface.PWM;
 
 /**
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class PWMController extends PWM implements ControllerModule,
         ActuatorModule, SpeedController, MotorSafety {
-    
+
     protected final MotorSafetyHelper m_safetyHelper;
-    
+
     private boolean m_inverted = false;
-    
+
     /**
      * Instantiates a new PWM motor controller.
      *
@@ -42,7 +42,7 @@ public class PWMController extends PWM implements ControllerModule,
     public PWMController(PWMChannel channel){
         this(channel, "PWM Motor Ch" + channel.ordinal());
     }
-    
+
     /**
      * Instantiates a new PWM motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.
@@ -53,7 +53,7 @@ public class PWMController extends PWM implements ControllerModule,
     public PWMController(PWMChannel channel, String desc){
         this(channel, desc, null);
     }
-    
+
     /**
      * Instantiates a new PWM motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.
@@ -74,7 +74,7 @@ public class PWMController extends PWM implements ControllerModule,
             PDP.claimChannel(pwChannel, desc);
         }
     }
-    
+
     /**
      * Instantiates a new PWM motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.
@@ -110,7 +110,7 @@ public class PWMController extends PWM implements ControllerModule,
     public final MotorSafetyHelper getSafetyHelper() {
         return m_safetyHelper;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -118,7 +118,7 @@ public class PWMController extends PWM implements ControllerModule,
     public final double getSpeed(){
     	return (m_inverted ? -super.getSpeed() : super.getSpeed());
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -127,7 +127,7 @@ public class PWMController extends PWM implements ControllerModule,
         super.setSpeed(m_inverted ? -speed : speed);
         m_safetyHelper.feed();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -143,7 +143,7 @@ public class PWMController extends PWM implements ControllerModule,
     public final void stopMotor() {
         setRaw(PWM_DISABLED_WIDTH);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -151,12 +151,12 @@ public class PWMController extends PWM implements ControllerModule,
     public final String getDescription() {
         return m_description;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void makeSafe() {
-        
+
     }
 }

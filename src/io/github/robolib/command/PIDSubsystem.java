@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -22,14 +22,14 @@ import io.github.robolib.module.controller.PIDController;
 import io.github.robolib.nettable.ITable;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public abstract class PIDSubsystem extends Subsystem implements Sendable {
-    
+
     final PIDController m_controller;
-    
+
     final PIDSink m_sink = this::usePIDOutput;
     final PIDSource m_source = this::returnPIDInput;
 
@@ -111,7 +111,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
     public PIDSubsystem(double p, double i, double d, double f, double period){
         m_controller = new PIDController(p, i, d, f, m_source, m_sink, period);
     }
-    
+
     /**
      * Returns the {@link PIDController} used by this {@link PIDSubsystem}.
      * Use this if you would like to fine tune the pid loop.
@@ -121,7 +121,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
     public final PIDController getPIDController() {
         return m_controller;
     }
-    
+
     /**
      * Adds the given value to the setpoint.
      * If {@link PIDSubsystem#setInputRange(double, double) setInputRange(...)} was used,
@@ -131,7 +131,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
     public final void setSetpointRelative(double deltaSetpoint) {
         setSetpoint(getPosition() + deltaSetpoint);
     }
-    
+
     /**
      * Sets the setpoint to the given value.  If {@link PIDSubsystem#setInputRange(double, double) setInputRange(...)}
      * was called,
@@ -142,7 +142,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
     public final void setSetpoint(double point) {
         m_controller.setSetpoint(point);
     }
-    
+
     /**
      * Returns the setpoint.
      * @return the setpoint
@@ -150,7 +150,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
     public final double getSetpoint() {
         return m_controller.getSetpoint();
     }
-    
+
     /**
      * Returns the current position
      * @return the current position
@@ -158,7 +158,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
     public final double getPosition() {
         return returnPIDInput();
     }
-    
+
     /**
      * Sets the maximum and minimum values expected from the input and setpoint.
      *
@@ -168,7 +168,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
     public final void setInputRange(double min, double max){
         m_controller.setInputRange(min, max);
     }
-    
+
     /**
      * Sets the maximum and minimum values to write.
      *
@@ -178,7 +178,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
     public final void setOutputRange(double min, double max){
         m_controller.setOutputRange(min, max);
     }
-    
+
     /**
      * Set the absolute error which is considered tolerable for use with
      * OnTarget. The value is in the same range as the PIDInput values.
@@ -246,7 +246,7 @@ public abstract class PIDSubsystem extends Subsystem implements Sendable {
      public final String getSmartDashboardType() {
          return "PIDSubsystem";
      }
-     
+
      public final void initTable(ITable table) {
          m_controller.initTable(table);
          super.initTable(table);

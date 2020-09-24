@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -26,31 +26,31 @@ import io.github.robolib.nettable.ITable;
 import io.github.robolib.nettable.ITableListener;
 
 /**
- * 
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class PIDController implements LiveWindowSendable {
-	
+
     /**
      * Interface for representing the error and tolerance
      * of the PID
      *
-     * @author noriah Reuland <vix@noriah.dev>
+     * @author noriah <vix@noriah.dev>
      */
 	public interface Tolerance {
 		public boolean onTarget();
 	}
-	
+
 	/**
 	 * The task each PIDController runs
 	 *
-	 * @author noriah Reuland <vix@noriah.dev>
+	 * @author noriah <vix@noriah.dev>
 	 */
 	private class PIDTask extends TimerTask {
 	    private PIDController m_controller;
 	    public PIDTask(PIDController controller){
 	        m_controller = controller;
-	        
+
 	    }
 	    @Override
         public void run(){
@@ -60,7 +60,7 @@ public class PIDController implements LiveWindowSendable {
 
 	public static final double DEFAULT_PERIOD = 0.05;
 	private static int m_instances = 0;
-	
+
 	private double m_P;
 	private double m_I;
 	private double m_D;
@@ -83,7 +83,7 @@ public class PIDController implements LiveWindowSendable {
 	Timer m_controlLoop;
 //	private boolean m_freed = false;
 //	private boolean m_usingPercentTolerance;
-	
+
 	/**
      * Allocate a PID object with the given constants for P, I, D, and F
      * @param p the proportional coefficient
@@ -98,24 +98,24 @@ public class PIDController implements LiveWindowSendable {
 	public PIDController(double p, double i, double d, double f,
 	        PIDSource source, PIDSink sink, double period){
 	    m_controlLoop = new java.util.Timer();
-	    
+
 	    m_P = p;
 	    m_I = i;
 	    m_D = d;
 	    m_F = f;
-	    
+
 	    m_source = source;
 	    m_sink = sink;
 //	    m_period = period;
-	    
+
 	    m_controlLoop.schedule(new PIDTask(this), 0L, (long) (period * 1000));
-	    
+
 	    UsageReporting.report(UsageReporting.ResourceType_PIDController, ++m_instances);
 	    m_tolerance = () -> {
 	        throw new RuntimeException("No tolerance value set when using PIDController.onTarget()");
 	    };
 	}
-	
+
 	/**
      * Allocate a PID object with the given constants for P, I, D and period
      * @param p the proportional coefficient
@@ -158,7 +158,7 @@ public class PIDController implements LiveWindowSendable {
                          PIDSource source, PIDSink sink) {
         this(p, i, d, f, source, sink, DEFAULT_PERIOD);
     }
-	
+
 	public void free(){
 	    m_controlLoop.cancel();
 	    synchronized (this){
@@ -170,7 +170,7 @@ public class PIDController implements LiveWindowSendable {
 	    if(m_source != null)
 	        m_table.removeTableListener(m_listener);
 	}
-	
+
 	/**
      * Read the input, calculate the output accordingly, and write to the output.
      * This should only be called by the PIDTask
@@ -240,7 +240,7 @@ public class PIDController implements LiveWindowSendable {
             pidOutput.pidWrite(result);
         }
 	}
-	
+
 	/**
      * Set the PID Controller gain parameters.
      * Set the proportional, integral, and differential coefficients.
@@ -252,14 +252,14 @@ public class PIDController implements LiveWindowSendable {
 	    m_P = p;
 	    m_I = i;
 	    m_D = d;
-	    
+
 	    if(m_table != null){
 	        m_table.putNumber("P", p);
 	        m_table.putNumber("I", i);
 	        m_table.putNumber("D", d);
 	    }
 	}
-	
+
 	/**
 	    * Set the PID Controller gain parameters.
 	    * Set the proportional, integral, and differential coefficients.
@@ -273,7 +273,7 @@ public class PIDController implements LiveWindowSendable {
         m_I = i;
         m_D = d;
         m_F = f;
-        
+
         if(m_table != null){
             m_table.putNumber("P", p);
             m_table.putNumber("I", i);
@@ -281,31 +281,31 @@ public class PIDController implements LiveWindowSendable {
             m_table.putNumber("F", f);
         }
     }
-	
+
 	/**
      * Get the Proportional coefficient
      * @return proportional coefficient
      */
 	public synchronized double getP(){ return m_P; }
-	
+
 	/**
      * Get the Integral coefficient
      * @return integral coefficient
      */
 	public synchronized double getI(){ return m_I; }
-	
+
 	/**
      * Get the Differential coefficient
      * @return differential coefficient
      */
 	public synchronized double getD(){ return m_D; }
-	
+
 	/**
      * Get the Feed forward coefficient
      * @return feed forward coefficient
      */
 	public synchronized double getF(){ return m_F; }
-	
+
 	/**
      * Return the current PID result
      * This is always centered on zero and constrained the the max and min outs
@@ -323,7 +323,7 @@ public class PIDController implements LiveWindowSendable {
 	public synchronized void setContinuous(boolean continuous){
 	    m_continuous = continuous;
 	}
-	
+
 	/**
      *  Set the PID controller to consider the input to be continuous,
      *  Rather then using the max and min in as constraints, it considers them to
@@ -331,7 +331,7 @@ public class PIDController implements LiveWindowSendable {
      *  the setpoint.
      */
 	public synchronized void setContinuous(){ setContinuous(true); }
-	
+
 	/**
      * Sets the maximum and minimum values expected from the input and setpoint.
      *
@@ -344,7 +344,7 @@ public class PIDController implements LiveWindowSendable {
 	    m_maxInput = max;
 	    setSetpoint(m_setpoint);
 	}
-	
+
 	/**
      * Sets the minimum and maximum values to write.
      *
@@ -356,7 +356,7 @@ public class PIDController implements LiveWindowSendable {
 	    m_minOutput = min;
 	    m_maxOutput = max;
 	}
-	
+
 	/**
      * Set the setpoint for the PIDController
      * @param point the desired setpoint
@@ -369,7 +369,7 @@ public class PIDController implements LiveWindowSendable {
                 m_setpoint = m_minInput;
             else
                 m_setpoint = point;
-            
+
         }else{
             m_setpoint = point;
         }
@@ -377,13 +377,13 @@ public class PIDController implements LiveWindowSendable {
         if (m_table != null)
             m_table.putNumber("setpoint", m_setpoint);
 	}
-	
+
 	/**
      * Returns the current setpoint of the PIDController
      * @return the current setpoint
      */
 	public synchronized double getSetpoint(){ return m_setpoint; }
-	
+
 	/**
      * Returns the current difference of the input from the setpoint
      * @return the current error
@@ -391,7 +391,7 @@ public class PIDController implements LiveWindowSendable {
 	public synchronized double getError(){
 	    return getSetpoint() - m_source.pidGet();
 	}
-	
+
 	/**
 	 * Set the PID tolerance using a Tolerance object.
      * Tolerance can be specified as a percentage of the range or as an absolute
@@ -402,7 +402,7 @@ public class PIDController implements LiveWindowSendable {
 	public synchronized void setTolerance(Tolerance tolerance){
 	    m_tolerance = tolerance;
 	}
-	
+
 	/**
      * Set the percentage error which is considered tolerable for use with
      * OnTarget. (Input of 15.0 = 15 percent)
@@ -412,7 +412,7 @@ public class PIDController implements LiveWindowSendable {
         m_tolerance = () -> (Math.abs(getError()) < percentage / 100
                 * (m_maxInput - m_minInput));
     }
-	
+
 	/**
      * Set the absolute error which is considered tolerable for use with
      * OnTarget.
@@ -429,7 +429,7 @@ public class PIDController implements LiveWindowSendable {
      * @return true if the error is less than the tolerance
      */
     public synchronized boolean onTarget(){ return m_tolerance.onTarget(); }
-	
+
     /**
      * Begin running the PIDController
      */
@@ -438,7 +438,7 @@ public class PIDController implements LiveWindowSendable {
         if(m_table != null)
             m_table.putBoolean("enabled", true);
     }
-    
+
     /**
      * Stop running the PIDController, this sets the output to zero before stopping.
      */
@@ -450,12 +450,12 @@ public class PIDController implements LiveWindowSendable {
             m_table.putBoolean("enabled", false);
         }
     }
-    
+
     /**
      * Return true if PIDController is enabled.
      */
     public synchronized boolean isEnabled(){ return m_enabled; }
-    
+
     /**
      * Reset the previous error,, the integral term, and disable the controller.
      */
@@ -465,7 +465,7 @@ public class PIDController implements LiveWindowSendable {
         m_totalError = 0;
         m_result = 0;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -473,7 +473,7 @@ public class PIDController implements LiveWindowSendable {
     public String getSmartDashboardType() {
         return "PIDController";
     }
-    
+
 	private ITable m_table;
 	private final ITableListener m_listener = (ITable table, String key,
 	        Object value, boolean isNew) -> {
@@ -493,7 +493,7 @@ public class PIDController implements LiveWindowSendable {
             }
         }
     };
-    
+
     /**
      * {@inheritDoc}
      */
@@ -512,7 +512,7 @@ public class PIDController implements LiveWindowSendable {
             table.addTableListener(m_listener, false);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -520,7 +520,7 @@ public class PIDController implements LiveWindowSendable {
     public ITable getTable(){
         return m_table;
     }
-    
+
     /**
      * {@inheritDoc}
      */

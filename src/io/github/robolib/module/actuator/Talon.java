@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -22,10 +22,10 @@ import io.github.robolib.module.controller.PWMController;
 /**
  * Cross the Road Electronics (CTRE) Talon and Talon SR Speed Controller
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public final class Talon extends PWMController {
-    
+
     /**
      * Instantiates a new Talon motor controller.
      *
@@ -34,7 +34,7 @@ public final class Talon extends PWMController {
     public Talon(PWMChannel channel) {
         this(channel, "PWM Talon Ch" + channel.ordinal(), null);
     }
-    
+
     /**
      * Instantiates a new Talon motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.
@@ -45,7 +45,7 @@ public final class Talon extends PWMController {
     public Talon(PWMChannel channel, String desc){
         this(channel, desc, null);
     }
-    
+
     /**
      * Instantiates a new Talon motor controller.
      * Giving a description helps with debugging. It will be used in log outputs.

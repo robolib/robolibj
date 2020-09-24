@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -23,18 +23,18 @@ import io.github.robolib.module.MotorSafetyHelper;
 /**
  * A SpeedController limited by Boolean Sources.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public final class LimitedController implements SpeedController, MotorSafety {
-    
+
     /** The m_motor. */
     private final SpeedController m_motor;
-    
+
     /** The m_switch system. */
     private final LimitSystem m_system;
-    
+
     private final MotorSafetyHelper m_safetyHelper;
-    
+
     /**
      * Instantiates a new limit switch controller.
      *
@@ -46,7 +46,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
         m_system = system;
         m_safetyHelper = SafetyManager.addMotor(this);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -67,7 +67,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
         else
             m_motor.setSpeed(0);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -75,7 +75,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
     public void setInverted(boolean inverted){
         m_motor.setInverted(inverted);
     }
-    
+
     /**
      * At a limit.
      *
@@ -84,19 +84,19 @@ public final class LimitedController implements SpeedController, MotorSafety {
     public boolean atLimit(){
         return atFrontLimit() || atBackLimit();
     }
-    
+
     /**
      * At far limit.
-     * 
+     *
      * @return true, if at far limit.
      */
     public boolean atFrontLimit(){
         return !m_system.canForward();
     }
-    
+
     /**
      * At near limit
-     * 
+     *
      * @return true, if at near limit.
      */
     public boolean atBackLimit(){
@@ -110,12 +110,12 @@ public final class LimitedController implements SpeedController, MotorSafety {
     public MotorSafetyHelper getSafetyHelper() {
         return m_safetyHelper;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public void stopMotor(){       
+    public void stopMotor(){
         m_motor.stopMotor();
     }
 

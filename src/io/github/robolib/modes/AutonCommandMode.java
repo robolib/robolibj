@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -18,14 +18,14 @@ package io.github.robolib.modes;
 import io.github.robolib.command.Command;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class AutonCommandMode extends AutonMode {
-    
+
     private Command m_command;
-    
+
     /**
      * Constructor for a Autonomous Robot mode.
      */
@@ -33,7 +33,7 @@ public class AutonCommandMode extends AutonMode {
         super();
         m_command = command;
     }
-    
+
     /**
      * Constructor for a Autonomous Robot mode.
      *
@@ -43,7 +43,7 @@ public class AutonCommandMode extends AutonMode {
         super(name);
         m_command = command;
     }
-    
+
     /**
      * Constructor for a Autonomous Robot mode.
      *
@@ -54,15 +54,15 @@ public class AutonCommandMode extends AutonMode {
         super(name, active);
         m_command = command;
     }
-    
+
     @Override
     protected void init(){
         m_command.start();
     }
-    
+
     @Override
     protected void end(){
         m_command.cancel();
     }
-    
+
 }

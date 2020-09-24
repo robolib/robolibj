@@ -3,23 +3,23 @@
 package io.github.robolib.module.sensor.mpu6050;
 
 /**
- * 
  *
- * @author noriah Reuland <vix@noriah.dev>
+ *
+ * @author noriah <vix@noriah.dev>
  */
 public class Quaternion {
     public double w;
     public double x;
     public double y;
     public double z;
-    
+
     public Quaternion() {
         w = 1.0f;
         x = 0.0f;
         y = 0.0f;
         z = 0.0f;
     }
-    
+
     public Quaternion(double nw, double nx, double ny, double nz) {
         w = nw;
         x = nx;
@@ -43,11 +43,11 @@ public class Quaternion {
     public Quaternion getConjugate() {
         return new Quaternion(w, -x, -y, -z);
     }
-    
+
     public double getMagnitude() {
         return Math.sqrt(w*w + x*x + y*y + z*z);
     }
-    
+
     public void normalize() {
         double m = getMagnitude();
         w /= m;
@@ -55,7 +55,7 @@ public class Quaternion {
         y /= m;
         z /= m;
     }
-    
+
     public Quaternion getNormalized() {
         Quaternion r = new Quaternion(w, x, y, z);
         r.normalize();

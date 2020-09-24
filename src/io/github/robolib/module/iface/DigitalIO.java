@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -30,14 +30,14 @@ import io.github.robolib.util.log.Logger;
 /**
  * The Class DigitalIO.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public abstract class DigitalIO extends InterruptBase {
- 
+
     /**
      * The Enum Channel.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum DigitalChannel{
 
@@ -138,11 +138,11 @@ public abstract class DigitalIO extends InterruptBase {
             m_mxpPin = mxpPin;
         }
     }
-    
+
     /**
      * The Enum Direction.
-     * 
-     * @author noriah Reuland <vix@noriah.dev>
+     *
+     * @author noriah <vix@noriah.dev>
      */
     public static enum Direction{
 
@@ -161,7 +161,7 @@ public abstract class DigitalIO extends InterruptBase {
 
     /** The DigitalIO Channel this DigitalIO is operating on. */
     protected DigitalChannel m_channel;
-    
+
     /** The direction of this digital io. */
     protected Direction m_direction;
 
@@ -176,19 +176,19 @@ public abstract class DigitalIO extends InterruptBase {
         allocateChannel(channel);
 
         m_channel = channel;
-        
+
         byte isIn = (byte) (dir.equals(Direction.IN) ? 1 : 0);
-        
+
         IntBuffer status = allocateInt();
-        
+
         m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte)channel.ordinal()), status);
         HALUtil.checkStatus(status);
         DIOJNI.allocateDIO(m_port, isIn, status);
         HALUtil.checkStatus(status);
-        
+
         UsageReporting.report((byte) (UsageReporting.ResourceType_DigitalOutput - isIn), channel.ordinal());
     }
-    
+
     /**
      * Constructor for use with analog trigger output. NOTHING ELSE!!!
      */
@@ -264,7 +264,7 @@ public abstract class DigitalIO extends InterruptBase {
     public int getChannelNumber(){
         return m_channel.ordinal();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -281,7 +281,7 @@ public abstract class DigitalIO extends InterruptBase {
     public String getChannelName(){
         return m_channel.name();
     }
-    
+
     /**
      * {@inheritDoc}
      */

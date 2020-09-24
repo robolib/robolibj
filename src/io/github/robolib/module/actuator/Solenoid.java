@@ -1,6 +1,6 @@
 /*
-\ * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+\ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -27,31 +27,31 @@ import io.github.robolib.util.log.Logger;
 /**
  * The Class Solenoid.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public final class Solenoid extends SolenoidBase implements ActuatorModule,
         LiveWindowSendable, BooleanSink, BooleanSource {
-    
+
     private final ByteBuffer m_port;
     private final SolenoidChannel m_channel;
-    
+
     private ITable m_table;
     private ITableListener m_table_listener;
-    
+
     public Solenoid(SolenoidChannel channel){
         m_channel = channel;
         m_port = initChannel(channel);
-        
+
     }
-    
+
     public int getChannelNumber(){
         return m_channel.ordinal();
     }
-    
+
     public SolenoidChannel getChannel(){
         return m_channel;
     }
-    
+
     /**
      * Set the solenoid with a boolean value.
      * @param value on or off
@@ -59,7 +59,7 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
     public void setState(boolean value){
         set(m_port, value?SOLENOID_ON:SOLENOID_OFF);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -80,7 +80,7 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
             break;
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -88,11 +88,11 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
     public Value get(){
         return get(m_port) ? Value.ON : Value.OFF;
     }
-    
+
     public boolean getState(){
         return get(m_port);
     }
-    
+
     /**
      * Check if solenoid is blacklisted.
      *      If a solenoid is shorted, it is added to the blacklist and
@@ -113,7 +113,7 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
     public String getSmartDashboardType() {
         return "Solenoid";
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -140,7 +140,7 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
             m_table.putBoolean("Value", getState());
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -170,7 +170,7 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -179,7 +179,7 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -188,7 +188,7 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
     @Override
     public void makeSafe() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -23,7 +23,7 @@ import io.github.robolib.jni.NetworkCommunications;
 /**
  * The Class AutonMode.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public abstract class AutonMode extends RobotMode {
 
@@ -33,7 +33,7 @@ public abstract class AutonMode extends RobotMode {
     protected AutonMode() {
         super(GameMode.AUTON);
     }
-    
+
     /**
      * Constructor for a Autonomous Robot mode.
      *
@@ -42,7 +42,7 @@ public abstract class AutonMode extends RobotMode {
     protected AutonMode(String name){
         super(GameMode.AUTON, name);
     }
-    
+
     /**
      * Constructor for a Autonomous Robot mode.
      *
@@ -52,7 +52,7 @@ public abstract class AutonMode extends RobotMode {
     protected AutonMode(String name, boolean active){
         super(GameMode.AUTON, name, active);
     }
-    
+
     /**
      * {@inheritDoc}
      */

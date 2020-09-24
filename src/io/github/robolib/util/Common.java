@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015 noriah Reuland <vix@noriah.dev>.
- * 
+ * Copyright (c) 2015-2020 noriah <vix@noriah.dev>.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -8,7 +8,7 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  */
@@ -26,11 +26,11 @@ import io.github.robolib.nettable.ITable;
 /**
  * Common functions for use in the robot code.
  *
- * @author noriah Reuland <vix@noriah.dev>
+ * @author noriah <vix@noriah.dev>
  */
 public class Common {
-    
-    
+
+
     public static String getTeamNumber(){
         Runtime run = Runtime.getRuntime();
         Process proc;
@@ -45,7 +45,7 @@ public class Common {
         }
         return null;
     }
-    
+
     /**
      * Get an integer representation of the direction towards an angle.
      *
@@ -64,7 +64,7 @@ public class Common {
             return ((from < -90 ? -1 : 1) * (to > 90 ? -1 : 1));
         }
     }
-    
+
     /**
      * Get an IntBuffer of size 4 with Little Endian Byte Order
      * @return an IntBuffer of size 4 with Little Endian byte order
@@ -74,7 +74,7 @@ public class Common {
         status.order(ByteOrder.LITTLE_ENDIAN);
         return status.asIntBuffer();
     }
-    
+
     public static ITable getTable(ITable table, String path){
         String[] a = path.split("/");
         for(String s : a){
