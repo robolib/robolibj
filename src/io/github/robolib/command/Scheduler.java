@@ -51,7 +51,7 @@ public final class Scheduler implements NamedSendable {
     private static boolean m_disabled = false;
 
     /** The m_running commands changed. */
-//    private static boolean m_runningCommandsChanged;
+    // private static boolean m_runningCommandsChanged;
 
     /** The m_disabled counter. */
     private static byte m_disabledCounter = 0;
@@ -73,8 +73,8 @@ public final class Scheduler implements NamedSendable {
 
     private static final Command m_lastCommand = new NullCommand();
 
-    public synchronized static void initialize(){
-        if(m_instance != null)
+    public synchronized static void initialize() {
+        if (m_instance != null)
             throw new IllegalStateException("Scheduler already initialized.");
 
         m_instance = new Scheduler();
@@ -87,8 +87,8 @@ public final class Scheduler implements NamedSendable {
      *
      * @return single instance of Scheduler
      */
-    public static Scheduler getInstance(){
-        synchronized(m_instance){
+    public static Scheduler getInstance() {
+        synchronized (m_instance) {
             return m_instance;
         }
     }
@@ -96,26 +96,25 @@ public final class Scheduler implements NamedSendable {
     /**
      * Instantiates a new scheduler.
      */
-    private Scheduler(){
+    private Scheduler() {
 
         m_firstCommand.m_nextCommand = m_lastCommand;
         m_lastCommand.m_previousCommand = m_firstCommand;
-//        initTable(NetworkTable.getTable("Scheduler"));
-//        SmartDashboard.putData(this);
+        // initTable(NetworkTable.getTable("Scheduler"));
+        // SmartDashboard.putData(this);
     }
-
 
     /**
      * Adds the.
      *
      * @param command the command
      */
-    public static void add(Command command){
-        if(command != null)
+    public static void add(Command command) {
+        if (command != null)
             m_additions.addElement(command);
     }
 
-    public static void addBind(Binding sink){
+    public static void addBind(Binding sink) {
         m_binds.addElement(sink);
     }
 
@@ -124,8 +123,8 @@ public final class Scheduler implements NamedSendable {
      *
      * @param btn the btn
      */
-    public static void addButton(ButtonScheduler btn){
-        if(btn != null)
+    public static void addButton(ButtonScheduler btn) {
+        if (btn != null)
             m_buttons.addElement(btn);
     }
 
@@ -137,24 +136,25 @@ public final class Scheduler implements NamedSendable {
      *
      * @param command the {@link Command} to add
      */
-    protected static void add_internal(Command command){
-        if(command == null) return;
+    protected static void add_internal(Command command) {
+        if (command == null)
+            return;
 
-        if(m_adding){
+        if (m_adding) {
             m_log.warn("Cannot start command from cancel. Ignoring '" + command + "'");
             return;
         }
 
-        if(!command.m_running){
+        if (!command.m_running) {
             List<Subsystem> requires = command.getRequirements();
-            if(requires.stream().anyMatch(Subsystem::getCurrentCommandNotInterruptable))
+            if (requires.stream().anyMatch(Subsystem::getCurrentCommandNotInterruptable))
                 return;
 
             m_adding = true;
 
             Command cmd;
-            for(Subsystem system : requires){
-                if((cmd = system.getCurrentCommand()) != null){
+            for (Subsystem system : requires) {
+                if ((cmd = system.getCurrentCommand()) != null) {
                     cmd.cancel();
                     cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
                     cmd.removed();
@@ -173,38 +173,39 @@ public final class Scheduler implements NamedSendable {
             command.m_nextCommand = m_lastCommand;
             m_lastCommand.m_previousCommand = command;
 
-//            m_runningCommandsChanged = true;
+            // m_runningCommandsChanged = true;
             command.startRunning();
         }
     }
 
     /**
-     * Runs a single iteration of the loop. This method should be called often
-     * in order to have a functioning {@link Command} system. The loop has five
-     * stages:
+     * Runs a single iteration of the loop. This method should be called often in
+     * order to have a functioning {@link Command} system. The loop has five stages:
      *
-     * <ol> <li> Poll the Buttons </li> <li> Execute/Remove the Commands </li>
-     * <li> Send values to SmartDashboard </li> <li> Add Commands </li> <li> Add
-     * Defaults </li> </ol>
+     * <ol>
+     * <li>Poll the Buttons</li>
+     * <li>Execute/Remove the Commands</li>
+     * <li>Send values to SmartDashboard</li>
+     * <li>Add Commands</li>
+     * <li>Add Defaults</li>
+     * </ol>
      */
-    public static void run(){
-        if(m_disabled){
-            if(++m_disabledCounter >= 32){
+    public static void run() {
+        if (m_disabled) {
+            if (++m_disabledCounter >= 32) {
                 m_log.warn("Scheduler is being called, but is disabled.");
                 m_disabledCounter = 0;
             }
             return;
         }
 
-        if(m_running){
+        if (m_running) {
             m_log.warn("Scheduler already running");
             return;
         }
 
         m_running = true;
-//        m_runningCommandsChanged = false;
-
-
+        // m_runningCommandsChanged = false;
 
         m_buttons.forEach(ButtonScheduler::execute);
 
@@ -213,95 +214,94 @@ public final class Scheduler implements NamedSendable {
         Command cmd = null;
         Command nextCmd = m_firstCommand.m_nextCommand;
 
+        // if(m_table != null){
+        // m_table.retrieveValue("Cancel", toCancel);
+        //
+        // commands.setSize(0);
+        // ids.setSize(0);
+        //
+        // while(nextCmd != m_lastCommand){
+        // cmd = nextCmd;
+        // nextCmd = cmd.m_nextCommand;
+        // if
+        // if(!cmd.run()){
+        // cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
+        // cmd.removed();
+        //
+        // m_runningCommandsChanged = true;
+        // }else{
+        // commands.add(cmd.getName());
+        // ids.add(cmd.hashCode());
+        // }
+        // }
+        //
+        // toCancel.setSize(0);
+        // m_table.putValue("Cancel", toCancel);
+        //
+        // if(m_runningCommandsChanged){
+        // m_table.putValue("Names", commands);
+        // m_table.putValue("Ids", ids);
+        // }
+        //
+        // }else{
+        //
+        while (nextCmd != m_lastCommand) {
+            cmd = nextCmd;
+            nextCmd = cmd.m_nextCommand;
+            // cmd.
+            if (!cmd.run()) {
+                cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
+                cmd.removed();
+                cmd.m_previousCommand.m_nextCommand = cmd.m_nextCommand;
+                cmd.m_nextCommand.m_previousCommand = cmd.m_previousCommand;
+                cmd.m_previousCommand = null;
+                cmd.m_nextCommand = null;
 
-//        if(m_table != null){
-//            m_table.retrieveValue("Cancel", toCancel);
-//
-//            commands.setSize(0);
-//            ids.setSize(0);
-//
-//            while(nextCmd != m_lastCommand){
-//                cmd = nextCmd;
-//                nextCmd = cmd.m_nextCommand;
-//                if
-//                if(!cmd.run()){
-//                    cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
-//                    cmd.removed();
-//
-//                    m_runningCommandsChanged = true;
-//                }else{
-//                    commands.add(cmd.getName());
-//                    ids.add(cmd.hashCode());
-//                }
-//            }
-//
-//            toCancel.setSize(0);
-//            m_table.putValue("Cancel", toCancel);
-//
-//            if(m_runningCommandsChanged){
-//                m_table.putValue("Names", commands);
-//                m_table.putValue("Ids", ids);
-//            }
-//
-//        }else{
-//
-            while(nextCmd != m_lastCommand){
-                cmd = nextCmd;
-                nextCmd = cmd.m_nextCommand;
-//                cmd.
-                if(!cmd.run()){
-                    cmd.getRequirements().forEach(Subsystem::nullifyCurrentCommand);
-                    cmd.removed();
-                    cmd.m_previousCommand.m_nextCommand = cmd.m_nextCommand;
-                    cmd.m_nextCommand.m_previousCommand = cmd.m_previousCommand;
-                    cmd.m_previousCommand = null;
-                    cmd.m_nextCommand = null;
-
-//                    m_runningCommandsChanged = true;
-                }
+                // m_runningCommandsChanged = true;
             }
-//        }
+        }
+        // }
 
         cmd = null;
         nextCmd = null;
 
-        for(Iterator<Command> iter = m_additions.iterator(); iter.hasNext();){
+        for (Iterator<Command> iter = m_additions.iterator(); iter.hasNext();) {
             add_internal(iter.next());
             iter.remove();
         }
 
-//        Iterator<Subsystem> iter = m_subsystems.iterator();
-//        Subsystem sys;
-        for(Subsystem sys : m_subsystems){
-            if(sys.getCurrentCommand() == null){
+        // Iterator<Subsystem> iter = m_subsystems.iterator();
+        // Subsystem sys;
+        for (Subsystem sys : m_subsystems) {
+            if (sys.getCurrentCommand() == null) {
                 add_internal(sys.getDefaultCommand());
             }
             sys.confirmCommand();
         }
 
-//        updateTable();
+        // updateTable();
         m_running = false;
     }
 
     /**
      * Registers a {@link Subsystem} to this {@link Scheduler}, so that the
-     * {@link Scheduler} might know if a default {@link Command} needs to be
-     * run. All {@link Subsystem Subsystems} should call this.
+     * {@link Scheduler} might know if a default {@link Command} needs to be run.
+     * All {@link Subsystem Subsystems} should call this.
      *
      * @param system the system
      */
-    static void registerSubsystem(Subsystem system){
-        if(system != null)
+    static void registerSubsystem(Subsystem system) {
+        if (system != null)
             m_subsystems.addElement(system);
     }
 
     /**
      * Removes the all.
      */
-    public static void removeAll(){
+    public static void removeAll() {
         Command cmd;
         Command nextCmd = m_firstCommand.m_nextCommand;
-        while(nextCmd != m_lastCommand){
+        while (nextCmd != m_lastCommand) {
             cmd = nextCmd;
             nextCmd = cmd.m_nextCommand;
             cmd.removed();
@@ -314,7 +314,7 @@ public final class Scheduler implements NamedSendable {
         cmd = null;
         nextCmd = null;
 
-        for(Iterator<Subsystem> iter = m_subsystems.iterator(); iter.hasNext();){
+        for (Iterator<Subsystem> iter = m_subsystems.iterator(); iter.hasNext();) {
             iter.next().nullifyCurrentCommand();
         }
     }
@@ -324,7 +324,7 @@ public final class Scheduler implements NamedSendable {
      *
      * @param enabled the new enabled
      */
-    public static void setEnabled(boolean enabled){
+    public static void setEnabled(boolean enabled) {
         m_disabled = !enabled;
     }
 
@@ -333,7 +333,7 @@ public final class Scheduler implements NamedSendable {
      *
      * @return the type
      */
-    public String getType(){
+    public String getType() {
         return "Scheduler";
     }
 
@@ -347,7 +347,7 @@ public final class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public String getName(){
+    public String getName() {
         return "Scheduler";
     }
 
@@ -363,7 +363,7 @@ public final class Scheduler implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public void initTable(ITable subtable){
+    public void initTable(ITable subtable) {
         m_table = subtable;
         commands = new StringArray();
         ids = new NumberArray();
@@ -382,22 +382,22 @@ public final class Scheduler implements NamedSendable {
         return m_table;
     }
 
-//    public static void updateTable(){
-//        if(m_table != null){
-//            m_table.retrieveValue("Cancel", toCancel);
-//
-//            if(toCancel.size() > 0){
-//                m_commandList.forEach(cmd -> {
-//                    for(int i = 0; i < toCancel.size(); i++){
-//                        if(cmd.hashCode() == toCancel.get(i)){
-//                            cmd.cancel();
-//                            return;
-//                        }
-//                    }
-//                });
-//            }
-//            toCancel.setSize(0);
-//            m_table.putValue("Cancel", toCancel);
-//        }
-//    }
+    // public static void updateTable(){
+    // if(m_table != null){
+    // m_table.retrieveValue("Cancel", toCancel);
+    //
+    // if(toCancel.size() > 0){
+    // m_commandList.forEach(cmd -> {
+    // for(int i = 0; i < toCancel.size(); i++){
+    // if(cmd.hashCode() == toCancel.get(i)){
+    // cmd.cancel();
+    // return;
+    // }
+    // }
+    // });
+    // }
+    // toCancel.setSize(0);
+    // m_table.putValue("Cancel", toCancel);
+    // }
+    // }
 }

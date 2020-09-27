@@ -33,16 +33,15 @@ public class SmartDashboard {
 
     private static final Hashtable<Sendable, String> TABLE_TO_DATA = new Hashtable<Sendable, String>();
 
-    public static void putData(String key, Sendable data){
+    public static void putData(String key, Sendable data) {
         ITable dataTable = SD_TABLE.getSubTable(key);
         dataTable.putString("~TYPE~", data.getSmartDashboardType());
         data.initTable(dataTable);
         TABLE_TO_DATA.put(data, key);
     }
 
-    public static void putData(NamedSendable value){
+    public static void putData(NamedSendable value) {
         putData(value.getName(), value);
     }
-
 
 }

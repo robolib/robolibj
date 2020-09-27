@@ -29,13 +29,13 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
      *
      * @author noriah <vix@noriah.dev>
      */
-    static enum Axis{
-        X(0),
-        Z(2),
-        Y(4);
+    static enum Axis {
+        X(0), Z(2), Y(4);
+
         public byte value;
-        Axis(int val){
-            value = (byte)val;
+
+        Axis(int val) {
+            value = (byte) val;
         }
     }
 
@@ -93,8 +93,8 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
     /**
      * Get the acceleration of all axes in Gs.
      *
-     * @return An array of doubles containing the
-     * acceleration measured on each axis of the ADXL345 in Gs.
+     * @return An array of doubles containing the acceleration measured on each axis
+     *         of the ADXL345 in Gs.
      */
     double[] getAccelerations();
 
@@ -102,7 +102,7 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
      * {@inheritDoc}
      */
     @Override
-    default String getSmartDashboardType(){
+    default String getSmartDashboardType() {
         return "3AxisAccelerometer";
     }
 
@@ -110,11 +110,13 @@ public interface ADXL345 extends IAccelerometer, LiveWindowSendable {
      * {@inheritDoc}
      */
     @Override
-    default void startLiveWindowMode() {}
+    default void startLiveWindowMode() {
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    default void stopLiveWindowMode(){}
+    default void stopLiveWindowMode() {
+    }
 }

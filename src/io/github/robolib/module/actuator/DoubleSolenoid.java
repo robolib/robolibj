@@ -27,8 +27,7 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah <vix@noriah.dev>
  */
-public final class DoubleSolenoid extends SolenoidBase
-        implements ActuatorModule, LiveWindowSendable {
+public final class DoubleSolenoid extends SolenoidBase implements ActuatorModule, LiveWindowSendable {
 
     private final SolenoidChannel m_forwardChannel;
     private final SolenoidChannel m_reverseChannel;
@@ -39,7 +38,7 @@ public final class DoubleSolenoid extends SolenoidBase
     private ITable m_table;
     private ITableListener m_table_listener;
 
-    public DoubleSolenoid(SolenoidChannel forwardChannel, SolenoidChannel reverseChannel){
+    public DoubleSolenoid(SolenoidChannel forwardChannel, SolenoidChannel reverseChannel) {
         m_forwardChannel = forwardChannel;
         m_reverseChannel = reverseChannel;
 
@@ -47,11 +46,11 @@ public final class DoubleSolenoid extends SolenoidBase
         m_reversePort = initChannel(reverseChannel);
     }
 
-    public SolenoidChannel getForwardChannel(){
+    public SolenoidChannel getForwardChannel() {
         return m_forwardChannel;
     }
 
-    public SolenoidChannel getReverseChannel(){
+    public SolenoidChannel getReverseChannel() {
         return m_reverseChannel;
     }
 
@@ -60,22 +59,22 @@ public final class DoubleSolenoid extends SolenoidBase
      */
     @Override
     public void set(Value value) {
-        switch(value){
-        case OFF:
-            set(m_forwardPort, SOLENOID_OFF);
-            set(m_reversePort, SOLENOID_OFF);
-            break;
-        case ON:
-            Logger.get(SolenoidBase.class, "Solenoid").warn("Double Solenoid cant be 'ON'");
-            break;
-        case FORWARD:
-            set(m_forwardPort, SOLENOID_ON);
-            set(m_reversePort, SOLENOID_OFF);
-            break;
-        case REVERSE:
-            set(m_forwardPort, SOLENOID_OFF);
-            set(m_forwardPort, SOLENOID_ON);
-            break;
+        switch (value) {
+            case OFF:
+                set(m_forwardPort, SOLENOID_OFF);
+                set(m_reversePort, SOLENOID_OFF);
+                break;
+            case ON:
+                Logger.get(SolenoidBase.class, "Solenoid").warn("Double Solenoid cant be 'ON'");
+                break;
+            case FORWARD:
+                set(m_forwardPort, SOLENOID_ON);
+                set(m_reversePort, SOLENOID_OFF);
+                break;
+            case REVERSE:
+                set(m_forwardPort, SOLENOID_OFF);
+                set(m_forwardPort, SOLENOID_ON);
+                break;
         }
 
     }
@@ -88,20 +87,21 @@ public final class DoubleSolenoid extends SolenoidBase
         boolean forward = get(m_forwardPort);
         boolean reverse = get(m_reversePort);
 
-        if(forward){
+        if (forward) {
             return Value.FORWARD;
-        }else if(reverse){
+        } else if (reverse) {
             return Value.REVERSE;
-        }else{
+        } else {
             return Value.OFF;
         }
     }
 
     /**
-     * Check if the forward solenoid is blacklisted.
-     *      If a solenoid is shorted, it is added to the blacklist and
-     *      disabled until power cycle, or until faults are cleared.
-     *      @see SolenoidBase#clearAllPCMStickyFaults(int)
+     * Check if the forward solenoid is blacklisted. If a solenoid is shorted, it is
+     * added to the blacklist and disabled until power cycle, or until faults are
+     * cleared.
+     *
+     * @see SolenoidBase#clearAllPCMStickyFaults(int)
      *
      * @return If solenoid is disabled due to short.
      */
@@ -109,11 +109,13 @@ public final class DoubleSolenoid extends SolenoidBase
         int blackList = getPCMSolenoidBlacklist(m_forwardChannel.ordinal() / 8) & (1 << m_forwardChannel.ordinal());
         return blackList != 0;
     }
+
     /**
-     * Check if the reverse solenoid is blacklisted.
-     *      If a solenoid is shorted, it is added to the blacklist and
-     *      disabled until power cycle, or until faults are cleared.
-     *      @see SolenoidBase#clearAllPCMStickyFaults(int)
+     * Check if the reverse solenoid is blacklisted. If a solenoid is shorted, it is
+     * added to the blacklist and disabled until power cycle, or until faults are
+     * cleared.
+     *
+     * @see SolenoidBase#clearAllPCMStickyFaults(int)
      *
      * @return If solenoid is disabled due to short.
      */
@@ -153,7 +155,8 @@ public final class DoubleSolenoid extends SolenoidBase
     @Override
     public void updateTable() {
         if (m_table != null) {
-            m_table.putString("Value", (get() == Value.FORWARD ? "Forward" : (get() == Value.REVERSE ? "Reverse" : "Off")));
+            m_table.putString("Value",
+                    (get() == Value.FORWARD ? "Forward" : (get() == Value.REVERSE ? "Reverse" : "Off")));
         }
     }
 
@@ -221,8 +224,5 @@ public final class DoubleSolenoid extends SolenoidBase
         // TODO Auto-generated method stub
         return true;
     }
-
-
-
 
 }

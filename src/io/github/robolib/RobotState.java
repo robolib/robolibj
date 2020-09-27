@@ -15,7 +15,6 @@
 
 package io.github.robolib;
 
-
 /**
  *
  * @author noriah <vix@noriah.dev>
@@ -23,25 +22,26 @@ package io.github.robolib;
  */
 public final class RobotState {
 
-    private RobotState(){}
+    private RobotState() {
+    }
 
-    public static boolean isEnabled(){
+    public static boolean isEnabled() {
         return DriverStation.isEnabled();
     }
 
-    public static boolean isDisabled(){
+    public static boolean isDisabled() {
         return DriverStation.isDisabled();
     }
 
-    public static boolean isAutonomous(){
+    public static boolean isAutonomous() {
         return DriverStation.isAutonomous();
     }
 
-    public static boolean isTest(){
+    public static boolean isTest() {
         return DriverStation.isTest();
     }
 
-    public static boolean isOperatorControl(){
+    public static boolean isOperatorControl() {
         return DriverStation.isOperatorControl();
     }
 }

@@ -34,10 +34,9 @@ public class DoubleStateMachine implements StateMachine {
     @Override
     public void transition() {
 
-
     }
 
-    public short getCurrentState(){
+    public short getCurrentState() {
         return m_currentState;
     }
 

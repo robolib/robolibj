@@ -24,33 +24,40 @@ public final class NullController implements SpeedController {
 
     /**
      * Do absolutely nothing
+     *
      * @return 0.00
      */
     @Override
-    public double getSpeed() { return 0.00; }
+    public double getSpeed() {
+        return 0.00;
+    }
 
     /**
      * Do absolutely nothing
      */
     @Override
-    public void setSpeed(double speed) {}
+    public void setSpeed(double speed) {
+    }
 
     /**
      * Do absolutely nothing
      */
     @Override
-    public void setInverted(boolean inverted) {}
+    public void setInverted(boolean inverted) {
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void pidWrite(double output) {}
+    public void pidWrite(double output) {
+    }
 
     /**
      * Do Nothing
      */
     @Override
-    public void stopMotor() {}
+    public void stopMotor() {
+    }
 
 }

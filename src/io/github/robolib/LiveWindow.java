@@ -31,11 +31,9 @@ import io.github.robolib.util.log.Logger;
  */
 public final class LiveWindow {
 
-    private static final Vector<LiveWindowSendable> SENSORS_LIST =
-            new Vector<LiveWindowSendable>();
+    private static final Vector<LiveWindowSendable> SENSORS_LIST = new Vector<LiveWindowSendable>();
 
-    private static final Hashtable<LiveWindowSendable, LWComponent> COMPONENTS_LIST =
-            new Hashtable<LiveWindowSendable, LWComponent>();
+    private static final Hashtable<LiveWindowSendable, LWComponent> COMPONENTS_LIST = new Hashtable<LiveWindowSendable, LWComponent>();
 
     private static ITable m_table;
 
@@ -47,9 +45,10 @@ public final class LiveWindow {
 
     private static boolean m_firstTime = true;
 
-    private LiveWindow(){}
+    private LiveWindow() {
+    }
 
-    private static void initLWComponents(){
+    private static void initLWComponents() {
         LOG.debug("Initializing the components first time");
         m_table = NetworkTable.getTable("LiveWindow");
         m_statusTable = m_table.getSubTable("~STATUS~");
@@ -63,22 +62,23 @@ public final class LiveWindow {
             table.putString("Name", name);
             table.putString("Subsystem", subsystem);
             s.initTable(table);
-            if(c.m_isSensor) SENSORS_LIST.addElement(s);
+            if (c.m_isSensor)
+                SENSORS_LIST.addElement(s);
         });
     }
 
-    public static void setEnabled(boolean enabled){
-        if(m_lwEnabled != enabled){
-            if(enabled){
+    public static void setEnabled(boolean enabled) {
+        if (m_lwEnabled != enabled) {
+            if (enabled) {
                 LOG.debug("Starting live window mode");
-                if(m_firstTime){
+                if (m_firstTime) {
                     initLWComponents();
                     m_firstTime = false;
                 }
                 Scheduler.setEnabled(false);
                 Scheduler.removeAll();
                 COMPONENTS_LIST.keySet().forEach(s -> s.startLiveWindowMode());
-            }else{
+            } else {
                 LOG.debug("Stopping live window mode.");
                 COMPONENTS_LIST.keySet().forEach(s -> s.stopLiveWindowMode());
                 Scheduler.setEnabled(true);
@@ -88,15 +88,15 @@ public final class LiveWindow {
         }
     }
 
-    public static void run(){
+    public static void run() {
         SENSORS_LIST.forEach(sensor -> sensor.updateTable());
     }
 
-    public static void addSensor(String subsystem, String name, LiveWindowSendable component){
+    public static void addSensor(String subsystem, String name, LiveWindowSendable component) {
         COMPONENTS_LIST.put(component, new LWComponent(subsystem, name, true));
     }
 
-    public static void addSensor(String itemType, int channel, LiveWindowSendable component){
+    public static void addSensor(String itemType, int channel, LiveWindowSendable component) {
         addSensor("Ungrouped", itemType + "[" + channel + "]", component);
         if (SENSORS_LIST.contains(component)) {
             SENSORS_LIST.removeElement(component);
@@ -104,11 +104,11 @@ public final class LiveWindow {
         SENSORS_LIST.addElement(component);
     }
 
-    public static void addActuator(String subsystem, String name, LiveWindowSendable component){
+    public static void addActuator(String subsystem, String name, LiveWindowSendable component) {
         COMPONENTS_LIST.put(component, new LWComponent(subsystem, name, false));
     }
 
-    public static void addActuator(String itemType, int channel, LiveWindowSendable component){
+    public static void addActuator(String itemType, int channel, LiveWindowSendable component) {
         addActuator("Ungrouped", itemType + "[" + channel + "]", component);
     }
 }
@@ -124,7 +124,7 @@ class LWComponent {
     String m_name;
     boolean m_isSensor;
 
-    LWComponent(String s, String n, boolean i){
+    LWComponent(String s, String n, boolean i) {
         m_subsystem = s;
         m_name = n;
         m_isSensor = i;

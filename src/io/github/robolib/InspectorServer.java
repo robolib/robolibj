@@ -16,10 +16,9 @@
 package io.github.robolib;
 
 /**
- * Provides a server for a client to connect and retireve
- * information about various robot properties sunch as
- * digital/analog input/output and power distribution panel
- * data.
+ * Provides a server for a client to connect and retireve information about
+ * various robot properties sunch as digital/analog input/output and power
+ * distribution panel data.
  *
  * @author noriah <vix@noriah.dev>
  */

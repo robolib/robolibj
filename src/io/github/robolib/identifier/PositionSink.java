@@ -28,11 +28,11 @@ public interface PositionSink {
 
     void setPosition(double position);
 
-    public default void bindPosition(PositionSource source){
+    public default void bindPosition(PositionSource source) {
         Scheduler.addBind(() -> setPosition(source.getPosition()));
     }
 
-    public default void bindPosition(DoubleSupplier source){
+    public default void bindPosition(DoubleSupplier source) {
         Scheduler.addBind(() -> setPosition(source.getAsDouble()));
     }
 

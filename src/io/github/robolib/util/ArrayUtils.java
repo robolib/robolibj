@@ -27,7 +27,7 @@ public class ArrayUtils {
     @SuppressWarnings("unchecked")
     public static final <T> T[] concatenate(T[] a, T[] b) {
         int l1 = a.length, l2 = b.length;
-        T[] c = (T[]) Array.newInstance(a.getClass().getComponentType(), l1+l2);
+        T[] c = (T[]) Array.newInstance(a.getClass().getComponentType(), l1 + l2);
         System.arraycopy(a, 0, c, 0, l1);
         System.arraycopy(b, 0, c, l1, l2);
         return c;

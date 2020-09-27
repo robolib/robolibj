@@ -26,7 +26,6 @@ import io.github.robolib.jni.UsageReporting;
 import io.github.robolib.lang.ResourceAllocationException;
 import io.github.robolib.util.log.Logger;
 
-
 /**
  * The Class DigitalIO.
  *
@@ -39,84 +38,84 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @author noriah <vix@noriah.dev>
      */
-    public static enum DigitalChannel{
+    public static enum DigitalChannel {
 
-        /**  DIO Channel 0 On-board. */
+        /** DIO Channel 0 On-board. */
         DIO0,
 
-        /**  DIO Channel 1 On-board. */
+        /** DIO Channel 1 On-board. */
         DIO1,
 
-        /**  DIO Channel 2 On-board. */
+        /** DIO Channel 2 On-board. */
         DIO2,
 
-        /**  DIO Channel 3 On-board. */
+        /** DIO Channel 3 On-board. */
         DIO3,
 
-        /**  DIO Channel 4 On-board. */
+        /** DIO Channel 4 On-board. */
         DIO4,
 
-        /**  DIO Channel 5 On-board. */
+        /** DIO Channel 5 On-board. */
         DIO5,
 
-        /**  DIO Channel 6 On-board. */
+        /** DIO Channel 6 On-board. */
         DIO6,
 
-        /**  DIO Channel 7 On-board. */
+        /** DIO Channel 7 On-board. */
         DIO7,
 
-        /**  DIO Channel 8 On-board. */
+        /** DIO Channel 8 On-board. */
         DIO8,
 
-        /**  DIO Channel 9 On-board. */
+        /** DIO Channel 9 On-board. */
         DIO9,
 
-        /**  DIO Channel 10, Channel 0 on MXP. */
+        /** DIO Channel 10, Channel 0 on MXP. */
         DIO10(11),
 
-        /**  DIO Channel 11, Channel 1 on MXP. */
+        /** DIO Channel 11, Channel 1 on MXP. */
         DIO11(13),
 
-        /**  DIO Channel 12, Channel 2 on MXP. */
+        /** DIO Channel 12, Channel 2 on MXP. */
         DIO12(15),
 
-        /**  DIO Channel 13, Channel 3 on MXP. */
+        /** DIO Channel 13, Channel 3 on MXP. */
         DIO13(17),
 
-        /**  DIO Channel 14, Channel 4 on MXP. */
+        /** DIO Channel 14, Channel 4 on MXP. */
         DIO14(19),
 
-        /**  DIO Channel 15, Channel 5 on MXP. */
+        /** DIO Channel 15, Channel 5 on MXP. */
         DIO15(21),
 
-        /**  DIO Channel 16, Channel 6 on MXP. */
+        /** DIO Channel 16, Channel 6 on MXP. */
         DIO16(23),
 
-        /**  DIO Channel 17, Channel 7 on MXP. */
+        /** DIO Channel 17, Channel 7 on MXP. */
         DIO17(25),
 
-        /**  DIO Channel 18, Channel 8 on MXP. */
+        /** DIO Channel 18, Channel 8 on MXP. */
         DIO18(27),
 
-        /**  DIO Channel 19, Channel 9 on MXP. */
+        /** DIO Channel 19, Channel 9 on MXP. */
         DIO19(29),
 
-        /**  DIO Channel 20, Channel 10 on MXP. */
+        /** DIO Channel 20, Channel 10 on MXP. */
         DIO20(31),
 
-        /**  DIO Channel 21, Channel 11 on MXP. */
+        /** DIO Channel 21, Channel 11 on MXP. */
         DIO21(18),
 
-        /**  DIO Channel 22, Channel 12 on MXP. */
+        /** DIO Channel 22, Channel 12 on MXP. */
         DIO22(22),
 
-        /**  DIO Channel 23, Channel 13 on MXP. */
+        /** DIO Channel 23, Channel 13 on MXP. */
         DIO23(26),
 
-        /**  DIO Channel 24, Channel 14 on MXP. */
+        /** DIO Channel 24, Channel 14 on MXP. */
         DIO24(32),
 
-        /**  DIO Channel 25, Channel 15 on MXP. */
+        /** DIO Channel 25, Channel 15 on MXP. */
         DIO25(34);
 
         /** The Pin on the MXP port that this channel is on. */
@@ -125,7 +124,7 @@ public abstract class DigitalIO extends InterruptBase {
         /**
          * Instantiates a new channel.
          */
-        private DigitalChannel(){
+        private DigitalChannel() {
             m_mxpPin = 0;
         }
 
@@ -134,7 +133,7 @@ public abstract class DigitalIO extends InterruptBase {
          *
          * @param mxpPin the mxp pin
          */
-        private DigitalChannel(int mxpPin){
+        private DigitalChannel(int mxpPin) {
             m_mxpPin = mxpPin;
         }
     }
@@ -144,7 +143,7 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @author noriah <vix@noriah.dev>
      */
-    public static enum Direction{
+    public static enum Direction {
 
         /** The in. */
         IN,
@@ -181,7 +180,7 @@ public abstract class DigitalIO extends InterruptBase {
 
         IntBuffer status = allocateInt();
 
-        m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte)channel.ordinal()), status);
+        m_port = DIOJNI.initializeDigitalPort(DIOJNI.getPort((byte) channel.ordinal()), status);
         HALUtil.checkStatus(status);
         DIOJNI.allocateDIO(m_port, isIn, status);
         HALUtil.checkStatus(status);
@@ -192,14 +191,15 @@ public abstract class DigitalIO extends InterruptBase {
     /**
      * Constructor for use with analog trigger output. NOTHING ELSE!!!
      */
-    protected DigitalIO(){
+    protected DigitalIO() {
         super(InterfaceType.ANALOG);
     }
 
     /**
      * Free the DigitalIO channel.
      *
-     * Free the resource associated with the Digital IO channel and set the value to 0.
+     * Free the resource associated with the Digital IO channel and set the value to
+     * 0.
      */
     public final void free() {
 
@@ -217,14 +217,14 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @param channel the DigitalIO channel to allocate
      */
-    private final void allocateChannel(DigitalChannel channel){
-        if(channel.ordinal() > 9){
+    private final void allocateChannel(DigitalChannel channel) {
+        if (channel.ordinal() > 9) {
             allocateMXPPin(channel.m_mxpPin);
         }
 
-        if(USED_CHANNELS[channel.ordinal()] == false){
+        if (USED_CHANNELS[channel.ordinal()] == false) {
             USED_CHANNELS[channel.ordinal()] = true;
-        }else{
+        } else {
             throw new ResourceAllocationException("Digital IO channel '" + channel.name() + "' already in use.");
         }
     }
@@ -234,15 +234,16 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @param channel the DigitalIO channel to free
      */
-    private final void freeChannel(DigitalChannel channel){
-        if(channel.ordinal() > 9){
+    private final void freeChannel(DigitalChannel channel) {
+        if (channel.ordinal() > 9) {
             freeMXPPin(channel.m_mxpPin);
         }
 
-        if(USED_CHANNELS[channel.ordinal()] == true){
+        if (USED_CHANNELS[channel.ordinal()] == true) {
             USED_CHANNELS[channel.ordinal()] = false;
-        }else{
-            Logger.get(DigitalIO.class).error("Digital IO Channel '" + channel.name() + "' was not allocated. How did you get here?");
+        } else {
+            Logger.get(DigitalIO.class)
+                    .error("Digital IO Channel '" + channel.name() + "' was not allocated. How did you get here?");
         }
     }
 
@@ -251,7 +252,7 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @return {@link DigitalChannel} representation of the DigitalIO channel
      */
-    public final DigitalChannel getChannel(){
+    public final DigitalChannel getChannel() {
         return m_channel;
     }
 
@@ -261,7 +262,7 @@ public abstract class DigitalIO extends InterruptBase {
      * @return integer representation of the DigitalIO channel
      */
     @Override
-    public int getChannelNumber(){
+    public int getChannelNumber() {
         return m_channel.ordinal();
     }
 
@@ -269,7 +270,7 @@ public abstract class DigitalIO extends InterruptBase {
      * {@inheritDoc}
      */
     @Override
-    public byte getModuleNumber(){
+    public byte getModuleNumber() {
         return 0;
     }
 
@@ -278,7 +279,7 @@ public abstract class DigitalIO extends InterruptBase {
      *
      * @return string representation of the DigitalIO channel
      */
-    public String getChannelName(){
+    public String getChannelName() {
         return m_channel.name();
     }
 
@@ -286,7 +287,7 @@ public abstract class DigitalIO extends InterruptBase {
      * {@inheritDoc}
      */
     @Override
-    public boolean isAnalogTrigger(){
+    public boolean isAnalogTrigger() {
         return false;
     }
 

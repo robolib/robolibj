@@ -22,17 +22,28 @@ package io.github.robolib.command;
  */
 public final class WaitCommand extends Command {
 
-    public WaitCommand(double timeout){
+    public WaitCommand(double timeout) {
         this("Wait " + timeout, timeout);
     }
 
-    public WaitCommand(String name, double timeout){
+    public WaitCommand(String name, double timeout) {
         super(name, timeout);
     }
-    protected void initialize() {}
-    protected void execute() {}
-    protected boolean isFinished() { return isTimedOut(); }
-    protected void end() {}
-    protected void interrupted() {}
+
+    protected void initialize() {
+    }
+
+    protected void execute() {
+    }
+
+    protected boolean isFinished() {
+        return isTimedOut();
+    }
+
+    protected void end() {
+    }
+
+    protected void interrupted() {
+    }
 
 }

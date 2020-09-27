@@ -24,54 +24,55 @@ import io.github.robolib.module.RoboRIO;
  */
 public interface ButtonTrigger extends Trigger {
 
-    public default void runWhenPressed(final Command command){
+    public default void runWhenPressed(final Command command) {
         runWhenActive(command);
     }
 
-    public default void runWhileHeld(final Command command){
+    public default void runWhileHeld(final Command command) {
         runWhileActive(command);
     }
 
-    public default void runWhenReleased(final Command command){
+    public default void runWhenReleased(final Command command) {
         runWhenInactive(command);
     }
 
-    public default void runWhileReleased(final Command command){
+    public default void runWhileReleased(final Command command) {
         runWhileInactive(command);
     }
 
-    public default void togglenWhenPressed(final Command command){
+    public default void togglenWhenPressed(final Command command) {
         toggleWhenActive(command);
     }
 
-    public default void cancelWhenPressed(final Command command){
+    public default void cancelWhenPressed(final Command command) {
         cancelWhenActive(command);
     }
 
-    public default void runWhenDoublePressed(final Command command, final double timeout){
-        new ButtonScheduler(){
+    public default void runWhenDoublePressed(final Command command, final double timeout) {
+        new ButtonScheduler() {
             boolean pressed = false;
             boolean pressedFirst = false;
             double time = 0;
+
             @Override
             public void execute() {
-                if(getState()){
-                    if(!pressed){
-                        if(!pressedFirst){
+                if (getState()) {
+                    if (!pressed) {
+                        if (!pressedFirst) {
                             pressedFirst = true;
                             time = RoboRIO.getFPGATimestamp();
-                        }else{
-                            if(RoboRIO.getFPGATimestamp() - time <= timeout){
+                        } else {
+                            if (RoboRIO.getFPGATimestamp() - time <= timeout) {
                                 command.start();
                                 pressedFirst = false;
                             }
                         }
                     }
                     pressed = true;
-                }else{
+                } else {
                     pressed = false;
-                    if(pressedFirst){
-                        if(RoboRIO.getFPGATimestamp() - time > timeout){
+                    if (pressedFirst) {
+                        if (RoboRIO.getFPGATimestamp() - time > timeout) {
                             pressedFirst = false;
                         }
                     }

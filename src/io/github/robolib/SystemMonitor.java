@@ -49,12 +49,11 @@ public final class SystemMonitor implements Runnable {
 
     private static final ILogger m_log = Logger.get(SystemMonitor.class);
 
-
-    private SystemMonitor(){
+    private SystemMonitor() {
 
     }
 
-    public static void setMonitoringInterval(double interval){
+    public static void setMonitoringInterval(double interval) {
         m_interval = interval;
     }
 
@@ -62,7 +61,7 @@ public final class SystemMonitor implements Runnable {
      *
      * @param enabled
      */
-    public static void enableVoltageMonitoring(boolean enabled){
+    public static void enableVoltageMonitoring(boolean enabled) {
         m_enableVoltage = enabled;
     }
 
@@ -70,7 +69,7 @@ public final class SystemMonitor implements Runnable {
      *
      * @param enabled
      */
-    public static void enablePDPFaultMonitoring(boolean enabled){
+    public static void enablePDPFaultMonitoring(boolean enabled) {
         m_enablePDP = enabled;
     }
 
@@ -78,7 +77,7 @@ public final class SystemMonitor implements Runnable {
      *
      * @param enabled
      */
-    public static void enablePCMFaultMonitoring(boolean enabled){
+    public static void enablePCMFaultMonitoring(boolean enabled) {
         m_enablePCM = enabled;
     }
 
@@ -86,7 +85,7 @@ public final class SystemMonitor implements Runnable {
      *
      * @param enabled
      */
-    public static void enableRIOFaultMonitoring(boolean enabled){
+    public static void enableRIOFaultMonitoring(boolean enabled) {
         m_enableRIO = enabled;
     }
 
@@ -94,7 +93,7 @@ public final class SystemMonitor implements Runnable {
      *
      * @param enabled
      */
-    public static void enableNetworkMonitoring(boolean enabled){
+    public static void enableNetworkMonitoring(boolean enabled) {
         m_enableNetwork = enabled;
     }
 
@@ -102,7 +101,7 @@ public final class SystemMonitor implements Runnable {
      *
      * @param warnLevel
      */
-    public static void setVoltageWarnLevel(double warnLevel){
+    public static void setVoltageWarnLevel(double warnLevel) {
         m_voltWarn = warnLevel;
     }
 
@@ -110,7 +109,7 @@ public final class SystemMonitor implements Runnable {
      *
      * @param critLevel
      */
-    public static void setVoltageCritLevel(double critLevel){
+    public static void setVoltageCritLevel(double critLevel) {
         m_voltCrit = critLevel;
     }
 
@@ -118,7 +117,7 @@ public final class SystemMonitor implements Runnable {
      *
      * @param disableLevel
      */
-    public static void setVoltageDisableLevel(double disableLevel){
+    public static void setVoltageDisableLevel(double disableLevel) {
         m_voltDisable = disableLevel;
     }
 
@@ -128,13 +127,13 @@ public final class SystemMonitor implements Runnable {
      * @param critLevel
      * @param disableLevel
      */
-    public static void monitorVoltage(double warnLevel, double critLevel, double disableLevel){
+    public static void monitorVoltage(double warnLevel, double critLevel, double disableLevel) {
         m_voltWarn = warnLevel;
         m_voltCrit = critLevel;
         m_voltDisable = disableLevel;
     }
 
-    public static void monitorSystemCurrent(double warnLevel, double critLevel, double disableLevel){
+    public static void monitorSystemCurrent(double warnLevel, double critLevel, double disableLevel) {
         m_sysCurrentWarn = warnLevel;
         m_sysCurrentCrit = critLevel;
         m_sysCurrentDisable = disableLevel;
@@ -144,16 +143,15 @@ public final class SystemMonitor implements Runnable {
      *
      * @param enabled
      */
-    public static void monitorMemory(boolean enabled){
+    public static void monitorMemory(boolean enabled) {
 
     }
 
-    public void run(){
-        while(true){
+    public void run() {
+        while (true) {
 
         }
 
     }
-
 
 }

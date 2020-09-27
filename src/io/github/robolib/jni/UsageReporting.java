@@ -1,6 +1,5 @@
 package io.github.robolib.jni;
 
-
 public class UsageReporting extends JNIWrapper {
 
     public static final byte ResourceType_Controller = 0;
@@ -84,28 +83,30 @@ public class UsageReporting extends JNIWrapper {
     public static final byte ADXL345_I2C = 2;
     public static final byte Command_Scheduler = 1;
     public static final byte SmartDashboard_Instance = 1;
-    
-    
-	public static void report(byte resource, int instanceNumber, int i) {
-		report(resource, instanceNumber, i, "");
-	}
-	
-	public static void report(byte resource, int instanceNumber) {
-		report(resource, instanceNumber, 0, "");
-	}
 
-	public static void report(byte resource, int instanceNumber, int i, String string) {
-	    
-		UsageReportingReport(resource, (byte) instanceNumber, (byte) i, string);
-	}
-	
-	/**
-     * Original signature : <code>uint32_t FRC_NetworkCommunication_nUsageReporting_report(uint8_t, uint8_t, uint8_t, const char*)</code><br>
-     * <i>native declaration : src\main\include\NetworkCommunication\UsageReporting.h:120</i>
-     * @param resource 
-     * @param instanceNumber 
-     * @param context 
-     * @param feature 
+    public static void report(byte resource, int instanceNumber, int i) {
+        report(resource, instanceNumber, i, "");
+    }
+
+    public static void report(byte resource, int instanceNumber) {
+        report(resource, instanceNumber, 0, "");
+    }
+
+    public static void report(byte resource, int instanceNumber, int i, String string) {
+
+        UsageReportingReport(resource, (byte) instanceNumber, (byte) i, string);
+    }
+
+    /**
+     * Original signature :
+     * <code>uint32_t FRC_NetworkCommunication_nUsageReporting_report(uint8_t, uint8_t, uint8_t, const char*)</code><br>
+     * <i>native declaration :
+     * src\main\include\NetworkCommunication\UsageReporting.h:120</i>
+     * 
+     * @param resource
+     * @param instanceNumber
+     * @param context
+     * @param feature
      * @return int
      */
     public static native int UsageReportingReport(byte resource, byte instanceNumber, byte context, String feature);

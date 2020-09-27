@@ -28,11 +28,11 @@ public interface RateSink {
 
     void setRate(double rate);
 
-    public default void bindRate(RateSource source){
+    public default void bindRate(RateSource source) {
         Scheduler.addBind(() -> setRate(source.getRate()));
     }
 
-    public default void bindRate(DoubleSupplier source){
+    public default void bindRate(DoubleSupplier source) {
         Scheduler.addBind(() -> setRate(source.getAsDouble()));
     }
 

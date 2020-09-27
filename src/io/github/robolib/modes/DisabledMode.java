@@ -19,7 +19,6 @@ import io.github.robolib.RobotMode;
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
 
-
 /**
  * The Class DisabledMode.
  *
@@ -30,30 +29,29 @@ public abstract class DisabledMode extends RobotMode {
     /**
      * Constructor for a Disable Robot mode.
      */
-    protected DisabledMode(){
+    protected DisabledMode() {
         super(GameMode.DISABLED);
     }
 
     /**
-     * Constructor for a Disable Robot mode
-     * Although, why would you be naming this,
+     * Constructor for a Disable Robot mode Although, why would you be naming this,
      * You should really only have one.
+     *
      * @param name The name for this Disable mode
      */
-    protected DisabledMode(String name){
+    protected DisabledMode(String name) {
         super(GameMode.DISABLED, name);
     }
 
     /**
-     * Constructor for a Disable Robot mode
-     * Although, why would you be naming this?
-     * And why are you setting this as active?
-     * Do you really have more than one disabled mode?.
+     * Constructor for a Disable Robot mode Although, why would you be naming this?
+     * And why are you setting this as active? Do you really have more than one
+     * disabled mode?.
      *
-     * @param name The name for this Disable mode
+     * @param name   The name for this Disable mode
      * @param active Set this mode as the active mode by default
      */
-    protected DisabledMode(String name, boolean active){
+    protected DisabledMode(String name, boolean active) {
         super(GameMode.DISABLED, name, active);
     }
 
@@ -61,7 +59,7 @@ public abstract class DisabledMode extends RobotMode {
      * {@inheritDoc}
      */
     @Override
-    protected final void modeRun(){
+    protected final void modeRun() {
         NetworkCommunications.ObserveUserProgramDisabled();
         run();
         Scheduler.run();

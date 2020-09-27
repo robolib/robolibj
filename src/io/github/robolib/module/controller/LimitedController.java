@@ -38,10 +38,10 @@ public final class LimitedController implements SpeedController, MotorSafety {
     /**
      * Instantiates a new limit switch controller.
      *
-     * @param motor the motor
+     * @param motor  the motor
      * @param system the switch system
      */
-    public LimitedController(SpeedController motor, LimitSystem system){
+    public LimitedController(SpeedController motor, LimitSystem system) {
         m_motor = motor;
         m_system = system;
         m_safetyHelper = SafetyManager.addMotor(this);
@@ -60,9 +60,9 @@ public final class LimitedController implements SpeedController, MotorSafety {
      */
     @Override
     public void setSpeed(double speed) {
-        if(speed > 0 && m_system.canForward())
+        if (speed > 0 && m_system.canForward())
             m_motor.setSpeed(speed);
-        else if(speed < 0 && m_system.canReverse())
+        else if (speed < 0 && m_system.canReverse())
             m_motor.setSpeed(speed);
         else
             m_motor.setSpeed(0);
@@ -72,7 +72,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public void setInverted(boolean inverted){
+    public void setInverted(boolean inverted) {
         m_motor.setInverted(inverted);
     }
 
@@ -81,7 +81,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
      *
      * @return true, if at a limit
      */
-    public boolean atLimit(){
+    public boolean atLimit() {
         return atFrontLimit() || atBackLimit();
     }
 
@@ -90,7 +90,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
      *
      * @return true, if at far limit.
      */
-    public boolean atFrontLimit(){
+    public boolean atFrontLimit() {
         return !m_system.canForward();
     }
 
@@ -99,7 +99,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
      *
      * @return true, if at near limit.
      */
-    public boolean atBackLimit(){
+    public boolean atBackLimit() {
         return !m_system.canReverse();
     }
 
@@ -115,7 +115,7 @@ public final class LimitedController implements SpeedController, MotorSafety {
      * {@inheritDoc}
      */
     @Override
-    public void stopMotor(){
+    public void stopMotor() {
         m_motor.stopMotor();
     }
 

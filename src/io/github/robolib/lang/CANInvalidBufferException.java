@@ -16,9 +16,9 @@
 package io.github.robolib.lang;
 
 /**
- * Exception indicating that a CAN driver library entry-point
- * was passed an invalid buffer.  Typically, this is due to a
- * buffer being too small to include the needed safety token.
+ * Exception indicating that a CAN driver library entry-point was passed an
+ * invalid buffer. Typically, this is due to a buffer being too small to include
+ * the needed safety token.
  *
  * @author noriah <vix@noriah.dev>
  */

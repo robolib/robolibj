@@ -49,7 +49,7 @@ public final class NetTableController extends GenericHID {
          *
          * @param channel the channel
          */
-        public NetTableAxis(int channel){
+        public NetTableAxis(int channel) {
             m_channel = channel;
             m_table.putNumber("axis-" + channel, 0.00);
         }
@@ -58,7 +58,7 @@ public final class NetTableController extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public double get(){
+        public double get() {
             double out = m_table.getNumber("axis-" + m_channel, 0.00);
             out = (Math.abs(out) <= m_deadBand ? 0 : out);
             return m_invert ? -out : out;
@@ -68,7 +68,7 @@ public final class NetTableController extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public void setInverted(boolean inverted){
+        public void setInverted(boolean inverted) {
             m_invert = inverted;
         }
 
@@ -76,7 +76,7 @@ public final class NetTableController extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public void setDeadband(double value){
+        public void setDeadband(double value) {
             m_deadBand = value;
         }
 
@@ -126,7 +126,7 @@ public final class NetTableController extends GenericHID {
          *
          * @param channel the channel
          */
-        public NetTableButton(int channel){
+        public NetTableButton(int channel) {
             m_channel = channel;
             m_table.putBoolean("button-" + channel, false);
         }
@@ -145,25 +145,25 @@ public final class NetTableController extends GenericHID {
      *
      * @param name Name of the Joystick in the RoboLibBot/Joystick Table
      */
-    public NetTableController(String name){
+    public NetTableController(String name) {
         this(name, 6, 12);
     }
 
     /**
      * Create a NetworkJoystick Instance.
      *
-     * @param name Name of the Joystick in the RoboLibBot/Joystick Table
+     * @param name    Name of the Joystick in the RoboLibBot/Joystick Table
      * @param numAxes Number of Axes to add to the Joystick
      * @param numBtns Number of Buttons to add to the Joystick
      */
-    public NetTableController(String name, int numAxes, int numBtns){
+    public NetTableController(String name, int numAxes, int numBtns) {
         super(numAxes, numBtns);
 
         m_table = RoboLib.getRobotTable().getSubTable("Joystick").getSubTable(name);
-        for(int i = 0; i < numAxes; i++)
+        for (int i = 0; i < numAxes; i++)
             m_axes[i] = new NetTableAxis(i + 1);
 
-        for(int i = 0; i < numBtns; i++)
+        for (int i = 0; i < numBtns; i++)
             m_btns[i] = new NetTableButton(i + 1);
     }
 

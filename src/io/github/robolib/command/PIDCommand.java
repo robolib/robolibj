@@ -36,26 +36,29 @@ public abstract class PIDCommand extends Command implements Sendable {
 
     /**
      * Instantiates a {@link PIDCommand} that will use the given p, i and d values.
+     *
      * @param name the name of the command
-     * @param p the proportional value
-     * @param i the integral value
-     * @param d the derivative value
+     * @param p    the proportional value
+     * @param i    the integral value
+     * @param d    the derivative value
      */
-    public PIDCommand(String name, double p, double i, double d){
+    public PIDCommand(String name, double p, double i, double d) {
         super(name);
         m_controller = new PIDController(p, i, d, m_source, m_sink);
     }
 
     /**
-     * Instantiates a {@link PIDCommand} that will use the given p, i and d values.  It will also space the time
-     * between PID loop calculations to be equal to the given period.
-     * @param name the name
-     * @param p the proportional value
-     * @param i the integral value
-     * @param d the derivative value
+     * Instantiates a {@link PIDCommand} that will use the given p, i and d values.
+     * It will also space the time between PID loop calculations to be equal to the
+     * given period.
+     *
+     * @param name   the name
+     * @param p      the proportional value
+     * @param i      the integral value
+     * @param d      the derivative value
      * @param period the time (in seconds) between calculations
      */
-    public PIDCommand(String name, double p, double i, double d, double period){
+    public PIDCommand(String name, double p, double i, double d, double period) {
         super(name);
         m_controller = new PIDController(p, i, d, m_source, m_sink, period);
     }
@@ -63,87 +66,91 @@ public abstract class PIDCommand extends Command implements Sendable {
     /**
      * Instantiates a {@link PIDCommand} that will use the given p, i and d values.
      * It will use the class name as its name.
+     *
      * @param p the proportional value
      * @param i the integral value
      * @param d the derivative value
      */
-    public PIDCommand(double p, double i, double d){
+    public PIDCommand(double p, double i, double d) {
         m_controller = new PIDController(p, i, d, m_source, m_sink);
     }
 
     /**
      * Instantiates a {@link PIDCommand} that will use the given p, i and d values.
-     * It will use the class name as its name..
-     * It will also space the time
-     * between PID loop calculations to be equal to the given period.
-     * @param p the proportional value
-     * @param i the integral value
-     * @param d the derivative value
+     * It will use the class name as its name.. It will also space the time between
+     * PID loop calculations to be equal to the given period.
+     *
+     * @param p      the proportional value
+     * @param i      the integral value
+     * @param d      the derivative value
      * @param period the time (in seconds) between calculations
      */
-    public PIDCommand(double p, double i, double d, double period){
+    public PIDCommand(double p, double i, double d, double period) {
         m_controller = new PIDController(p, i, d, m_source, m_sink, period);
     }
 
     /**
-     * Returns the {@link PIDController} used by this {@link PIDCommand}.
-     * Use this if you would like to fine tune the pid loop.
+     * Returns the {@link PIDController} used by this {@link PIDCommand}. Use this
+     * if you would like to fine tune the pid loop.
      *
      * @return the {@link PIDController} used by this {@link PIDCommand}
      */
-    protected PIDController getController(){
+    protected PIDController getController() {
         return m_controller;
     }
 
     @Override
-    final void _initialize(){
+    final void _initialize() {
         m_controller.enable();
     }
 
     @Override
-    final void _end(){
+    final void _end() {
         m_controller.disable();
     }
 
     @Override
-    final void _interrupted(){
+    final void _interrupted() {
         m_controller.disable();
     }
 
     /**
-     * Adds the given value to the setpoint.
-     * If {@link PIDCommand#setInputRange(double, double) setInputRange(...)} was used,
+     * Adds the given value to the setpoint. If
+     * {@link PIDCommand#setInputRange(double, double) setInputRange(...)} was used,
      * then the bounds will still be honored by this method.
+     *
      * @param deltaSetpoint the change in the setpoint
      */
-    public final void setSetpointRelative(double deltaSetpoint){
+    public final void setSetpointRelative(double deltaSetpoint) {
         setSetpoint(getSetpoint() + deltaSetpoint);
     }
 
     /**
-     * Sets the setpoint to the given value.  If {@link PIDCommand#setInputRange(double, double) setInputRange(...)}
-     * was called,
-     * then the given setpoint
-     * will be trimmed to fit within the range.
+     * Sets the setpoint to the given value. If
+     * {@link PIDCommand#setInputRange(double, double) setInputRange(...)} was
+     * called, then the given setpoint will be trimmed to fit within the range.
+     *
      * @param setpoint the new setpoint
      */
-    protected final void setSetpoint(double point){
+    protected final void setSetpoint(double point) {
         m_controller.setSetpoint(point);
     }
 
     /**
      * Returns the setpoint.
+     *
      * @return the setpoint
      */
-    protected final double getSetpoint(){
+    protected final double getSetpoint() {
         return m_controller.getSetpoint();
     }
 
     /**
      * Returns the current position
+     *
      * @return the current position
      */
-    protected final double getPosition(){
+    protected final double getPosition() {
         return returnPIDInput();
     }
 
@@ -153,7 +160,7 @@ public abstract class PIDCommand extends Command implements Sendable {
      * @param min the minimum value expected from the input and setpoint
      * @param max the maximum value expected from the input and setpoint
      */
-    protected final void setInputRange(double min, double max){
+    protected final void setInputRange(double min, double max) {
         m_controller.setInputRange(min, max);
     }
 
@@ -163,41 +170,55 @@ public abstract class PIDCommand extends Command implements Sendable {
      * @param min the minimum value to write to the output
      * @param max the maximum value to write to the output
      */
-    protected final void setOutputRange(double min, double max){
+    protected final void setOutputRange(double min, double max) {
         m_controller.setOutputRange(min, max);
     }
 
     /**
      * Returns the input for the pid loop.
      *
-     * <p>It returns the input for the pid loop, so if this command was based
-     * off of a gyro, then it should return the angle of the gyro</p>
+     * <p>
+     * It returns the input for the pid loop, so if this command was based off of a
+     * gyro, then it should return the angle of the gyro
+     * </p>
      *
-     * <p>All subclasses of {@link PIDCommand} must override this method.</p>
+     * <p>
+     * All subclasses of {@link PIDCommand} must override this method.
+     * </p>
      *
-     * <p>This method will be called in a different thread then the {@link Scheduler} thread.</p>
+     * <p>
+     * This method will be called in a different thread then the {@link Scheduler}
+     * thread.
+     * </p>
      *
      * @return the value the pid loop should use as input
      */
     protected abstract double returnPIDInput();
 
     /**
-     * Uses the value that the pid loop calculated.  The calculated value is the "output" parameter.
-     * This method is a good time to set motor values, maybe something along the lines of <code>driveline.tankDrive(output, -output)</code>
+     * Uses the value that the pid loop calculated. The calculated value is the
+     * "output" parameter. This method is a good time to set motor values, maybe
+     * something along the lines of
+     * <code>driveline.tankDrive(output, -output)</code>
      *
-     * <p>All subclasses of {@link PIDCommand} must override this method.</p>
+     * <p>
+     * All subclasses of {@link PIDCommand} must override this method.
+     * </p>
      *
-     * <p>This method will be called in a different thread then the {@link Scheduler} thread.</p>
+     * <p>
+     * This method will be called in a different thread then the {@link Scheduler}
+     * thread.
+     * </p>
      *
      * @param output the value the pid loop calculated
      */
     protected abstract void usePIDOutput(double output);
 
-    public final String getSmartDashboardType(){
+    public final String getSmartDashboardType() {
         return "PIDCommand";
     }
 
-    public final void initTable(ITable table){
+    public final void initTable(ITable table) {
         m_controller.initTable(table);
         super.initTable(table);
     }

@@ -28,8 +28,8 @@ import io.github.robolib.util.Timer;
  *
  * @author noriah <vix@noriah.dev>
  */
-public class AnalogGyro extends AnalogInput implements SensorModule,
-        PIDSource, LiveWindowSendable, AngleSource, RateSource {
+public class AnalogGyro extends AnalogInput
+        implements SensorModule, PIDSource, LiveWindowSendable, AngleSource, RateSource {
 
     public static final int OVERSAMPLE_BITS = 10;
 
@@ -50,7 +50,7 @@ public class AnalogGyro extends AnalogInput implements SensorModule,
     private AccumulatorResult m_results;
     private PIDSourceType m_sType;
 
-    public AnalogGyro(AnalogChannel channel){
+    public AnalogGyro(AnalogChannel channel) {
         super(channel);
         m_results = new AccumulatorResult();
         m_VperDperS = DEF_VOLTAGE_PER_DEGREE;
@@ -69,7 +69,7 @@ public class AnalogGyro extends AnalogInput implements SensorModule,
 
         getAccumulatorOutput(m_results);
 
-        m_center = (int)((double) m_results.value / (double) m_results.count + 0.5);
+        m_center = (int) ((double) m_results.value / (double) m_results.count + 0.5);
         m_offset = ((double) m_results.value / (double) m_results.count) - m_center;
 
         m_co = m_center + m_offset;
@@ -86,10 +86,10 @@ public class AnalogGyro extends AnalogInput implements SensorModule,
 
     /**
      * Reset the gyro. Resets the gyro to a heading of zero. This can be used if
-     * there is significant drift in the gyro and it needs to be recalibrated
-     * after it has been running.case DISTANCE:
+     * there is significant drift in the gyro and it needs to be recalibrated after
+     * it has been running.case DISTANCE:
      */
-    public void reset(){
+    public void reset() {
         resetAccumulator();
     }
 
@@ -97,21 +97,21 @@ public class AnalogGyro extends AnalogInput implements SensorModule,
      * Return the actual angle in degrees that the robot is currently facing.
      *
      * The angle is based on the current accumulator value corrected by the
-     * oversampling rate, the gyro type and the A/D calibration values. The
-     * angle is continuous, that is it will continue from 360 to 361 degrees. This allows
-     * algorithms that wouldn't want to see a discontinuity in the gyro output
-     * as it sweeps past from 360 to 0 on the second time around.
+     * oversampling rate, the gyro type and the A/D calibration values. The angle is
+     * continuous, that is it will continue from 360 to 361 degrees. This allows
+     * algorithms that wouldn't want to see a discontinuity in the gyro output as it
+     * sweeps past from 360 to 0 on the second time around.
      *
-     * @return the current heading of the robot in degrees. This heading is
-     *         based on integration of the returned rate from the gyro.
+     * @return the current heading of the robot in degrees. This heading is based on
+     *         integration of the returned rate from the gyro.
      */
-    public double getAngle(){
+    public double getAngle() {
         getAccumulatorOutput(m_results);
-        return (m_results.value - (long)(m_results.count * m_offset)) *
-                1e-9 * getLSBWeight() * (1 << getAverageBits()) / (getGlobalSampleRate() * m_VperDperS);
+        return (m_results.value - (long) (m_results.count * m_offset)) * 1e-9 * getLSBWeight() * (1 << getAverageBits())
+                / (getGlobalSampleRate() * m_VperDperS);
     }
 
-    public double get(){
+    public double get() {
         return getAngle();
     }
 
@@ -122,43 +122,43 @@ public class AnalogGyro extends AnalogInput implements SensorModule,
      *
      * @return the current rate in degrees per second
      */
-    public double getRate(){
+    public double getRate() {
         return (getAverageValue() - m_co) * 1e-9 * getLSBWeight() / ((1 << getOversampleBits()) * m_VperDperS);
     }
 
     /**
-     * Set the gyro sensitivity. This takes the number of
-     * volts/degree/second sensitivity of the gyro and uses it in subsequent
-     * calculations to allow the code to work with multiple gyros. This value
-     * is typically found in the gyro datasheet.
+     * Set the gyro sensitivity. This takes the number of volts/degree/second
+     * sensitivity of the gyro and uses it in subsequent calculations to allow the
+     * code to work with multiple gyros. This value is typically found in the gyro
+     * datasheet.
      *
      * @param voltsPerDegreesPerSecond The sensitivity in Volts/degree/second.
      */
-    public void setSensitivity(double voltsPerDegreesPerSecond){
+    public void setSensitivity(double voltsPerDegreesPerSecond) {
         m_VperDperS = voltsPerDegreesPerSecond;
     }
 
     /**
-     * Set the size of the neutral zone.  Any voltage from the gyro less than
-     * this amount from the center is considered stationary.  Setting a
-     * deadband will decrease the amount of drift when the gyro isn't rotating,
-     * but will make it less accurate.
+     * Set the size of the neutral zone. Any voltage from the gyro less than this
+     * amount from the center is considered stationary. Setting a deadband will
+     * decrease the amount of drift when the gyro isn't rotating, but will make it
+     * less accurate.
      *
      * @param volts The size of the deadband in volts
      */
-    public void setDeadband(double volts){
-        int deadband = (int)(volts * 1e9 / getLSBWeight() * (1 << getOversampleBits()));
+    public void setDeadband(double volts) {
+        int deadband = (int) (volts * 1e9 / getLSBWeight() * (1 << getOversampleBits()));
         setAccumulatorDeadband(deadband);
     }
 
     /**
-     * Set which parameter of the gyro you are using as a process control
-     * variable. The Gyro class supports the rate and angle parameters
+     * Set which parameter of the gyro you are using as a process control variable.
+     * The Gyro class supports the rate and angle parameters
      *
      * @param sType An enum to select the parameter.
      */
-    public void setPIDSourceType(PIDSourceType sType){
-        if(sType == PIDSourceType.DISTANCE)
+    public void setPIDSourceType(PIDSourceType sType) {
+        if (sType == PIDSourceType.DISTANCE)
             throw new IllegalArgumentException("Cant use Distance here!");
 
         m_sType = sType;
@@ -168,14 +168,14 @@ public class AnalogGyro extends AnalogInput implements SensorModule,
      * {@inheritDoc}
      */
     @Override
-    public double pidGet(){
-        switch(m_sType){
-        case RATE:
-            return getRate();
-        case ANGLE:
-            return getAngle();
-        default:
-            return 0.0;
+    public double pidGet() {
+        switch (m_sType) {
+            case RATE:
+                return getRate();
+            case ANGLE:
+                return getAngle();
+            default:
+                return 0.0;
         }
     }
 

@@ -24,16 +24,14 @@ import io.github.robolib.nettable.ITable;
  *
  * @author noriah <vix@noriah.dev>
  */
-public final class InternalAccelerometer implements SensorModule,
-        IAccelerometer, LiveWindowSendable {
-
+public final class InternalAccelerometer implements SensorModule, IAccelerometer, LiveWindowSendable {
 
     /** The m_table. */
     private ITable m_table;
 
     private static AccelRange m_range;
 
-    static{
+    static {
         setAccelRange(AccelRange.k8G);
     }
 
@@ -42,15 +40,16 @@ public final class InternalAccelerometer implements SensorModule,
      *
      * @param range the range
      */
-    private InternalAccelerometer(){}
+    private InternalAccelerometer() {
+    }
 
     /**
      * {@inheritDoc}
      */
-    public static void setAccelRange(AccelRange range){
+    public static void setAccelRange(AccelRange range) {
         AccelerometerJNI.setAccelerometerActive(false);
 
-        if(range == AccelRange.k16G){
+        if (range == AccelRange.k16G) {
             throw new RuntimeException("16G range not supported (use k2G, k4G, or k8G)");
         }
         AccelerometerJNI.setAccelerometerRange(range.ordinal());
@@ -62,7 +61,7 @@ public final class InternalAccelerometer implements SensorModule,
     /**
      * {@inheritDoc}
      */
-    public static AccelRange getAccelRange(){
+    public static AccelRange getAccelRange() {
         return m_range;
     }
 
@@ -93,7 +92,6 @@ public final class InternalAccelerometer implements SensorModule,
         return AccelerometerJNI.getAccelerometerZ();
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -107,7 +105,7 @@ public final class InternalAccelerometer implements SensorModule,
      * {@inheritDoc}
      */
     @Override
-    public ITable getTable(){
+    public ITable getTable() {
         return m_table;
     }
 
@@ -115,7 +113,7 @@ public final class InternalAccelerometer implements SensorModule,
      * {@inheritDoc}
      */
     @Override
-    public String getSmartDashboardType(){
+    public String getSmartDashboardType() {
         return "Internal3AxisAccelerometer";
     }
 

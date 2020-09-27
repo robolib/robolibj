@@ -23,7 +23,6 @@ package io.github.robolib.modes;
  */
 public enum GameMode {
 
-
     /** The none. */
     NONE("Init", "I"),
 
@@ -51,11 +50,11 @@ public enum GameMode {
      * Instantiates a new game mode.
      *
      * @param modeName the mode name
-     * @param abbr the abbr
+     * @param abbr     the abbr
      */
-    private GameMode(String modeName, String abbr){
-    	m_name = modeName;
-    	m_abbr = abbr;
+    private GameMode(String modeName, String abbr) {
+        m_name = modeName;
+        m_abbr = abbr;
         value = ordinal();
     }
 
@@ -64,8 +63,8 @@ public enum GameMode {
      *
      * @return the GameMode Name
      */
-    public String getName(){
-    	return m_name;
+    public String getName() {
+        return m_name;
     }
 
     /**
@@ -73,7 +72,7 @@ public enum GameMode {
      *
      * @return the GameMode abbreviation
      */
-    public String getAbbreviation(){
+    public String getAbbreviation() {
         return m_abbr;
     }
 }

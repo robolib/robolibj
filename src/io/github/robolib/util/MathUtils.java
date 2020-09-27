@@ -22,7 +22,8 @@ package io.github.robolib.util;
  */
 public class MathUtils {
 
-    private MathUtils(){}
+    private MathUtils() {
+    }
 
     /**
      *
@@ -37,7 +38,7 @@ public class MathUtils {
      * @param max
      * @return
      */
-    public static double clamp(double value, double min, double max){
+    public static double clamp(double value, double min, double max) {
         return Math.max(Math.min(value, max), min);
     }
 
@@ -48,7 +49,7 @@ public class MathUtils {
      * @param max
      * @return
      */
-    public static float clamp(float value, float min, float max){
+    public static float clamp(float value, float min, float max) {
         return Math.max(Math.min(value, max), min);
     }
 
@@ -59,7 +60,7 @@ public class MathUtils {
      * @param max
      * @return
      */
-    public static int clamp(int value, int min, int max){
+    public static int clamp(int value, int min, int max) {
         return Math.max(Math.min(value, max), min);
     }
 
@@ -70,7 +71,7 @@ public class MathUtils {
      * @param max
      * @return
      */
-    public static boolean inBounds(double value, double min, double max){
+    public static boolean inBounds(double value, double min, double max) {
         return (min <= value) && (value <= max);
     }
 
@@ -81,7 +82,7 @@ public class MathUtils {
      * @param max
      * @return
      */
-    public static boolean inBounds(float value, float min, float max){
+    public static boolean inBounds(float value, float min, float max) {
         return (min <= value) && (value <= max);
     }
 
@@ -92,7 +93,7 @@ public class MathUtils {
      * @param max
      * @return
      */
-    public static boolean inBounds(int value, int min, int max){
+    public static boolean inBounds(int value, int min, int max) {
         return (min <= value) && (value <= max);
     }
 
@@ -102,7 +103,7 @@ public class MathUtils {
      * @param b
      * @return
      */
-    public static double pythagorize(double a, double b){
+    public static double pythagorize(double a, double b) {
         return Math.sqrt(a * a + b * b);
     }
 
@@ -111,12 +112,11 @@ public class MathUtils {
      * @param value
      * @return
      */
-    public static double squareSign(double value){
-        if(value < 0){
+    public static double squareSign(double value) {
+        if (value < 0) {
             return -(value * value);
         }
         return value * value;
     }
-
 
 }

@@ -29,9 +29,7 @@ public abstract class CounterBase implements CounterSource {
      * @author noriah <vix@noriah.dev>
      */
     public static enum EncodingType {
-        k1X,
-        k2X,
-        k4X;
+        k1X, k2X, k4X;
     }
 
     protected int m_index;
@@ -39,23 +37,23 @@ public abstract class CounterBase implements CounterSource {
     /**
      * @return the Counter's FPGA index
      */
-    public int getFPGAIndex(){
+    public int getFPGAIndex() {
         return m_index;
     }
 
     /**
-     * Read the current counter value. Read the value at this instant. It may
-     * still be running, so it reflects the current value. Next time it is read,
-     * it might have a different value.
+     * Read the current counter value. Read the value at this instant. It may still
+     * be running, so it reflects the current value. Next time it is read, it might
+     * have a different value.
      */
-    public int get(){
+    public int get() {
         return getCount();
     }
 
     /**
-     * Read the current counter value. Read the value at this instant. It may
-     * still be running, so it reflects the current value. Next time it is read,
-     * it might have a different value.
+     * Read the current counter value. Read the value at this instant. It may still
+     * be running, so it reflects the current value. Next time it is read, it might
+     * have a different value.
      */
     public abstract int getCount();
 
@@ -66,24 +64,28 @@ public abstract class CounterBase implements CounterSource {
 
     /**
      * Get the time between the last two edges counted
+     *
      * @return the time beteween the last two ticks in seconds
      */
     abstract double getPeriod();
 
     /**
      * Set the maximum time between edges to be considered stalled
+     *
      * @param max the maximum period in seconds
      */
     abstract void setMaxPeriod(double max);
 
     /**
      * Determine if the counter is not moving
+     *
      * @return true if the counter has not changed for the max period
      */
     abstract boolean getStopped();
 
     /**
      * Determine which direction the counter is going
+     *
      * @return true for one direction, false for the other
      */
     abstract boolean getDirection();

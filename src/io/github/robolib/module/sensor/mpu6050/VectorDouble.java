@@ -1,5 +1,4 @@
 
-
 package io.github.robolib.module.sensor.mpu6050;
 
 /**
@@ -24,8 +23,8 @@ public class VectorDouble {
         z = nz;
     }
 
-   public double getMagnitude() {
-        return Math.sqrt(x*x + y*y + z*z);
+    public double getMagnitude() {
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     public void normalize() {

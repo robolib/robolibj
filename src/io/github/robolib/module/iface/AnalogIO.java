@@ -39,36 +39,37 @@ public class AnalogIO extends Interface {
      */
     public static enum AnalogChannel {
 
-        /**  AnalogIO Channel 0. */
+        /** AnalogIO Channel 0. */
         AIO0,
 
-        /**  AnalogIO Channel 1. */
+        /** AnalogIO Channel 1. */
         AIO1,
 
-        /**  AnalogIO Channel 2. */
+        /** AnalogIO Channel 2. */
         AIO2,
 
-        /**  AnalogIO Channel 3. */
+        /** AnalogIO Channel 3. */
         AIO3,
 
-        /**  AnalogIO Channel 4, Channel 1 on MXP. */
+        /** AnalogIO Channel 4, Channel 1 on MXP. */
         AIO4,
 
-        /**  AnalogIO Channel 5, Channel 2 on MXP. */
+        /** AnalogIO Channel 5, Channel 2 on MXP. */
         AIO5,
 
-        /**  AnalogIO Channel 6, Channel 3 on MXP. */
+        /** AnalogIO Channel 6, Channel 3 on MXP. */
         AIO6,
 
-        /**  AnalogIO Channel 7, Channel 4 on MXP. */
+        /** AnalogIO Channel 7, Channel 4 on MXP. */
         AIO7;
     }
+
     /**
      * The Enum Direction.
      *
      * @author noriah <vix@noriah.dev>
      */
-    public static enum Direction{
+    public static enum Direction {
 
         /** The in. */
         IN,
@@ -83,7 +84,6 @@ public class AnalogIO extends Interface {
     /** The m_used out channels. */
     private static final boolean USED_OUT_CHANNELS[] = new boolean[MAX_ANALOG_OUT_CHANNELS];
 
-
     protected final ByteBuffer m_port;
     protected final ByteBuffer m_portPointer;
     protected AnalogChannel m_channel;
@@ -92,7 +92,7 @@ public class AnalogIO extends Interface {
      * Instantiates a new analog.
      *
      * @param channel the channel
-     * @param dir the dir
+     * @param dir     the dir
      */
     protected AnalogIO(AnalogChannel channel, Direction dir) {
         super(InterfaceType.ANALOG);
@@ -100,26 +100,28 @@ public class AnalogIO extends Interface {
         m_portPointer = AnalogJNI.getPort((byte) channel.ordinal());
         IntBuffer status = allocateInt();
 
-        switch(dir){
-        case IN:
-            checkAnalogInputChannel(channel.ordinal());
-            if(USED_IN_CHANNELS[channel.ordinal()] == true)
-                throw new ResourceAllocationException("AnalogIO Input channel '" + channel.name() + "' already in use.");
+        switch (dir) {
+            case IN:
+                checkAnalogInputChannel(channel.ordinal());
+                if (USED_IN_CHANNELS[channel.ordinal()] == true)
+                    throw new ResourceAllocationException(
+                            "AnalogIO Input channel '" + channel.name() + "' already in use.");
 
-            USED_IN_CHANNELS[channel.ordinal()] = true;
-            m_port = AnalogJNI.initializeAnalogInputPort(m_portPointer, status);
-        break;
-        case OUT:
-            checkAnalogOutputChannel(channel.ordinal());
-            if(USED_OUT_CHANNELS[channel.ordinal()] == true)
-                throw new ResourceAllocationException("AnalogIO Output channel '" + channel.name() + "' already in use.");
+                USED_IN_CHANNELS[channel.ordinal()] = true;
+                m_port = AnalogJNI.initializeAnalogInputPort(m_portPointer, status);
+                break;
+            case OUT:
+                checkAnalogOutputChannel(channel.ordinal());
+                if (USED_OUT_CHANNELS[channel.ordinal()] == true)
+                    throw new ResourceAllocationException(
+                            "AnalogIO Output channel '" + channel.name() + "' already in use.");
 
-            USED_OUT_CHANNELS[channel.ordinal()] = true;
-            m_port = AnalogJNI.initializeAnalogOutputPort(m_portPointer, status);
+                USED_OUT_CHANNELS[channel.ordinal()] = true;
+                m_port = AnalogJNI.initializeAnalogOutputPort(m_portPointer, status);
 
-        break;
-        default:
-            throw new IllegalStateException("How did you get here?");
+                break;
+            default:
+                throw new IllegalStateException("How did you get here?");
         }
 
         m_channel = channel;
@@ -132,17 +134,16 @@ public class AnalogIO extends Interface {
     /**
      * Release the resources used by this object
      */
-    public void free(){
+    public void free() {
         m_channel = null;
     }
-
 
     /**
      * Get the AnalogChannel.
      *
      * @return The channel AnalogChannel.
      */
-    public final AnalogChannel getChannel(){
+    public final AnalogChannel getChannel() {
         return m_channel;
     }
 
@@ -151,9 +152,8 @@ public class AnalogIO extends Interface {
      *
      * @return The channel number.
      */
-    public final int getChannelNumber(){
+    public final int getChannelNumber() {
         return m_channel.ordinal();
     }
-
 
 }

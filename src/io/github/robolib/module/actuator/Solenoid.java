@@ -29,8 +29,8 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah <vix@noriah.dev>
  */
-public final class Solenoid extends SolenoidBase implements ActuatorModule,
-        LiveWindowSendable, BooleanSink, BooleanSource {
+public final class Solenoid extends SolenoidBase
+        implements ActuatorModule, LiveWindowSendable, BooleanSink, BooleanSource {
 
     private final ByteBuffer m_port;
     private final SolenoidChannel m_channel;
@@ -38,46 +38,47 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
     private ITable m_table;
     private ITableListener m_table_listener;
 
-    public Solenoid(SolenoidChannel channel){
+    public Solenoid(SolenoidChannel channel) {
         m_channel = channel;
         m_port = initChannel(channel);
 
     }
 
-    public int getChannelNumber(){
+    public int getChannelNumber() {
         return m_channel.ordinal();
     }
 
-    public SolenoidChannel getChannel(){
+    public SolenoidChannel getChannel() {
         return m_channel;
     }
 
     /**
      * Set the solenoid with a boolean value.
+     *
      * @param value on or off
      */
-    public void setState(boolean value){
-        set(m_port, value?SOLENOID_ON:SOLENOID_OFF);
+    public void setState(boolean value) {
+        set(m_port, value ? SOLENOID_ON : SOLENOID_OFF);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void set(Value value){
-        switch(value){
-        case OFF:
-            set(m_port, SOLENOID_OFF);
-            break;
-        case ON:
-            set(m_port, SOLENOID_ON);
-            break;
-        case FORWARD:
-            Logger.get(SolenoidBase.class, "Solenoid").warn("Single solenoid cannot go Forward!");
-            break;
-        case REVERSE:
-            Logger.get(SolenoidBase.class, "Solenoid").warn("Single solenoid cannot go in Reverse!");
-            break;
+    public void set(Value value) {
+        switch (value) {
+            case OFF:
+                set(m_port, SOLENOID_OFF);
+                break;
+            case ON:
+                set(m_port, SOLENOID_ON);
+                break;
+            case FORWARD:
+                Logger.get(SolenoidBase.class, "Solenoid").warn("Single solenoid cannot go Forward!");
+                break;
+            case REVERSE:
+                Logger.get(SolenoidBase.class, "Solenoid").warn("Single solenoid cannot go in Reverse!");
+                break;
         }
     }
 
@@ -85,23 +86,23 @@ public final class Solenoid extends SolenoidBase implements ActuatorModule,
      * {@inheritDoc}
      */
     @Override
-    public Value get(){
+    public Value get() {
         return get(m_port) ? Value.ON : Value.OFF;
     }
 
-    public boolean getState(){
+    public boolean getState() {
         return get(m_port);
     }
 
     /**
-     * Check if solenoid is blacklisted.
-     *      If a solenoid is shorted, it is added to the blacklist and
-     *      disabled until power cycle, or until faults are cleared.
-     *      @see SolenoidBase#clearAllPCMStickyFaults(int)
+     * Check if solenoid is blacklisted. If a solenoid is shorted, it is added to
+     * the blacklist and disabled until power cycle, or until faults are cleared.
+     *
+     * @see SolenoidBase#clearAllPCMStickyFaults(int)
      *
      * @return If solenoid is disabled due to short.
      */
-    public boolean isBlackListed(){
+    public boolean isBlackListed() {
         int value = getPCMSolenoidBlacklist(m_channel.ordinal() / 8) & (1 << m_channel.ordinal());
         return value != 0;
     }

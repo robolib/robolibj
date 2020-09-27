@@ -27,9 +27,7 @@ public interface PIDSource {
      * @author noriah <vix@noriah.dev>
      */
     public static enum PIDSourceType {
-        DISTANCE,
-        RATE,
-        ANGLE;
+        DISTANCE, RATE, ANGLE;
     }
 
     double pidGet();

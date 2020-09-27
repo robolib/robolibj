@@ -21,7 +21,7 @@ package io.github.robolib.util;
  */
 public class Timer {
 
-    public static void delay(final double seconds){
+    public static void delay(final double seconds) {
         try {
             Thread.sleep((long) (seconds * 1e3));
         } catch (final InterruptedException e) {

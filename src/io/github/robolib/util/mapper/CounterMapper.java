@@ -40,9 +40,7 @@ public class CounterMapper implements ModuleMapper<Counter> {
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "counter"
-        };
+        return new String[] { "counter" };
     }
 
 }

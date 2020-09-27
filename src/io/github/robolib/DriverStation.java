@@ -15,7 +15,6 @@
 
 package io.github.robolib;
 
-
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -50,12 +49,10 @@ public final class DriverStation implements Runnable {
     public static final int COUNT_JOYSTICKS = 6;
 
     /** The m_joystick axes. */
-    private static final short m_joystickAxes[][] =
-            new short[COUNT_JOYSTICKS][NetworkCommunications.MAX_JS_AXES];
+    private static final short m_joystickAxes[][] = new short[COUNT_JOYSTICKS][NetworkCommunications.MAX_JS_AXES];
 
     /** The m_joystick po vs. */
-    private static final short m_joystickPOVs[][] =
-            new short[COUNT_JOYSTICKS][NetworkCommunications.MAX_JS_POVS];
+    private static final short m_joystickPOVs[][] = new short[COUNT_JOYSTICKS][NetworkCommunications.MAX_JS_POVS];
 
     /** The m_joystick buttons. */
     private static final int m_joystickBtns[] = new int[COUNT_JOYSTICKS];
@@ -65,20 +62,20 @@ public final class DriverStation implements Runnable {
 
     private static DriverStation m_instance;
 
-    protected static void initialize(){
-        if(m_instance != null)
+    protected static void initialize() {
+        if (m_instance != null)
             throw new IllegalStateException("DriverStation already Initialized");
         m_instance = new DriverStation();
     }
 
-    public static DriverStation getInstance(){
+    public static DriverStation getInstance() {
         return m_instance;
     }
 
     /**
      *
      */
-    private DriverStation(){
+    private DriverStation() {
         m_log = Logger.get(DriverStation.class);
         m_log.info("Interface initializing");
         m_dataSem = new Object();
@@ -86,7 +83,7 @@ public final class DriverStation implements Runnable {
         m_packetDataAvailableSem = HALUtil.initializeMultiWait();
         NetworkCommunications.setNewDataSem(m_packetDataAvailableSem);
 
-        //WOO lookie here. Lambda functions ^_^
+        // WOO lookie here. Lambda functions ^_^
         m_thread = new Thread(this, "DriverStation JSThread");
         m_thread.setPriority(8);
         m_thread.setDaemon(true);
@@ -95,18 +92,18 @@ public final class DriverStation implements Runnable {
     /**
      * Task run by the Robot to get DS data.
      */
-    public void run(){
+    public void run() {
         m_log.info("Communications thread started.");
         byte safetyCounter = 0;
         byte tableCounter = 0;
         ByteBuffer countBuffer = ByteBuffer.allocateDirect(1);
-        synchronized(m_dataSem){
+        synchronized (m_dataSem) {
             m_dataSem.notifyAll();
         }
 
-        while (m_thread_keepAlive){
+        while (m_thread_keepAlive) {
             HALUtil.takeMultiWait(m_packetDataAvailableSem, m_packetDataAvailableMutex, 0);
-            synchronized(m_jsSem){
+            synchronized (m_jsSem) {
 
                 m_joystickAxes[0] = NetworkCommunications.HALGetJoystickAxes((byte) 0x00);
                 m_joystickPOVs[0] = NetworkCommunications.HALGetJoystickPOVs((byte) 0x00);
@@ -147,30 +144,30 @@ public final class DriverStation implements Runnable {
                 m_newControlData = true;
             }
 
-            synchronized(m_dataSem){
+            synchronized (m_dataSem) {
                 m_dataSem.notifyAll();
             }
 
-            if(++tableCounter >= 2){
+            if (++tableCounter >= 2) {
                 TableSender.getInstance().runFramework();
                 tableCounter = 0;
             }
 
-            if(++safetyCounter >= 4){
+            if (++safetyCounter >= 4) {
                 SafetyManager.check();
                 safetyCounter = 0;
             }
         }
-        if(m_thread_exit_error)
+        if (m_thread_exit_error)
             m_log.severe("Communications thread ended!");
     }
 
     private static double m_nextComplainTime = 0.0;
 
-    protected static void complainJoystickMissing(String msg){
-        synchronized(m_instance) {
+    protected static void complainJoystickMissing(String msg) {
+        synchronized (m_instance) {
             double c = RoboRIO.getFPGATimestamp();
-            if(c > m_nextComplainTime){
+            if (c > m_nextComplainTime) {
                 Logger.get(Joystick.class).error(msg);
                 m_nextComplainTime = c + 5.0;
             }
@@ -182,20 +179,20 @@ public final class DriverStation implements Runnable {
      * Gets the stick axis.
      *
      * @param stick the stick
-     * @param axis the axis
+     * @param axis  the axis
      * @return the stick axis
      */
-    public static double getStickAxis(Joystick.JSID stick, int axis){
-        synchronized(m_jsSem){
-            if(m_joystickAxes[stick.ordinal()].length <= axis){
+    public static double getStickAxis(Joystick.JSID stick, int axis) {
+        synchronized (m_jsSem) {
+            if (m_joystickAxes[stick.ordinal()].length <= axis) {
                 complainJoystickMissing("Axis '" + axis + "' on stick '" + stick + "' is invalid. Is it plugged in?");
                 return 0.0;
             }
 
             double value = m_joystickAxes[stick.ordinal()][axis];
-            if(value < 0){
+            if (value < 0) {
                 return value / 128.0;
-            }else{
+            } else {
                 return value / 127.0;
             }
         }
@@ -204,14 +201,15 @@ public final class DriverStation implements Runnable {
     /**
      * Gets the stick button.
      *
-     * @param stick the stick
+     * @param stick  the stick
      * @param button the button
      * @return the stick button
      */
-    public static boolean getStickButton(Joystick.JSID stick, int button){
-        synchronized(m_jsSem){
-            if(m_joystickNBtn[stick.ordinal()] <= button){
-                complainJoystickMissing("Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
+    public static boolean getStickButton(Joystick.JSID stick, int button) {
+        synchronized (m_jsSem) {
+            if (m_joystickNBtn[stick.ordinal()] <= button) {
+                complainJoystickMissing(
+                        "Button '" + button + "' on stick '" + stick + "' is invalid. Is it plugged in?");
                 return false;
             }
 
@@ -223,12 +221,12 @@ public final class DriverStation implements Runnable {
      * Gets the stick pov.
      *
      * @param stick the stick
-     * @param pov the pov
+     * @param pov   the pov
      * @return the stick pov
      */
-    public static int getStickPOV(Joystick.JSID stick, int pov){
-        synchronized(m_jsSem){
-            if(m_joystickPOVs[stick.ordinal()].length <= pov){
+    public static int getStickPOV(Joystick.JSID stick, int pov) {
+        synchronized (m_jsSem) {
+            if (m_joystickPOVs[stick.ordinal()].length <= pov) {
                 complainJoystickMissing("Button '" + pov + "' on stick '" + stick + "' is invalid. Is it plugged in?");
                 return 0;
             }
@@ -237,20 +235,20 @@ public final class DriverStation implements Runnable {
         }
     }
 
-    protected void startThread(){
-        if(!m_thread.isAlive()){
+    protected void startThread() {
+        if (!m_thread.isAlive()) {
             m_thread_keepAlive = true;
             m_thread_exit_error = true;
             m_thread.start();
         }
     }
 
-    public void exitNoError(){
+    public void exitNoError() {
         m_thread_keepAlive = false;
         m_thread_exit_error = false;
     }
 
-    public void exit(){
+    public void exit() {
         m_thread_keepAlive = false;
     }
 
@@ -262,8 +260,8 @@ public final class DriverStation implements Runnable {
     }
 
     /**
-     * Wait for new data or for timeout, which ever comes first.  If timeout is
-     * 0, wait for new data only.
+     * Wait for new data or for timeout, which ever comes first. If timeout is 0,
+     * wait for new data only.
      *
      * @param timeout The maximum time in milliseconds to wait.
      */
@@ -277,11 +275,13 @@ public final class DriverStation implements Runnable {
     }
 
     /**
-     * Has a new control packet from the driver station arrived since the last time this function was called?
+     * Has a new control packet from the driver station arrived since the last time
+     * this function was called?
+     *
      * @return True if the control data has been updated since the last call.
      */
     protected boolean isNewControlData() {
-        synchronized(this){
+        synchronized (this) {
             boolean result = m_newControlData;
             m_newControlData = false;
             return result;
@@ -291,10 +291,9 @@ public final class DriverStation implements Runnable {
     private int m_modeInt = 0;
     private int m_modeNewInt = 0;
 
-
-    protected boolean hasModeChanged(){
+    protected boolean hasModeChanged() {
         m_modeNewInt = NetworkCommunications.HALGetRobotStatus();
-        if(m_modeNewInt != m_modeInt){
+        if (m_modeNewInt != m_modeInt) {
             m_modeInt = m_modeNewInt;
             return true;
         }
@@ -322,8 +321,8 @@ public final class DriverStation implements Runnable {
     /**
      * Determine if the robot is currently in Autonomous mode.
      *
-     * @return True if the robot is currently operating Autonomously as
-     * determined by the field controls.
+     * @return True if the robot is currently operating Autonomously as determined
+     *         by the field controls.
      */
     public static boolean isAutonomous() {
         return (NetworkCommunications.HALGetRobotStatus() & 2) != 0;
@@ -332,8 +331,8 @@ public final class DriverStation implements Runnable {
     /**
      * Determine if the robot is currently in Test mode.
      *
-     * @return True if the robot is currently operating in Test mode as
-     * determined by the driver station.
+     * @return True if the robot is currently operating in Test mode as determined
+     *         by the driver station.
      */
     public static boolean isTest() {
         return (NetworkCommunications.HALGetRobotStatus() & 4) != 0;
@@ -344,7 +343,7 @@ public final class DriverStation implements Runnable {
      *
      * @return True if the robot is currently emergency stopped.
      */
-    public static boolean isEStopped(){
+    public static boolean isEStopped() {
         return (NetworkCommunications.HALGetRobotStatus() & 8) != 0;
     }
 
@@ -353,7 +352,7 @@ public final class DriverStation implements Runnable {
      *
      * @return True if the FMS is attached
      */
-    public static boolean isFMSAttached(){
+    public static boolean isFMSAttached() {
         return (NetworkCommunications.HALGetRobotStatus() & 16) != 0;
     }
 
@@ -362,7 +361,7 @@ public final class DriverStation implements Runnable {
      *
      * @return True if we have a driver station
      */
-    public static boolean isDSAttached(){
+    public static boolean isDSAttached() {
         return (NetworkCommunications.HALGetRobotStatus() & 32) != 0;
     }
 
@@ -370,7 +369,7 @@ public final class DriverStation implements Runnable {
      * Determine if the robot is currently in Operator Control mode.
      *
      * @return True if the robot is currently operating in Tele-Op mode as
-     * determined by the field controls.
+     *         determined by the field controls.
      */
     public static boolean isOperatorControl() {
         int word = NetworkCommunications.HALGetRobotStatus();
@@ -403,14 +402,15 @@ public final class DriverStation implements Runnable {
 
     /**
      * Get the current driver station indicated mode.
+     *
      * @return the driver station mode as a {@link GameMode}
      */
-    public static GameMode getGameMode(){
-        if(isDisabled())
+    public static GameMode getGameMode() {
+        if (isDisabled())
             return GameMode.DISABLED;
-        else if(isTest())
+        else if (isTest())
             return GameMode.TEST;
-        else if(isAutonomous())
+        else if (isAutonomous())
             return GameMode.AUTON;
         else
             return GameMode.TELEOP;
@@ -421,8 +421,8 @@ public final class DriverStation implements Runnable {
      *
      * @param err
      */
-    public static void reportError(String err){
-        if(isDSAttached())
+    public static void reportError(String err) {
+        if (isDSAttached())
             NetworkCommunications.HALSetErrorData(err);
     }
 }

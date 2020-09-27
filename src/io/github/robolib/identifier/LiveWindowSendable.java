@@ -15,7 +15,6 @@
 
 package io.github.robolib.identifier;
 
-
 /**
  *
  * @author noriah <vix@noriah.dev>

@@ -28,13 +28,12 @@ import io.github.robolib.util.log.Logger;
  */
 public class Joystick extends GenericHID {
 
-
     /**
      * The Enum JSID.
      *
      * @author noriah <vix@noriah.dev>
      */
-    public static enum JSID{
+    public static enum JSID {
 
         /** The first Joystick input device. */
         JS0,
@@ -54,7 +53,6 @@ public class Joystick extends GenericHID {
         /** The sixth Joystick input device. */
         JS5;
     }
-
 
     /**
      * The Class JoystickAxis.
@@ -87,7 +85,7 @@ public class Joystick extends GenericHID {
          *
          * @param axis the axis
          */
-        public JoystickAxis(int axis){
+        public JoystickAxis(int axis) {
             m_channel = axis;
             calculate();
         }
@@ -96,20 +94,20 @@ public class Joystick extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public double get(){
+        public double get() {
             double out = DriverStation.getStickAxis(m_port, m_channel);
             double x = Math.abs(out);
 
-            if(x < m_deadband)
+            if (x < m_deadband)
                 x = 0.0;
-            else if(x < m_rampEnd)
+            else if (x < m_rampEnd)
                 x = m_backlash + m_m1 * (x - m_deadband);
             else
                 x = m_fineConrol + m_m2 * (x - m_rampEnd);
 
-            if(out < 0)
+            if (out < 0)
                 x = -x;
-//            double x = Math.abs(out) < m_deadband ? 0 : out;
+            // double x = Math.abs(out) < m_deadband ? 0 : out;
             return m_inverted ? -x : x;
         }
 
@@ -117,7 +115,7 @@ public class Joystick extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public void setInverted(boolean inverted){
+        public void setInverted(boolean inverted) {
             m_inverted = inverted;
         }
 
@@ -125,7 +123,7 @@ public class Joystick extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public void setDeadband(double value){
+        public void setDeadband(double value) {
             m_deadband = value;
             calculate();
         }
@@ -134,7 +132,7 @@ public class Joystick extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public void setRampEnd(double end){
+        public void setRampEnd(double end) {
             m_rampEnd = end;
             calculate();
         }
@@ -143,7 +141,7 @@ public class Joystick extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public void setBacklash(double value){
+        public void setBacklash(double value) {
             m_backlash = value;
             calculate();
         }
@@ -152,12 +150,12 @@ public class Joystick extends GenericHID {
          * {@inheritDoc}
          */
         @Override
-        public void setFineControl(double control){
+        public void setFineControl(double control) {
             m_fineConrol = control;
             calculate();
         }
 
-        private void calculate(){
+        private void calculate() {
             m_m1 = (m_fineConrol - m_backlash) / (m_rampEnd - m_deadband);
 
             m_m2 = (1 - m_fineConrol) / (1 - m_rampEnd);
@@ -179,7 +177,7 @@ public class Joystick extends GenericHID {
          *
          * @param channel the channel
          */
-        public JoystickButton(int channel){
+        public JoystickButton(int channel) {
             m_channel = channel;
         }
 
@@ -192,15 +190,15 @@ public class Joystick extends GenericHID {
         }
     }
 
-//    private static final EnumMap<JSID, ? extends Joystick> m_stickMap =
+    // private static final EnumMap<JSID, ? extends Joystick> m_stickMap =
 
     /**
      * Check stick.
      *
      * @param stick the stick
      */
-    protected static void checkStick(int stick){
-        if(stick < 0 || stick > 6){
+    protected static void checkStick(int stick) {
+        if (stick < 0 || stick > 6) {
             throw new RuntimeException("Invalid Joystick '" + stick + "'.");
         }
     }
@@ -220,26 +218,26 @@ public class Joystick extends GenericHID {
     /**
      * Instantiates a new joystick.
      *
-     * @param port the port
+     * @param port    the port
      * @param numAxes the num axes
      * @param numBtns the num btns
      */
-    public Joystick(final JSID port, int numAxes, int numBtns){
+    public Joystick(final JSID port, int numAxes, int numBtns) {
         super(numAxes, numBtns);
 
         m_port = port;
-        m_portByte = (byte)port.ordinal();
-        for(int i = 0; i < numAxes; i++){
+        m_portByte = (byte) port.ordinal();
+        for (int i = 0; i < numAxes; i++) {
             m_axes[i] = new JoystickAxis(i);
         }
 
-        for(int i = 0; i < numBtns; i++){
+        for (int i = 0; i < numBtns; i++) {
             m_btns[i] = new JoystickButton(i);
         }
         UsageReporting.report(UsageReporting.ResourceType_Joystick, port.ordinal());
     }
 
-    public Joystick getStick(JSID port, int numAxes, int numBtns){
+    public Joystick getStick(JSID port, int numAxes, int numBtns) {
         return null;
     }
 
@@ -247,15 +245,16 @@ public class Joystick extends GenericHID {
      * {@inheritDoc}
      */
     @Override
-    public final int getPOV(int pov){
+    public final int getPOV(int pov) {
         return DriverStation.getStickPOV(m_port, pov);
     }
 
     /**
      * Get the Port JSID that this Joystick is on
+     *
      * @return the stick this joystick is on
      */
-    public final JSID getStickPort(){
+    public final JSID getStickPort() {
         return m_port;
     }
 
@@ -264,46 +263,45 @@ public class Joystick extends GenericHID {
      *
      * @author noriah <vix@noriah.dev>
      */
-    public static enum RumbleSide{
-        LEFT,
-        RIGHT,
-        BOTH;
+    public static enum RumbleSide {
+        LEFT, RIGHT, BOTH;
     }
 
     /**
-     * Set the rumble output for the joystick. The DS currently supports 2 rumble values,
-     * left rumble and right rumble
-     * @param type Which rumble value to set
+     * Set the rumble output for the joystick. The DS currently supports 2 rumble
+     * values, left rumble and right rumble
+     *
+     * @param type  Which rumble value to set
      * @param value The normalized value (0 to 1) to set the rumble to
      */
     public final void setRumble(RumbleSide type, float value) {
-        short rVal = (short)(MathUtils.clamp(value, 0F, 1F) * 65535);
-        switch(type){
-        case LEFT:
-            m_leftRumble = rVal;
-            break;
-        case RIGHT:
-            m_rightRumble = rVal;
-            break;
-        case BOTH:
-            m_leftRumble = rVal;
-            m_rightRumble = rVal;
-            break;
+        short rVal = (short) (MathUtils.clamp(value, 0F, 1F) * 65535);
+        switch (type) {
+            case LEFT:
+                m_leftRumble = rVal;
+                break;
+            case RIGHT:
+                m_rightRumble = rVal;
+                break;
+            case BOTH:
+                m_leftRumble = rVal;
+                m_rightRumble = rVal;
+                break;
         }
         NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }
 
-    public final void setOutput(int outputNumber, boolean value){
-        if(MathUtils.inBounds(outputNumber, 0, 31)){
-            m_outputs = (m_outputs & ~(1 << outputNumber)) | ((value?1:0) << outputNumber);
+    public final void setOutput(int outputNumber, boolean value) {
+        if (MathUtils.inBounds(outputNumber, 0, 31)) {
+            m_outputs = (m_outputs & ~(1 << outputNumber)) | ((value ? 1 : 0) << outputNumber);
             NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
-        }else{
+        } else {
             Logger.get(Joystick.class).warn("No such Output number '" + outputNumber + "' on joysticks.");
         }
 
     }
 
-    public final void setOutputs(int value){
+    public final void setOutputs(int value) {
         m_outputs = value;
         NetworkCommunications.HALSetJoystickOutputs(m_portByte, m_outputs, m_leftRumble, m_rightRumble);
     }

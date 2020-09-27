@@ -21,10 +21,22 @@ package io.github.robolib.command;
  * @author noriah <vix@noriah.dev>
  */
 public class NullCommand extends Command {
-    public NullCommand(){}
-    protected void initialize() {}
-    protected void execute(){}
-    protected boolean isFinished(){return true;}
-    protected void end(){}
-    protected void interrupted(){}
+    public NullCommand() {
+    }
+
+    protected void initialize() {
+    }
+
+    protected void execute() {
+    }
+
+    protected boolean isFinished() {
+        return true;
+    }
+
+    protected void end() {
+    }
+
+    protected void interrupted() {
+    }
 }

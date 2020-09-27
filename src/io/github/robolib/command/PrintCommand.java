@@ -21,11 +21,11 @@ import io.github.robolib.util.log.Logger;
  *
  * @author noriah <vix@noriah.dev>
  */
-public final class PrintCommand extends Command{
+public final class PrintCommand extends Command {
 
     private final String m_message;
 
-    public PrintCommand(String message){
+    public PrintCommand(String message) {
         super("Print(\"" + message + "\"");
         m_message = message;
     }
@@ -37,9 +37,18 @@ public final class PrintCommand extends Command{
     protected void initialize() {
         Logger.get(Command.class).info(m_message);
     }
-    protected void execute() {}
-    protected boolean isFinished() {return true;}
-    protected void end() {}
-    protected void interrupted() {}
+
+    protected void execute() {
+    }
+
+    protected boolean isFinished() {
+        return true;
+    }
+
+    protected void end() {
+    }
+
+    protected void interrupted() {
+    }
 
 }

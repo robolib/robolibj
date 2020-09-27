@@ -26,7 +26,6 @@ import io.github.robolib.nettable.ITable;
  */
 public abstract class Subsystem implements NamedSendable {
 
-
     /** The m_initialized default command. */
     private boolean m_initializedDefaultCommand = false;
 
@@ -45,14 +44,14 @@ public abstract class Subsystem implements NamedSendable {
     private ITable m_table;
 
     /** The m_all subsystems. */
-//    private static Vector<Subsystem> m_allSubsystems = new Vector<Subsystem>();
+    // private static Vector<Subsystem> m_allSubsystems = new Vector<Subsystem>();
 
     /**
      * Instantiates a new subsystem.
      *
      * @param name the name
      */
-    public Subsystem(String name){
+    public Subsystem(String name) {
         m_name = name;
         Scheduler.registerSubsystem(this);
         m_currentCommandChanged = true;
@@ -61,7 +60,7 @@ public abstract class Subsystem implements NamedSendable {
     /**
      * Instantiates a new subsystem.
      */
-    public Subsystem(){
+    public Subsystem() {
         m_name = getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1);
         Scheduler.registerSubsystem(this);
         m_currentCommandChanged = true;
@@ -77,11 +76,11 @@ public abstract class Subsystem implements NamedSendable {
      *
      * @param command the new default command
      */
-    protected void setDefaultCommand(Command command){
-        if(command == null){
+    protected void setDefaultCommand(Command command) {
+        if (command == null) {
             m_defaultCommand = null;
-        }else{
-            if(!command.getRequirements().contains(this))
+        } else {
+            if (!command.getRequirements().contains(this))
                 throw new IllegalStateException("A default command must require the subsystem");
 
             m_defaultCommand = command;
@@ -102,8 +101,8 @@ public abstract class Subsystem implements NamedSendable {
      *
      * @return the default command
      */
-    protected Command getDefaultCommand(){
-        if(!m_initializedDefaultCommand){
+    protected Command getDefaultCommand() {
+        if (!m_initializedDefaultCommand) {
             m_initializedDefaultCommand = true;
             initDefaultCommand();
         }
@@ -115,12 +114,12 @@ public abstract class Subsystem implements NamedSendable {
      *
      * @param command the new current command
      */
-    void setCurrentCommand(Command command){
+    void setCurrentCommand(Command command) {
         m_currentCommand = command;
         m_currentCommandChanged = true;
     }
 
-    void nullifyCurrentCommand(){
+    void nullifyCurrentCommand() {
         m_currentCommand = null;
         m_currentCommandChanged = true;
     }
@@ -128,14 +127,14 @@ public abstract class Subsystem implements NamedSendable {
     /**
      * Confirm command.
      */
-    void confirmCommand(){
-        if(m_currentCommandChanged){
+    void confirmCommand() {
+        if (m_currentCommandChanged) {
             m_currentCommandChanged = false;
-            if(m_table != null){
-                if(m_currentCommand != null){
+            if (m_table != null) {
+                if (m_currentCommand != null) {
                     m_table.putBoolean("hasCommand", true);
                     m_table.putString("command", m_currentCommand.getName());
-                }else{
+                } else {
                     m_table.putBoolean("hasCommand", false);
                 }
             }
@@ -147,12 +146,12 @@ public abstract class Subsystem implements NamedSendable {
      *
      * @return the current command
      */
-    public Command getCurrentCommand(){
+    public Command getCurrentCommand() {
         return m_currentCommand;
     }
 
-    public boolean getCurrentCommandNotInterruptable(){
-        if(m_currentCommand == null){
+    public boolean getCurrentCommandNotInterruptable() {
+        if (m_currentCommand == null) {
             return false;
         }
         return !m_currentCommand.isInterruptible();
@@ -162,7 +161,7 @@ public abstract class Subsystem implements NamedSendable {
      * {@inheritDoc}
      */
     @Override
-    public String toString(){
+    public String toString() {
         return m_name;
     }
 
@@ -172,7 +171,7 @@ public abstract class Subsystem implements NamedSendable {
 
     public void initTable(ITable table) {
         m_table = table;
-        if(table!=null) {
+        if (table != null) {
             if (m_defaultCommand != null) {
                 m_table.putBoolean("hasDefault", true);
                 m_table.putString("default", m_defaultCommand.getName());
@@ -187,6 +186,7 @@ public abstract class Subsystem implements NamedSendable {
             }
         }
     }
+
     /**
      * {@inheritDoc}
      */
@@ -199,7 +199,7 @@ public abstract class Subsystem implements NamedSendable {
      *
      * @return the name
      */
-    public String getName(){
+    public String getName() {
         return m_name;
     }
 

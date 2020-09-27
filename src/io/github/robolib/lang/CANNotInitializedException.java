@@ -16,9 +16,9 @@
 package io.github.robolib.lang;
 
 /**
- * Exception indicating that the CAN driver layer has not been initialized.
- * This happens when an entry-point is called before a CAN driver plugin
- * has been installed.
+ * Exception indicating that the CAN driver layer has not been initialized. This
+ * happens when an entry-point is called before a CAN driver plugin has been
+ * installed.
  *
  * @author noriah <vix@noriah.dev>
  */

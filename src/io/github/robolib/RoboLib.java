@@ -45,13 +45,12 @@ import io.github.robolib.util.log.Logger;
  * IterativeRobot. It has a more complex program flow, however it runs faster
  * and uses less memory.
  *
- * You must make your own class and have it extend this class to use it.
- * The constructor must call the Super class with either no arguments,
- * or two strings representing the Name of the robot and the version of
- * the code.
+ * You must make your own class and have it extend this class to use it. The
+ * constructor must call the Super class with either no arguments, or two
+ * strings representing the Name of the robot and the version of the code.
  *
- * Handles the Switching of the Game mode and the Execution of the mode.
- * This controls what GameMode the robot should run.
+ * Handles the Switching of the Game mode and the Execution of the mode. This
+ * controls what GameMode the robot should run.
  *
  * @author noriah <vix@noriah.dev>
  * @since 0.1.0
@@ -67,9 +66,7 @@ public class RoboLib {
     /** RoboLibJ Patch Version */
     public static final int PATCH_VERSION = 2;
 
-    public static final String FRC_JAVA_VERSION = "RoboLibJ v"
-            + MAJOR_VERSION + "."
-            + MINOR_VERSION + "."
+    public static final String FRC_JAVA_VERSION = "RoboLibJ v" + MAJOR_VERSION + "." + MINOR_VERSION + "."
             + PATCH_VERSION;
 
     /** The m_current mode. */
@@ -81,7 +78,7 @@ public class RoboLib {
     /** The m_modes. */
     private static RobotMode[] m_modesArr = new RobotMode[GameMode.values().length];
 
-    //private final RobotMode m_modes[];
+    // private final RobotMode m_modes[];
 
     private static volatile boolean m_thread_keepAlive = true;
 
@@ -95,7 +92,7 @@ public class RoboLib {
     protected static ILogger m_log;
 
     /** The m_run. */
-//    private static boolean m_run = true;
+    // private static boolean m_run = true;
 
     /** The m_table. */
     private static ITable m_table;
@@ -103,7 +100,7 @@ public class RoboLib {
     /**
      * Robot Class Method.
      */
-    protected RoboLib(){
+    protected RoboLib() {
         this("RoboLibBot", "1.0.0");
     }
 
@@ -112,17 +109,17 @@ public class RoboLib {
      *
      * @param name Name of the Robot
      */
-    protected RoboLib(String name){
+    protected RoboLib(String name) {
         this(name, "1.0.0");
     }
 
     /**
      * Robot Class Method.
      *
-     * @param name Name of the Robot
+     * @param name    Name of the Robot
      * @param version Version number of the robot code
      */
-    protected RoboLib(String name, String version){
+    protected RoboLib(String name, String version) {
         m_name = name;
         m_version = version;
         m_log = Logger.get(this.getClass());
@@ -130,24 +127,26 @@ public class RoboLib {
 
     /**
      * Send a message to the Console, and to the Dashboard.
+     *
      * @param msg The message to be sent.
      */
-    protected void msg(String msg){
+    protected void msg(String msg) {
         m_log.info(msg);
     }
 
     /**
      * Send a message to the Console, and to the Dashboard.
+     *
      * @param msg The message to be sent.
      */
-    protected void debug(String msg){
+    protected void debug(String msg) {
         m_log.debug(msg);
     }
 
     /**
      * Enable Debug Messages.
      */
-    protected final void enableDebugStatements(){
+    protected final void enableDebugStatements() {
         enableDebug(true);
     }
 
@@ -156,62 +155,67 @@ public class RoboLib {
      *
      * @param debug Enable or Disable
      */
-    protected final void enableDebug(boolean debug){
+    protected final void enableDebug(boolean debug) {
         m_log.enableDebug(debug);
     }
 
     /**
-     * Send out an error to the console. Crash the Robot.
-     * Lets hope we don't get too many of these
+     * Send out an error to the console. Crash the Robot. Lets hope we don't get too
+     * many of these
+     *
      * @param msg The message to be sent with the RuntimeException
      */
-    protected void error(String msg){
+    protected void error(String msg) {
         error(msg, new RuntimeException());
     }
 
     /**
-     * Send out an error to the console. Crash the Robot.
-     * Lets hope we don't get too many of these
+     * Send out an error to the console. Crash the Robot. Lets hope we don't get too
+     * many of these
+     *
      * @param msg The message to be sent with the RuntimeException
-     * @param e The throwable object to send with this message
+     * @param e   The throwable object to send with this message
      */
-    protected void error(String msg, Throwable e){
-//        m_run = false;
+    protected void error(String msg, Throwable e) {
+        // m_run = false;
         m_log.error(msg, e);
     }
 
     /**
-     * Send out fatal message to the console. Crash the Robot.
-     * Lets hope we don't get too many of these
+     * Send out fatal message to the console. Crash the Robot. Lets hope we don't
+     * get too many of these
+     *
      * @param msg The message to be sent with the RuntimeException
      */
-    protected void fatal(String msg){
+    protected void fatal(String msg) {
         fatal(msg, new RuntimeException());
     }
 
     /**
-     * Send out a fatal message to the console. Crash the Robot.
-     *  Lets hope we don't get too many of these
+     * Send out a fatal message to the console. Crash the Robot. Lets hope we don't
+     * get too many of these
+     *
      * @param msg The message to be sent with the RuntimeException
-     * @param e The throwable object to send with this message
+     * @param e   The throwable object to send with this message
      */
-    protected void fatal(String msg, Throwable e){
-//        m_run = false;
+    protected void fatal(String msg, Throwable e) {
+        // m_run = false;
         m_log.fatal(msg, e);
     }
 
     /**
      * Kill the robot.
      */
-    public static void die(){
+    public static void die() {
         m_thread_keepAlive = false;
     }
 
     /**
      * Get the main NetworkTable table for the robot.
+     *
      * @return a networktable ITable
      */
-    public static final ITable getRobotTable(){
+    public static final ITable getRobotTable() {
         return m_table;
     }
 
@@ -220,37 +224,46 @@ public class RoboLib {
      *
      * This is run before the robot runs through its modes.
      */
-    protected void robotInit(){
+    protected void robotInit() {
         debug("Default Robot.robotInit() method... Overload me!");
     }
 
     /**
      * The Main method for the robot.
      *
-     * Starting point for the applications. Starts the OtaServer and then runs
-     * the robot.
+     * Starting point for the applications. Starts the OtaServer and then runs the
+     * robot.
      *
-     * This is called to start the robot. It should never exit.
-     * If it does exit, it will first throw several exceptions to kill the robot.
-     * We don't want an out of control robot.
+     * This is called to start the robot. It should never exit. If it does exit, it
+     * will first throw several exceptions to kill the robot. We don't want an out
+     * of control robot.
      *
-     * Initializes the Game Mode Switcher.
-     * This method must be called when ready to start the robot.
+     * Initializes the Game Mode Switcher. This method must be called when ready to
+     * start the robot.
      *
-     * Checks each Mode to see if there is code to run, if not, a Default class
-     * will be added.
+     * Checks each Mode to see if there is code to run, if not, a Default class will
+     * be added.
      *
      * Main task for the Game Manager
      *
-     * <p>This method does three main things.</p>
-     * <p>Checks to see whether we need to switch RobotMode or not</p>
-     * <p>If needed, switch the current game mode. This will first call the end()
-     * Method of the current {@link RobotMode}, then set the current {@link GameMode},
-     * call the System Garbace Collector, and then call the new RobotMode init() method.</p>
-     * <p>Finally, Runs the Current RobotMode. Catches any Throwable objects that may be thrown.
-     * Any caught Throwable Object is treated as fatal and will kill the RoboLibBot.
-     * They are treated as fatal because any uncaught Throwables can only be
-     * RuntimeExceptions or Errors, which are Fatal</p>
+     * <p>
+     * This method does three main things.
+     * </p>
+     * <p>
+     * Checks to see whether we need to switch RobotMode or not
+     * </p>
+     * <p>
+     * If needed, switch the current game mode. This will first call the end()
+     * Method of the current {@link RobotMode}, then set the current
+     * {@link GameMode}, call the System Garbace Collector, and then call the new
+     * RobotMode init() method.
+     * </p>
+     * <p>
+     * Finally, Runs the Current RobotMode. Catches any Throwable objects that may
+     * be thrown. Any caught Throwable Object is treated as fatal and will kill the
+     * RoboLibBot. They are treated as fatal because any uncaught Throwables can
+     * only be RuntimeExceptions or Errors, which are Fatal
+     * </p>
      *
      * @param args the arguments
      * @see DisabledMode
@@ -292,10 +305,9 @@ public class RoboLib {
             TableSender.addFramework(PDP.getInstance(), "Power/PDP");
             TableSender.addFramework(RoboRIO.getInstance(), "Power/RIO");
             TableSender.addFramework(Compressor.getInstance(), "Compressor");
-        }catch(Throwable t){
+        } catch (Throwable t) {
             log.fatal("Failure creating framework", t);
         }
-
 
         String robotName = "";
         InputStream is = RoboLib.class.getResourceAsStream("/META-INF/MANIFEST.MF");
@@ -307,7 +319,7 @@ public class RoboLib {
             log.fatal("Could not open manifest file.", e);
         }
 
-        if(robotName == null)
+        if (robotName == null)
             log.fatal("No 'Robot-Class' in manifest file.");
         else
             log.debug("Found " + robotName + " robot class. Attempting to start.");
@@ -327,21 +339,19 @@ public class RoboLib {
         log.debug("Using Java Language");
         UsageReporting.report(UsageReporting.ResourceType_Language, UsageReporting.Language_Java);
 
-
         log.info("Initializing Robot Network Table and Data");
-        try{
+        try {
             m_table.putString("name", m_name);
             m_table.putString("version", m_version);
-        }catch(Throwable t){
+        } catch (Throwable t) {
             log.error("Could not set Robot Name and Version in the Network Table. Did Something Screw Up?", t);
         }
 
-
-        //Run User initialization
+        // Run User initialization
         log.info("Running User Initialization code");
-        try{
+        try {
             robot.robotInit();
-        }catch(Throwable t){
+        } catch (Throwable t) {
             log.fatal("Error running User Init Code", t);
             System.exit(1);
             return;
@@ -350,20 +360,20 @@ public class RoboLib {
         File versionFile = new File("/tmp/frc_versions/FRC_Lib_Version.ini");
         boolean writeFile = !versionFile.exists();
         byte[] vData = FRC_JAVA_VERSION.getBytes();
-        try{
+        try {
             FileInputStream fInput = new FileInputStream(versionFile);
             byte[] d = new byte[vData.length];
             fInput.read(d);
             fInput.close();
-            if(!d.equals(vData)){
-            versionFile.delete();
-            writeFile = true;
-        }
-        }catch (IOException ex){
+            if (!d.equals(vData)) {
+                versionFile.delete();
+                writeFile = true;
+            }
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
 
-        if(writeFile){
+        if (writeFile) {
             FileOutputStream fOutput = null;
             try {
                 versionFile.createNewFile();
@@ -387,38 +397,42 @@ public class RoboLib {
 
         log.info("Initializing Robot Modes");
 
-        if(m_modesArr[GameMode.DISABLED.value] == null){
+        if (m_modesArr[GameMode.DISABLED.value] == null) {
             log.debug("No Disabled Robot Mode Defined");
             log.debug("Creating Empty Disabled Mode");
-            new DisabledMode(){};
+            new DisabledMode() {
+            };
         }
 
-        if(m_modesArr[GameMode.TEST.value] == null){
+        if (m_modesArr[GameMode.TEST.value] == null) {
             log.debug("No Test Robot Mode Defined");
             log.debug("Creating Empty Test Mode");
-            new TestMode(){};
+            new TestMode() {
+            };
         }
 
-        if(m_modesArr[GameMode.AUTON.value] == null){
+        if (m_modesArr[GameMode.AUTON.value] == null) {
             log.debug("No Autonomous Robot Mode Defined");
             log.debug("Creating Empty Autonomous Mode");
-            new AutonMode(){};
+            new AutonMode() {
+            };
         }
 
-        if(m_modesArr[GameMode.TELEOP.value] == null){
+        if (m_modesArr[GameMode.TELEOP.value] == null) {
             log.debug("No Teleop Robot Mode Defined");
             log.debug("Creating Empty Teleop Mode");
-            new TeleopMode(){};
+            new TeleopMode() {
+            };
         }
         m_currentMode = GameMode.DISABLED;
         m_currentRobotMode = m_modesArr[m_currentMode.value];
-//        m_table.putNumber("mode", m_currentMode.value);
-//        m_table.putString("mode-string", m_currentRobotMode.getName());
+        // m_table.putNumber("mode", m_currentMode.value);
+        // m_table.putString("mode-string", m_currentRobotMode.getName());
 
         PDP.resetFaults();
         Compressor.clearCompressorStickyFaults();
 
-        if(Compressor.getNoConnectionFault() || Compressor.getNoConnectionStickyFault()){
+        if (Compressor.getNoConnectionFault() || Compressor.getNoConnectionStickyFault()) {
             log.severe("Compressor not connected?");
         }
 
@@ -434,41 +448,41 @@ public class RoboLib {
         log.info("Starting Main Loop");
 
         GameMode gMode;
-        try{
-            while(m_thread_keepAlive){
+        try {
+            while (m_thread_keepAlive) {
                 ds.waitForData();
-                if(ds.hasModeChanged()){
+                if (ds.hasModeChanged()) {
                     gMode = DriverStation.getGameMode();
-                    if(m_currentMode != gMode){
+                    if (m_currentMode != gMode) {
                         log.info("Switching to " + gMode.getName());
 
-                        try{
+                        try {
                             m_currentRobotMode.modeEnd();
-                        }catch(Throwable e){
+                        } catch (Throwable e) {
                             Logger.get(m_currentRobotMode).fatal("Fatal error in RobotMode end method", e);
                         }
 
                         m_currentMode = gMode;
                         m_currentRobotMode = m_modesArr[m_currentMode.value];
-//                        m_table.putNumber("mode", gMode.value);
-//                        m_table.putString("mode-string", m_currentRobotMode.getName());
+                        // m_table.putNumber("mode", gMode.value);
+                        // m_table.putString("mode-string", m_currentRobotMode.getName());
                         System.gc();
 
-                        try{
+                        try {
                             m_currentRobotMode.modeInit();
-                        }catch(Throwable e){
+                        } catch (Throwable e) {
                             Logger.get(m_currentRobotMode).fatal("Fatal error in RobotMode init method", e);
                         }
                     }
                 }
 
-                if(ds.isNewControlData()){
+                if (ds.isNewControlData()) {
                     m_currentRobotMode.modeRun();
                 }
             }
-        }catch(Throwable t){
+        } catch (Throwable t) {
             log.fatal("Error in Main Loop. Something should have caught this!!!", t);
-        }finally{
+        } finally {
             log.fatal("ROBOTS DON'T QUIT!!!", "Exited Main Loop");
             System.exit(1);
         }
@@ -480,20 +494,21 @@ public class RoboLib {
     public void free() {
     }
 
-    public static final void registerAutonomous(AutonMode aMode, String name){
+    public static final void registerAutonomous(AutonMode aMode, String name) {
 
     }
 
     /**
-     * Add the a {@link RobotMode} to the ModeSwitcher this will overwrite any previous
-     * mode that has the same {@link GameMode}.
+     * Add the a {@link RobotMode} to the ModeSwitcher this will overwrite any
+     * previous mode that has the same {@link GameMode}.
+     *
      * @param gMode the {@link GameMode} that this RobotMode will be run at
      * @param rMode the {@link RobotMode} to add
      * @see GameMode
      * @see RobotMode
      */
-    protected static final void set(GameMode gMode, RobotMode rMode){
-        if(m_currentMode != gMode){
+    protected static final void set(GameMode gMode, RobotMode rMode) {
+        if (m_currentMode != gMode) {
             m_modesArr[gMode.value] = rMode;
         }
     }
@@ -501,12 +516,12 @@ public class RoboLib {
     /**
      * Gets the current {@link RobotMode}.
      *
-     * If there is no current Mode, then something went wrong,
-     * and an error mode is returned that will cause the robot to quit.
+     * If there is no current Mode, then something went wrong, and an error mode is
+     * returned that will cause the robot to quit.
      *
      * @return the current {@link RobotMode}
      */
-    public static final RobotMode getCurrentRobotMode(){
+    public static final RobotMode getCurrentRobotMode() {
         return m_currentRobotMode;
     }
 
@@ -515,7 +530,7 @@ public class RoboLib {
      *
      * @return the current {@link GameMode}
      */
-    public static final GameMode getGameMode(){
+    public static final GameMode getGameMode() {
         return m_currentMode;
     }
 
@@ -525,9 +540,10 @@ public class RoboLib {
      * @param mode the mode
      * @return {@link RobotMode}
      */
-    public static final RobotMode getRobotMode(GameMode mode){
-        if(m_modesArr[mode.value] == null)
-            return new RobotMode(){};
+    public static final RobotMode getRobotMode(GameMode mode) {
+        if (m_modesArr[mode.value] == null)
+            return new RobotMode() {
+            };
 
         return m_modesArr[mode.value];
     }
@@ -538,7 +554,7 @@ public class RoboLib {
      * @param mode the mode
      * @return boolean do we have it?
      */
-    public static final boolean hasMode(GameMode mode){
+    public static final boolean hasMode(GameMode mode) {
         return m_modesArr[mode.value] != null;
     }
 
@@ -551,17 +567,17 @@ public class RoboLib {
         return NetworkCommunications.HALGetMatchTime();
     }
 
-    public static final Alliance getAlliance(){
+    public static final Alliance getAlliance() {
         int sID = NetworkCommunications.HALGetAllianceStation();
-        if(!MathUtils.inBounds(sID, 0, 5)){
+        if (!MathUtils.inBounds(sID, 0, 5)) {
             return Alliance.NONE;
         }
         return Alliance.values()[sID / 3];
     }
 
-    public static final StationID getStation(){
+    public static final StationID getStation() {
         int sID = NetworkCommunications.HALGetAllianceStation();
-        if(!MathUtils.inBounds(sID, 0, 5)){
+        if (!MathUtils.inBounds(sID, 0, 5)) {
             return StationID.NONE;
         }
         return StationID.values()[sID];
@@ -588,8 +604,8 @@ public class RoboLib {
     /**
      * Determine if the robot is currently in Autonomous mode.
      *
-     * @return True if the robot is currently operating Autonomously as
-     * determined by the field controls.
+     * @return True if the robot is currently operating Autonomously as determined
+     *         by the field controls.
      */
     public static final boolean isAutonomous() {
         return DriverStation.isAutonomous();
@@ -598,8 +614,8 @@ public class RoboLib {
     /**
      * Determine if the robot is currently in Test mode.
      *
-     * @return True if the robot is currently operating in Test mode as
-     * determined by the driver station.
+     * @return True if the robot is currently operating in Test mode as determined
+     *         by the driver station.
      */
     public static final boolean isTest() {
         return DriverStation.isTest();
@@ -610,7 +626,7 @@ public class RoboLib {
      *
      * @return True if the robot is currently emergency stopped.
      */
-    public static final boolean isEStopped(){
+    public static final boolean isEStopped() {
         return DriverStation.isEStopped();
     }
 
@@ -618,7 +634,7 @@ public class RoboLib {
      * Determine if the robot is currently in Operator Control mode.
      *
      * @return True if the robot is currently operating in Tele-Op mode as
-     * determined by the field controls.
+     *         determined by the field controls.
      */
     public static final boolean isOperatorControl() {
         return DriverStation.isOperatorControl();
@@ -648,9 +664,7 @@ public class RoboLib {
      * @author noriah <vix@noriah.dev>
      */
     public static enum Alliance {
-        RED,
-        BLUE,
-        NONE;
+        RED, BLUE, NONE;
     }
 
     /**
@@ -659,13 +673,7 @@ public class RoboLib {
      * @author noriah <vix@noriah.dev>
      */
     public static enum StationID {
-        RED1,
-        RED2,
-        RED3,
-        BLUE1,
-        BLUE2,
-        BLUE3,
-        NONE;
+        RED1, RED2, RED3, BLUE1, BLUE2, BLUE3, NONE;
     }
 
 }

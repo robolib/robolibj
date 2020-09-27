@@ -23,7 +23,7 @@ import io.github.robolib.jni.InterruptJNI.InterruptJNIHandlerFunction;
  * @author noriah <vix@noriah.dev>
  *
  * @param <T> The type of the parameter that should be returned to the the
- *  method {@link #interruptFired(int, Object)}
+ *            method {@link #interruptFired(int, Object)}
  */
 public interface InterruptHandlerFunction<T> extends InterruptJNIHandlerFunction {
 
@@ -33,25 +33,25 @@ public interface InterruptHandlerFunction<T> extends InterruptJNIHandlerFunction
     @SuppressWarnings("unchecked")
     @Override
     public default void apply(int mask, Object param) {
-        interruptFired(mask, (T)param);
+        interruptFired(mask, (T) param);
     }
 
     /**
      * This method is run every time an interrupt is fired.
-     * @param mask ??? What is this?
-     * @param param an argument that can be overidden by overriding the {@link #getParameter()}
-     * method
+     * 
+     * @param mask  ??? What is this?
+     * @param param an argument that can be overidden by overriding the
+     *              {@link #getParameter()} method
      */
     abstract void interruptFired(int mask, T param);
 
     /**
      * Parameter to be passed with the interrupt when called.
+     * 
      * @return a variable to be passed to the function
      */
-    public default T getParameter(){
+    public default T getParameter() {
         return null;
     }
-
-
 
 }

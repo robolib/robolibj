@@ -25,9 +25,9 @@ import io.github.robolib.module.iface.DigitalInput;
 public class LimitSwitch extends DigitalInput implements SensorModule {
 
     /**
-     * The type of switch this is
-     * Normally open is a switch that is normally false when not pushed
-     * Normally closed is a switch that is normally true when not pushed
+     * The type of switch this is Normally open is a switch that is normally false
+     * when not pushed Normally closed is a switch that is normally true when not
+     * pushed
      *
      * @author noriah <vix@noriah.dev>
      */
@@ -47,7 +47,7 @@ public class LimitSwitch extends DigitalInput implements SensorModule {
          *
          * @param open the open
          */
-        SwitchType(boolean open){
+        SwitchType(boolean open) {
             value = open;
         }
     }
@@ -55,7 +55,7 @@ public class LimitSwitch extends DigitalInput implements SensorModule {
     /** The m_type. */
     private SwitchType m_type;
 
-    public LimitSwitch(DigitalChannel channel){
+    public LimitSwitch(DigitalChannel channel) {
         this(channel, SwitchType.OPEN);
     }
 
@@ -63,9 +63,9 @@ public class LimitSwitch extends DigitalInput implements SensorModule {
      * Instantiates a new limit switch.
      *
      * @param channel the channel
-     * @param type the type
+     * @param type    the type
      */
-    public LimitSwitch(DigitalChannel channel, SwitchType type){
+    public LimitSwitch(DigitalChannel channel, SwitchType type) {
         super(channel);
         this.m_type = type;
     }

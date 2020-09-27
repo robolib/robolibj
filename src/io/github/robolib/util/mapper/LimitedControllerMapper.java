@@ -39,15 +39,15 @@ public class LimitedControllerMapper implements ModuleMapper<LimitedController> 
         Object o = data.get("motor");
         Object p = data.get("system");
 
-        if(o instanceof JSONObject){
+        if (o instanceof JSONObject) {
             motor = RobotMap.getModule(key, (JSONObject) o);
-        }else{
+        } else {
             motor = RobotMap.getModule((String) o);
         }
 
-        if(p instanceof JSONObject){
+        if (p instanceof JSONObject) {
             system = RobotMap.getModule(key, (JSONObject) p);
-        }else{
+        } else {
             system = RobotMap.getModule((String) p);
         }
 
@@ -59,12 +59,7 @@ public class LimitedControllerMapper implements ModuleMapper<LimitedController> 
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "limitedcontroller",
-                "limited_controller",
-                "limitcontroller",
-                "limit_controller"
-        };
+        return new String[] { "limitedcontroller", "limited_controller", "limitcontroller", "limit_controller" };
     }
 
 }

@@ -28,9 +28,9 @@ import io.github.robolib.jni.HALUtil;
  *
  * @author noriah <vix@noriah.dev>
  */
-public class DigitalInput extends DigitalIO implements Trigger,  BooleanSource {
+public class DigitalInput extends DigitalIO implements Trigger, BooleanSource {
 
-    public DigitalInput(DigitalChannel channel){
+    public DigitalInput(DigitalChannel channel) {
         super(channel, Direction.IN);
     }
 
@@ -38,7 +38,7 @@ public class DigitalInput extends DigitalIO implements Trigger,  BooleanSource {
      * {@inheritDoc}
      */
     @Override
-    public boolean getState(){
+    public boolean getState() {
         IntBuffer status = allocateInt();
         boolean value = DIOJNI.getDIO(m_port, status) == 0;
         HALUtil.checkStatus(status);

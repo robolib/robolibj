@@ -44,7 +44,7 @@ public final class MotorSafetyHelper {
      *
      * @param object the object
      */
-    public MotorSafetyHelper(MotorSafety object){
+    public MotorSafetyHelper(MotorSafety object) {
         m_safetyObject = object;
         m_stopTime = RoboRIO.getFPGATimestamp();
         m_expiration = MotorSafety.SAFETY_TIMEOUT_DEFAULT;
@@ -54,7 +54,7 @@ public final class MotorSafetyHelper {
     /**
      * Feed.
      */
-    public void feed(){
+    public void feed() {
         m_stopTime = RoboRIO.getFPGATimestamp() + m_expiration;
     }
 
@@ -63,7 +63,7 @@ public final class MotorSafetyHelper {
      *
      * @param enabled the enabled
      */
-    public void setSafetyEnabled(boolean enabled){
+    public void setSafetyEnabled(boolean enabled) {
         m_enabled = enabled;
     }
 
@@ -72,7 +72,7 @@ public final class MotorSafetyHelper {
      *
      * @return true, if is safety enabled
      */
-    public boolean isSafetyEnabled(){
+    public boolean isSafetyEnabled() {
         return m_enabled;
     }
 
@@ -81,7 +81,7 @@ public final class MotorSafetyHelper {
      *
      * @param exp the new expiration
      */
-    public void setExpiration(double exp){
+    public void setExpiration(double exp) {
         m_expiration = exp;
     }
 
@@ -90,7 +90,7 @@ public final class MotorSafetyHelper {
      *
      * @return the expiration
      */
-    public double getExpiration(){
+    public double getExpiration() {
         return m_expiration;
     }
 
@@ -99,18 +99,19 @@ public final class MotorSafetyHelper {
      *
      * @return true, if is alive
      */
-    public boolean isAlive(){
+    public boolean isAlive() {
         return !m_enabled || m_stopTime > RoboRIO.getFPGATimestamp();
     }
 
     /**
      * Check.
      */
-    public void check(){
-        if(!m_enabled || RobotState.isDisabled() || RobotState.isTest())
+    public void check() {
+        if (!m_enabled || RobotState.isDisabled() || RobotState.isTest())
             return;
-        if(m_stopTime < RoboRIO.getFPGATimestamp()){
-            Logger.get(SafetyManager.class).warn(m_safetyObject.getDescription() + "... Output not updated often enough.");
+        if (m_stopTime < RoboRIO.getFPGATimestamp()) {
+            Logger.get(SafetyManager.class)
+                    .warn(m_safetyObject.getDescription() + "... Output not updated often enough.");
 
             m_safetyObject.stopMotor();
         }

@@ -19,22 +19,24 @@ import io.github.robolib.module.controller.SpeedController;
 import io.github.robolib.util.Timer;
 
 @SuppressWarnings("unused")
-public final class CANTalon implements ActuatorModule, ControllerModule,
-        MotorSafety, PIDSink, SpeedController {
+public final class CANTalon implements ActuatorModule, ControllerModule, MotorSafety, PIDSink, SpeedController {
 
     private MotorSafetyHelper m_safetyHelper;
-    
+
     public enum ControlMode {
         PercentVbus(0), Follower(5), Voltage(4), Position(1), Speed(2), Current(3), Disabled(15);
+
         public int value;
+
         public static ControlMode valueOf(int value) {
-            for (ControlMode mode: values()) {
+            for (ControlMode mode : values()) {
                 if (mode.value == value) {
                     return mode;
                 }
             }
             return null;
         }
+
         private ControlMode(int value) {
             this.value = value;
         }
@@ -42,15 +44,18 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
 
     public enum FeedbackDevice {
         QuadEncoder(0), AnalogPot(2), AnalogEncoder(3), EncRising(4), EncFalling(5);
+
         public int value;
+
         public static FeedbackDevice valueOf(int value) {
-            for (FeedbackDevice mode: values()) {
+            for (FeedbackDevice mode : values()) {
                 if (mode.value == value) {
                     return mode;
                 }
             }
             return null;
         }
+
         private FeedbackDevice(int value) {
             this.value = value;
         }
@@ -59,19 +64,23 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     /** enumerated types for frame rate ms */
     public enum StatusFrameRate {
         General(0), Feedback(1), QuadEncoder(2), AnalogTempVbat(3);
+
         public int value;
+
         public static StatusFrameRate valueOf(int value) {
-            for (StatusFrameRate mode: values()) {
+            for (StatusFrameRate mode : values()) {
                 if (mode.value == value) {
                     return mode;
                 }
             }
             return null;
         }
+
         private StatusFrameRate(int value) {
             this.value = value;
         }
     }
+
     private CanTalonSRX m_impl;
     ControlMode m_controlMode;
     private static double kDelayForSolicitedSignals = 0.004;
@@ -80,6 +89,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     int m_profile;
     double m_setPoint;
     String m_description;
+
     void _initialize(int deviceNumber) {
         m_description = "CANTalon ID " + deviceNumber;
         m_deviceNumber = deviceNumber;
@@ -90,14 +100,18 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
         setProfile(m_profile);
         applyControlMode(ControlMode.PercentVbus);
     }
+
     public CANTalon(int deviceNumber) {
         _initialize(deviceNumber);
         m_impl = new CanTalonSRX(deviceNumber);
     }
+
     public CANTalon(int deviceNumber, int controlPeriodMs) {
         _initialize(deviceNumber);
         m_impl = new CanTalonSRX(deviceNumber, controlPeriodMs); /* bound period to be within [1 ms,95 ms] */
-    }@Override
+    }
+
+    @Override
     public void pidWrite(double output) {
         if (getControlMode() == ControlMode.PercentVbus) {
             set(output);
@@ -105,13 +119,17 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
             throw new IllegalStateException("PID only supported in PercentVbus mode");
         }
     }
+
     public void delete() {
         m_impl.delete();
     }
+
     private boolean m_invert;
+
     public void setInverted(boolean invert) {
         m_invert = invert;
     }
+
     public void setSpeed(double speed) {
         set(speed);
     }
@@ -119,13 +137,12 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     /**
      * Sets the appropriate output on the talon, depending on the mode.
      *
-     * In PercentVbus, the output is between -1.0 and 1.0, with 0.0 as stopped.
-     * In Follower mode, the output is the integer device ID of the talon to duplicate.
-     * In Voltage mode, outputValue is in volts.
-     * In Current mode, outputValue is in amperes.
-     * In Speed mode, outputValue is in position change / 10ms.
-     * In Position mode, outputValue is in encoder ticks or an analog value,
-     *   depending on the sensor.
+     * In PercentVbus, the output is between -1.0 and 1.0, with 0.0 as stopped. In
+     * Follower mode, the output is the integer device ID of the talon to duplicate.
+     * In Voltage mode, outputValue is in volts. In Current mode, outputValue is in
+     * amperes. In Speed mode, outputValue is in position change / 10ms. In Position
+     * mode, outputValue is in encoder ticks or an analog value, depending on the
+     * sensor.
      *
      * @param outputValue The setpoint value, as described above.
      */
@@ -143,7 +160,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
                     break;
                 case Voltage:
                     // Voltage is an 8.8 fixed point number.
-                    int volts = (int)(outputValue * 256);
+                    int volts = (int) (outputValue * 256);
                     m_impl.SetDemand(volts);
                     break;
                 case Speed:
@@ -162,8 +179,9 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     /**
      * Sets the output of the Talon.
      *
-     * @param outputValue See set().
-     * @param thisValueDoesNotDoAnything corresponds to syncGroup from Jaguar; not relevant here.
+     * @param outputValue                See set().
+     * @param thisValueDoesNotDoAnything corresponds to syncGroup from Jaguar; not
+     *                                   relevant here.
      */
     @Override
     public void set(double outputValue, byte thisValueDoesNotDoAnything) {
@@ -171,12 +189,12 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Flips the sign (multiplies by negative one) the sensor values going into
-     *the talon.
+     * Flips the sign (multiplies by negative one) the sensor values going into the
+     * talon.
      *
      * This only affects position and velocity closed loop control. Allows for
-     *   situations where you may have a sensor flipped and going in the wrong
-     *   direction.
+     * situations where you may have a sensor flipped and going in the wrong
+     * direction.
      *
      * @param flip True if sensor input should be flipped; False if not.
      */
@@ -186,7 +204,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
 
     /**
      * Flips the sign (multiplies by negative one) the throttle values going into
-     *  the motor on the talon in closed loop modes.
+     * the motor on the talon in closed loop modes.
      *
      * @param flip True if motor output should be flipped; False if not.
      */
@@ -197,10 +215,9 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     /**
      * Gets the current status of the Talon (usually a sensor value).
      *
-     * In Current mode: returns output current.
-     * In Speed mode: returns current speed.
-     * In Position mode: returns current sensor position.
-     * In PercentVbus and Follower modes: returns current applied throttle.
+     * In Current mode: returns output current. In Speed mode: returns current
+     * speed. In Position mode: returns current sensor position. In PercentVbus and
+     * Follower modes: returns current applied throttle.
      *
      * @return The current sensor value of the Talon.
      */
@@ -227,7 +244,8 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Get the current encoder position, regardless of whether it is the current feedback device.
+     * Get the current encoder position, regardless of whether it is the current
+     * feedback device.
      *
      * @return The current position of the encoder.
      */
@@ -239,7 +257,8 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Get the current encoder velocity, regardless of whether it is the current feedback device.
+     * Get the current encoder velocity, regardless of whether it is the current
+     * feedback device.
      *
      * @return The current speed of the encoder.
      */
@@ -296,9 +315,9 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
      * Get the current analog in position, regardless of whether it is the current
      * feedback device.
      *
-     * @return The 24bit analog position.  The bottom ten bits is the ADC (0 - 1023) on
-     *                the analog pin of the Talon. The upper 14 bits
-     *                tracks the overflows and underflows (continuous sensor).
+     * @return The 24bit analog position. The bottom ten bits is the ADC (0 - 1023)
+     *         on the analog pin of the Talon. The upper 14 bits tracks the
+     *         overflows and underflows (continuous sensor).
      */
     public int getAnalogInPosition() {
         long valuep = CanTalonJNI.new_intp();
@@ -310,6 +329,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     /**
      * Get the current analog in position, regardless of whether it is the current
      * feedback device.
+     * 
      * @return The ADC (0 - 1023) on analog pin of the Talon.
      */
     public int getAnalogInRaw() {
@@ -340,6 +360,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
         m_impl.GetCloseLoopErr(swigp);
         return CanTalonJNI.intp_value(valuep);
     }
+
     // Returns true if limit switch is closed. false if open.
     public boolean isFwdLimitSwitchClosed() {
         long valuep = CanTalonJNI.new_intp();
@@ -347,6 +368,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
         m_impl.GetLimitSwitchClosedFor(swigp);
         return (CanTalonJNI.intp_value(valuep) == 0) ? true : false;
     }
+
     // Returns true if limit switch is closed. false if open.
     public boolean isRevLimitSwitchClosed() {
         long valuep = CanTalonJNI.new_intp();
@@ -354,6 +376,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
         m_impl.GetLimitSwitchClosedRev(swigp);
         return (CanTalonJNI.intp_value(valuep) == 0) ? true : false;
     }
+
     // Returns true if break is enabled during neutral. false if coast.
     public boolean getBrakeEnableDuringNeutral() {
         long valuep = CanTalonJNI.new_intp();
@@ -363,7 +386,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     }
 
     /**
-     *  Returns temperature of Talon, in degrees Celsius.
+     * Returns temperature of Talon, in degrees Celsius.
      */
     public double getTemp() {
         long tempp = CanTalonJNI.new_doublep(); // Create a new swig pointer.
@@ -372,7 +395,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     }
 
     /**
-     *  Returns the current going through the Talon, in Amperes.
+     * Returns the current going through the Talon, in Amperes.
      */
     public double getOutputCurrent() {
         long curp = CanTalonJNI.new_doublep(); // Create a new swig pointer.
@@ -396,28 +419,29 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     public double getBusVoltage() {
         long voltagep = CanTalonJNI.new_doublep();
         SWIGTYPE_Adapter status = m_impl.GetBatteryV(new SWIGTYPE_Adapter(voltagep, true));
-        /* Note: This section needs the JNI bindings regenerated with
-     pointer_functions for CTR_Code included in order to be able to catch notice
-     and throw errors.
-     if (CanTalonJNI.CTR_Codep_value(status) != 0) {
-       // TODO throw an error.
-     }*/
+        /*
+         * Note: This section needs the JNI bindings regenerated with pointer_functions
+         * for CTR_Code included in order to be able to catch notice and throw errors.
+         * if (CanTalonJNI.CTR_Codep_value(status) != 0) { // TODO throw an error. }
+         */
         return CanTalonJNI.doublep_value(voltagep);
     }
 
     /**
      * TODO documentation (see CANJaguar.java)
      *
-     * @return The position of the sensor currently providing feedback.
-     *      When using analog sensors, 0 units corresponds to 0V, 1023 units corresponds to 3.3V
-     *      When using an analog encoder (wrapping around 1023 to 0 is possible) the units are still 3.3V per 1023 units.
-     *      When using quadrature, each unit is a quadrature edge (4X) mode.
+     * @return The position of the sensor currently providing feedback. When using
+     *         analog sensors, 0 units corresponds to 0V, 1023 units corresponds to
+     *         3.3V When using an analog encoder (wrapping around 1023 to 0 is
+     *         possible) the units are still 3.3V per 1023 units. When using
+     *         quadrature, each unit is a quadrature edge (4X) mode.
      */
     public double getPosition() {
         long positionp = CanTalonJNI.new_intp();
         m_impl.GetSensorPosition(new SWIGTYPE_Adapter(positionp, true));
         return CanTalonJNI.intp_value(positionp);
     }
+
     public void setPosition(double pos) {
         m_impl.SetSensorPosition((int) pos);
     }
@@ -427,37 +451,41 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
      *
      * @return The speed of the sensor currently providing feedback.
      *
-     * The speed units will be in the sensor's native ticks per 100ms.
+     *         The speed units will be in the sensor's native ticks per 100ms.
      *
-     * For analog sensors, 3.3V corresponds to 1023 units.
-     *    So a speed of 200 equates to ~0.645 dV per 100ms or 6.451 dV per second.
-     *    If this is an analog encoder, that likely means 1.9548 rotations per sec.
-     * For quadrature encoders, each unit corresponds a quadrature edge (4X).
-     *    So a 250 count encoder will produce 1000 edge events per rotation.
-     *    An example speed of 200 would then equate to 20% of a rotation per 100ms,
-     *    or 10 rotations per second.
+     *         For analog sensors, 3.3V corresponds to 1023 units. So a speed of 200
+     *         equates to ~0.645 dV per 100ms or 6.451 dV per second. If this is an
+     *         analog encoder, that likely means 1.9548 rotations per sec. For
+     *         quadrature encoders, each unit corresponds a quadrature edge (4X). So
+     *         a 250 count encoder will produce 1000 edge events per rotation. An
+     *         example speed of 200 would then equate to 20% of a rotation per
+     *         100ms, or 10 rotations per second.
      */
     public double getSpeed() {
         long speedp = CanTalonJNI.new_intp();
         m_impl.GetSensorVelocity(new SWIGTYPE_Adapter(speedp, true));
         return CanTalonJNI.intp_value(speedp);
     }
+
     public ControlMode getControlMode() {
         return m_controlMode;
     }
 
     /**
-     * Fixup the m_controlMode so set() serializes the correct demand value.
-     * Also fills the modeSelecet in the control frame to disabled.
+     * Fixup the m_controlMode so set() serializes the correct demand value. Also
+     * fills the modeSelecet in the control frame to disabled.
+     * 
      * @param controlMode Control mode to ultimately enter once user calls set().
      * @see #set
      */
     private void applyControlMode(ControlMode controlMode) {
         m_controlMode = controlMode;
-        if (controlMode == ControlMode.Disabled) m_controlEnabled = false;
+        if (controlMode == ControlMode.Disabled)
+            m_controlEnabled = false;
         // Disable until set() is called.
         m_impl.SetModeSelect(ControlMode.Disabled.value);
     }
+
     public void changeControlMode(ControlMode controlMode) {
         if (m_controlMode == controlMode) {
             /* we already are in this mode, don't perform disable workaround */
@@ -465,20 +493,25 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
             applyControlMode(controlMode);
         }
     }
+
     public void setFeedbackDevice(FeedbackDevice device) {
         m_impl.SetFeedbackDeviceSelect(device.value);
     }
+
     public void setStatusFrameRateMs(StatusFrameRate stateFrame, int periodMs) {
         m_impl.SetStatusFrameRate(stateFrame.value, periodMs);
     }
+
     public void enableControl() {
         changeControlMode(m_controlMode);
         m_controlEnabled = true;
     }
+
     public void disableControl() {
         m_impl.SetModeSelect(ControlMode.Disabled.value);
         m_controlEnabled = false;
     }
+
     public boolean isControlEnabled() {
         return m_controlEnabled;
     }
@@ -489,64 +522,88 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
      * @return double proportional constant for current profile.
      */
     public double getP() {
-        //if(!(m_controlMode.equals(ControlMode.Position) || m_controlMode.equals(ControlMode.Speed))) {
-        //  throw new IllegalStateException("PID mode only applies in Position and Speed modes.");
-        //}
+        // if(!(m_controlMode.equals(ControlMode.Position) ||
+        // m_controlMode.equals(ControlMode.Speed))) {
+        // throw new IllegalStateException("PID mode only applies in Position and Speed
+        // modes.");
+        // }
         // Update the information that we have.
-        if (m_profile == 0) m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_P);
-        else m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_P);
+        if (m_profile == 0)
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_P);
+        else
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_P);
         // Briefly wait for new values from the Talon.
         Timer.delay(kDelayForSolicitedSignals);
         long pp = CanTalonJNI.new_doublep();
         m_impl.GetPgain(m_profile, new SWIGTYPE_Adapter(pp, true));
         return CanTalonJNI.doublep_value(pp);
     }
+
     public double getI() {
-        //if(!(m_controlMode.equals(ControlMode.Position) || m_controlMode.equals(ControlMode.Speed))) {
-        //  throw new IllegalStateException("PID mode only applies in Position and Speed modes.");
-        //}
+        // if(!(m_controlMode.equals(ControlMode.Position) ||
+        // m_controlMode.equals(ControlMode.Speed))) {
+        // throw new IllegalStateException("PID mode only applies in Position and Speed
+        // modes.");
+        // }
         // Update the information that we have.
-        if (m_profile == 0) m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_I);
-        else m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_I);
+        if (m_profile == 0)
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_I);
+        else
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_I);
         // Briefly wait for new values from the Talon.
         Timer.delay(kDelayForSolicitedSignals);
         long ip = CanTalonJNI.new_doublep();
         m_impl.GetIgain(m_profile, new SWIGTYPE_Adapter(ip, true));
         return CanTalonJNI.doublep_value(ip);
     }
+
     public double getD() {
-        //if(!(m_controlMode.equals(ControlMode.Position) || m_controlMode.equals(ControlMode.Speed))) {
-        //  throw new IllegalStateException("PID mode only applies in Position and Speed modes.");
-        //}
+        // if(!(m_controlMode.equals(ControlMode.Position) ||
+        // m_controlMode.equals(ControlMode.Speed))) {
+        // throw new IllegalStateException("PID mode only applies in Position and Speed
+        // modes.");
+        // }
         // Update the information that we have.
-        if (m_profile == 0) m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_D);
-        else m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_D);
+        if (m_profile == 0)
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_D);
+        else
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_D);
         // Briefly wait for new values from the Talon.
         Timer.delay(kDelayForSolicitedSignals);
         long dp = CanTalonJNI.new_doublep();
         m_impl.GetDgain(m_profile, new SWIGTYPE_Adapter(dp, true));
         return CanTalonJNI.doublep_value(dp);
     }
+
     public double getF() {
-        //if(!(m_controlMode.equals(ControlMode.Position) || m_controlMode.equals(ControlMode.Speed))) {
-        //  throw new IllegalStateException("PID mode only applies in Position and Speed modes.");
-        //}
+        // if(!(m_controlMode.equals(ControlMode.Position) ||
+        // m_controlMode.equals(ControlMode.Speed))) {
+        // throw new IllegalStateException("PID mode only applies in Position and Speed
+        // modes.");
+        // }
         // Update the information that we have.
-        if (m_profile == 0) m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_F);
-        else m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_F);
+        if (m_profile == 0)
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_F);
+        else
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_F);
         // Briefly wait for new values from the Talon.
         Timer.delay(kDelayForSolicitedSignals);
         long fp = CanTalonJNI.new_doublep();
         m_impl.GetFgain(m_profile, new SWIGTYPE_Adapter(fp, true));
         return CanTalonJNI.doublep_value(fp);
     }
+
     public double getIZone() {
-        //if(!(m_controlMode.equals(ControlMode.Position) || m_controlMode.equals(ControlMode.Speed))) {
-        //  throw new IllegalStateException("PID mode only applies in Position and Speed modes.");
-        //}
+        // if(!(m_controlMode.equals(ControlMode.Position) ||
+        // m_controlMode.equals(ControlMode.Speed))) {
+        // throw new IllegalStateException("PID mode only applies in Position and Speed
+        // modes.");
+        // }
         // Update the information that we have.
-        if (m_profile == 0) m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_IZone);
-        else m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_IZone);
+        if (m_profile == 0)
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_IZone);
+        else
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_IZone);
         // Briefly wait for new values from the Talon.
         Timer.delay(kDelayForSolicitedSignals);
         long fp = CanTalonJNI.new_intp();
@@ -557,19 +614,23 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     /**
      * Get the closed loop ramp rate for the current profile.
      *
-     * Limits the rate at which the throttle will change.
-     * Only affects position and speed closed loop modes.
+     * Limits the rate at which the throttle will change. Only affects position and
+     * speed closed loop modes.
      *
      * @return rampRate Maximum change in voltage, in volts / sec.
      * @see #setProfile For selecting a certain profile.
      */
     public double getCloseLoopRampRate() {
-        //  if(!(m_controlMode.equals(ControlMode.Position) || m_controlMode.equals(ControlMode.Speed))) {
-        //    throw new IllegalStateException("PID mode only applies in Position and Speed modes.");
-        //  }
+        // if(!(m_controlMode.equals(ControlMode.Position) ||
+        // m_controlMode.equals(ControlMode.Speed))) {
+        // throw new IllegalStateException("PID mode only applies in Position and Speed
+        // modes.");
+        // }
         // Update the information that we have.
-        if (m_profile == 0) m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_CloseLoopRampRate);
-        else m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_CloseLoopRampRate);
+        if (m_profile == 0)
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot0_CloseLoopRampRate);
+        else
+            m_impl.RequestParam(CanTalonSRX.param_t.eProfileParamSlot1_CloseLoopRampRate);
         // Briefly wait for new values from the Talon.
         Timer.delay(kDelayForSolicitedSignals);
         long fp = CanTalonJNI.new_intp();
@@ -590,6 +651,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
         m_impl.GetParamResponseInt32(CanTalonSRX.param_t.eFirmVers, new SWIGTYPE_Adapter(fp, true));
         return CanTalonJNI.intp_value(fp);
     }
+
     public long GetIaccum() {
         // Update the information that we have.
         m_impl.RequestParam(CanTalonSRX.param_t.ePidIaccum);
@@ -651,9 +713,9 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
      * Set the integration zone of the current Closed Loop profile.
      *
      * Whenever the error is larger than the izone value, the accumulated
-     *  integration error is cleared so that high errors aren't racked up when at
-     *  high errors.
-     * An izone value of 0 means no difference from a standard PIDF loop.
+     * integration error is cleared so that high errors aren't racked up when at
+     * high errors. An izone value of 0 means no difference from a standard PIDF
+     * loop.
      *
      * @param izone Width of the integration zone.
      * @see #setProfile For selecting a certain profile.
@@ -665,49 +727,52 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     /**
      * Set the closed loop ramp rate for the current profile.
      *
-     * Limits the rate at which the throttle will change.
-     * Only affects position and speed closed loop modes.
+     * Limits the rate at which the throttle will change. Only affects position and
+     * speed closed loop modes.
      *
      * @param rampRate Maximum change in voltage, in volts / sec.
      * @see #setProfile For selecting a certain profile.
      */
     public void setCloseLoopRampRate(double rampRate) {
         // CanTalonSRX takes units of Throttle (0 - 1023) / 1ms.
-        int rate = (int)(rampRate * 1023.0 / 12.0 / 1000.0);
+        int rate = (int) (rampRate * 1023.0 / 12.0 / 1000.0);
         m_impl.SetCloseLoopRampRate(m_profile, rate);
     }
 
     /**
      * Set the voltage ramp rate for the current profile.
      *
-     * Limits the rate at which the throttle will change.
-     * Affects all modes.
+     * Limits the rate at which the throttle will change. Affects all modes.
      *
      * @param rampRate Maximum change in voltage, in volts / sec.
      */
     public void setVoltageRampRate(double rampRate) {
         // CanTalonSRX takes units of Throttle (0 - 1023) / 10ms.
-        int rate = (int)(rampRate * 1023.0 / 12.0 / 100.0);
+        int rate = (int) (rampRate * 1023.0 / 12.0 / 100.0);
         m_impl.SetRampThrottle(rate);
     }
 
     /**
      * Sets control values for closed loop control.
      *
-     * @param p Proportional constant.
-     * @param i Integration constant.
-     * @param d Differential constant.
-     * @param f Feedforward constant.
-     * @param izone Integration zone -- prevents accumulation of integration error
-     *   with large errors. Setting this to zero will ignore any izone stuff.
-     * @param closeLoopRampRate Closed loop ramp rate. Maximum change in voltage, in volts / sec.
-     * @param profile which profile to set the pid constants for. You can have two
-     *   profiles, with values of 0 or 1, allowing you to keep a second set of values
-     *   on hand in the talon. In order to switch profiles without recalling setPID,
-     *   you must call setProfile().
+     * @param p                 Proportional constant.
+     * @param i                 Integration constant.
+     * @param d                 Differential constant.
+     * @param f                 Feedforward constant.
+     * @param izone             Integration zone -- prevents accumulation of
+     *                          integration error with large errors. Setting this to
+     *                          zero will ignore any izone stuff.
+     * @param closeLoopRampRate Closed loop ramp rate. Maximum change in voltage, in
+     *                          volts / sec.
+     * @param profile           which profile to set the pid constants for. You can
+     *                          have two profiles, with values of 0 or 1, allowing
+     *                          you to keep a second set of values on hand in the
+     *                          talon. In order to switch profiles without recalling
+     *                          setPID, you must call setProfile().
      */
     public void setPID(double p, double i, double d, double f, int izone, double closeLoopRampRate, int profile) {
-        if (profile != 0 && profile != 1) throw new IllegalArgumentException("Talon PID profile must be 0 or 1.");
+        if (profile != 0 && profile != 1)
+            throw new IllegalArgumentException("Talon PID profile must be 0 or 1.");
         m_profile = profile;
         setProfile(profile);
         setP(p);
@@ -717,6 +782,7 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
         setIZone(izone);
         setCloseLoopRampRate(closeLoopRampRate);
     }
+
     public void setPID(double p, double i, double d) {
         setPID(p, i, d, 0, 0, 0, m_profile);
     }
@@ -729,11 +795,12 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Select which closed loop profile to use, and uses whatever PIDF gains and
-     * the such that are already there.
+     * Select which closed loop profile to use, and uses whatever PIDF gains and the
+     * such that are already there.
      */
     public void setProfile(int profile) {
-        if (profile != 0 && profile != 1) throw new IllegalArgumentException("Talon PID profile must be 0 or 1.");
+        if (profile != 0 && profile != 1)
+            throw new IllegalArgumentException("Talon PID profile must be 0 or 1.");
         m_profile = profile;
         m_impl.SetProfileSlotSelect(m_profile);
     }
@@ -781,31 +848,33 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Configure the fwd limit switch to be normally open or normally closed.
-     * Talon will disable momentarilly if the Talon's current setting
-     * is dissimilar to the caller's requested setting.
+     * Configure the fwd limit switch to be normally open or normally closed. Talon
+     * will disable momentarilly if the Talon's current setting is dissimilar to the
+     * caller's requested setting.
      *
-     * Since Talon saves setting to flash this should only affect
-     * a given Talon initially during robot install.
+     * Since Talon saves setting to flash this should only affect a given Talon
+     * initially during robot install.
      *
-     * @param normallyOpen true for normally open.  false for normally closed.
+     * @param normallyOpen true for normally open. false for normally closed.
      */
     public void ConfigFwdLimitSwitchNormallyOpen(boolean normallyOpen) {
-        SWIGTYPE_Adapter status = m_impl.SetParam(CanTalonSRX.param_t.eOnBoot_LimitSwitch_Forward_NormallyClosed, normallyOpen ? 0 : 1);
+        SWIGTYPE_Adapter status = m_impl.SetParam(CanTalonSRX.param_t.eOnBoot_LimitSwitch_Forward_NormallyClosed,
+                normallyOpen ? 0 : 1);
     }
 
     /**
-     * Configure the rev limit switch to be normally open or normally closed.
-     * Talon will disable momentarilly if the Talon's current setting
-     * is dissimilar to the caller's requested setting.
+     * Configure the rev limit switch to be normally open or normally closed. Talon
+     * will disable momentarilly if the Talon's current setting is dissimilar to the
+     * caller's requested setting.
      *
-     * Since Talon saves setting to flash this should only affect
-     * a given Talon initially during robot install.
+     * Since Talon saves setting to flash this should only affect a given Talon
+     * initially during robot install.
      *
-     * @param normallyOpen true for normally open.  false for normally closed.
+     * @param normallyOpen true for normally open. false for normally closed.
      */
     public void ConfigRevLimitSwitchNormallyOpen(boolean normallyOpen) {
-        SWIGTYPE_Adapter status = m_impl.SetParam(CanTalonSRX.param_t.eOnBoot_LimitSwitch_Reverse_NormallyClosed, normallyOpen ? 0 : 1);
+        SWIGTYPE_Adapter status = m_impl.SetParam(CanTalonSRX.param_t.eOnBoot_LimitSwitch_Reverse_NormallyClosed,
+                normallyOpen ? 0 : 1);
     }
 
     public void enableBrakeMode(boolean brake) {
@@ -894,30 +963,34 @@ public final class CANTalon implements ActuatorModule, ControllerModule,
     public String getDescription() {
         return m_description;
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void enableModule() {
         // TODO Auto-generated method stub
-        
+
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void disableModule() {
         // TODO Auto-generated method stub
-        
+
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void makeSafe() {
         // TODO Auto-generated method stub
-        
+
     }
+
     /**
      * {@inheritDoc}
      */

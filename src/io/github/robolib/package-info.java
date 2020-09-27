@@ -14,8 +14,9 @@
  */
 
 /**
- * Classes essential for the Framework to run.
- * Contains the main robot class that is called at run time
+ * Classes essential for the Framework to run. Contains the main robot class
+ * that is called at run time
+ *
  * @author noriah <vix@noriah.dev>
  */
 package io.github.robolib;

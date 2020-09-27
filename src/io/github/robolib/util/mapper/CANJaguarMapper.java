@@ -36,9 +36,7 @@ public class CANJaguarMapper implements ModuleMapper<CANJaguar> {
         String description = data.getString("description");
         int pChannel = data.getInt("power_channel");
 
-        return new CANJaguar(
-                channel, description,
-                PowerChannel.values()[pChannel]);
+        return new CANJaguar(channel, description, PowerChannel.values()[pChannel]);
     }
 
     /**
@@ -46,12 +44,7 @@ public class CANJaguarMapper implements ModuleMapper<CANJaguar> {
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "canjaguar",
-                "can_jaguar",
-                "canjag",
-                "can_jag"
-        };
+        return new String[] { "canjaguar", "can_jaguar", "canjag", "can_jag" };
     }
 
 }

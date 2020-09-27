@@ -25,8 +25,7 @@ import io.github.robolib.util.MathUtils;
  *
  * @author noriah <vix@noriah.dev>
  */
-public class Servo extends PWM implements ActuatorModule,
-        AngleSink, AngleSource {
+public class Servo extends PWM implements ActuatorModule, AngleSink, AngleSource {
 
     private static final double SERVO_MAX_ANGLE = 180.0;
     private static final double SERVO_MIN_ANGLE = 0.0;
@@ -40,7 +39,7 @@ public class Servo extends PWM implements ActuatorModule,
      *
      * @param channel
      */
-    public Servo(PWMChannel channel){
+    public Servo(PWMChannel channel) {
         super(channel, "PWM Servo Ch" + channel.ordinal());
         setBounds(2.4, 0, 0, 0, 0.6);
         setPeriodMultiplier(PeriodMultiplier.k4X);
@@ -51,39 +50,44 @@ public class Servo extends PWM implements ActuatorModule,
     /**
      * Set the servo position.
      *
-     * Servo values range from 0.0 to 1.0 corresponding to the range of full left to full right.
+     * Servo values range from 0.0 to 1.0 corresponding to the range of full left to
+     * full right.
      *
      * @param value Position from 0.0 to 1.0.
      */
     @Override
-    public final void set(double value){
+    public final void set(double value) {
         setPosition(value);
     }
 
     /**
      * Get the servo position.
      *
-     * Servo values range from 0.0 to 1.0 corresponding to the range of full left to full right.
+     * Servo values range from 0.0 to 1.0 corresponding to the range of full left to
+     * full right.
      *
      * @return Position from 0.0 to 1.0.
      */
     @Override
-    public final double get(){
+    public final double get() {
         return getPosition();
     }
 
     /**
      * Set the servo angle.
      *
-     * Assume that the servo angle is linear with respect to the PWM value (big assumption, need to test).
+     * Assume that the servo angle is linear with respect to the PWM value (big
+     * assumption, need to test).
      *
-     * Servo angles that are out of the supported range of the servo simply "saturate" in that direction
-     * In other words, if the servo has a range of (X degrees to Y degrees) than angles of less than X
-     * result in an angle of X being set and angles of more than Y degrees result in an angle of Y being set.
+     * Servo angles that are out of the supported range of the servo simply
+     * "saturate" in that direction In other words, if the servo has a range of (X
+     * degrees to Y degrees) than angles of less than X result in an angle of X
+     * being set and angles of more than Y degrees result in an angle of Y being
+     * set.
      *
      * @param degrees The angle in degrees to set the servo.
      */
-    public final void setAngle(double degrees){
+    public final void setAngle(double degrees) {
         degrees = MathUtils.clamp(degrees, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
 
         setPosition(((degrees - SERVO_MIN_ANGLE)) / SERVO_ANGLE_RANGE);
@@ -92,10 +96,12 @@ public class Servo extends PWM implements ActuatorModule,
     /**
      * Get the servo angle.
      *
-     * Assume that the servo angle is linear with respect to the PWM value (big assumption, need to test).
+     * Assume that the servo angle is linear with respect to the PWM value (big
+     * assumption, need to test).
+     *
      * @return The angle in degrees to which the servo is set.
      */
-    public final double getAngle(){
+    public final double getAngle() {
         return getPosition() * SERVO_ANGLE_RANGE + SERVO_MIN_ANGLE;
     }
 
@@ -103,7 +109,7 @@ public class Servo extends PWM implements ActuatorModule,
      * {@inheritDoc}
      */
     @Override
-    public void enableModule(){
+    public void enableModule() {
         m_disabled = false;
     }
 
@@ -111,5 +117,6 @@ public class Servo extends PWM implements ActuatorModule,
      * {@inheritDoc}
      */
     @Override
-    public void makeSafe(){}
+    public void makeSafe() {
+    }
 }

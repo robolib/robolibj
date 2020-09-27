@@ -39,7 +39,7 @@ public class AutonCommandMode extends AutonMode {
      *
      * @param name The name for this Auton mode
      */
-    public AutonCommandMode(Command command, String name){
+    public AutonCommandMode(Command command, String name) {
         super(name);
         m_command = command;
     }
@@ -47,21 +47,21 @@ public class AutonCommandMode extends AutonMode {
     /**
      * Constructor for a Autonomous Robot mode.
      *
-     * @param name The name for this Auton mode
+     * @param name   The name for this Auton mode
      * @param active Set this mode as the active mode by default
      */
-    public AutonCommandMode(Command command, String name, boolean active){
+    public AutonCommandMode(Command command, String name, boolean active) {
         super(name, active);
         m_command = command;
     }
 
     @Override
-    protected void init(){
+    protected void init() {
         m_command.start();
     }
 
     @Override
-    protected void end(){
+    protected void end() {
         m_command.cancel();
     }
 

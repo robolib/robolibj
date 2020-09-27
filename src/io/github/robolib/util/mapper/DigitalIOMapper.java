@@ -24,9 +24,7 @@ import org.json.JSONObject;
  *
  * @author noriah <vix@noriah.dev>
  */
-public class DigitalIOMapper implements ModuleMapper<DigitalIO>{
-
-
+public class DigitalIOMapper implements ModuleMapper<DigitalIO> {
 
     /**
      * {@inheritDoc}
@@ -41,11 +39,7 @@ public class DigitalIOMapper implements ModuleMapper<DigitalIO>{
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "digitalio"
-        };
+        return new String[] { "digitalio" };
     }
-
-
 
 }

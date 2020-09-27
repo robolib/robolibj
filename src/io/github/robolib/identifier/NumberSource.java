@@ -24,6 +24,7 @@ public interface NumberSource {
 
     /**
      * Get the value of this double source
+     * 
      * @return the value of this double source.
      */
     double get();

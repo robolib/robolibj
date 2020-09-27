@@ -22,7 +22,7 @@ import io.github.robolib.module.iface.I2C;
 import io.github.robolib.util.Timer;
 
 /**
- * LCD CLass for LCM2004
+ * LCD Class for LCM2004
  *
  * @see http://www.wvshare.com/datasheet/LCD_en_PDF/HD44780.pdf
  *
@@ -82,21 +82,21 @@ public class LCD2004 extends I2C {
     private static final byte COMMAND = 0x00;
     private static final byte DATA = REGISTER_SELECT_MASK;
 
-    private static final Map<Byte, Byte>DATA_PIN_MASK_MAP = new HashMap<>();
-    static{
+    private static final Map<Byte, Byte> DATA_PIN_MASK_MAP = new HashMap<>();
+    static {
         DATA_PIN_MASK_MAP.put((byte) 0x01, DATA_PIN_4_MASK);
         DATA_PIN_MASK_MAP.put((byte) 0x02, DATA_PIN_5_MASK);
         DATA_PIN_MASK_MAP.put((byte) 0x04, DATA_PIN_6_MASK);
         DATA_PIN_MASK_MAP.put((byte) 0x08, DATA_PIN_7_MASK);
     }
 
-    private static final byte[] ROW_ADDR = {0x00, 0x40, 0x14, 0x54};
+    private static final byte[] ROW_ADDR = { 0x00, 0x40, 0x14, 0x54 };
 
     private byte displayControl = LCD_DISPLAYCONTROL | LCD_DISPLAY_ON;
     private byte displayMode = LCD_ENTRYMODESET | LCD_ENTRY_LEFT | LCD_ENTRY_SHIFT_DECREMENT;
     private byte backlightStsMask = 0x08;
 
-    public LCD2004(Port port){
+    public LCD2004(Port port) {
         super(port, I2C_ADDR);
 
         Timer.delay(0.041);
@@ -104,130 +104,125 @@ public class LCD2004 extends I2C {
         clear();
     }
 
-    public void writeString(String str){
-        for(char c : str.toCharArray())
+    public void writeString(String str) {
+        for (char c : str.toCharArray())
             write(c);
     }
 
-
-    public void clear(){
+    public void clear() {
         command(LCD_CLEARDISPLAY);
         Timer.delay(0.1);
     }
 
-    public void home(){
+    public void home() {
         command(LCD_RETURNHOME);
         Timer.delay(0.1);
     }
 
-    public void setCursor(int line, int pos){
-        if(line >= 4)
+    public void setCursor(int line, int pos) {
+        if (line >= 4)
             line = line - 1;
 
         int address = ROW_ADDR[line] + pos;
         command(LCD_SET_DDRAM_ADDR + address);
     }
 
-    public void noDisplay(){
+    public void noDisplay() {
         displayControl &= ~LCD_DISPLAY_ON;
         command(displayControl);
     }
 
-    public void display(){
+    public void display() {
         displayControl |= LCD_DISPLAY_ON;
         command(displayControl);
     }
 
-    public void noCursor(){
+    public void noCursor() {
         displayControl &= ~LCD_CURSOR_ON;
         command(displayControl);
     }
 
-    public void cursor(){
+    public void cursor() {
         displayControl |= LCD_CURSOR_ON;
         command(displayControl);
     }
 
-    public void noBlink(){
+    public void noBlink() {
         displayControl &= ~LCD_BLINK_ON;
         command(displayControl);
     }
 
-    public void blink(){
+    public void blink() {
         displayControl |= LCD_BLINK_ON;
         command(displayControl);
     }
 
-    public void scrollDisplayLeft(){
+    public void scrollDisplayLeft() {
         command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVE_LEFT);
     }
 
-    public void scrollDisplayRight(){
+    public void scrollDisplayRight() {
         command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVE_LEFT);
     }
 
-    public void leftToRight(){
+    public void leftToRight() {
         displayMode |= LCD_ENTRY_LEFT;
         command(displayMode);
     }
 
-    public void rightToLeft(){
+    public void rightToLeft() {
         displayMode &= ~LCD_ENTRY_LEFT;
         command(displayMode);
     }
 
-    public void moveCursorRight(){
+    public void moveCursorRight() {
         command(LCD_CURSORSHIFT | LCD_CURSORMOVE | LCD_MOVE_RIGHT);
     }
 
-    public void moveCursorLeft(){
+    public void moveCursorLeft() {
         command(LCD_CURSORSHIFT | LCD_CURSORMOVE | LCD_MOVE_LEFT);
     }
 
-    public void autoscroll(){
+    public void autoscroll() {
         displayMode |= LCD_ENTRY_SHIFT_INCREMENT;
         command(displayMode);
     }
 
-    public void noAutoscroll(){
+    public void noAutoscroll() {
         displayMode &= ~LCD_ENTRY_SHIFT_INCREMENT;
         command(displayMode);
     }
 
-    public void backlight(){
+    public void backlight() {
         backlightStsMask = BACKLIGHT_MASK;
-        writeBulk(new byte[]{backlightStsMask});
+        writeBulk(new byte[] { backlightStsMask });
     }
 
-    public void noBacklight(){
+    public void noBacklight() {
         backlightStsMask = 0x00;
-        writeBulk(new byte[]{backlightStsMask});
+        writeBulk(new byte[] { backlightStsMask });
     }
 
-    private void write(int data){
+    private void write(int data) {
         command(displayControl);
         send(data, DATA);
     }
 
-    private void command(int data){
+    private void command(int data) {
         send(data, COMMAND);
     }
 
-    private void send(int data, byte mode){
+    private void send(int data, byte mode) {
         byte first = get4bits((byte) (data >> 4), mode);
         byte second = get4bits((byte) (data & 0x0f), mode);
-        writeBulk(new byte[]{
-                (byte) (first | ENABLE_MASK),
-                first,
-                (byte) (second | ENABLE_MASK),
-                second
-        });
+        writeBulk(new byte[] { (byte) (first | ENABLE_MASK), first, (byte) (second | ENABLE_MASK), second });
     }
 
-    private byte get4bits(byte value, byte mode){
+    private byte get4bits(byte value, byte mode) {
         final byte[] pinMapValue = new byte[1];
         DATA_PIN_MASK_MAP.forEach((Byte a, Byte b) -> {
-            if((value & a) == a) pinMapValue[0] |= b;
+            if ((value & a) == a)
+                pinMapValue[0] |= b;
         });
 
         pinMapValue[0] |= (mode | backlightStsMask);

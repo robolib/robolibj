@@ -18,8 +18,8 @@ package io.github.robolib.lang;
 /**
  * An exception for use with robot code.
  *
- * throw this exception when something goes wrong with the robot that does
- * not fall under any other exception type.
+ * throw this exception when something goes wrong with the robot that does not
+ * fall under any other exception type.
  *
  * @author noriah <vix@noriah.dev>
  * @since 0.1.0
@@ -34,7 +34,7 @@ public final class RobotException extends RuntimeException {
      *
      * @param msg the msg
      */
-    public RobotException(String msg){
+    public RobotException(String msg) {
         super(msg);
     }
 }

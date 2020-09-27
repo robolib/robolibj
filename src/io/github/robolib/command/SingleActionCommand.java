@@ -22,11 +22,11 @@ package io.github.robolib.command;
  */
 public abstract class SingleActionCommand extends Command {
 
-    public SingleActionCommand(){
+    public SingleActionCommand() {
         super();
     }
 
-    public SingleActionCommand(String name){
+    public SingleActionCommand(String name) {
         super(name);
     }
 
@@ -34,26 +34,29 @@ public abstract class SingleActionCommand extends Command {
      * {@inheritDoc}
      */
     @Override
-    protected void initialize() {}
+    protected void initialize() {
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean isFinished() { return true; }
+    protected boolean isFinished() {
+        return true;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void end() {}
+    protected void end() {
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void interrupted() {}
-
-
+    protected void interrupted() {
+    }
 
 }

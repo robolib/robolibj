@@ -22,23 +22,22 @@ import io.github.robolib.identifier.SpeedSource;
 /**
  * The Interface SpeedController. A SpeedController is usually a motor
  * controller connected to a CIM or other FRC legal motors. Most are PWM
- * controlled, but there are the new ones, such as the TalonSRX, which
- * run on CAN as well as the old Jaguars with CAN interface.
+ * controlled, but there are the new ones, such as the TalonSRX, which run on
+ * CAN as well as the old Jaguars with CAN interface.
  *
  * You might think im missing a set(double) here, but this is a <b>Speed
- * Controller</b>. That means we are setting speed, not just anything.
- * I have found that being specific in code, when needed, does wonder for
- * those that don't understand it.
+ * Controller</b>. That means we are setting speed, not just anything. I have
+ * found that being specific in code, when needed, does wonder for those that
+ * don't understand it.
  *
  * @author noriah <vix@noriah.dev>
  */
 public interface SpeedController extends PIDSink, SpeedSink, SpeedSource {
 
     /**
-     * Common interface for getting the current set speed of a speed
-     * controller.
+     * Common interface for getting the current set speed of a speed controller.
      *
-     * @return The current set speed.  Value is between -1.0 and 1.0.
+     * @return The current set speed. Value is between -1.0 and 1.0.
      */
     @Override
     double getSpeed();
@@ -47,13 +46,13 @@ public interface SpeedController extends PIDSink, SpeedSink, SpeedSource {
      * Common interface for setting the speed of a speed controller.
      *
      *
-     * @param speed The speed to set.  Value should be between -1.0 and 1.0.
+     * @param speed     The speed to set. Value should be between -1.0 and 1.0.
      * @param syncGroup The update group to add this Set() to, pending
-     * UpdateSyncGroup(). If 0, update immediately.
-     * @deprecated Replaced by {@link #setSpeed(double)}, only here for
-     * CANJaguar compatibility.
+     *                  UpdateSyncGroup(). If 0, update immediately.
+     * @deprecated Replaced by {@link #setSpeed(double)}, only here for CANJaguar
+     *             compatibility.
      */
-    public default void set(double speed, byte syncGroup){
+    public default void set(double speed, byte syncGroup) {
         setSpeed(speed);
     }
 
@@ -81,7 +80,7 @@ public interface SpeedController extends PIDSink, SpeedSink, SpeedSource {
      * {@inheritDoc}
      */
     @Override
-    public default void pidWrite(double value){
+    public default void pidWrite(double value) {
         setSpeed(value);
     }
 

@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-
 /**
  * The Class RMap.
  *
@@ -36,11 +35,9 @@ import org.json.JSONTokener;
 @SuppressWarnings("unchecked")
 public final class RobotMap {
 
-    private static final Map<String, ModuleMapper<?>> m_builderMap =
-            new HashMap<String, ModuleMapper<?>>();
+    private static final Map<String, ModuleMapper<?>> m_builderMap = new HashMap<String, ModuleMapper<?>>();
 
-    private static final Map<String, Object> m_objectMap =
-            new HashMap<String, Object>();
+    private static final Map<String, Object> m_objectMap = new HashMap<String, Object>();
 
     private static JSONObject m_jMap;
 
@@ -48,7 +45,7 @@ public final class RobotMap {
 
     private static boolean m_enabled = false;
 
-    public static void setMapFile(String file){
+    public static void setMapFile(String file) {
         m_mapFile = file;
         m_enabled = true;
         File f = new File(m_mapFile);
@@ -59,7 +56,7 @@ public final class RobotMap {
         }
     }
 
-    static{
+    static {
         registerModuleBuilder(new SpeedControllerMapper());
         registerModuleBuilder(new CANJaguarMapper());
         registerModuleBuilder(new SolenoidMapper());
@@ -73,79 +70,78 @@ public final class RobotMap {
         registerModuleBuilder(new ServoMapper());
     }
 
-    private RobotMap(){}
+    private RobotMap() {
+    }
 
-    public static void registerModuleBuilder(ModuleMapper<?> builder){
-        for(String s : builder.getModuleIdentifiers()){
-            if(m_builderMap.containsKey(s))
-                throw new IllegalArgumentException("A module builder under the key '"
-                        + s + "' already exists.");
+    public static void registerModuleBuilder(ModuleMapper<?> builder) {
+        for (String s : builder.getModuleIdentifiers()) {
+            if (m_builderMap.containsKey(s))
+                throw new IllegalArgumentException("A module builder under the key '" + s + "' already exists.");
             m_builderMap.put(s, builder);
         }
     }
 
-    public static boolean getBoolean(String key){
+    public static boolean getBoolean(String key) {
         return m_jMap.getBoolean(key);
     }
 
-    public static boolean getBoolean(String key, boolean def){
-        try{
+    public static boolean getBoolean(String key, boolean def) {
+        try {
             return m_jMap.getBoolean(key);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             return def;
         }
     }
 
-    public static String getString(String key){
+    public static String getString(String key) {
         return m_jMap.getString(key);
     }
 
-    public static String getString(String key, String def){
-        try{
+    public static String getString(String key, String def) {
+        try {
             return m_jMap.getString(key);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             return def;
         }
     }
 
-    public static int getInt(String key){
+    public static int getInt(String key) {
         return m_jMap.getInt(key);
     }
 
-    public static int getInt(String key, int def){
-        try{
+    public static int getInt(String key, int def) {
+        try {
             return m_jMap.getInt(key);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             return def;
         }
     }
 
-    public static double getNumber(String key){
+    public static double getNumber(String key) {
         return m_jMap.getDouble(key);
     }
 
-    public static double getNumber(String key, double def){
-        try{
+    public static double getNumber(String key, double def) {
+        try {
             return m_jMap.getDouble(key);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             return def;
         }
     }
 
-    protected static <T> T getModule(String key, JSONObject data){
+    protected static <T> T getModule(String key, JSONObject data) {
         ModuleMapper<?> builder = m_builderMap.get(data.getString("type").toLowerCase());
-        if(builder == null)
+        if (builder == null)
             throw new RuntimeException("Unknown Module builder for type '" + data.getString("type") + "'.");
         return (T) builder.createModule(key, data);
     }
 
-    public static <T> T getModule(String key){
-        if(!m_enabled)
-            throw new IllegalStateException(
-                    "You must set the map file in the robot constructor before anything else.");
-        if(m_objectMap.containsKey(key)){
+    public static <T> T getModule(String key) {
+        if (!m_enabled)
+            throw new IllegalStateException("You must set the map file in the robot constructor before anything else.");
+        if (m_objectMap.containsKey(key)) {
             return (T) m_objectMap.get(key);
-        }else{
+        } else {
             Object x = getModule(key, m_jMap.getJSONObject(key));
             m_objectMap.put(key, x);
             return (T) x;

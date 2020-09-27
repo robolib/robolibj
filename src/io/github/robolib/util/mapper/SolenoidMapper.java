@@ -36,11 +36,7 @@ public final class SolenoidMapper implements ModuleMapper<SolenoidBase> {
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "solenoid",
-                "singlesolenoid",
-                "doublesolenoid",
-        };
+        return new String[] { "solenoid", "singlesolenoid", "doublesolenoid", };
     }
 
     /**
@@ -50,17 +46,17 @@ public final class SolenoidMapper implements ModuleMapper<SolenoidBase> {
     public SolenoidBase createModule(String key, JSONObject data) {
         try {
             String type = data.getString("type");
-            switch(type){
-            case "solenoid":
-            case "singlesolenoid":
-                return new Solenoid(SolenoidChannel.values()[data.getInt("channel")]);
-            case "doublesolenoid":
-                return new DoubleSolenoid(
-                        SolenoidChannel.values()[data.getInt("forward_channel")],
-                        SolenoidChannel.values()[data.getInt("reverse_channel")]);
-            default:
-                Logger.get(RobotMap.class).fatal("Unable to create Solenoid for '" + key + "'! NO type '" + type + "'");
-                break;
+            switch (type) {
+                case "solenoid":
+                case "singlesolenoid":
+                    return new Solenoid(SolenoidChannel.values()[data.getInt("channel")]);
+                case "doublesolenoid":
+                    return new DoubleSolenoid(SolenoidChannel.values()[data.getInt("forward_channel")],
+                            SolenoidChannel.values()[data.getInt("reverse_channel")]);
+                default:
+                    Logger.get(RobotMap.class)
+                            .fatal("Unable to create Solenoid for '" + key + "'! NO type '" + type + "'");
+                    break;
             }
 
         } catch (SecurityException | IllegalArgumentException | JSONException e) {

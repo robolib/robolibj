@@ -29,40 +29,43 @@ public interface Trigger extends BooleanSource {
      *
      * @author noriah <vix@noriah.dev>
      */
-    public abstract class ButtonScheduler{
+    public abstract class ButtonScheduler {
 
-        protected ButtonScheduler(){
+        protected ButtonScheduler() {
             Scheduler.addButton(this);
         }
+
         public abstract void execute();
     }
 
-    public default void runWhenActive(final Command command){
-        new ButtonScheduler(){
+    public default void runWhenActive(final Command command) {
+        new ButtonScheduler() {
             boolean pressed = false;
+
             @Override
             public void execute() {
-                if(getState()){
-                    if(!pressed){
+                if (getState()) {
+                    if (!pressed) {
                         pressed = true;
                         command.start();
                     }
-                }else{
+                } else {
                     pressed = false;
                 }
             }
         };
     }
 
-    public default void runWhileActive(final Command command){
-        new ButtonScheduler(){
+    public default void runWhileActive(final Command command) {
+        new ButtonScheduler() {
             boolean pressed = false;
+
             @Override
             public void execute() {
-                if(getState()){
+                if (getState()) {
                     command.start();
                     pressed = true;
-                }else if(pressed){
+                } else if (pressed) {
                     command.cancel();
                     pressed = false;
                 }
@@ -70,14 +73,15 @@ public interface Trigger extends BooleanSource {
         };
     }
 
-    public default void runWhenInactive(final Command command){
-        new ButtonScheduler(){
+    public default void runWhenInactive(final Command command) {
+        new ButtonScheduler() {
             boolean pressed = false;
+
             @Override
             public void execute() {
-                if(getState()){
+                if (getState()) {
                     pressed = true;
-                }else if(pressed){
+                } else if (pressed) {
                     command.start();
                     pressed = false;
                 }
@@ -85,17 +89,18 @@ public interface Trigger extends BooleanSource {
         };
     }
 
-    public default void runWhileInactive(final Command command){
-        new ButtonScheduler(){
+    public default void runWhileInactive(final Command command) {
+        new ButtonScheduler() {
             boolean pressed = false;
+
             @Override
             public void execute() {
-                if(getState()){
-                    if(!pressed){
+                if (getState()) {
+                    if (!pressed) {
                         command.cancel();
                         pressed = true;
                     }
-                }else{
+                } else {
                     command.start();
                     pressed = false;
                 }
@@ -103,36 +108,38 @@ public interface Trigger extends BooleanSource {
         };
     }
 
-    public default void toggleWhenActive(final Command command){
-        new ButtonScheduler(){
+    public default void toggleWhenActive(final Command command) {
+        new ButtonScheduler() {
             boolean pressed = false;
+
             @Override
             public void execute() {
-                if(getState()){
-                    if(!pressed){
-                        if(command.isRunning())
+                if (getState()) {
+                    if (!pressed) {
+                        if (command.isRunning())
                             command.cancel();
                         else
                             command.start();
                     }
-                }else{
+                } else {
                     pressed = false;
                 }
             }
         };
     }
 
-    public default void cancelWhenActive(final Command command){
-        new ButtonScheduler(){
+    public default void cancelWhenActive(final Command command) {
+        new ButtonScheduler() {
             boolean pressed = false;
+
             @Override
             public void execute() {
-                if(getState()){
-                    if(!pressed){
+                if (getState()) {
+                    if (!pressed) {
                         command.cancel();
                         pressed = true;
                     }
-                }else{
+                } else {
                     pressed = false;
                 }
             }

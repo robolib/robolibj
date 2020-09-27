@@ -31,13 +31,7 @@ public abstract class Interface {
      * @author noriah <vix@noriah.dev>
      */
     protected static enum InterfaceType {
-        ANALOG,
-        DIGITALIO,
-        I2C,
-        PWM,
-        RELAY,
-        SERIAL,
-        SPI;
+        ANALOG, DIGITALIO, I2C, PWM, RELAY, SERIAL, SPI;
     }
 
     /** The maximum number of digital channels. */
@@ -60,8 +54,8 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static final void checkDigitalChannel(final int channel){
-        if(channel < 0 || channel > MAX_DIGITAL_CHANNELS){
+    protected static final void checkDigitalChannel(final int channel) {
+        if (channel < 0 || channel > MAX_DIGITAL_CHANNELS) {
             throw new IndexOutOfBoundsException("Bad Digital Channel");
         }
     }
@@ -71,8 +65,8 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static final void checkAnalogInputChannel(final int channel){
-        if(channel < 0 || channel > MAX_ANALOG_IN_CHANNELS){
+    protected static final void checkAnalogInputChannel(final int channel) {
+        if (channel < 0 || channel > MAX_ANALOG_IN_CHANNELS) {
             throw new IndexOutOfBoundsException("Bad AnalogIO Input Channel");
         }
     }
@@ -82,8 +76,8 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static final void checkAnalogOutputChannel(final int channel){
-        if(channel < 0 || channel > MAX_ANALOG_OUT_CHANNELS){
+    protected static final void checkAnalogOutputChannel(final int channel) {
+        if (channel < 0 || channel > MAX_ANALOG_OUT_CHANNELS) {
             throw new IndexOutOfBoundsException("Bad AnalogIO Output Channel");
         }
     }
@@ -93,8 +87,8 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static final void checkPWMChannel(final int channel){
-        if(channel < 0 || channel > MAX_PWM_CHANNELS){
+    protected static final void checkPWMChannel(final int channel) {
+        if (channel < 0 || channel > MAX_PWM_CHANNELS) {
             throw new IndexOutOfBoundsException("Bad PWM Channel");
         }
     }
@@ -104,8 +98,8 @@ public abstract class Interface {
      *
      * @param channel the channel to check
      */
-    protected static final void checkRelayChannel(final int channel){
-        if(channel < 0 || channel > MAX_RELAY_CHANNELS){
+    protected static final void checkRelayChannel(final int channel) {
+        if (channel < 0 || channel > MAX_RELAY_CHANNELS) {
             throw new IndexOutOfBoundsException("Bad Relay Channel");
         }
     }
@@ -121,7 +115,7 @@ public abstract class Interface {
      *
      * @param iType the InterfaceType for this Interface
      */
-    protected Interface(InterfaceType iType){
+    protected Interface(InterfaceType iType) {
         m_ifaceType = iType;
     }
 
@@ -130,11 +124,12 @@ public abstract class Interface {
      *
      * @param pin the pin we are allocating.
      */
-    protected final void allocateMXPPin(int pin){
-        if(pin > 0){
-            if(m_mxpArr[pin] != null){
-                throw new ResourceAllocationException("MXP pin '" + pin + "' already allocated as '" + m_mxpArr[pin].name() + "'.");
-            }else{
+    protected final void allocateMXPPin(int pin) {
+        if (pin > 0) {
+            if (m_mxpArr[pin] != null) {
+                throw new ResourceAllocationException(
+                        "MXP pin '" + pin + "' already allocated as '" + m_mxpArr[pin].name() + "'.");
+            } else {
                 m_mxpArr[pin] = m_ifaceType;
             }
         }
@@ -145,17 +140,20 @@ public abstract class Interface {
      *
      * @param pin the pin we are allocating.
      */
-    protected final void freeMXPPin(int pin){
-        if(pin > 0){
-            if(m_mxpArr[pin] != null){
-                if(m_mxpArr[pin] == m_ifaceType){
+    protected final void freeMXPPin(int pin) {
+        if (pin > 0) {
+            if (m_mxpArr[pin] != null) {
+                if (m_mxpArr[pin] == m_ifaceType) {
                     m_mxpArr[pin] = null;
-                }else{
-                    Logger.get(Interface.class).warn("Attempt to release MXP pin '" + pin + "' (" + m_mxpArr[pin].name() + ")  failed. Type");
-                    Logger.get(Interface.class).warn("Allocated Type: " + m_mxpArr[pin].name() + ", Releasing type: " + m_ifaceType.name() + ".");
+                } else {
+                    Logger.get(Interface.class).warn(
+                            "Attempt to release MXP pin '" + pin + "' (" + m_mxpArr[pin].name() + ")  failed. Type");
+                    Logger.get(Interface.class).warn("Allocated Type: " + m_mxpArr[pin].name() + ", Releasing type: "
+                            + m_ifaceType.name() + ".");
                 }
-            }else{
-                Logger.get(Interface.class).warn("MXP pin '" + pin + "' Was not allocated. Should have been type: '" + m_ifaceType.name() + "'.");
+            } else {
+                Logger.get(Interface.class).warn("MXP pin '" + pin + "' Was not allocated. Should have been type: '"
+                        + m_ifaceType.name() + "'.");
             }
         }
     }
@@ -165,7 +163,7 @@ public abstract class Interface {
      *
      * @return the interface type for this interface
      */
-    public final InterfaceType getInterfaceType(){
+    public final InterfaceType getInterfaceType() {
         return m_ifaceType;
     }
 

@@ -19,7 +19,6 @@ import io.github.robolib.RobotMode;
 import io.github.robolib.command.Scheduler;
 import io.github.robolib.jni.NetworkCommunications;
 
-
 /**
  * The Class AutonMode.
  *
@@ -39,17 +38,17 @@ public abstract class AutonMode extends RobotMode {
      *
      * @param name The name for this Auton mode
      */
-    protected AutonMode(String name){
+    protected AutonMode(String name) {
         super(GameMode.AUTON, name);
     }
 
     /**
      * Constructor for a Autonomous Robot mode.
      *
-     * @param name The name for this Auton mode
+     * @param name   The name for this Auton mode
      * @param active Set this mode as the active mode by default
      */
-    protected AutonMode(String name, boolean active){
+    protected AutonMode(String name, boolean active) {
         super(GameMode.AUTON, name, active);
     }
 
@@ -57,7 +56,7 @@ public abstract class AutonMode extends RobotMode {
      * {@inheritDoc}
      */
     @Override
-    protected final void modeRun(){
+    protected final void modeRun() {
         NetworkCommunications.ObserveUserProgramAutonomous();
         run();
         Scheduler.run();

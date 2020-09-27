@@ -23,63 +23,76 @@ import io.github.robolib.util.Timer;
 /**
  * Honeywell HMC5883L I2C 3-axis compass class
  *
- * <p>The Honeywell HMC5883L magnetoresistive sensor circuit is a trio of sensors and application specific support circuits to
- * measure magnetic fields. With power supply applied, the sensor converts any incident magnetic field in the sensitive axis
- * directions to a differential voltage output. The magnetoresistive sensors are made of a nickel-iron (Permalloy) thin-film and
- * patterned as a resistive strip element. In the presence of a magnetic field, a change in the bridge resistive elements
- * causes a corresponding change in voltage across the bridge outputs.</p>
- * <p>These resistive elements are aligned together to have a common sensitive axis (indicated by arrows in the pinout
- * diagram) that will provide positive voltage change with magnetic fields increasing in the sensitive direction. Because the
- * output is only proportional to the magnetic field component along its axis, additional sensor bridges are placed at
- * orthogonal directions to permit accurate measurement of magnetic field in any orientation.</p>
+ * <p>
+ * The Honeywell HMC5883L magnetoresistive sensor circuit is a trio of sensors
+ * and application specific support circuits to measure magnetic fields. With
+ * power supply applied, the sensor converts any incident magnetic field in the
+ * sensitive axis directions to a differential voltage output. The
+ * magnetoresistive sensors are made of a nickel-iron (Permalloy) thin-film and
+ * patterned as a resistive strip element. In the presence of a magnetic field,
+ * a change in the bridge resistive elements causes a corresponding change in
+ * voltage across the bridge outputs.
+ * </p>
+ * <p>
+ * These resistive elements are aligned together to have a common sensitive axis
+ * (indicated by arrows in the pinout diagram) that will provide positive
+ * voltage change with magnetic fields increasing in the sensitive direction.
+ * Because the output is only proportional to the magnetic field component along
+ * its axis, additional sensor bridges are placed at orthogonal directions to
+ * permit accurate measurement of magnetic field in any orientation.
+ * </p>
  *
- * <p>To check the HMC5883L for proper operation, a self test feature in incorporated in which the sensor is internally excited
- * with a nominal magnetic field (in either positive or negative bias configuration). This field is then measured and reported.
- * This function is enabled and the polarity is set by bits MS[n] in the configuration register A. An internal current source
- * generates DC current (about 10 mA) from the VDD supply. This DC current is applied to the offset straps of the magnetoresistive
- * sensor, which creates an artificial magnetic field bias on the sensor. The difference of this measurement and the
- * measurement of the ambient field will be put in the data output register for each of the three axes. By using this built-in
- * function, the manufacturer can quickly verify the sensor’s full functionality after the assembly without additional test setup.
- * The self test results can also be used to estimate/compensate the sensor’s sensitivity drift due to temperature.</p>
+ * <p>
+ * To check the HMC5883L for proper operation, a self test feature in
+ * incorporated in which the sensor is internally excited with a nominal
+ * magnetic field (in either positive or negative bias configuration). This
+ * field is then measured and reported. This function is enabled and the
+ * polarity is set by bits MS[n] in the configuration register A. An internal
+ * current source generates DC current (about 10 mA) from the VDD supply. This
+ * DC current is applied to the offset straps of the magnetoresistive sensor,
+ * which creates an artificial magnetic field bias on the sensor. The difference
+ * of this measurement and the measurement of the ambient field will be put in
+ * the data output register for each of the three axes. By using this built-in
+ * function, the manufacturer can quickly verify the sensor’s full functionality
+ * after the assembly without additional test setup. The self test results can
+ * also be used to estimate/compensate the sensor’s sensitivity drift due to
+ * temperature.
+ * </p>
  *
  * @author noriah <vix@noriah.dev>
  */
 public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
     /** Device I2C Address */
-    public static final byte HMC_I2C_ADDR = (byte)0x1e;
+    public static final byte HMC_I2C_ADDR = (byte) 0x1e;
 
     /** Axes scale value */
-    public static final byte HMC_SCALE = (byte)0.92;
+    public static final byte HMC_SCALE = (byte) 0.92;
 
     /** Configuration Register A */
 
     /**
-     * Measurement Configuration Bits.
-     * These bits define the measurement flow of the device,
-     * specifically whether or not to incorporate an applied
-     * bias into the measurement.
+     * Measurement Configuration Bits. These bits define the measurement flow of the
+     * device, specifically whether or not to incorporate an applied bias into the
+     * measurement.
      *
      * @author noriah <vix@noriah.dev>
      */
     public static enum MeasurementMode {
         /**
-         * Normal Measurement Config (Default)
-         * In normal measurement configuration the device follows
-         * normal measurement flow. The positive and negative pins
-         * of the resistive load are left floating and high impedance.
+         * Normal Measurement Config (Default) In normal measurement configuration the
+         * device follows normal measurement flow. The positive and negative pins of the
+         * resistive load are left floating and high impedance.
          */
         kNORMAL(0x00),
         /**
-         * Positive bias configuration for X, Y, and Z axes
-         * In this configuration, a positive current is forced across
-         * the resistive load for all three axes.
+         * Positive bias configuration for X, Y, and Z axes In this configuration, a
+         * positive current is forced across the resistive load for all three axes.
          */
         kPOSBIAS(0x01),
         /**
-         * Negative bias configuration for X, Y and Z axes
-         * In this configuration, a negative current is forced across
-         * the resistive load for all three axes.
+         * Negative bias configuration for X, Y and Z axes In this configuration, a
+         * negative current is forced across the resistive load for all three axes.
          */
         kNEGBIAS(0x02),
         /** Reserved */
@@ -87,15 +100,14 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
         public byte value;
 
-        MeasurementMode(int val){
-            value = (byte)val;
+        MeasurementMode(int val) {
+            value = (byte) val;
         }
     }
 
     /**
-     * Data Output Rate Bits
-     * These bits set the rate at which data is written to
-     * all three data output registers.
+     * Data Output Rate Bits These bits set the rate at which data is written to all
+     * three data output registers.
      *
      * @author noriah <vix@noriah.dev>
      */
@@ -119,14 +131,14 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
         public byte value;
 
-        OutputRate(int val){
-            value = (byte)val;
+        OutputRate(int val) {
+            value = (byte) val;
         }
     }
 
     /**
-     * Select number of samples averaged (1 to 8) per measurement output.
-     * 00 = 1(Default); 01 = 2; 10 = 4; 11 = 8
+     * Select number of samples averaged (1 to 8) per measurement output. 00 =
+     * 1(Default); 01 = 2; 10 = 4; 11 = 8
      *
      * @author noriah <vix@noriah.dev>
      */
@@ -142,17 +154,16 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
         public byte value;
 
-        Averaging(int val){
-            value = (byte)val;
+        Averaging(int val) {
+            value = (byte) val;
         }
     }
 
     /** Configuration Register B */
 
     /**
-     * Gain Configuration Bits
-     * These bits configure the gain for the device.
-     * The gain configuration is common for all channels.
+     * Gain Configuration Bits These bits configure the gain for the device. The
+     * gain configuration is common for all channels.
      *
      * @author noriah <vix@noriah.dev>
      */
@@ -176,46 +187,39 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
         public byte value;
 
-        Gain(int val){
-            value = (byte)val;
+        Gain(int val) {
+            value = (byte) val;
         }
     }
 
     /** Mode Register */
 
     /**
-     * Mode Select Bits.
-     * These bits select the operation mode of this device.
+     * Mode Select Bits. These bits select the operation mode of this device.
      *
      * @author noriah <vix@noriah.dev>
      */
     public static enum OperatingMode {
         /**
-         * Continuous-Measurement Mode
-         * In continuous-measurement mode, the device continuously
-         * performs measurements and places the result in the data
-         * register. RDY goes high when new data is placed in all
-         * three registers. After a power-on or a write to the mode
-         * or configuration register, the first measurement set is
-         * available from all three data output registers after a
-         * period of 2/fDO and subsequent measurements are available
-         * at a frequency of fDO, where fDO is the frequency of data
-         * output.
+         * Continuous-Measurement Mode In continuous-measurement mode, the device
+         * continuously performs measurements and places the result in the data
+         * register. RDY goes high when new data is placed in all three registers. After
+         * a power-on or a write to the mode or configuration register, the first
+         * measurement set is available from all three data output registers after a
+         * period of 2/fDO and subsequent measurements are available at a frequency of
+         * fDO, where fDO is the frequency of data output.
          */
         kCONTINUOUS(0x00),
         /**
-         * Single-Measurement Mode (Default)
-         * When single-measurement mode is selected, device performs
-         * a single measurement, sets RDY high and returned to idle
-         * mode. Mode register returns to idle mode bit values. The
-         * measurement remains in the data output register and RDY
-         * remains high until the data output register is read or
-         * another measurement is performed.
+         * Single-Measurement Mode (Default) When single-measurement mode is selected,
+         * device performs a single measurement, sets RDY high and returned to idle
+         * mode. Mode register returns to idle mode bit values. The measurement remains
+         * in the data output register and RDY remains high until the data output
+         * register is read or another measurement is performed.
          */
         kSINGLE(0x01),
         /**
-         * Idle Mode (Power Saving)
-         * Device is placed in idle mode.
+         * Idle Mode (Power Saving) Device is placed in idle mode.
          */
         kIDLE(0x02),
         /** Reserved */
@@ -223,8 +227,8 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
         public byte value;
 
-        OperatingMode(int val){
-            value = (byte)val;
+        OperatingMode(int val) {
+            value = (byte) val;
         }
     }
 
@@ -233,52 +237,51 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
      */
 
     /** Data output register lock */
-    public static final byte HMC_LOCK_BIT = (byte)1;
+    public static final byte HMC_LOCK_BIT = (byte) 1;
     /** Ready Bit */
-    public static final byte HMC_READY_BIT = (byte)0;
-
+    public static final byte HMC_READY_BIT = (byte) 0;
 
     /** Registers */
 
     /** Configuration Register A */
-    public static final byte HMC_REG_CFG_A = (byte)0x00;
+    public static final byte HMC_REG_CFG_A = (byte) 0x00;
     /** Configuration Register B */
-    public static final byte HMC_REG_CFG_B = (byte)0x01;
+    public static final byte HMC_REG_CFG_B = (byte) 0x01;
     /** Mode Register */
-    public static final byte HMC_REG_CFG_MODE = (byte)0x02;
+    public static final byte HMC_REG_CFG_MODE = (byte) 0x02;
     /** Data Output X MSB Register */
-    public static final byte HMC_REG_X_MSB = (byte)0x03;
+    public static final byte HMC_REG_X_MSB = (byte) 0x03;
     /** Data Output X LSB Register */
-    public static final byte HMC_REG_X_LSB = (byte)0x04;
+    public static final byte HMC_REG_X_LSB = (byte) 0x04;
     /** Data Output Z MSB Register */
-    public static final byte HMC_REG_Z_MSB = (byte)0x05;
+    public static final byte HMC_REG_Z_MSB = (byte) 0x05;
     /** Data Output Z LSB Register */
-    public static final byte HMC_REG_Z_LSB = (byte)0x06;
+    public static final byte HMC_REG_Z_LSB = (byte) 0x06;
     /** Data Output Y MSB Register */
-    public static final byte HMC_REG_Y_MSB = (byte)0x07;
+    public static final byte HMC_REG_Y_MSB = (byte) 0x07;
     /** Data Output Y LSB Register */
-    public static final byte HMC_REG_Y_LSB = (byte)0x08;
+    public static final byte HMC_REG_Y_LSB = (byte) 0x08;
     /** Status Register */
-    public static final byte HMC_REG_STATUS = (byte)0x09;
+    public static final byte HMC_REG_STATUS = (byte) 0x09;
     /** Identification Register A */
-    public static final byte HMC_REG_IDA = (byte)0x0A;
+    public static final byte HMC_REG_IDA = (byte) 0x0A;
     /** Identification Register B */
-    public static final byte HMC_REG_IDB = (byte)0x0B;
+    public static final byte HMC_REG_IDB = (byte) 0x0B;
     /** Identification Register C */
-    public static final byte HMC_REG_IDC = (byte)0x0C;
+    public static final byte HMC_REG_IDC = (byte) 0x0C;
 
     /**
      * Enum representation of each of the three Axes.
      *
      * @author noriah <vix@noriah.dev>
      */
-    public static enum Axis{
-        X(0),
-        Z(2),
-        Y(4);
+    public static enum Axis {
+        X(0), Z(2), Y(4);
+
         public byte value;
-        Axis(int val){
-            value = (byte)val;
+
+        Axis(int val) {
+            value = (byte) val;
         }
     }
 
@@ -294,9 +297,10 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
     /**
      * Create a new HMC5883L compass on I2C Port.
+     *
      * @param port
      */
-    public HMC5883L(Port port){
+    public HMC5883L(Port port) {
         super(port, HMC_I2C_ADDR);
         writeRegisterA();
         writeRegisterB();
@@ -305,167 +309,180 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     }
 
     /**
-     * Get the heading around the X axis in radians.
-     * This is not the direction the X axis is pointing,
-     * but the value of rotation around the X axis.
+     * Get the heading around the X axis in radians. This is not the direction the X
+     * axis is pointing, but the value of rotation around the X axis.
+     *
      * @return the heading around the X axis.
      */
-    public double getHeadingXRad(){
+    public double getHeadingXRad() {
         double mags[] = getAllMagnitudes();
         double head = Math.atan2(mags[1], mags[2]);
         return head < 0.0 ? head + Math.PI * 2 : head;
     }
 
     /**
-     * Get the heading around the X axis in degrees.
-     * This is not the direction the X axis is pointing,
-     * but the value of rotation around the X axis.
+     * Get the heading around the X axis in degrees. This is not the direction the X
+     * axis is pointing, but the value of rotation around the X axis.
+     *
      * @return the heading around the X axis.
      */
-    public double getHeadingXDeg(){
+    public double getHeadingXDeg() {
         return Math.toDegrees(getHeadingXRad());
     }
 
     /**
      * Get magnitude for the X Axis.
+     *
      * @return the X axis magnitude value.
      */
-    public double getXMagnitude(){
+    public double getXMagnitude() {
         return getMagnitude(Axis.X);
     }
 
     /**
-     * Get the heading around the Y axis in radians.
-     * This is not the direction the Y axis is pointing,
-     * but the value of rotation around the Y axis.
+     * Get the heading around the Y axis in radians. This is not the direction the Y
+     * axis is pointing, but the value of rotation around the Y axis.
+     *
      * @return the heading around the Y axis.
      */
-    public double getHeadingYRad(){
+    public double getHeadingYRad() {
         double mags[] = getAllMagnitudes();
         double head = Math.atan2(mags[0], mags[2]);
         return head < 0.0 ? head + Math.PI * 2 : head;
     }
 
     /**
-     * Get the heading around the Y axis in degrees.
-     * This is not the direction the Y axis is pointing,
-     * but the value of rotation around the Y axis.
+     * Get the heading around the Y axis in degrees. This is not the direction the Y
+     * axis is pointing, but the value of rotation around the Y axis.
+     *
      * @return the heading around the Y axis.
      */
-    public double getHeadingYDeg(){
+    public double getHeadingYDeg() {
         return Math.toDegrees(getHeadingYRad());
     }
 
     /**
      * Get magnitude for the Y Axis.
+     *
      * @return the Y axis magnitude value.
      */
-    public double getYMagnitude(){
+    public double getYMagnitude() {
         return getMagnitude(Axis.Y);
     }
 
     /**
-     * Get the heading around the Z axis in radians.
-     * This is not the direction the Z axis is pointing,
-     * but the value of rotation around the Z axis.
+     * Get the heading around the Z axis in radians. This is not the direction the Z
+     * axis is pointing, but the value of rotation around the Z axis.
+     *
      * @return the heading around the Z axis.
      */
-    public double getHeadingZRad(){
+    public double getHeadingZRad() {
         double mags[] = getAllMagnitudes();
         double head = Math.atan2(mags[1], mags[0]);
         return head < 0.0 ? head + Math.PI * 2 : head;
     }
 
     /**
-     * Get the heading around the Z axis in degrees.
-     * This is not the direction the Z axis is pointing,
-     * but the value of rotation around the Z axis.
+     * Get the heading around the Z axis in degrees. This is not the direction the Z
+     * axis is pointing, but the value of rotation around the Z axis.
+     *
      * @return the heading around the Z axis.
      */
-    public double getHeadingZDeg(){
+    public double getHeadingZDeg() {
         return Math.toDegrees(getHeadingZRad());
     }
 
     /**
      * Get magnitude for the Z Axis.
+     *
      * @return the Z axis magnitude value.
      */
-    public double getZMagnitude(){
+    public double getZMagnitude() {
         return getMagnitude(Axis.Z);
     }
 
     /**
      * Get magnitude for givien {@link Axis}
+     *
      * @see Axis
      * @param axis the {@link Axis} to get
      * @return the given axis magnitude value.
      */
-    public double getMagnitude(Axis axis){
+    public double getMagnitude(Axis axis) {
         byte[] regs = new byte[6];
         read(HMC_REG_X_MSB, regs, 6);
         byte addr = axis.value;
-        return magnitudeFromBytes(regs[addr], regs[addr+1]);
+        return magnitudeFromBytes(regs[addr], regs[addr + 1]);
     }
 
     /**
      * Get all magnitude values. Headings are in the order of X, Y, Z.
+     *
      * @return all magnitude values.
      */
-    public double[] getAllMagnitudes(){
+    public double[] getAllMagnitudes() {
         byte[] regs = new byte[6];
         read(HMC_REG_X_MSB, regs, 6);
-        return new double[]{
-                magnitudeFromBytes(regs[0], regs[1]),
-                magnitudeFromBytes(regs[4], regs[5]),
-                magnitudeFromBytes(regs[2], regs[3])
-                };
+        return new double[] { magnitudeFromBytes(regs[0], regs[1]), magnitudeFromBytes(regs[4], regs[5]),
+                magnitudeFromBytes(regs[2], regs[3]) };
     }
 
     /**
      * Data output register lock bit status.
-     * <p>This bit is set when: <ol><li>some but not all for of the six
-     * data output registers have been read</li><li>Mode register has
-     * been read</li></ol></p><p>When this bit is set, the six data output
-     * registers are locked and any new data will not be placed in these
-     * register until one of these conditions are met: <ol><li>all six
-     * bytes have been read</li><li>the mode register is changed</li>
-     * <li>the measurement configuration (CRA) is changed</li><li>power
-     * is reset.</li></ol></p>
+     * <p>
+     * This bit is set when:
+     * <ol>
+     * <li>some but not all for of the six data output registers have been read</li>
+     * <li>Mode register has been read</li>
+     * </ol>
+     * </p>
+     * <p>
+     * When this bit is set, the six data output registers are locked and any new
+     * data will not be placed in these register until one of these conditions are
+     * met:
+     * <ol>
+     * <li>all six bytes have been read</li>
+     * <li>the mode register is changed</li>
+     * <li>the measurement configuration (CRA) is changed</li>
+     * <li>power is reset.</li>
+     * </ol>
+     * </p>
+     *
      * @return the status of the lock bit.
      */
-    public boolean getLock(){
+    public boolean getLock() {
         return readBit(HMC_REG_STATUS, HMC_LOCK_BIT);
     }
 
     /**
-     * Get the status of the Ready Bit.
-     * Set when data is written to all six data registers.
-     * Cleared when device initiates a write to the data output
-     * registers and after one or more of the data output registers
-     * are written to. When RDY bit is clear it shall remain cleared
-     * for a 250 μs. DRDY pin can be used as an alternative to
-     * the status register for monitoring the device for
-     * measurement data.
+     * Get the status of the Ready Bit. Set when data is written to all six data
+     * registers. Cleared when device initiates a write to the data output registers
+     * and after one or more of the data output registers are written to. When RDY
+     * bit is clear it shall remain cleared for a 250 μs. DRDY pin can be used as an
+     * alternative to the status register for monitoring the device for measurement
+     * data.
+     *
      * @return the status of the ready bit
      */
-    public boolean getReady(){
+    public boolean getReady() {
         return readBit(HMC_REG_STATUS, HMC_READY_BIT);
     }
 
     /**
      * Turn two bytes into a magnitude
-     * @param first the MSB byte
+     *
+     * @param first  the MSB byte
      * @param second the LSB byte
      * @return magnitude from bytes
      */
-    private double magnitudeFromBytes(byte first, byte second){
+    private double magnitudeFromBytes(byte first, byte second) {
         return ((first << 8) | second);
     }
 
     /**
      * Write the A configuration register
      */
-    private void writeRegisterA(){
+    private void writeRegisterA() {
         byte val = 0;
         val |= m_mMode.value;
         val |= m_rate.value;
@@ -476,7 +493,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     /**
      * Write the B configuration register
      */
-    private void writeRegisterB(){
+    private void writeRegisterB() {
         byte val = 0;
         val |= m_gain.value;
         write(HMC_REG_CFG_B, val);
@@ -485,7 +502,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
     /**
      * Write the Mode configuration register
      */
-    private void writeModeRegister(){
+    private void writeModeRegister() {
         byte val = 0;
         val |= (m_highSpeed ? 1 : 0) << 7;
         val |= m_oMode.value;
@@ -494,113 +511,125 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
 
     /**
      * Set the {@link MeasurementMode} to use
+     *
      * @see MeasurementMode
      * @param mode the {@link MeasurementMode} to use
      */
-    public void setMeasurementMode(MeasurementMode mode){
+    public void setMeasurementMode(MeasurementMode mode) {
         m_mMode = mode;
         writeRegisterA();
     }
 
     /**
      * Get the {@link MeasurementMode} being used.
+     *
      * @see MeasurementMode
      * @return the {@link MeasurementMode} being used.
      */
-    public MeasurementMode getMeasurementMode(){
+    public MeasurementMode getMeasurementMode() {
         return m_mMode;
     }
 
     /**
      * Set the {@link OutputRate} to used.
+     *
      * @see OutputRate
      * @param rate the {@link OutputRate} to used.
      */
-    public void setOutputRate(OutputRate rate){
+    public void setOutputRate(OutputRate rate) {
         m_rate = rate;
         writeRegisterA();
     }
 
     /**
      * Get the {@link OutputRate} being used.
+     *
      * @see OutputRate
      * @return the {@link OutputRate} being used.
      */
-    public OutputRate getOutputRate(){
+    public OutputRate getOutputRate() {
         return m_rate;
     }
 
     /**
      * Set the {@link Averaging} mode to use.
+     *
      * @see Averaging
      * @param avg the {@link Averaging} mode to use.
      */
-    public void setSamplesPerAverage(Averaging avg){
+    public void setSamplesPerAverage(Averaging avg) {
         m_averaging = avg;
         writeRegisterA();
     }
 
     /**
      * Get the {@link Averaging} mode being used.
+     *
      * @see Averaging
      * @return the {@link Averaging} mode being used.
      */
-    public Averaging getSamplesPerAverage(){
+    public Averaging getSamplesPerAverage() {
         return m_averaging;
     }
 
     /**
      * Set the {@link Gain} to use for measurement.
+     *
      * @see Gain
      * @param gain the {@link Gain} to use.
      */
-    public void setGain(Gain gain){
+    public void setGain(Gain gain) {
         m_gain = gain;
         writeRegisterB();
     }
 
     /**
      * Get the {@link Gain} used for measurements.
+     *
      * @see Gain
      * @return the {@link Gain} used for measurements.
      */
-    public Gain getGain(){
+    public Gain getGain() {
         return m_gain;
     }
 
     /**
      * Set the {@link OperatingMode} to run in.
+     *
      * @see OperatingMode
      * @param mode the {@link OperatingMode} to run in.
      */
-    public void setOperatingMode(OperatingMode mode){
+    public void setOperatingMode(OperatingMode mode) {
         m_oMode = mode;
         writeModeRegister();
     }
 
     /**
      * Get the {@link OperatingMode} being run.
+     *
      * @see OperatingMode
      * @return the {@link OperatingMode} being run.
      */
-    public OperatingMode getOperatingMode(){
+    public OperatingMode getOperatingMode() {
         return m_oMode;
     }
 
     /**
      * Set whether or not to use High Speed I2C mode (3400kHz)
+     *
      * @param highSpeed use high speed or not
      */
-    public void setUsingHighSpeed(boolean highSpeed){
+    public void setUsingHighSpeed(boolean highSpeed) {
         m_highSpeed = highSpeed;
         writeModeRegister();
     }
 
     /**
      * Get whether or not we are using High Speed I2C mode (3400kHz)
+     *
      * @return using high speed or not
      */
-    public boolean getUsingHighSpeed(){
+    public boolean getUsingHighSpeed() {
         return m_highSpeed;
     }
 
@@ -626,7 +655,7 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
      */
     @Override
     public void updateTable() {
-        if(m_table != null){
+        if (m_table != null) {
             m_table.putNumber("X Heading", getHeadingXDeg());
             m_table.putNumber("Y Heading", getHeadingYDeg());
             m_table.putNumber("Z Heading", getHeadingZDeg());
@@ -645,13 +674,15 @@ public class HMC5883L extends I2C implements SensorModule, LiveWindowSendable {
      * {@inheritDoc}
      */
     @Override
-    public void startLiveWindowMode() {}
+    public void startLiveWindowMode() {
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void stopLiveWindowMode() {}
+    public void stopLiveWindowMode() {
+    }
 
     /**
      * {@inheritDoc}

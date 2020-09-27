@@ -31,44 +31,45 @@ import io.github.robolib.nettable.ITable;
  *
  * @author noriah <vix@noriah.dev>
  */
-public class AnalogOutput extends AnalogIO implements Module,
-        LiveWindowSendable, NumberSink {
+public class AnalogOutput extends AnalogIO implements Module, LiveWindowSendable, NumberSink {
 
     private ITable m_table;
 
     private boolean m_disabled;
 
     /**
-     * Construct an analog output on a specified AnalogChannel
-     * channel.
+     * Construct an analog output on a specified AnalogChannel channel.
      *
      * @param channel The channel to represent.
      */
-    public AnalogOutput(AnalogChannel channel){
+    public AnalogOutput(AnalogChannel channel) {
         super(channel, Direction.OUT);
     }
 
     /**
      * Set the voltage of this Analog Output
+     *
      * @param voltage the voltage to set
      */
-    public void set(double voltage){
+    public void set(double voltage) {
         setVoltage(voltage);
     }
 
-    public void setVoltage(double voltage){
-        if(m_disabled) return;
+    public void setVoltage(double voltage) {
+        if (m_disabled)
+            return;
         IntBuffer status = allocateInt();
         AnalogJNI.setAnalogOutput(m_port, voltage, status);
         HALUtil.checkStatus(status);
     }
 
-    public double get(){
+    public double get() {
         return getVoltage();
     }
 
-    public double getVoltage(){
-        if(m_disabled) return 0.0D;
+    public double getVoltage() {
+        if (m_disabled)
+            return 0.0D;
         IntBuffer status = allocateInt();
         double value = AnalogJNI.getAnalogOutput(m_port, status);
         HALUtil.checkStatus(status);
@@ -79,7 +80,7 @@ public class AnalogOutput extends AnalogIO implements Module,
      * {@inheritDoc}
      */
     @Override
-    public final String getSmartDashboardType(){
+    public final String getSmartDashboardType() {
         return "Analog Output";
     }
 
@@ -96,8 +97,8 @@ public class AnalogOutput extends AnalogIO implements Module,
      * {@inheritDoc}
      */
     @Override
-    public final void updateTable(){
-        if(m_table != null){
+    public final void updateTable() {
+        if (m_table != null) {
             m_table.putNumber("Value", getVoltage());
         }
     }
@@ -112,8 +113,7 @@ public class AnalogOutput extends AnalogIO implements Module,
 
     /**
      * Analog Channels don't have to do anything special when entering the
-     * LiveWindow.
-     * {@inheritDoc}
+     * LiveWindow. {@inheritDoc}
      */
     @Override
     public void startLiveWindowMode() {
@@ -121,8 +121,7 @@ public class AnalogOutput extends AnalogIO implements Module,
 
     /**
      * Analog Channels don't have to do anything special when exiting the
-     * LiveWindow.
-     * {@inheritDoc}
+     * LiveWindow. {@inheritDoc}
      */
     @Override
     public void stopLiveWindowMode() {

@@ -35,7 +35,7 @@ public abstract class RobotMode {
     /**
      * Instantiates a new robot mode.
      */
-    protected RobotMode(){
+    protected RobotMode() {
         this(GameMode.NONE);
     }
 
@@ -44,7 +44,7 @@ public abstract class RobotMode {
      *
      * @param mode the mode
      */
-    protected RobotMode(GameMode mode){
+    protected RobotMode(GameMode mode) {
         this(mode, mode.getName(), false);
     }
 
@@ -54,21 +54,21 @@ public abstract class RobotMode {
      * @param mode the mode
      * @param name the name
      */
-    protected RobotMode(GameMode mode, String name){
+    protected RobotMode(GameMode mode, String name) {
         this(mode, mode.getAbbreviation() + ":" + name, false);
     }
 
     /**
      * Instantiates a new robot mode.
      *
-     * @param mode the mode
-     * @param name the name
+     * @param mode   the mode
+     * @param name   the name
      * @param active the active
      */
-    protected RobotMode(GameMode mode, String name, boolean active){
+    protected RobotMode(GameMode mode, String name, boolean active) {
         m_mode = mode;
         m_name = name;
-        if(active || !RoboLib.hasMode(mode))
+        if (active || !RoboLib.hasMode(mode))
             setActive();
         Logger.get(this, m_name);
     }
@@ -78,7 +78,7 @@ public abstract class RobotMode {
      *
      * @return the name
      */
-    public final String getName(){
+    public final String getName() {
         return m_name;
     }
 
@@ -87,7 +87,7 @@ public abstract class RobotMode {
      *
      * @return GameMode type
      */
-    public final GameMode getModeType(){
+    public final GameMode getModeType() {
         return m_mode;
     }
 
@@ -96,14 +96,14 @@ public abstract class RobotMode {
      *
      * @return is this the active RobotMode for its {@link GameMode}
      */
-    public final boolean getActive(){
+    public final boolean getActive() {
         return RoboLib.getRobotMode(m_mode).equals(this);
     }
 
     /**
      * Set this RobotMode as the active robot mode for its {@link GameMode}.
      */
-    public final void setActive(){
+    public final void setActive() {
         RoboLib.set(m_mode, this);
     }
 
@@ -112,17 +112,17 @@ public abstract class RobotMode {
      *
      * This calls the {@code init()} method when the mode changes.
      */
-    protected void modeInit(){
+    protected void modeInit() {
         init();
     }
 
     /**
      * The user initialization code for this mode.
      *
-     * This is called every time the mode changes.
-     * It is called before anything in {@code run()} is run.
+     * This is called every time the mode changes. It is called before anything in
+     * {@code run()} is run.
      */
-    protected void init(){
+    protected void init() {
 
     }
 
@@ -131,7 +131,7 @@ public abstract class RobotMode {
      *
      * This calls the {@code run()} method once every period.
      */
-    protected void modeRun(){
+    protected void modeRun() {
         NetworkCommunications.ObserveUserProgramDisabled();
         run();
     }
@@ -139,10 +139,10 @@ public abstract class RobotMode {
     /**
      * The user run code for this mode.
      *
-     * This is called every period.
-     * Every time the robot runs through a loop, this is called.
+     * This is called every period. Every time the robot runs through a loop, this
+     * is called.
      */
-    protected void run(){
+    protected void run() {
 
     }
 
@@ -151,19 +151,19 @@ public abstract class RobotMode {
      *
      * This calls the {@code end()} method when the mode changes.
      */
-    protected void modeEnd(){
+    protected void modeEnd() {
         end();
     }
 
     /**
      * The user end code for this mode.
      *
-     * This is called every time the mode changes.
-     * It is called before the mode changes.
+     * This is called every time the mode changes. It is called before the mode
+     * changes.
      *
      * Overload this to write your own end method.
      */
-    protected void end(){
+    protected void end() {
 
     }
 }

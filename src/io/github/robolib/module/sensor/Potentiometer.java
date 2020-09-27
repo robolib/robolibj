@@ -19,8 +19,7 @@ import io.github.robolib.identifier.AngleSource;
 import io.github.robolib.module.iface.AnalogInput;
 
 /**
- * Potentiometer Class.
- * Wraps the AnalogInput class.
+ * Potentiometer Class. Wraps the AnalogInput class.
  *
  * @author noriah <vix@noriah.dev>
  */
@@ -33,13 +32,13 @@ public class Potentiometer extends AnalogInput implements SensorModule, AngleSou
      * @param avgBits Number of Averaging Bits
      * @param ovrBits Number of Oversample Bits
      */
-    public Potentiometer(AnalogChannel channel, int avgBits, int ovrBits){
+    public Potentiometer(AnalogChannel channel, int avgBits, int ovrBits) {
         super(channel);
         setAverageBits(avgBits);
         setOversampleBits(ovrBits);
     }
 
-    public double getAngle(){
+    public double getAngle() {
         return 0.0;
     }
 

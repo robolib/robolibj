@@ -28,34 +28,36 @@ public class TableSender {
 
     private static TableSender m_instance;
 
-//    private static Vector<Sendable> m_userSends = new Vector<Sendable>();
+    // private static Vector<Sendable> m_userSends = new Vector<Sendable>();
     private static Vector<UpdatingSendable> m_framework = new Vector<UpdatingSendable>();
 
     private static boolean m_enabled = true;
 
-    public static final TableSender getInstance(){
+    public static final TableSender getInstance() {
         return m_instance == null ? m_instance = new TableSender() : m_instance;
     }
 
-    private TableSender(){}
-
-    public void runFramework(){
-        if(m_enabled) m_framework.forEach(UpdatingSendable::updateTable);
+    private TableSender() {
     }
 
-    public void runUser(){
+    public void runFramework() {
+        if (m_enabled)
+            m_framework.forEach(UpdatingSendable::updateTable);
+    }
+
+    public void runUser() {
 
     }
 
-    public static void setEnabled(boolean enabled){
+    public static void setEnabled(boolean enabled) {
         m_enabled = enabled;
     }
 
-//    public static void addSendable(Sendable sendable, String tableName){
-//
-//    }
+    // public static void addSendable(Sendable sendable, String tableName){
+    //
+    // }
 
-    public static void addFramework(UpdatingSendable sendable, String tableName){
+    public static void addFramework(UpdatingSendable sendable, String tableName) {
         sendable.initTable(Common.getTable(RoboLib.getRobotTable(), tableName));
         m_framework.addElement(sendable);
 

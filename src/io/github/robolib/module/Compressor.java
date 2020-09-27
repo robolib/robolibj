@@ -37,14 +37,13 @@ public final class Compressor implements Module, UpdatingSendable {
     private ITable m_table;
 
     /** The m_pcm_compressor. */
-    private static final ByteBuffer COMPRESSOR =
-            CompressorJNI.initializeCompressor((byte) 0);
+    private static final ByteBuffer COMPRESSOR = CompressorJNI.initializeCompressor((byte) 0);
 
     /** The Constant m_instance. */
     private static Compressor m_instance;
 
-    public static void initialize(){
-        if(m_instance != null)
+    public static void initialize() {
+        if (m_instance != null)
             throw new IllegalStateException("Compressor has already been initialized.");
         m_instance = new Compressor();
     }
@@ -54,16 +53,17 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return single instance of PCM
      */
-    public static Compressor getInstance(){
+    public static Compressor getInstance() {
         return m_instance;
     }
 
     /**
      * Instantiates a new pcm.
      */
-    private Compressor(){}
+    private Compressor() {
+    }
 
-    public void free(){
+    public void free() {
 
     }
 
@@ -72,7 +72,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the compressor current
      */
-    public static double getCompressorCurrent(){
+    public static double getCompressorCurrent() {
         IntBuffer status = allocateInt();
         float current = CompressorJNI.getCompressorCurrent(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -84,7 +84,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @param on the on
      */
-    public static void enableCompressor(boolean on){
+    public static void enableCompressor(boolean on) {
         IntBuffer status = allocateInt();
         CompressorJNI.setClosedLoopControl(COMPRESSOR, on, status);
         HALUtil.checkStatus(status);
@@ -95,7 +95,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the compressor enabled
      */
-    public static boolean getCompressorEnabled(){
+    public static boolean getCompressorEnabled() {
         IntBuffer status = allocateInt();
         boolean on = CompressorJNI.getClosedLoopControl(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -107,7 +107,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the pressure switch
      */
-    public static boolean getPressureSwitch(){
+    public static boolean getPressureSwitch() {
         IntBuffer status = allocateInt();
         boolean on = CompressorJNI.getPressureSwitch(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -119,7 +119,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the current fault
      */
-    public static boolean getCurrentFault(){
+    public static boolean getCurrentFault() {
         IntBuffer status = allocateInt();
         boolean retval = CompressorJNI.getCompressorCurrentTooHighFault(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -131,7 +131,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the current sticky fault
      */
-    public static boolean getCurrentStickyFault(){
+    public static boolean getCurrentStickyFault() {
         IntBuffer status = allocateInt();
         boolean retval = CompressorJNI.getCompressorCurrentTooHighStickyFault(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -143,7 +143,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the short fault
      */
-    public static boolean getShortFault(){
+    public static boolean getShortFault() {
         IntBuffer status = allocateInt();
         boolean retval = CompressorJNI.getCompressorShortedFault(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -155,7 +155,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the short sticky fault
      */
-    public static boolean getShortStickyFault(){
+    public static boolean getShortStickyFault() {
         IntBuffer status = allocateInt();
         boolean retval = CompressorJNI.getCompressorShortedStickyFault(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -167,7 +167,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the no connection fault
      */
-    public static boolean getNoConnectionFault(){
+    public static boolean getNoConnectionFault() {
         IntBuffer status = allocateInt();
         boolean retval = CompressorJNI.getCompressorNotConnectedFault(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -179,7 +179,7 @@ public final class Compressor implements Module, UpdatingSendable {
      *
      * @return the no connection sticky fault
      */
-    public static boolean getNoConnectionStickyFault(){
+    public static boolean getNoConnectionStickyFault() {
         IntBuffer status = allocateInt();
         boolean retval = CompressorJNI.getCompressorNotConnectedStickyFault(COMPRESSOR, status);
         HALUtil.checkStatus(status);
@@ -189,7 +189,7 @@ public final class Compressor implements Module, UpdatingSendable {
     /**
      * Clear compressor sticky faults.
      */
-    public static void clearCompressorStickyFaults(){
+    public static void clearCompressorStickyFaults() {
         IntBuffer status = allocateInt();
         CompressorJNI.clearAllPCMStickyFaults(COMPRESSOR, status);
         HALUtil.checkStatus(status);

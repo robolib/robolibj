@@ -15,6 +15,7 @@
 
 /**
  * Contains classes that can be used for sensor input.
+ *
  * @author noriah <vix@noriah.dev>
  */
 package io.github.robolib.module.sensor;

@@ -33,19 +33,19 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
 
     ByteBuffer m_pwmGenerator;
 
-    public DigitalOutput(DigitalChannel channel){
+    public DigitalOutput(DigitalChannel channel) {
         super(channel, Direction.OUT);
     }
 
     /**
-     * {@inheritDoc}
-     * Set the value of this DigitalOutput
+     * {@inheritDoc} Set the value of this DigitalOutput
+     *
      * @param value the value true = High, false = Low
      */
     @Override
-    public void setState(boolean value){
+    public void setState(boolean value) {
         IntBuffer status = allocateInt();
-        DIOJNI.setDIO(m_port, (short)(value?1:0), status);
+        DIOJNI.setDIO(m_port, (short) (value ? 1 : 0), status);
         HALUtil.checkStatus(status);
     }
 
@@ -55,7 +55,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * @param pulseLength The length of the pulse.
      */
-    public final void pulse(double pulseLength){
+    public final void pulse(double pulseLength) {
         IntBuffer status = allocateInt();
         DIOJNI.pulse(m_port, pulseLength, status);
         HALUtil.checkStatus(status);
@@ -67,7 +67,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * @return true if pulsing
      */
-    public final boolean isPulsing(){
+    public final boolean isPulsing() {
         IntBuffer status = allocateInt();
         boolean value = DIOJNI.isPulsing(m_port, status) != 0;
         HALUtil.checkStatus(status);
@@ -84,7 +84,7 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * @param rate The frequency to output all digital output PWM signals.
      */
-    public static final void setPWMRate(double rate){
+    public static final void setPWMRate(double rate) {
         IntBuffer status = allocateInt();
         PWMJNI.setPWMRate(rate, status);
         HALUtil.checkStatus(status);
@@ -95,16 +95,16 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * Allocate one of the 6 DO PWM generator resources.
      *
-     * Supply the initial duty-cycle to output so as to avoid a glitch when
-     * first starting.
+     * Supply the initial duty-cycle to output so as to avoid a glitch when first
+     * starting.
      *
-     * The resolution of the duty cycle is 8-bit for low frequencies (1kHz or
-     * less) but is reduced the higher the frequency of the PWM signal is.
+     * The resolution of the duty cycle is 8-bit for low frequencies (1kHz or less)
+     * but is reduced the higher the frequency of the PWM signal is.
      *
      * @param initialDutyCycle The duty-cycle to start generating. [0..1]
      */
-    public final void enablePWM(double initialDutyCycle){
-        if(m_pwmGenerator != null)
+    public final void enablePWM(double initialDutyCycle) {
+        if (m_pwmGenerator != null)
             return;
 
         IntBuffer status = allocateInt();
@@ -120,8 +120,8 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
      *
      * Free up one of the 6 DO PWM generator resources that were in use.
      */
-    public final void disablePWM(){
-        if(m_pwmGenerator == null)
+    public final void disablePWM() {
+        if (m_pwmGenerator == null)
             return;
 
         IntBuffer status = allocateInt();
@@ -134,13 +134,13 @@ public class DigitalOutput extends DigitalIO implements BooleanSink {
     /**
      * Change the duty-cycle that is being generated on the line.
      *
-     * The resolution of the duty cycle is 8-bit for low frequencies (1kHz or
-     * less) but is reduced the higher the frequency of the PWM signal is.
+     * The resolution of the duty cycle is 8-bit for low frequencies (1kHz or less)
+     * but is reduced the higher the frequency of the PWM signal is.
      *
      * @param dutyCycle The duty-cycle to change to. [0..1]
      */
-    public final void updateDutyCycle(double dutyCycle){
-        if(m_pwmGenerator == null)
+    public final void updateDutyCycle(double dutyCycle) {
+        if (m_pwmGenerator == null)
             return;
 
         IntBuffer status = allocateInt();

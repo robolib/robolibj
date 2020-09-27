@@ -39,43 +39,44 @@ public final class RoboRIO implements UpdatingSendable {
 
     private static final ButtonTrigger USER_BUTTON = () -> getUserButton();
 
-    public static void initialize(){
-        if(m_instance != null)
+    public static void initialize() {
+        if (m_instance != null)
             throw new IllegalStateException("RoboRIO already Initialized.");
         m_instance = new RoboRIO();
     }
 
-    public static final RoboRIO getInstance(){
+    public static final RoboRIO getInstance() {
         return m_instance;
     }
 
     /**
      * Instantiates a new robo rio.
      */
-    private RoboRIO(){}
+    private RoboRIO() {
+    }
 
-    public static int getFPGAVersion(){
+    public static int getFPGAVersion() {
         IntBuffer status = allocateInt();
         int value = HALUtil.getFPGAVersion(status);
         HALUtil.checkStatus(status);
         return value;
     }
 
-    public static long getFPGARevision(){
+    public static long getFPGARevision() {
         IntBuffer status = allocateInt();
         int value = HALUtil.getFPGARevision(status);
         HALUtil.checkStatus(status);
         return value;
     }
 
-    public static long getFPGATime(){
+    public static long getFPGATime() {
         IntBuffer status = allocateInt();
         long value = HALUtil.getFPGATime(status);
         HALUtil.checkStatus(status);
         return value;
     }
 
-    public static double getFPGATimestamp(){
+    public static double getFPGATimestamp() {
         return getFPGATime() / 1000000.0;
     }
 
@@ -84,14 +85,14 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return The User Button status
      */
-    public static boolean getUserButton(){
+    public static boolean getUserButton() {
         IntBuffer status = allocateInt();
         boolean value = HALUtil.getFPGAButton(status);
         HALUtil.checkStatus(status);
         return value;
     }
 
-    public static ButtonTrigger getUserButtonAsButton(){
+    public static ButtonTrigger getUserButtonAsButton() {
         return USER_BUTTON;
     }
 
@@ -100,7 +101,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return The Vin Voltage
      */
-    public static double getVoltage(){
+    public static double getVoltage() {
         IntBuffer status = allocateInt();
         double retVal = PowerJNI.getVinVoltage(status);
         HALUtil.checkStatus(status);
@@ -112,7 +113,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return The Vin Current
      */
-    public static double getCurrent(){
+    public static double getCurrent() {
         IntBuffer status = allocateInt();
         double retVal = PowerJNI.getVinCurrent(status);
         HALUtil.checkStatus(status);
@@ -120,11 +121,12 @@ public final class RoboRIO implements UpdatingSendable {
     }
 
     /**
-     * Return the Voltage used by the 3.3 Volt rail.
-     * This rail is used for I2C, SPI, Serial, and CAN?
+     * Return the Voltage used by the 3.3 Volt rail. This rail is used for I2C, SPI,
+     * Serial, and CAN?
+     *
      * @return The 3.3 rail voltage
      */
-    public static double get3V3Voltage(){
+    public static double get3V3Voltage() {
         IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserCurrent3V3(status);
         HALUtil.checkStatus(status);
@@ -132,11 +134,12 @@ public final class RoboRIO implements UpdatingSendable {
     }
 
     /**
-     * Return the Current used by the 3.3 Volt rail.
-     * This rail is used for I2C, SPI, Serial, and CAN?
+     * Return the Current used by the 3.3 Volt rail. This rail is used for I2C, SPI,
+     * Serial, and CAN?
+     *
      * @return The 3.3 rail current
      */
-    public static double get3V3Current(){
+    public static double get3V3Current() {
         IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserCurrent3V3(status);
         HALUtil.checkStatus(status);
@@ -148,7 +151,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the comms power enabled
      */
-    public static boolean get3V3PowerEnabled(){
+    public static boolean get3V3PowerEnabled() {
         IntBuffer status = allocateInt();
         boolean retVal = PowerJNI.getUserActive3V3(status);
         HALUtil.checkStatus(status);
@@ -160,7 +163,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the comms fault count
      */
-    public static int get3V3FaultCount(){
+    public static int get3V3FaultCount() {
         IntBuffer status = allocateInt();
         int retVal = PowerJNI.getUserCurrentFaults3V3(status);
         HALUtil.checkStatus(status);
@@ -172,7 +175,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the IO voltage
      */
-    public static double get5VVoltage(){
+    public static double get5VVoltage() {
         IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserVoltage5V(status);
         HALUtil.checkStatus(status);
@@ -184,7 +187,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the IO current
      */
-    public static double get5VCurrent(){
+    public static double get5VCurrent() {
         IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserCurrent5V(status);
         HALUtil.checkStatus(status);
@@ -196,7 +199,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the IO power enabled
      */
-    public static boolean get5VPowerEnabled(){
+    public static boolean get5VPowerEnabled() {
         IntBuffer status = allocateInt();
         boolean retVal = PowerJNI.getUserActive5V(status);
         HALUtil.checkStatus(status);
@@ -208,7 +211,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the IO fault count
      */
-    public static int get5VFaultCount(){
+    public static int get5VFaultCount() {
         IntBuffer status = allocateInt();
         int retVal = PowerJNI.getUserCurrentFaults5V(status);
         HALUtil.checkStatus(status);
@@ -220,7 +223,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the servo voltage
      */
-    public static double get6VVoltage(){
+    public static double get6VVoltage() {
         IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserVoltage6V(status);
         HALUtil.checkStatus(status);
@@ -232,7 +235,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the servo current
      */
-    public static double get6VCurrent(){
+    public static double get6VCurrent() {
         IntBuffer status = allocateInt();
         double retVal = PowerJNI.getUserCurrent6V(status);
         HALUtil.checkStatus(status);
@@ -244,7 +247,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the servo power enabled
      */
-    public static boolean get6VPowerEnabled(){
+    public static boolean get6VPowerEnabled() {
         IntBuffer status = allocateInt();
         boolean retVal = PowerJNI.getUserActive6V(status);
         HALUtil.checkStatus(status);
@@ -256,7 +259,7 @@ public final class RoboRIO implements UpdatingSendable {
      *
      * @return the servo fault count
      */
-    public static int get6VFaultCount(){
+    public static int get6VFaultCount() {
         IntBuffer status = allocateInt();
         int retVal = PowerJNI.getUserCurrentFaults6V(status);
         HALUtil.checkStatus(status);
@@ -291,11 +294,10 @@ public final class RoboRIO implements UpdatingSendable {
      * Update the table for this object with the latest values.
      */
     @Override
-    public void updateTable(){
+    public void updateTable() {
         m_table.putString("RIO Voltage", StringUtils.getNumber2DWithUnits(getVoltage(), "V"));
         m_table.putString("RIO Current", StringUtils.getNumber2DWithUnits(getCurrent(), "A"));
         m_table.putNumber("Volts", getVoltage());
-
 
         m_table.putString("3v3 Voltage", StringUtils.getNumber2DWithUnits(get3V3Voltage(), "V"));
         m_table.putString("3v3 Current", StringUtils.getNumber2DWithUnits(get3V3Current(), "A"));
@@ -306,7 +308,5 @@ public final class RoboRIO implements UpdatingSendable {
         m_table.putString("6v Voltage", StringUtils.getNumber2DWithUnits(get6VVoltage(), "V"));
         m_table.putString("6v Current", StringUtils.getNumber2DWithUnits(get6VCurrent(), "A"));
     }
-
-
 
 }

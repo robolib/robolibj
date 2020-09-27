@@ -24,6 +24,7 @@ public interface RateSource {
 
     /**
      * Returns the current rate of the source.
+     * 
      * @return current rate of sensor
      */
     double getRate();

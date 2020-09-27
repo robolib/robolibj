@@ -22,11 +22,11 @@ package io.github.robolib.command;
  */
 public abstract class ContinuousCommand extends Command {
 
-    public ContinuousCommand(){
+    public ContinuousCommand() {
         super();
     }
 
-    public ContinuousCommand(String name){
+    public ContinuousCommand(String name) {
         super(name);
     }
 
@@ -34,26 +34,29 @@ public abstract class ContinuousCommand extends Command {
      * {@inheritDoc}
      */
     @Override
-    protected void initialize() {}
+    protected void initialize() {
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean isFinished() { return false; }
+    protected boolean isFinished() {
+        return false;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void end() {}
+    protected void end() {
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void interrupted() {}
-
-
+    protected void interrupted() {
+    }
 
 }
