@@ -40,9 +40,7 @@ public class ServoMapper implements ModuleMapper<Servo> {
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[] {
-                "servo"
-        };
+        return new String[] { "servo" };
     }
 
 }

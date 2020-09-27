@@ -12,15 +12,15 @@ public class WrongEntryTypeException extends RuntimeException {
 
     /**
      * Creates a new TableKeyExistsWithDifferentTypeException
-     * 
-     * @param existingKey The name of the key which exists.
+     *
+     * @param existingKey  The name of the key which exists.
      * @param existingType The type of the key which exists.
      */
     public WrongEntryTypeException(String existingKey, NTEntryType existingType) {
         this(existingKey, existingType, "");
     }
-    
+
     public WrongEntryTypeException(String existingKey, NTEntryType existingType, String message) {
-        super("Illegal put - key '" + existingKey + "' exists with type '" + existingType + "'. "+message);
+        super("Illegal put - key '" + existingKey + "' exists with type '" + existingType + "'. " + message);
     }
 }

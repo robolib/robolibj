@@ -26,7 +26,7 @@ public class ChannelIndexException extends RuntimeException {
      */
     private static final long serialVersionUID = -6862051294773080694L;
 
-    public ChannelIndexException(String msg){
+    public ChannelIndexException(String msg) {
         super(msg);
     }
 

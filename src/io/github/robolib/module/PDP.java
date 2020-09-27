@@ -97,8 +97,8 @@ public final class PDP implements UpdatingSendable {
     /** The m_table. */
     private ITable m_table;
 
-    public static void initialize(){
-        if(m_instance != null)
+    public static void initialize() {
+        if (m_instance != null)
             throw new IllegalStateException("PDP already initialized.");
 
         m_instance = new PDP();
@@ -109,14 +109,15 @@ public final class PDP implements UpdatingSendable {
      *
      * @return single instance of PDP
      */
-    public static PDP getInstance(){
+    public static PDP getInstance() {
         return m_instance;
     }
 
     /**
      * Instantiates a PDP.
      */
-    private PDP(){}
+    private PDP() {
+    }
 
     /**
      * Gets the channel name.
@@ -124,7 +125,7 @@ public final class PDP implements UpdatingSendable {
      * @param channel the channel
      * @return the channel name
      */
-    public static String getChannelName(PowerChannel channel){
+    public static String getChannelName(PowerChannel channel) {
         return m_channelMap[channel.ordinal()];
     }
 
@@ -132,13 +133,12 @@ public final class PDP implements UpdatingSendable {
      * Sets the channel name.
      *
      * @param channel the channel
-     * @param name the name
+     * @param name    the name
      */
-    public static void claimChannel(PowerChannel channel, String name){
+    public static void claimChannel(PowerChannel channel, String name) {
 
-        if(m_channelMap[channel.ordinal()] != null)
-            throw new ResourceAllocationException("PDP channel '"
-                    + channel.name() + "' already claimed by '"
+        if (m_channelMap[channel.ordinal()] != null)
+            throw new ResourceAllocationException("PDP channel '" + channel.name() + "' already claimed by '"
                     + m_channelMap[channel.ordinal()] + "'.");
 
         m_channelMap[channel.ordinal()] = name;
@@ -149,7 +149,7 @@ public final class PDP implements UpdatingSendable {
      *
      * @return the voltage
      */
-    public static double getVoltage(){
+    public static double getVoltage() {
         return PDPJNI.getPDPVoltage(Common.allocateInt());
     }
 
@@ -158,7 +158,7 @@ public final class PDP implements UpdatingSendable {
      *
      * @return the temperature
      */
-    public static double getTemperature(){
+    public static double getTemperature() {
         return PDPJNI.getPDPTemperature(Common.allocateInt());
     }
 
@@ -168,8 +168,8 @@ public final class PDP implements UpdatingSendable {
      * @param channel the channel
      * @return the current
      */
-    public static double getCurrent(PowerChannel channel){
-        return PDPJNI.getPDPChannelCurrent((byte)channel.ordinal(), Common.allocateInt());
+    public static double getCurrent(PowerChannel channel) {
+        return PDPJNI.getPDPChannelCurrent((byte) channel.ordinal(), Common.allocateInt());
     }
 
     /**
@@ -178,8 +178,8 @@ public final class PDP implements UpdatingSendable {
      * @param channel the channel
      * @return the current
      */
-    private double getChannelCurrent(int channel){
-        return PDPJNI.getPDPChannelCurrent((byte)channel, Common.allocateInt());
+    private double getChannelCurrent(int channel) {
+        return PDPJNI.getPDPChannelCurrent((byte) channel, Common.allocateInt());
     }
 
     /**
@@ -187,7 +187,7 @@ public final class PDP implements UpdatingSendable {
      *
      * @return the total current
      */
-    public static double getTotalCurrent(){
+    public static double getTotalCurrent() {
         return PDPJNI.getPDPTotalCurrent(Common.allocateInt());
     }
 
@@ -196,7 +196,7 @@ public final class PDP implements UpdatingSendable {
      *
      * @return the total power
      */
-    public static double getTotalPower(){
+    public static double getTotalPower() {
         return PDPJNI.getPDPTotalPower(Common.allocateInt());
     }
 
@@ -205,21 +205,21 @@ public final class PDP implements UpdatingSendable {
      *
      * @return the total energy
      */
-    public static double getTotalEnergy(){
+    public static double getTotalEnergy() {
         return PDPJNI.getPDPTotalEnergy(Common.allocateInt());
     }
 
     /**
      * Reset total energy.
      */
-    public static void resetTotalEnergy(){
+    public static void resetTotalEnergy() {
         PDPJNI.resetPDPTotalEnergy(Common.allocateInt());
     }
 
     /**
      * Reset faults.
      */
-    public static void resetFaults(){
+    public static void resetFaults() {
         PDPJNI.clearPDPStickyFaults(Common.allocateInt());
     }
 
@@ -252,7 +252,7 @@ public final class PDP implements UpdatingSendable {
      */
     @Override
     public void updateTable() {
-        for(int i = 0; i < MAX_POWER_CHANNELS; i++){
+        for (int i = 0; i < MAX_POWER_CHANNELS; i++) {
             m_table.putNumber(m_channelMap[i], getChannelCurrent(i));
         }
 

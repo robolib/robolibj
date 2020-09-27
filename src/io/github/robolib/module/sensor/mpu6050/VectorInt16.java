@@ -1,5 +1,4 @@
 
-
 package io.github.robolib.module.sensor.mpu6050;
 
 /**
@@ -25,7 +24,7 @@ public class VectorInt16 {
     }
 
     public double getMagnitude() {
-        return Math.sqrt(x*x + y*y + z*z);
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     public void normalize() {
@@ -45,13 +44,15 @@ public class VectorInt16 {
         // http://www.cprogramming.com/tutorial/3d/quaternions.html
         // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/index.htm
         // http://content.gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation
-        // ^ or: http://webcache.googleusercontent.com/search?q=cache:xgJAp3bDNhQJ:content.gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation&hl=en&gl=us&strip=1
+        // ^ or:
+        // http://webcache.googleusercontent.com/search?q=cache:xgJAp3bDNhQJ:content.gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation&hl=en&gl=us&strip=1
 
         // P_out = q * P_in * conj(q)
         // - P_out is the output vector
         // - q is the orientation quaternion
         // - P_in is the input vector (a*aReal)
-        // - conj(q) is the conjugate of the orientation quaternion (q=[w,x,y,z], q*=[w,-x,-y,-z])
+        // - conj(q) is the conjugate of the orientation quaternion (q=[w,x,y,z],
+        // q*=[w,-x,-y,-z])
         Quaternion p = new Quaternion(0, x, y, z);
 
         // quaternion multiplication: q * p, stored back in p

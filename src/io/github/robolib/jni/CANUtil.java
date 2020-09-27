@@ -33,26 +33,25 @@ public class CANUtil {
     static final int ERR_CANSessionMux_NotAllowed = -44088;
     static final int ERR_CANSessionMux_NotInitialized = -44089;
 
-    public static void checkStatus(int status, int messageID) throws
-    CANInvalidBufferException, CANMessageNotAllowedException,
-    CANNotInitializedException {
+    public static void checkStatus(int status, int messageID)
+            throws CANInvalidBufferException, CANMessageNotAllowedException, CANNotInitializedException {
         switch (status) {
-        case NIRioStatus.kRioStatusSuccess:
-            return;
-        case ERR_CANSessionMux_InvalidBuffer:
-        case NIRioStatus.kRIOStatusBufferInvalidSize:
-            throw new CANInvalidBufferException();
-        case ERR_CANSessionMux_MessageNotFound:
-        case NIRioStatus.kRIOStatusOperationTimedOut:
-            throw new CANMessageNotFoundException();
-        case ERR_CANSessionMux_NotAllowed:
-        case NIRioStatus.kRIOStatusFeatureNotSupported:
-            throw new CANMessageNotAllowedException("MessageID = " + Integer.toString(messageID));
-        case ERR_CANSessionMux_NotInitialized:
-        case NIRioStatus.kRIOStatusResourceNotInitialized:
-            throw new CANNotInitializedException();
-        default:
-            throw new RuntimeException("Fatal status code detected:  " + Integer.toString(status));
+            case NIRioStatus.kRioStatusSuccess:
+                return;
+            case ERR_CANSessionMux_InvalidBuffer:
+            case NIRioStatus.kRIOStatusBufferInvalidSize:
+                throw new CANInvalidBufferException();
+            case ERR_CANSessionMux_MessageNotFound:
+            case NIRioStatus.kRIOStatusOperationTimedOut:
+                throw new CANMessageNotFoundException();
+            case ERR_CANSessionMux_NotAllowed:
+            case NIRioStatus.kRIOStatusFeatureNotSupported:
+                throw new CANMessageNotAllowedException("MessageID = " + Integer.toString(messageID));
+            case ERR_CANSessionMux_NotInitialized:
+            case NIRioStatus.kRIOStatusResourceNotInitialized:
+                throw new CANNotInitializedException();
+            default:
+                throw new RuntimeException("Fatal status code detected:  " + Integer.toString(status));
         }
     }
 }

@@ -23,4 +23,3 @@ public class SWIGTYPE_Adapter {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 }
-

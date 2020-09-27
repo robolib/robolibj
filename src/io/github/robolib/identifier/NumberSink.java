@@ -28,15 +28,16 @@ public interface NumberSink {
 
     /**
      * Set the value of this sink
+     *
      * @param value new value
      */
     void set(double value);
 
-    public default void bindValue(NumberSource source){
+    public default void bindValue(NumberSource source) {
         Scheduler.addBind(() -> set(source.get()));
     }
 
-    public default void bindValue(DoubleSupplier source){
+    public default void bindValue(DoubleSupplier source) {
         Scheduler.addBind(() -> set(source.getAsDouble()));
     }
 

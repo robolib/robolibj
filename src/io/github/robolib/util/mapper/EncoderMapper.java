@@ -40,9 +40,7 @@ public class EncoderMapper implements ModuleMapper<Encoder> {
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "encoder"
-        };
+        return new String[] { "encoder" };
     }
 
 }

@@ -29,7 +29,7 @@ public abstract class TeleopMode extends RobotMode {
     /**
      * Constructor for a Tele-Operative Robot mode.
      */
-    protected TeleopMode(){
+    protected TeleopMode() {
         super(GameMode.TELEOP);
     }
 
@@ -38,17 +38,17 @@ public abstract class TeleopMode extends RobotMode {
      *
      * @param name The name for this Teleop mode
      */
-    protected TeleopMode(String name){
+    protected TeleopMode(String name) {
         super(GameMode.TELEOP, name);
     }
 
     /**
      * Constructor for a Tele-Operative Robot mode.
      *
-     * @param name The name for this Teleop mode
+     * @param name   The name for this Teleop mode
      * @param active Set this mode as the active mode by default
      */
-    protected TeleopMode(String name, boolean active){
+    protected TeleopMode(String name, boolean active) {
         super(GameMode.TELEOP, name, active);
     }
 
@@ -56,7 +56,7 @@ public abstract class TeleopMode extends RobotMode {
      * {@inheritDoc}
      */
     @Override
-    protected final void modeRun(){
+    protected final void modeRun() {
         NetworkCommunications.ObserveUserProgramTeleop();
         run();
         Scheduler.run();

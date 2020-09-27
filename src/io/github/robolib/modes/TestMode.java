@@ -29,7 +29,7 @@ public abstract class TestMode extends RobotMode {
     /**
      * Constructor for a Test Robot mode.
      */
-    protected TestMode(){
+    protected TestMode() {
         super(GameMode.TEST);
     }
 
@@ -38,17 +38,17 @@ public abstract class TestMode extends RobotMode {
      *
      * @param name The name for this Test mode
      */
-    protected TestMode(String name){
+    protected TestMode(String name) {
         super(GameMode.TEST, name);
     }
 
     /**
      * Constructor for a Test Robot mode.
      *
-     * @param name The name for this Test mode
+     * @param name   The name for this Test mode
      * @param active Set this mode as the active mode by default
      */
-    protected TestMode(String name, boolean active){
+    protected TestMode(String name, boolean active) {
         super(GameMode.TEST, name, active);
     }
 
@@ -56,7 +56,7 @@ public abstract class TestMode extends RobotMode {
      * {@inheritDoc}
      */
     @Override
-    protected final void modeInit(){
+    protected final void modeInit() {
         LiveWindow.setEnabled(true);
         init();
     }
@@ -65,7 +65,7 @@ public abstract class TestMode extends RobotMode {
      * {@inheritDoc}
      */
     @Override
-    protected final void modeRun(){
+    protected final void modeRun() {
         NetworkCommunications.ObserveUserProgramTest();
         run();
     }
@@ -74,7 +74,7 @@ public abstract class TestMode extends RobotMode {
      * {@inheritDoc}
      */
     @Override
-    protected final void modeEnd(){
+    protected final void modeEnd() {
         LiveWindow.setEnabled(false);
         end();
     }

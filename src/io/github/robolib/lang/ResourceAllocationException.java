@@ -22,7 +22,6 @@ package io.github.robolib.lang;
  */
 public class ResourceAllocationException extends RuntimeException {
 
-
     private static final long serialVersionUID = -6451386153566418315L;
 
     /**
@@ -30,7 +29,7 @@ public class ResourceAllocationException extends RuntimeException {
      *
      * @param msg the msg
      */
-    public ResourceAllocationException(String msg){
+    public ResourceAllocationException(String msg) {
         super(msg);
     }
 }

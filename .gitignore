@@ -1,6 +1,8 @@
 # Java Build Files #
 *.class
 
+.DS_Store
+
 # Package Files #
 *.jar
 *.war

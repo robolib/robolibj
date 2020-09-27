@@ -27,44 +27,76 @@ import io.github.robolib.modes.TestMode;
  */
 public abstract class SimpleRobot extends RoboLib {
 
-    protected SimpleRobot(){
+    protected SimpleRobot() {
         super();
         initModes();
     }
 
-    protected SimpleRobot(String name){
+    protected SimpleRobot(String name) {
         super(name);
         initModes();
     }
 
-    protected SimpleRobot(String name, String version){
+    protected SimpleRobot(String name, String version) {
         super(name, version);
         initModes();
     }
 
-    private final void initModes(){
-        new DisabledMode(){
-            protected void init(){ disabledInit(); }
-            protected void run(){ disabledPeriodic(); }
-            protected void end(){ disabledEnd(); }
+    private final void initModes() {
+        new DisabledMode() {
+            protected void init() {
+                disabledInit();
+            }
+
+            protected void run() {
+                disabledPeriodic();
+            }
+
+            protected void end() {
+                disabledEnd();
+            }
         };
 
-        new TestMode(){
-            protected void init(){ testInit(); }
-            protected void run(){ testPeriodic(); }
-            protected void end(){ testEnd(); }
+        new TestMode() {
+            protected void init() {
+                testInit();
+            }
+
+            protected void run() {
+                testPeriodic();
+            }
+
+            protected void end() {
+                testEnd();
+            }
         };
 
-        new AutonMode(){
-            protected void init(){ autonomousInit(); }
-            protected void run(){ autonomousPeriodic(); }
-            protected void end(){ autonomousEnd(); }
+        new AutonMode() {
+            protected void init() {
+                autonomousInit();
+            }
+
+            protected void run() {
+                autonomousPeriodic();
+            }
+
+            protected void end() {
+                autonomousEnd();
+            }
         };
 
-        new TeleopMode(){
-            protected void init(){ teleopInit(); }
-            protected void run(){ teleopPeriodic(); }
-            protected void end(){ teleopEnd(); }
+        new TeleopMode() {
+            protected void init() {
+                teleopInit();
+            }
+
+            protected void run() {
+                teleopPeriodic();
+            }
+
+            protected void end() {
+                teleopEnd();
+            }
         };
     }
 

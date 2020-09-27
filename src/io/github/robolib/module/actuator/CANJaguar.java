@@ -24,13 +24,12 @@ import io.github.robolib.util.Timer;
 import io.github.robolib.util.log.Logger;
 
 /**
- * Texas Instruments Jaguar Speed Controller as a CAN device. 
+ * Texas Instruments Jaguar Speed Controller as a CAN device.
  *
  * @author Thomas Clark
  */
-public final class CANJaguar implements ActuatorModule, ControllerModule,
-        SpeedController, MotorSafety, RateSource, LiveWindowSendable {
-
+public final class CANJaguar
+        implements ActuatorModule, ControllerModule, SpeedController, MotorSafety, RateSource, LiveWindowSendable {
 
     public static final int kMaxMessageDataSize = 8;
 
@@ -40,34 +39,45 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
     private MotorSafetyHelper m_safetyHelper;
 
-    private static final int kFullMessageIDMask = CANJNI.CAN_MSGID_API_M | CANJNI.CAN_MSGID_MFR_M | CANJNI.CAN_MSGID_DTYPE_M;
+    private static final int kFullMessageIDMask = CANJNI.CAN_MSGID_API_M | CANJNI.CAN_MSGID_MFR_M
+            | CANJNI.CAN_MSGID_DTYPE_M;
     private static final int kSendMessagePeriod = 20;
 
     private static BitSet m_allocated = new BitSet(64);
-    
+
     // Control Mode tags
-    private static class EncoderTag {};
-    /** Sets an encoder as the speed reference only. <br> Passed as the "tag" when setting the control mode.*/
+    private static class EncoderTag {
+    };
+
+    /**
+     * Sets an encoder as the speed reference only. <br>
+     * Passed as the "tag" when setting the control mode.
+     */
     public final static EncoderTag kEncoder = new EncoderTag();
 
-    private static class QuadEncoderTag {};
-    /** Sets a quadrature encoder as the position and speed reference. <br> Passed as the "tag" when setting the control mode.*/
+    private static class QuadEncoderTag {
+    };
+
+    /**
+     * Sets a quadrature encoder as the position and speed reference. <br>
+     * Passed as the "tag" when setting the control mode.
+     */
     public final static QuadEncoderTag kQuadEncoder = new QuadEncoderTag();
 
-    private static class PotentiometerTag {};
-    /** Sets a potentiometer as the position reference only. <br> Passed as the "tag" when setting the control mode. */
-    public final static PotentiometerTag kPotentiometer = new PotentiometerTag();
+    private static class PotentiometerTag {
+    };
 
+    /**
+     * Sets a potentiometer as the position reference only. <br>
+     * Passed as the "tag" when setting the control mode.
+     */
+    public final static PotentiometerTag kPotentiometer = new PotentiometerTag();
 
     /**
      * Mode determines how the Jaguar is controlled, used internally.
      */
     public enum ControlMode {
-        PercentVbus,
-        Current,
-        Speed,
-        Position,
-        Voltage;
+        PercentVbus, Current, Speed, Position, Voltage;
     }
 
     public static final int kCurrentFault = 1;
@@ -89,31 +99,35 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         Jumper,
         /** Stop the motor's rotation by applying a force. */
         Brake,
-        /** Do not attempt to stop the motor. Instead allow it to coast to a stop without applying resistance. */
+        /**
+         * Do not attempt to stop the motor. Instead allow it to coast to a stop without
+         * applying resistance.
+         */
         Coast;
     }
 
-
     /**
-     * Determines which sensor to use for position reference.
-     * Limit switches will always be used to limit the rotation. This can not be disabled.
+     * Determines which sensor to use for position reference. Limit switches will
+     * always be used to limit the rotation. This can not be disabled.
      */
     public enum LimitMode {
         /**
-         * Disables the soft position limits and only uses the limit switches to limit rotation.
+         * Disables the soft position limits and only uses the limit switches to limit
+         * rotation.
+         *
          * @see CANJaguar#getForwardLimitOK()
          * @see CANJaguar#getReverseLimitOK()
          */
         SwitchInputsOnly,
         /**
-         * Enables the soft position limits on the Jaguar.
-         * These will be used in addition to the limit switches. This does not disable the behavior
-         * of the limit switch input.
+         * Enables the soft position limits on the Jaguar. These will be used in
+         * addition to the limit switches. This does not disable the behavior of the
+         * limit switch input.
+         *
          * @see CANJaguar#configSoftPositionLimits(double, double)
          */
         SoftPositionLimits;
     }
-
 
     private byte m_deviceNumber;
     private double m_value = 0.0f;
@@ -136,7 +150,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     private float m_faultTime = 0.0f;
 
     private String m_description;
-    
+
     // Which parameters have been verified since they were last set?
     private boolean m_controlModeVerified = true;
     private boolean m_speedRefVerified = true;
@@ -161,25 +175,24 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     private double m_temperature = 0.0f;
     private double m_position = 0.0;
     private double m_speed = 0.0;
-    private byte m_limits = (byte)0;
-    private short m_faults = (short)0;
+    private byte m_limits = (byte) 0;
+    private short m_faults = (short) 0;
     private int m_firmwareVersion = 0;
-    private byte m_hardwareVersion = (byte)0;
+    private byte m_hardwareVersion = (byte) 0;
     private boolean m_inverted;
 
     // Which periodic status messages have we received at least once?
     private boolean m_receivedStatusMessage0 = false;
     private boolean m_receivedStatusMessage1 = false;
     private boolean m_receivedStatusMessage2 = false;
-    
+
     private ITable m_table = null;
     private ITableListener m_listener = null;
-    
-    
+
     /**
      * Constructor for the CANJaguar device.<br>
-     * By default the device is configured in Percent mode.
-     * The control mode can be changed by calling one of the control modes listed below.
+     * By default the device is configured in Percent mode. The control mode can be
+     * changed by calling one of the control modes listed below.
      *
      * @param deviceNumber The address of the Jaguar on the CAN bus.
      * @see CANJaguar#setCurrentMode(double, double, double)
@@ -199,17 +212,17 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * @see CANJaguar#setVoltageMode(EncoderTag, int)
      * @see CANJaguar#setVoltageMode(QuadEncoderTag, int)
      */
-    public CANJaguar(int deviceNumber){
+    public CANJaguar(int deviceNumber) {
         this(deviceNumber, "CANJaguar ID " + deviceNumber, null);
     }
-    
+
     /**
      * Constructor for the CANJaguar device.<br>
-     * By default the device is configured in Percent mode.
-     * The control mode can be changed by calling one of the control modes listed below.
+     * By default the device is configured in Percent mode. The control mode can be
+     * changed by calling one of the control modes listed below.
      *
      * @param deviceNumber The address of the Jaguar on the CAN bus.
-     * @param desc The description of this CANJaguar
+     * @param desc         The description of this CANJaguar
      * @see CANJaguar#setCurrentMode(double, double, double)
      * @see CANJaguar#setCurrentMode(PotentiometerTag, double, double, double)
      * @see CANJaguar#setCurrentMode(EncoderTag, int, double, double, double)
@@ -227,18 +240,18 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * @see CANJaguar#setVoltageMode(EncoderTag, int)
      * @see CANJaguar#setVoltageMode(QuadEncoderTag, int)
      */
-    public CANJaguar(int deviceNumber, String desc){
+    public CANJaguar(int deviceNumber, String desc) {
         this(deviceNumber, desc, null);
     }
-    
+
     /**
      * Constructor for the CANJaguar device.<br>
-     * By default the device is configured in Percent mode.
-     * The control mode can be changed by calling one of the control modes listed below.
+     * By default the device is configured in Percent mode. The control mode can be
+     * changed by calling one of the control modes listed below.
      *
      * @param deviceNumber The address of the Jaguar on the CAN bus.
-     * @param desc The description of this CANJaguar
-     * @param pwChannel the PowerChannel this is running on.
+     * @param desc         The description of this CANJaguar
+     * @param pwChannel    the PowerChannel this is running on.
      * @see CANJaguar#setCurrentMode(double, double, double)
      * @see CANJaguar#setCurrentMode(PotentiometerTag, double, double, double)
      * @see CANJaguar#setCurrentMode(EncoderTag, int, double, double, double)
@@ -257,13 +270,14 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * @see CANJaguar#setVoltageMode(QuadEncoderTag, int)
      */
     public CANJaguar(int deviceNumber, String desc, PowerChannel pwChannel) {
-        if(m_allocated.get(deviceNumber)) throw new ResourceAllocationException("CAN Jaguar allready allocated");
-        
+        if (m_allocated.get(deviceNumber))
+            throw new ResourceAllocationException("CAN Jaguar allready allocated");
+
         m_description = desc;
-        
+
         m_allocated.set(deviceNumber);
-        
-        m_deviceNumber = (byte)deviceNumber;
+
+        m_deviceNumber = (byte) deviceNumber;
         m_controlMode = ControlMode.PercentVbus;
 
         m_safetyHelper = new MotorSafetyHelper(this);
@@ -276,32 +290,29 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         requestMessage(CANJNI.LM_API_HWVER);
 
         // Wait until we've gotten all of the status data at least once.
-        for(int i = 0; i < kReceiveStatusAttempts; i++){
+        for (int i = 0; i < kReceiveStatusAttempts; i++) {
             Timer.delay(0.001);
 
             setupPeriodicStatus();
             updatePeriodicStatus();
 
-            if(!receivedFirmwareVersion) {
+            if (!receivedFirmwareVersion) {
                 try {
                     getMessage(CANJNI.CAN_MSGID_API_FIRMVER, CANJNI.CAN_MSGID_FULL_M, data);
                     m_firmwareVersion = unpackINT32(data);
                     receivedFirmwareVersion = true;
-                } catch(CANMessageNotFoundException e) {}
+                } catch (CANMessageNotFoundException e) {
+                }
             }
 
-            if(m_receivedStatusMessage0 &&
-            m_receivedStatusMessage1 &&
-            m_receivedStatusMessage2 &&
-            receivedFirmwareVersion) {
+            if (m_receivedStatusMessage0 && m_receivedStatusMessage1 && m_receivedStatusMessage2
+                    && receivedFirmwareVersion) {
                 break;
             }
         }
 
-        if(!m_receivedStatusMessage0 ||
-        !m_receivedStatusMessage1 ||
-        !m_receivedStatusMessage2 ||
-        !receivedFirmwareVersion) {
+        if (!m_receivedStatusMessage0 || !m_receivedStatusMessage1 || !m_receivedStatusMessage2
+                || !receivedFirmwareVersion) {
             /* Free the resource */
             free();
             throw new CANMessageNotFoundException();
@@ -310,29 +321,31 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         try {
             getMessage(CANJNI.LM_API_HWVER, CANJNI.CAN_MSGID_FULL_M, data);
             m_hardwareVersion = data[0];
-        } catch(CANMessageNotFoundException e) {
+        } catch (CANMessageNotFoundException e) {
             // Not all Jaguar firmware reports a hardware version.
             m_hardwareVersion = 0;
         }
-        
+
         // 3330 was the first shipping RDK firmware version for the Jaguar
-        if (m_firmwareVersion >= 3330 || m_firmwareVersion < 108){
-            if (m_firmwareVersion < 3330){
-                Logger.get(CANJaguar.class).error("Jag " + m_deviceNumber + " firmware " + m_firmwareVersion + " is too old (must be at least version 108 of the FIRST approved firmware)");
-            }else{
-                Logger.get(CANJaguar.class).error("Jag" + m_deviceNumber + " firmware " + m_firmwareVersion +  " is not FIRST approved (must be at least version 108 of the FIRST approved firmware)");
+        if (m_firmwareVersion >= 3330 || m_firmwareVersion < 108) {
+            if (m_firmwareVersion < 3330) {
+                Logger.get(CANJaguar.class).error("Jag " + m_deviceNumber + " firmware " + m_firmwareVersion
+                        + " is too old (must be at least version 108 of the FIRST approved firmware)");
+            } else {
+                Logger.get(CANJaguar.class).error("Jag" + m_deviceNumber + " firmware " + m_firmwareVersion
+                        + " is not FIRST approved (must be at least version 108 of the FIRST approved firmware)");
             }
             return;
         }
-        
-        if(pwChannel != null){
+
+        if (pwChannel != null) {
             PDP.claimChannel(pwChannel, desc);
         }
-        
-        m_listener = (ITable table, String key,
-                Object value, boolean isNew) -> {
+
+        m_listener = (ITable table, String key, Object value, boolean isNew) -> {
             if (key.equals("p") || key.equals("d") || key.equals("d")) {
-                if (getP() != table.getNumber("p", 0.0) || getI() != table.getNumber("i", 0.0) || getD() != table.getNumber("d", 0.0))
+                if (getP() != table.getNumber("p", 0.0) || getI() != table.getNumber("i", 0.0)
+                        || getD() != table.getNumber("d", 0.0))
                     setPID(table.getNumber("p", 0.0), table.getNumber("i", 0.0), table.getNumber("d", 0.0));
             } else if (key.equals("setpoint")) {
                 if (get() != ((Double) value).doubleValue())
@@ -350,8 +363,8 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Cancel periodic messages to the Jaguar, effectively disabling it.
-     * No other methods should be called after this is called.
+     * Cancel periodic messages to the Jaguar, effectively disabling it. No other
+     * methods should be called after this is called.
      */
     public void free() {
         m_safetyHelper = null;
@@ -359,36 +372,35 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         IntBuffer status = allocateInt();
         status.put(0, 0);
 
-        int messageID ;
+        int messageID;
 
         // Disable periodic setpoints
-        switch(m_controlMode) {
-        case PercentVbus:
-            messageID = m_deviceNumber | CANJNI.LM_API_VOLT_T_SET;
-            break;
+        switch (m_controlMode) {
+            case PercentVbus:
+                messageID = m_deviceNumber | CANJNI.LM_API_VOLT_T_SET;
+                break;
 
-        case Speed:
-            messageID = m_deviceNumber | CANJNI.LM_API_SPD_T_SET;
-            break;
+            case Speed:
+                messageID = m_deviceNumber | CANJNI.LM_API_SPD_T_SET;
+                break;
 
-        case Position:
-            messageID = m_deviceNumber | CANJNI.LM_API_POS_T_SET;
-            break;
+            case Position:
+                messageID = m_deviceNumber | CANJNI.LM_API_POS_T_SET;
+                break;
 
-        case Current:
-            messageID = m_deviceNumber | CANJNI.LM_API_ICTRL_T_SET;
-            break;
+            case Current:
+                messageID = m_deviceNumber | CANJNI.LM_API_ICTRL_T_SET;
+                break;
 
-        case Voltage:
-            messageID = m_deviceNumber | CANJNI.LM_API_VCOMP_T_SET;
-            break;
+            case Voltage:
+                messageID = m_deviceNumber | CANJNI.LM_API_VCOMP_T_SET;
+                break;
 
-        default:
-            return;
+            default:
+                return;
         }
 
-        CANJNI.CANSessionMuxSendMessage(messageID, null,
-            CANJNI.CAN_SEND_PERIOD_STOP_REPEATING, status);
+        CANJNI.CANSessionMuxSendMessage(messageID, null, CANJNI.CAN_SEND_PERIOD_STOP_REPEATING, status);
 
         configMaxOutputVoltage(kApproxBusVoltage);
     }
@@ -396,7 +408,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * @return The CAN ID passed in the constructor
      */
-    int getDeviceNumber(){
+    int getDeviceNumber() {
         return m_deviceNumber;
     }
 
@@ -404,7 +416,8 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * Get the recently set outputValue set point.
      *
      * The scale and the units depend on the mode the Jaguar is in.<br>
-     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM Jaguar).<br>
+     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM
+     * Jaguar).<br>
      * In voltage mode, the outputValue is in volts.<br>
      * In current mode, the outputValue is in amps.<br>
      * In speed mode, the outputValue is in rotations/minute.<br>
@@ -415,13 +428,13 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     public double get() {
         return m_value;
     }
-    
+
     /**
-     * {@inheritDoc}
-     * Get the recently set outputValue set point.
+     * {@inheritDoc} Get the recently set outputValue set point.
      *
      * The scale and the units depend on the mode the Jaguar is in.<br>
-     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM Jaguar).<br>
+     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM
+     * Jaguar).<br>
      * In voltage mode, the outputValue is in volts.<br>
      * In current mode, the outputValue is in amps.<br>
      * In speed mode, the outputValue is in rotations/minute.<br>
@@ -438,14 +451,16 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * Sets the output set-point value.
      *
      * The scale and the units depend on the mode the Jaguar is in.<br>
-     * In percentVbus Mode, the outputValue is from -1.0 to 1.0 (same as PWM Jaguar).<br>
+     * In percentVbus Mode, the outputValue is from -1.0 to 1.0 (same as PWM
+     * Jaguar).<br>
      * In voltage Mode, the outputValue is in volts. <br>
      * In current Mode, the outputValue is in amps.<br>
      * In speed mode, the outputValue is in rotations/minute.<br>
      * In position Mode, the outputValue is in rotations.
      *
      * @param outputValue The set-point to sent to the motor controller.
-     * @param syncGroup The update group to add this set() to, pending UpdateSyncGroup().  If 0, update immediately.
+     * @param syncGroup   The update group to add this set() to, pending
+     *                    UpdateSyncGroup(). If 0, update immediately.
      */
     @Override
     public void set(double outputValue, byte syncGroup) {
@@ -453,39 +468,38 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         byte[] data = new byte[8];
         byte dataSize;
 
-        if(m_controlEnabled) {
-            switch(m_controlMode) {
-            case PercentVbus:
-                messageID = CANJNI.LM_API_VOLT_T_SET;
-                dataSize = packPercentage(data, m_inverted ? -outputValue : outputValue);
-                break; 
+        if (m_controlEnabled) {
+            switch (m_controlMode) {
+                case PercentVbus:
+                    messageID = CANJNI.LM_API_VOLT_T_SET;
+                    dataSize = packPercentage(data, m_inverted ? -outputValue : outputValue);
+                    break;
 
-            case Speed:
-                messageID = CANJNI.LM_API_SPD_T_SET;
-                dataSize = packFXP16_16(data, outputValue);
-                break;
+                case Speed:
+                    messageID = CANJNI.LM_API_SPD_T_SET;
+                    dataSize = packFXP16_16(data, outputValue);
+                    break;
 
-            case Position:
-                messageID = CANJNI.LM_API_POS_T_SET;
-                dataSize = packFXP16_16(data, outputValue);
-                break;
+                case Position:
+                    messageID = CANJNI.LM_API_POS_T_SET;
+                    dataSize = packFXP16_16(data, outputValue);
+                    break;
 
-            case Current:
-                messageID = CANJNI.LM_API_ICTRL_T_SET;
-                dataSize = packFXP8_8(data, outputValue);
-                break;
+                case Current:
+                    messageID = CANJNI.LM_API_ICTRL_T_SET;
+                    dataSize = packFXP8_8(data, outputValue);
+                    break;
 
+                case Voltage:
+                    messageID = CANJNI.LM_API_VCOMP_T_SET;
+                    dataSize = packFXP8_8(data, outputValue);
+                    break;
 
-            case Voltage:
-                messageID = CANJNI.LM_API_VCOMP_T_SET;
-                dataSize = packFXP8_8(data, outputValue);
-                break;
-
-            default:
-                return;
+                default:
+                    return;
             }
 
-            if(syncGroup != 0) {
+            if (syncGroup != 0) {
                 data[dataSize++] = syncGroup;
             }
 
@@ -503,38 +517,37 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * Sets the output set-point value.
      *
      * The scale and the units depend on the mode the Jaguar is in.<br>
-     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM Jaguar).<br>
+     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM
+     * Jaguar).<br>
      * In voltage mode, the outputValue is in volts. <br>
      * In current mode, the outputValue is in amps. <br>
      * In speed mode, the outputValue is in rotations/minute.<br>
      * In position mode, the outputValue is in rotations.
      *
-     * @param value
-     *            The set-point to sent to the motor controller.
+     * @param value The set-point to sent to the motor controller.
      */
     public void set(double value) {
-        set(value, (byte)0);
+        set(value, (byte) 0);
     }
 
     /**
-     * {@inheritDoc}
-     * Sets the output set-point value.
+     * {@inheritDoc} Sets the output set-point value.
      *
      * The scale and the units depend on the mode the Jaguar is in.<br>
-     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM Jaguar).<br>
+     * In percentVbus mode, the outputValue is from -1.0 to 1.0 (same as PWM
+     * Jaguar).<br>
      * In voltage mode, the outputValue is in volts. <br>
      * In current mode, the outputValue is in amps. <br>
      * In speed mode, the outputValue is in rotations/minute.<br>
      * In position mode, the outputValue is in rotations.
      *
-     * @param value
-     *            The set-point to sent to the motor controller.
+     * @param value The set-point to sent to the motor controller.
      */
     @Override
     public void setSpeed(double speed) {
         set(speed);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -544,9 +557,9 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Check all unverified params and make sure they're equal to their local
-     * cached versions. If a value isn't available, it gets requested.  If a value
-     * doesn't match up, it gets set again.
+     * Check all unverified params and make sure they're equal to their local cached
+     * versions. If a value isn't available, it gets requested. If a value doesn't
+     * match up, it gets set again.
      */
     protected void verify() {
         byte[] data = new byte[8];
@@ -556,7 +569,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
             getMessage(CANJNI.LM_API_STATUS_POWER, CANJNI.CAN_MSGID_FULL_M, data);
             boolean powerCycled = data[0] != 0;
 
-            if(powerCycled) {
+            if (powerCycled) {
                 // Clear the power cycled bit
                 data[0] = 1;
                 sendMessage(CANJNI.LM_API_STATUS_POWER, data, 1);
@@ -574,9 +587,9 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
                 m_maxOutputVoltageVerified = false;
                 m_faultTimeVerified = false;
 
-                if(m_controlMode == ControlMode.PercentVbus || m_controlMode == ControlMode.Voltage){
+                if (m_controlMode == ControlMode.PercentVbus || m_controlMode == ControlMode.Voltage) {
                     m_voltageRampRateVerified = false;
-                }else{
+                } else {
                     m_pVerified = false;
                     m_iVerified = false;
                     m_dVerified = false;
@@ -589,89 +602,84 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
                 // Remove any old values from netcomms. Otherwise, parameters
                 // are incorrectly marked as verified based on stale messages.
-                int[] messages = new int[] {
-                    CANJNI.LM_API_SPD_REF, CANJNI.LM_API_POS_REF,
-                    CANJNI.LM_API_SPD_PC, CANJNI.LM_API_POS_PC,
-                    CANJNI.LM_API_ICTRL_PC, CANJNI.LM_API_SPD_IC,
-                    CANJNI.LM_API_POS_IC, CANJNI.LM_API_ICTRL_IC,
-                    CANJNI.LM_API_SPD_DC, CANJNI.LM_API_POS_DC,
-                    CANJNI.LM_API_ICTRL_DC, CANJNI.LM_API_CFG_ENC_LINES,
-                    CANJNI.LM_API_CFG_POT_TURNS, CANJNI.LM_API_CFG_BRAKE_COAST,
-                    CANJNI.LM_API_CFG_LIMIT_MODE, CANJNI.LM_API_CFG_LIMIT_REV,
-                    CANJNI.LM_API_CFG_MAX_VOUT, CANJNI.LM_API_VOLT_SET_RAMP,
-                    CANJNI.LM_API_VCOMP_COMP_RAMP, CANJNI.LM_API_CFG_FAULT_TIME,
-                    CANJNI.LM_API_CFG_LIMIT_FWD
-                };
+                int[] messages = new int[] { CANJNI.LM_API_SPD_REF, CANJNI.LM_API_POS_REF, CANJNI.LM_API_SPD_PC,
+                        CANJNI.LM_API_POS_PC, CANJNI.LM_API_ICTRL_PC, CANJNI.LM_API_SPD_IC, CANJNI.LM_API_POS_IC,
+                        CANJNI.LM_API_ICTRL_IC, CANJNI.LM_API_SPD_DC, CANJNI.LM_API_POS_DC, CANJNI.LM_API_ICTRL_DC,
+                        CANJNI.LM_API_CFG_ENC_LINES, CANJNI.LM_API_CFG_POT_TURNS, CANJNI.LM_API_CFG_BRAKE_COAST,
+                        CANJNI.LM_API_CFG_LIMIT_MODE, CANJNI.LM_API_CFG_LIMIT_REV, CANJNI.LM_API_CFG_MAX_VOUT,
+                        CANJNI.LM_API_VOLT_SET_RAMP, CANJNI.LM_API_VCOMP_COMP_RAMP, CANJNI.LM_API_CFG_FAULT_TIME,
+                        CANJNI.LM_API_CFG_LIMIT_FWD };
 
-                for(int message : messages) {
+                for (int message : messages) {
                     try {
                         getMessage(message, CANJNI.CAN_MSGID_FULL_M, data);
-                    } catch (CANMessageNotFoundException e) {}
+                    } catch (CANMessageNotFoundException e) {
+                    }
                 }
             }
-        } catch(CANMessageNotFoundException e) {
+        } catch (CANMessageNotFoundException e) {
             requestMessage(CANJNI.LM_API_STATUS_POWER);
         }
 
         // Verify that any recently set parameters are correct
-        if(!m_controlModeVerified && m_controlEnabled) {
+        if (!m_controlModeVerified && m_controlEnabled) {
             try {
                 getMessage(CANJNI.LM_API_STATUS_CMODE, CANJNI.CAN_MSGID_FULL_M, data);
 
                 ControlMode mode = ControlMode.values()[data[0]];
 
-                if(m_controlMode == mode) {
+                if (m_controlMode == mode) {
                     m_controlModeVerified = true;
                 } else {
                     // Enable control again to resend the control mode
                     enableControl();
                 }
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_STATUS_CMODE);
             }
         }
 
-        if(!m_speedRefVerified) {
+        if (!m_speedRefVerified) {
             try {
                 getMessage(CANJNI.LM_API_SPD_REF, CANJNI.CAN_MSGID_FULL_M, data);
 
                 int speedRef = data[0];
 
-                if(m_speedReference == speedRef) {
+                if (m_speedReference == speedRef) {
                     m_speedRefVerified = true;
                 } else {
                     // It's wrong - set it again
                     setSpeedReference(m_speedReference);
                 }
-            } catch(CANMessageNotFoundException e) {
-                    // Verification is needed but not available - request it again.
-                    requestMessage(CANJNI.LM_API_SPD_REF);
+            } catch (CANMessageNotFoundException e) {
+                // Verification is needed but not available - request it again.
+                requestMessage(CANJNI.LM_API_SPD_REF);
             }
         }
 
-        if(!m_posRefVerified) {
+        if (!m_posRefVerified) {
             try {
                 getMessage(CANJNI.LM_API_POS_REF, CANJNI.CAN_MSGID_FULL_M, data);
 
                 int posRef = data[0];
 
-                if(m_positionReference == posRef) {
+                if (m_positionReference == posRef) {
                     m_posRefVerified = true;
                 } else {
                     // It's wrong - set it again
                     setPositionReference(m_positionReference);
                 }
-            } catch(CANMessageNotFoundException e) {
-                    // Verification is needed but not available - request it again.
-                    requestMessage(CANJNI.LM_API_POS_REF);
+            } catch (CANMessageNotFoundException e) {
+                // Verification is needed but not available - request it again.
+                requestMessage(CANJNI.LM_API_POS_REF);
             }
         }
 
-        if(!m_pVerified) {
+        if (!m_pVerified) {
             int message = 0;
 
-            switch(m_controlMode) {
+            switch (m_controlMode) {
                 case Speed:
                     message = CANJNI.LM_API_SPD_PC;
                     break;
@@ -693,22 +701,22 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
                 double p = unpackFXP16_16(data);
 
-                if(FXP16_EQ(m_p, p)) {
+                if (FXP16_EQ(m_p, p)) {
                     m_pVerified = true;
                 } else {
                     // It's wrong - set it again
                     setP(m_p);
                 }
-            } catch(CANMessageNotFoundException e) {
-                    // Verification is needed but not available - request it again.
-                    requestMessage(message);
+            } catch (CANMessageNotFoundException e) {
+                // Verification is needed but not available - request it again.
+                requestMessage(message);
             }
         }
 
-        if(!m_iVerified) {
+        if (!m_iVerified) {
             int message = 0;
 
-            switch(m_controlMode) {
+            switch (m_controlMode) {
                 case Speed:
                     message = CANJNI.LM_API_SPD_IC;
                     break;
@@ -730,22 +738,22 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
                 double i = unpackFXP16_16(data);
 
-                if(FXP16_EQ(m_i, i)) {
+                if (FXP16_EQ(m_i, i)) {
                     m_iVerified = true;
                 } else {
                     // It's wrong - set it again
                     setI(m_i);
                 }
-            } catch(CANMessageNotFoundException e) {
-                    // Verification is needed but not available - request it again.
-                    requestMessage(message);
+            } catch (CANMessageNotFoundException e) {
+                // Verification is needed but not available - request it again.
+                requestMessage(message);
             }
         }
 
-        if(!m_dVerified) {
+        if (!m_dVerified) {
             int message = 0;
 
-            switch(m_controlMode) {
+            switch (m_controlMode) {
                 case Speed:
                     message = CANJNI.LM_API_SPD_DC;
                     break;
@@ -767,207 +775,205 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
                 double d = unpackFXP16_16(data);
 
-                if(FXP16_EQ(m_d, d)) {
+                if (FXP16_EQ(m_d, d)) {
                     m_dVerified = true;
                 } else {
                     // It's wrong - set it again
                     setD(m_d);
                 }
-            } catch(CANMessageNotFoundException e) {
-                    // Verification is needed but not available - request it again.
-                    requestMessage(message);
+            } catch (CANMessageNotFoundException e) {
+                // Verification is needed but not available - request it again.
+                requestMessage(message);
             }
         }
 
-        if(!m_neutralModeVerified) {
+        if (!m_neutralModeVerified) {
             try {
                 getMessage(CANJNI.LM_API_CFG_BRAKE_COAST, CANJNI.CAN_MSGID_FULL_M, data);
 
                 NeutralMode mode = NeutralMode.values()[data[0]];
 
-                if(mode == m_neutralMode) {
+                if (mode == m_neutralMode) {
                     m_neutralModeVerified = true;
                 } else {
-                    //It's wrong - set it again
+                    // It's wrong - set it again
                     configNeutralMode(m_neutralMode);
                 }
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_CFG_BRAKE_COAST);
             }
         }
 
-        if(!m_encoderCodesPerRevVerified) {
+        if (!m_encoderCodesPerRevVerified) {
             try {
                 getMessage(CANJNI.LM_API_CFG_ENC_LINES, CANJNI.CAN_MSGID_FULL_M, data);
 
                 short codes = unpackINT16(data);
 
-                if(codes == m_encoderCodesPerRev) {
+                if (codes == m_encoderCodesPerRev) {
                     m_encoderCodesPerRevVerified = true;
                 } else {
-                    //It's wrong - set it again
+                    // It's wrong - set it again
                     configEncoderCodesPerRev(m_encoderCodesPerRev);
                 }
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_CFG_ENC_LINES);
             }
         }
 
-        if(!m_potentiometerTurnsVerified) {
+        if (!m_potentiometerTurnsVerified) {
             try {
                 getMessage(CANJNI.LM_API_CFG_POT_TURNS, CANJNI.CAN_MSGID_FULL_M, data);
 
                 short turns = unpackINT16(data);
 
-                if(turns == m_potentiometerTurns) {
+                if (turns == m_potentiometerTurns) {
                     m_potentiometerTurnsVerified = true;
                 } else {
-                    //It's wrong - set it again
+                    // It's wrong - set it again
                     configPotentiometerTurns(m_potentiometerTurns);
                 }
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_CFG_POT_TURNS);
             }
         }
 
-        if(!m_limitModeVerified) {
+        if (!m_limitModeVerified) {
             try {
                 getMessage(CANJNI.LM_API_CFG_LIMIT_MODE, CANJNI.CAN_MSGID_FULL_M, data);
 
                 LimitMode mode = LimitMode.values()[data[0]];
 
-                if(mode == m_limitMode) {
+                if (mode == m_limitMode) {
                     m_limitModeVerified = true;
                 } else {
-                    //It's wrong - set it again
+                    // It's wrong - set it again
                     configLimitMode(m_limitMode);
                 }
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_CFG_LIMIT_MODE);
             }
         }
 
-        if(!m_forwardLimitVerified) {
+        if (!m_forwardLimitVerified) {
             try {
                 getMessage(CANJNI.LM_API_CFG_LIMIT_FWD, CANJNI.CAN_MSGID_FULL_M, data);
 
                 double limit = unpackFXP16_16(data);
 
-                if(FXP16_EQ(limit, m_forwardLimit)) {
+                if (FXP16_EQ(limit, m_forwardLimit)) {
                     m_forwardLimitVerified = true;
                 } else {
-                    //It's wrong - set it again
+                    // It's wrong - set it again
                     configForwardLimit(m_forwardLimit);
                 }
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_CFG_LIMIT_FWD);
             }
         }
 
-        if(!m_reverseLimitVerified) {
+        if (!m_reverseLimitVerified) {
             try {
                 getMessage(CANJNI.LM_API_CFG_LIMIT_REV, CANJNI.CAN_MSGID_FULL_M, data);
 
                 double limit = unpackFXP16_16(data);
 
-                if(FXP16_EQ(limit, m_reverseLimit)) {
+                if (FXP16_EQ(limit, m_reverseLimit)) {
                     m_reverseLimitVerified = true;
                 } else {
-                    //It's wrong - set it again
+                    // It's wrong - set it again
                     configReverseLimit(m_reverseLimit);
                 }
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_CFG_LIMIT_REV);
             }
         }
 
-        if(!m_maxOutputVoltageVerified) {
+        if (!m_maxOutputVoltageVerified) {
             try {
                 getMessage(CANJNI.LM_API_CFG_MAX_VOUT, CANJNI.CAN_MSGID_FULL_M, data);
 
                 double voltage = unpackFXP8_8(data);
 
                 // The returned max output voltage is sometimes slightly higher
-                // or lower than what was sent.  This should not trigger
+                // or lower than what was sent. This should not trigger
                 // resending the message.
-                if(Math.abs(voltage - m_maxOutputVoltage) < 0.1) {
+                if (Math.abs(voltage - m_maxOutputVoltage) < 0.1) {
                     m_maxOutputVoltageVerified = true;
                 } else {
                     // It's wrong - set it again
                     configMaxOutputVoltage(m_maxOutputVoltage);
                 }
 
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_CFG_MAX_VOUT);
             }
         }
 
-        if(!m_voltageRampRateVerified) {
-            if(m_controlMode == ControlMode.PercentVbus) {
+        if (!m_voltageRampRateVerified) {
+            if (m_controlMode == ControlMode.PercentVbus) {
                 try {
                     getMessage(CANJNI.LM_API_VOLT_SET_RAMP, CANJNI.CAN_MSGID_FULL_M, data);
 
                     double rate = unpackPercentage(data);
 
-                    if(FXP16_EQ(rate, m_voltageRampRate)) {
+                    if (FXP16_EQ(rate, m_voltageRampRate)) {
                         m_voltageRampRateVerified = true;
                     } else {
                         // It's wrong - set it again
                         setVoltageRampRate(m_voltageRampRate);
                     }
 
-                } catch(CANMessageNotFoundException e) {
+                } catch (CANMessageNotFoundException e) {
                     // Verification is needed but not available - request it again.
                     requestMessage(CANJNI.LM_API_VOLT_SET_RAMP);
                 }
             }
-        } else if(m_controlMode == ControlMode.Voltage) {
+        } else if (m_controlMode == ControlMode.Voltage) {
             try {
                 getMessage(CANJNI.LM_API_VCOMP_COMP_RAMP, CANJNI.CAN_MSGID_FULL_M, data);
 
                 double rate = unpackFXP8_8(data);
 
-                if(FXP8_EQ(rate, m_voltageRampRate)) {
+                if (FXP8_EQ(rate, m_voltageRampRate)) {
                     m_voltageRampRateVerified = true;
                 } else {
                     // It's wrong - set it again
                     setVoltageRampRate(m_voltageRampRate);
                 }
 
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_VCOMP_COMP_RAMP);
             }
         }
 
-        if(!m_faultTimeVerified) {
+        if (!m_faultTimeVerified) {
             try {
                 getMessage(CANJNI.LM_API_CFG_FAULT_TIME, CANJNI.CAN_MSGID_FULL_M, data);
 
                 int faultTime = unpackINT16(data);
 
-                if((int)(m_faultTime * 1000.0) == faultTime) {
+                if ((int) (m_faultTime * 1000.0) == faultTime) {
                     m_faultTimeVerified = true;
                 } else {
-                    //It's wrong - set it again
+                    // It's wrong - set it again
                     configFaultTime(m_faultTime);
                 }
-            } catch(CANMessageNotFoundException e) {
+            } catch (CANMessageNotFoundException e) {
                 // Verification is needed but not available - request it again.
                 requestMessage(CANJNI.LM_API_CFG_FAULT_TIME);
             }
         }
 
-        if(!m_receivedStatusMessage0 ||
-                !m_receivedStatusMessage1 ||
-                !m_receivedStatusMessage2) {
+        if (!m_receivedStatusMessage0 || !m_receivedStatusMessage1 || !m_receivedStatusMessage2) {
             // If the periodic status messages haven't been verified as received,
             // request periodic status messages again and attempt to unpack any
             // available ones.
@@ -1008,7 +1014,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * @param reference Specify a speed reference.
      */
     private void setSpeedReference(int reference) {
-        sendMessage(CANJNI.LM_API_SPD_REF, new byte[] { (byte)reference }, 1);
+        sendMessage(CANJNI.LM_API_SPD_REF, new byte[] { (byte) reference }, 1);
 
         m_speedReference = reference;
         m_speedRefVerified = false;
@@ -1017,13 +1023,13 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Set the reference source device for position controller mode.
      *
-     * Choose between using and encoder and using a potentiometer
-     * as the source of position feedback when in position control mode.
+     * Choose between using and encoder and using a potentiometer as the source of
+     * position feedback when in position control mode.
      *
      * @param reference Specify a position reference.
      */
     private void setPositionReference(int reference) {
-        sendMessage(CANJNI.LM_API_POS_REF, new byte[] { (byte)reference }, 1);
+        sendMessage(CANJNI.LM_API_POS_REF, new byte[] { (byte) reference }, 1);
 
         m_positionReference = reference;
         m_posRefVerified = false;
@@ -1038,21 +1044,21 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         byte[] data = new byte[8];
         byte dataSize = packFXP16_16(data, p);
 
-        switch(m_controlMode) {
-        case Speed:
-            sendMessage(CANJNI.LM_API_SPD_PC, data, dataSize);
-            break;
+        switch (m_controlMode) {
+            case Speed:
+                sendMessage(CANJNI.LM_API_SPD_PC, data, dataSize);
+                break;
 
-        case Position:
-            sendMessage(CANJNI.LM_API_POS_PC, data, dataSize);
-            break;
+            case Position:
+                sendMessage(CANJNI.LM_API_POS_PC, data, dataSize);
+                break;
 
-        case Current:
-            sendMessage(CANJNI.LM_API_ICTRL_PC, data, dataSize);
-            break;
+            case Current:
+                sendMessage(CANJNI.LM_API_ICTRL_PC, data, dataSize);
+                break;
 
-        default:
-            throw new IllegalStateException("PID constants only apply in Speed, Position, and Current mode");
+            default:
+                throw new IllegalStateException("PID constants only apply in Speed, Position, and Current mode");
         }
 
         m_p = p;
@@ -1068,21 +1074,21 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         byte[] data = new byte[8];
         byte dataSize = packFXP16_16(data, i);
 
-        switch(m_controlMode) {
-        case Speed:
-            sendMessage(CANJNI.LM_API_SPD_IC, data, dataSize);
-            break;
+        switch (m_controlMode) {
+            case Speed:
+                sendMessage(CANJNI.LM_API_SPD_IC, data, dataSize);
+                break;
 
-        case Position:
-            sendMessage(CANJNI.LM_API_POS_IC, data, dataSize);
-            break;
+            case Position:
+                sendMessage(CANJNI.LM_API_POS_IC, data, dataSize);
+                break;
 
-        case Current:
-            sendMessage(CANJNI.LM_API_ICTRL_IC, data, dataSize);
-            break;
+            case Current:
+                sendMessage(CANJNI.LM_API_ICTRL_IC, data, dataSize);
+                break;
 
-        default:
-            throw new IllegalStateException("PID constants only apply in Speed, Position, and Current mode");
+            default:
+                throw new IllegalStateException("PID constants only apply in Speed, Position, and Current mode");
         }
 
         m_i = i;
@@ -1098,21 +1104,21 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         byte[] data = new byte[8];
         byte dataSize = packFXP16_16(data, d);
 
-        switch(m_controlMode) {
-        case Speed:
-            sendMessage(CANJNI.LM_API_SPD_DC, data, dataSize);
-            break;
+        switch (m_controlMode) {
+            case Speed:
+                sendMessage(CANJNI.LM_API_SPD_DC, data, dataSize);
+                break;
 
-        case Position:
-            sendMessage(CANJNI.LM_API_POS_DC, data, dataSize);
-            break;
+            case Position:
+                sendMessage(CANJNI.LM_API_POS_DC, data, dataSize);
+                break;
 
-        case Current:
-            sendMessage(CANJNI.LM_API_ICTRL_DC, data, dataSize);
-            break;
+            case Current:
+                sendMessage(CANJNI.LM_API_ICTRL_DC, data, dataSize);
+                break;
 
-        default:
-            throw new IllegalStateException("PID constants only apply in Speed, Position, and Current mode");
+            default:
+                throw new IllegalStateException("PID constants only apply in Speed, Position, and Current mode");
         }
 
         m_d = d;
@@ -1138,7 +1144,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * @return The proportional gain.
      */
     public double getP() {
-        if(m_controlMode.equals(ControlMode.PercentVbus) || m_controlMode.equals(ControlMode.Voltage)){
+        if (m_controlMode.equals(ControlMode.PercentVbus) || m_controlMode.equals(ControlMode.Voltage)) {
             throw new IllegalStateException("PID does not apply in Percent or Voltage control modes");
         }
         return m_p;
@@ -1150,7 +1156,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * @return The integral gain.
      */
     public double getI() {
-        if(m_controlMode.equals(ControlMode.PercentVbus) || m_controlMode.equals(ControlMode.Voltage)){
+        if (m_controlMode.equals(ControlMode.PercentVbus) || m_controlMode.equals(ControlMode.Voltage)) {
             throw new IllegalStateException("PID does not apply in Percent or Voltage control modes");
         }
         return m_i;
@@ -1162,7 +1168,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * @return The derivative gain.
      */
     public double getD() {
-        if(m_controlMode.equals(ControlMode.PercentVbus) || m_controlMode.equals(ControlMode.Voltage)){
+        if (m_controlMode.equals(ControlMode.PercentVbus) || m_controlMode.equals(ControlMode.Voltage)) {
             throw new IllegalStateException("PID does not apply in Percent or Voltage control modes");
         }
         return m_d;
@@ -1171,36 +1177,36 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable the closed loop controller.
      *
-     * Start actually controlling the output based on the feedback.
-     * If starting a position controller with an encoder reference,
-     * use the encoderInitialPosition parameter to initialize the
-     * encoder state.
+     * Start actually controlling the output based on the feedback. If starting a
+     * position controller with an encoder reference, use the encoderInitialPosition
+     * parameter to initialize the encoder state.
      *
-     * @param encoderInitialPosition Encoder position to set if position with encoder reference.  Ignored otherwise.
+     * @param encoderInitialPosition Encoder position to set if position with
+     *                               encoder reference. Ignored otherwise.
      */
     public void enableControl(double encoderInitialPosition) {
-        switch(m_controlMode) {
-        case PercentVbus:
-            sendMessage(CANJNI.LM_API_VOLT_T_EN, new byte[0], 0);
-            break;
+        switch (m_controlMode) {
+            case PercentVbus:
+                sendMessage(CANJNI.LM_API_VOLT_T_EN, new byte[0], 0);
+                break;
 
-        case Speed:
-            sendMessage(CANJNI.LM_API_SPD_T_EN, new byte[0], 0);
-            break;
+            case Speed:
+                sendMessage(CANJNI.LM_API_SPD_T_EN, new byte[0], 0);
+                break;
 
-        case Position:
-            byte[] data = new byte[8];
-            int dataSize = packFXP16_16(data, encoderInitialPosition);
-            sendMessage(CANJNI.LM_API_POS_T_EN, data, dataSize);
-            break;
+            case Position:
+                byte[] data = new byte[8];
+                int dataSize = packFXP16_16(data, encoderInitialPosition);
+                sendMessage(CANJNI.LM_API_POS_T_EN, data, dataSize);
+                break;
 
-        case Current:
-            sendMessage(CANJNI.LM_API_ICTRL_T_EN, new byte[0], 0);
-            break;
+            case Current:
+                sendMessage(CANJNI.LM_API_ICTRL_T_EN, new byte[0], 0);
+                break;
 
-        case Voltage:
-            sendMessage(CANJNI.LM_API_VCOMP_T_EN, new byte[0], 0);
-            break;
+            case Voltage:
+                sendMessage(CANJNI.LM_API_VCOMP_T_EN, new byte[0], 0);
+                break;
         }
 
         m_controlEnabled = true;
@@ -1209,9 +1215,10 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable the closed loop controller.
      *
-     * Start actually controlling the output based on the feedback.
-     * This is the same as calling <code>CANJaguar.enableControl(double encoderInitialPosition)</code>
-     * with <code>encoderInitialPosition</code> set to <code>0.0</code>
+     * Start actually controlling the output based on the feedback. This is the same
+     * as calling
+     * <code>CANJaguar.enableControl(double encoderInitialPosition)</code> with
+     * <code>encoderInitialPosition</code> set to <code>0.0</code>
      */
     public void enableControl() {
         enableControl(0.0);
@@ -1243,23 +1250,25 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable controlling the motor voltage as a percentage of the bus voltage
      * without any position or speed feedback.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      */
-    public void setPercentMode(){
+    public void setPercentMode() {
         changeControlMode(ControlMode.PercentVbus);
         setPositionReference(CANJNI.LM_REF_NONE);
         setSpeedReference(CANJNI.LM_REF_NONE);
     }
 
     /**
-     * Enable controlling the motor voltage as a percentage of the bus voltage,
-     * and enable speed sensing from a non-quadrature encoder.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * Enable controlling the motor voltage as a percentage of the bus voltage, and
+     * enable speed sensing from a non-quadrature encoder.<br>
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
-     * @param tag The constant {@link CANJaguar#kEncoder}
+     * @param tag         The constant {@link CANJaguar#kEncoder}
      * @param codesPerRev The counts per revolution on the encoder
      */
-    public void setPercentMode(EncoderTag tag, int codesPerRev){
+    public void setPercentMode(EncoderTag tag, int codesPerRev) {
         changeControlMode(ControlMode.PercentVbus);
         setPositionReference(CANJNI.LM_REF_NONE);
         setSpeedReference(CANJNI.LM_REF_ENCODER);
@@ -1267,14 +1276,15 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Enable controlling the motor voltage as a percentage of the bus voltage,
-     * and enable position and speed sensing from a quadrature encoder.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * Enable controlling the motor voltage as a percentage of the bus voltage, and
+     * enable position and speed sensing from a quadrature encoder.<br>
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
-     * @param tag The constant {@link CANJaguar#kQuadEncoder}
+     * @param tag         The constant {@link CANJaguar#kQuadEncoder}
      * @param codesPerRev The counts per revolution on the encoder
      */
-    public void setPercentMode(QuadEncoderTag tag, int codesPerRev){
+    public void setPercentMode(QuadEncoderTag tag, int codesPerRev) {
         changeControlMode(ControlMode.PercentVbus);
         setPositionReference(CANJNI.LM_REF_ENCODER);
         setSpeedReference(CANJNI.LM_REF_QUAD_ENCODER);
@@ -1282,13 +1292,14 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Enable controlling the motor voltage as a percentage of the bus voltage,
-     * and enable position sensing from a potentiometer and no speed feedback.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * Enable controlling the motor voltage as a percentage of the bus voltage, and
+     * enable position sensing from a potentiometer and no speed feedback.<br>
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
      * @param tag The constant {@link CANJaguar#kPotentiometer}
      */
-    public void setPercentMode(PotentiometerTag tag){
+    public void setPercentMode(PotentiometerTag tag) {
         changeControlMode(ControlMode.PercentVbus);
         setPositionReference(CANJNI.LM_REF_POT);
         setSpeedReference(CANJNI.LM_REF_NONE);
@@ -1297,13 +1308,14 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
     /**
      * Enable controlling the motor current with a PID loop.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
      * @param p The proportional gain of the Jaguar's PID controller.
      * @param i The integral gain of the Jaguar's PID controller.
      * @param d The differential gain of the Jaguar's PID controller.
      */
-    public void setCurrentMode(double p, double i, double d){
+    public void setCurrentMode(double p, double i, double d) {
         changeControlMode(ControlMode.Current);
         setPositionReference(CANJNI.LM_REF_NONE);
         setSpeedReference(CANJNI.LM_REF_NONE);
@@ -1313,14 +1325,15 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable controlling the motor current with a PID loop, and enable speed
      * sensing from a non-quadrature encoder.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
      * @param tag The constant {@link CANJaguar#kEncoder}
-     * @param p The proportional gain of the Jaguar's PID controller.
-     * @param i The integral gain of the Jaguar's PID controller.
-     * @param d The differential gain of the Jaguar's PID controller.
+     * @param p   The proportional gain of the Jaguar's PID controller.
+     * @param i   The integral gain of the Jaguar's PID controller.
+     * @param d   The differential gain of the Jaguar's PID controller.
      */
-    public void setCurrentMode(EncoderTag tag, int codesPerRev, double p, double i, double d){
+    public void setCurrentMode(EncoderTag tag, int codesPerRev, double p, double i, double d) {
         changeControlMode(ControlMode.Current);
         setPositionReference(CANJNI.LM_REF_NONE);
         setSpeedReference(CANJNI.LM_REF_NONE);
@@ -1331,14 +1344,15 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable controlling the motor current with a PID loop, and enable speed and
      * position sensing from a quadrature encoder.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
      * @param tag The constant {@link CANJaguar#kQuadEncoder}
-     * @param p The proportional gain of the Jaguar's PID controller.
-     * @param i The integral gain of the Jaguar's PID controller.
-     * @param d The differential gain of the Jaguar's PID controller.
+     * @param p   The proportional gain of the Jaguar's PID controller.
+     * @param i   The integral gain of the Jaguar's PID controller.
+     * @param d   The differential gain of the Jaguar's PID controller.
      */
-    public void setCurrentMode(QuadEncoderTag tag, int codesPerRev, double p, double i, double d){
+    public void setCurrentMode(QuadEncoderTag tag, int codesPerRev, double p, double i, double d) {
         changeControlMode(ControlMode.Current);
         setPositionReference(CANJNI.LM_REF_ENCODER);
         setSpeedReference(CANJNI.LM_REF_QUAD_ENCODER);
@@ -1349,14 +1363,15 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable controlling the motor current with a PID loop, and enable position
      * sensing from a potentiometer.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
      * @param tag The constant {@link CANJaguar#kPotentiometer}
-     * @param p The proportional gain of the Jaguar's PID controller.
-     * @param i The integral gain of the Jaguar's PID controller.
-     * @param d The differential gain of the Jaguar's PID controller.
+     * @param p   The proportional gain of the Jaguar's PID controller.
+     * @param i   The integral gain of the Jaguar's PID controller.
+     * @param d   The differential gain of the Jaguar's PID controller.
      */
-    public void setCurrentMode(PotentiometerTag tag, double p, double i, double d){
+    public void setCurrentMode(PotentiometerTag tag, double p, double i, double d) {
         changeControlMode(ControlMode.Current);
         setPositionReference(CANJNI.LM_REF_POT);
         setSpeedReference(CANJNI.LM_REF_NONE);
@@ -1367,15 +1382,16 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable controlling the speed with a feedback loop from a non-quadrature
      * encoder.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
-     * @param tag The constant {@link CANJaguar#kEncoder}
+     * @param tag         The constant {@link CANJaguar#kEncoder}
      * @param codesPerRev The counts per revolution on the encoder
-     * @param p The proportional gain of the Jaguar's PID controller.
-     * @param i The integral gain of the Jaguar's PID controller.
-     * @param d The differential gain of the Jaguar's PID controller.
+     * @param p           The proportional gain of the Jaguar's PID controller.
+     * @param i           The integral gain of the Jaguar's PID controller.
+     * @param d           The differential gain of the Jaguar's PID controller.
      */
-    public void setSpeedMode(EncoderTag tag, int codesPerRev, double p, double i, double d){
+    public void setSpeedMode(EncoderTag tag, int codesPerRev, double p, double i, double d) {
         changeControlMode(ControlMode.Speed);
         setPositionReference(CANJNI.LM_REF_NONE);
         setSpeedReference(CANJNI.LM_REF_ENCODER);
@@ -1384,16 +1400,18 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Enable controlling the speed with a feedback loop from a quadrature encoder.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * Enable controlling the speed with a feedback loop from a quadrature
+     * encoder.<br>
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
-     * @param tag The constant {@link CANJaguar#kQuadEncoder}
+     * @param tag         The constant {@link CANJaguar#kQuadEncoder}
      * @param codesPerRev The counts per revolution on the encoder
-     * @param p The proportional gain of the Jaguar's PID controller.
-     * @param i The integral gain of the Jaguar's PID controller.
-     * @param d The differential gain of the Jaguar's PID controller.
+     * @param p           The proportional gain of the Jaguar's PID controller.
+     * @param i           The integral gain of the Jaguar's PID controller.
+     * @param d           The differential gain of the Jaguar's PID controller.
      */
-    public void setSpeedMode(QuadEncoderTag tag, int codesPerRev, double p, double i, double d){
+    public void setSpeedMode(QuadEncoderTag tag, int codesPerRev, double p, double i, double d) {
         changeControlMode(ControlMode.Speed);
         setPositionReference(CANJNI.LM_REF_ENCODER);
         setSpeedReference(CANJNI.LM_REF_QUAD_ENCODER);
@@ -1403,16 +1421,17 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
     /**
      * Enable controlling the position with a feedback loop using an encoder.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
-     * @param tag The constant {@link CANJaguar#kQuadEncoder}
+     * @param tag         The constant {@link CANJaguar#kQuadEncoder}
      * @param codesPerRev The counts per revolution on the encoder
-     * @param p The proportional gain of the Jaguar's PID controller.
-     * @param i The integral gain of the Jaguar's PID controller.
-     * @param d The differential gain of the Jaguar's PID controller.
+     * @param p           The proportional gain of the Jaguar's PID controller.
+     * @param i           The integral gain of the Jaguar's PID controller.
+     * @param d           The differential gain of the Jaguar's PID controller.
      *
      */
-    public void setPositionMode(QuadEncoderTag tag, int codesPerRev, double p, double i, double d){
+    public void setPositionMode(QuadEncoderTag tag, int codesPerRev, double p, double i, double d) {
         changeControlMode(ControlMode.Position);
         setPositionReference(CANJNI.LM_REF_ENCODER);
         configEncoderCodesPerRev(codesPerRev);
@@ -1420,15 +1439,17 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Enable controlling the position with a feedback loop using a potentiometer.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * Enable controlling the position with a feedback loop using a
+     * potentiometer.<br>
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
      * @param tag The constant {@link CANJaguar#kPotentiometer}
-     * @param p The proportional gain of the Jaguar's PID controller.
-     * @param i The integral gain of the Jaguar's PID controller.
-     * @param d The differential gain of the Jaguar's PID controller.
+     * @param p   The proportional gain of the Jaguar's PID controller.
+     * @param i   The integral gain of the Jaguar's PID controller.
+     * @param d   The differential gain of the Jaguar's PID controller.
      */
-    public void setPositionMode(PotentiometerTag tag, double p, double i, double d){
+    public void setPositionMode(PotentiometerTag tag, double p, double i, double d) {
         changeControlMode(ControlMode.Position);
         setPositionReference(CANJNI.LM_REF_POT);
         configPotentiometerTurns(1);
@@ -1436,10 +1457,12 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Enable controlling the motor voltage without any position or speed feedback.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * Enable controlling the motor voltage without any position or speed
+     * feedback.<br>
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      */
-    public void setVoltageMode(){
+    public void setVoltageMode() {
         changeControlMode(ControlMode.Voltage);
         setPositionReference(CANJNI.LM_REF_NONE);
         setSpeedReference(CANJNI.LM_REF_NONE);
@@ -1448,12 +1471,13 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable controlling the motor voltage with speed feedback from a
      * non-quadrature encoder and no position feedback.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
-     * @param tag The constant {@link CANJaguar#kEncoder}
+     * @param tag         The constant {@link CANJaguar#kEncoder}
      * @param codesPerRev The counts per revolution on the encoder
      */
-    public void setVoltageMode(EncoderTag tag, int codesPerRev){
+    public void setVoltageMode(EncoderTag tag, int codesPerRev) {
         changeControlMode(ControlMode.Voltage);
         setPositionReference(CANJNI.LM_REF_NONE);
         setSpeedReference(CANJNI.LM_REF_ENCODER);
@@ -1463,12 +1487,13 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Enable controlling the motor voltage with position and speed feedback from a
      * quadrature encoder.<br>
-     * After calling this you must call {@link CANJaguar#enableControl()} or {@link CANJaguar#enableControl(double)} to enable the device.
+     * After calling this you must call {@link CANJaguar#enableControl()} or
+     * {@link CANJaguar#enableControl(double)} to enable the device.
      *
-     * @param tag The constant {@link CANJaguar#kQuadEncoder}
+     * @param tag         The constant {@link CANJaguar#kQuadEncoder}
      * @param codesPerRev The counts per revolution on the encoder
      */
-    public void setVoltageMode(QuadEncoderTag tag, int codesPerRev){
+    public void setVoltageMode(QuadEncoderTag tag, int codesPerRev) {
         changeControlMode(ControlMode.Voltage);
         setPositionReference(CANJNI.LM_REF_ENCODER);
         setSpeedReference(CANJNI.LM_REF_QUAD_ENCODER);
@@ -1481,7 +1506,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      *
      * @param tag The constant {@link CANJaguar#kPotentiometer}
      */
-    public void setVoltageMode(PotentiometerTag tag){
+    public void setVoltageMode(PotentiometerTag tag) {
         changeControlMode(ControlMode.Voltage);
         setPositionReference(CANJNI.LM_REF_POT);
         setSpeedReference(CANJNI.LM_REF_NONE);
@@ -1489,7 +1514,8 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Used internally. In order to set the control mode see the methods listed below.
+     * Used internally. In order to set the control mode see the methods listed
+     * below.
      *
      * Change the control mode of this Jaguar object.
      *
@@ -1582,7 +1608,8 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Get the position of the encoder or potentiometer.
      *
-     * @return The position of the motor in rotations based on the configured feedback.
+     * @return The position of the motor in rotations based on the configured
+     *         feedback.
      * @see CANJaguar#configPotentiometerTurns(int)
      * @see CANJaguar#configEncoderCodesPerRev(int)
      */
@@ -1644,27 +1671,29 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * set the maximum voltage change rate.
      *
-     * When in PercentVbus or Voltage output mode, the rate at which the voltage changes can
-     * be limited to reduce current spikes.  set this to 0.0 to disable rate limiting.
+     * When in PercentVbus or Voltage output mode, the rate at which the voltage
+     * changes can be limited to reduce current spikes. set this to 0.0 to disable
+     * rate limiting.
      *
-     * @param rampRate The maximum rate of voltage change in Percent Voltage mode in V/s.
+     * @param rampRate The maximum rate of voltage change in Percent Voltage mode in
+     *                 V/s.
      */
     public void setVoltageRampRate(double rampRate) {
         byte[] data = new byte[8];
         int dataSize;
         int message;
 
-        switch(m_controlMode) {
-        case PercentVbus:
-            dataSize = packPercentage(data, rampRate / (m_maxOutputVoltage * kControllerRate));
-            message = CANJNI.LM_API_VOLT_SET_RAMP;
-            break;
-        case Voltage:
-            dataSize = packFXP8_8(data, rampRate / kControllerRate);
-            message = CANJNI.LM_API_VCOMP_COMP_RAMP;
-            break;
-        default:
-            throw new IllegalStateException("Voltage ramp rate only applies in Percentage and Voltage modes");
+        switch (m_controlMode) {
+            case PercentVbus:
+                dataSize = packPercentage(data, rampRate / (m_maxOutputVoltage * kControllerRate));
+                message = CANJNI.LM_API_VOLT_SET_RAMP;
+                break;
+            case Voltage:
+                dataSize = packFXP8_8(data, rampRate / kControllerRate);
+                message = CANJNI.LM_API_VCOMP_COMP_RAMP;
+                break;
+            default:
+                throw new IllegalStateException("Voltage ramp rate only applies in Percentage and Voltage modes");
         }
 
         sendMessage(message, data, dataSize);
@@ -1673,7 +1702,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Get the version of the firmware running on the Jaguar.
      *
-     * @return The firmware version.  0 if the device did not respond.
+     * @return The firmware version. 0 if the device did not respond.
      */
     public int getFirmwareVersion() {
         return m_firmwareVersion;
@@ -1682,21 +1711,23 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Get the version of the Jaguar hardware.
      *
-     * @return The hardware version. 1: Jaguar,  2: Black Jaguar
+     * @return The hardware version. 1: Jaguar, 2: Black Jaguar
      */
     public byte getHardwareVersion() {
         return m_hardwareVersion;
     }
 
     /**
-     * Configure what the controller does to the H-Bridge when neutral (not driving the output).
+     * Configure what the controller does to the H-Bridge when neutral (not driving
+     * the output).
      *
      * This allows you to override the jumper configuration for brake or coast.
      *
-     * @param mode Select to use the jumper setting or to override it to coast or brake.
+     * @param mode Select to use the jumper setting or to override it to coast or
+     *             brake.
      */
     public void configNeutralMode(NeutralMode mode) {
-        sendMessage(CANJNI.LM_API_CFG_BRAKE_COAST, new byte[] { (byte)mode.ordinal() }, 1);
+        sendMessage(CANJNI.LM_API_CFG_BRAKE_COAST, new byte[] { (byte) mode.ordinal() }, 1);
 
         m_neutralMode = mode;
         m_neutralModeVerified = false;
@@ -1710,40 +1741,42 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     public void configEncoderCodesPerRev(int codesPerRev) {
         byte[] data = new byte[8];
 
-        int dataSize = packINT16(data, (short)codesPerRev);
+        int dataSize = packINT16(data, (short) codesPerRev);
         sendMessage(CANJNI.LM_API_CFG_ENC_LINES, data, dataSize);
 
-        m_encoderCodesPerRev = (short)codesPerRev;
+        m_encoderCodesPerRev = (short) codesPerRev;
         m_encoderCodesPerRevVerified = false;
     }
 
     /**
      * Configure the number of turns on the potentiometer.
      *
-     * There is no special support for continuous turn potentiometers.
-     * Only integer numbers of turns are supported.
+     * There is no special support for continuous turn potentiometers. Only integer
+     * numbers of turns are supported.
      *
      * @param turns The number of turns of the potentiometer
      */
     public void configPotentiometerTurns(int turns) {
         byte[] data = new byte[8];
 
-        int dataSize = packINT16(data, (short)turns);
+        int dataSize = packINT16(data, (short) turns);
         sendMessage(CANJNI.LM_API_CFG_POT_TURNS, data, dataSize);
 
-        m_potentiometerTurns = (short)turns;
+        m_potentiometerTurns = (short) turns;
         m_potentiometerTurnsVerified = false;
     }
 
     /**
      * Configure Soft Position Limits when in Position Controller mode.<br>
      *
-     * When controlling position, you can add additional limits on top of the limit switch inputs
-     * that are based on the position feedback.  If the position limit is reached or the
-     * switch is opened, that direction will be disabled.
+     * When controlling position, you can add additional limits on top of the limit
+     * switch inputs that are based on the position feedback. If the position limit
+     * is reached or the switch is opened, that direction will be disabled.
      *
-     * @param forwardLimitPosition The position that, if exceeded, will disable the forward direction.
-     * @param reverseLimitPosition The position that, if exceeded, will disable the reverse direction.
+     * @param forwardLimitPosition The position that, if exceeded, will disable the
+     *                             forward direction.
+     * @param reverseLimitPosition The position that, if exceeded, will disable the
+     *                             reverse direction.
      */
     public void configSoftPositionLimits(double forwardLimitPosition, double reverseLimitPosition) {
         configLimitMode(LimitMode.SoftPositionLimits);
@@ -1763,21 +1796,25 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Set the limit mode for position control mode.<br>
      *
-     * Use {@link #configSoftPositionLimits(double, double)} or {@link #disableSoftPositionLimits()} to set this
-     * automatically.
+     * Use {@link #configSoftPositionLimits(double, double)} or
+     * {@link #disableSoftPositionLimits()} to set this automatically.
+     *
      * @param mode The {@link LimitMode} to use to limit the rotation of the device.
      * @see LimitMode#SwitchInputsOnly
      * @see LimitMode#SoftPositionLimits
      */
     public void configLimitMode(LimitMode mode) {
-        sendMessage(CANJNI.LM_API_CFG_LIMIT_MODE, new byte[] { (byte)mode.ordinal() }, 1);
+        sendMessage(CANJNI.LM_API_CFG_LIMIT_MODE, new byte[] { (byte) mode.ordinal() }, 1);
     }
 
     /**
      * Set the position that, if exceeded, will disable the forward direction.
      *
-     * Use {@link #configSoftPositionLimits(double, double)} to set this and the {@link LimitMode} automatically.
-     * @param forwardLimitPosition The position that, if exceeded, will disable the forward direction.
+     * Use {@link #configSoftPositionLimits(double, double)} to set this and the
+     * {@link LimitMode} automatically.
+     *
+     * @param forwardLimitPosition The position that, if exceeded, will disable the
+     *                             forward direction.
      */
     public void configForwardLimit(double forwardLimitPosition) {
         byte[] data = new byte[8];
@@ -1793,8 +1830,11 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Set the position that, if exceeded, will disable the reverse direction.
      *
-     * Use {@link #configSoftPositionLimits(double, double)} to set this and the {@link LimitMode} automatically.
-     * @param reverseLimitPosition The position that, if exceeded, will disable the reverse direction.
+     * Use {@link #configSoftPositionLimits(double, double)} to set this and the
+     * {@link LimitMode} automatically.
+     *
+     * @param reverseLimitPosition The position that, if exceeded, will disable the
+     *                             reverse direction.
      */
     public void configReverseLimit(double reverseLimitPosition) {
         byte[] data = new byte[8];
@@ -1826,60 +1866,60 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     }
 
     /**
-     * Configure how long the Jaguar waits in the case of a fault before resuming operation.
+     * Configure how long the Jaguar waits in the case of a fault before resuming
+     * operation.
      *
-     * Faults include over temerature, over current, and bus under voltage.
-     * The default is 3.0 seconds, but can be reduced to as low as 0.5 seconds.
+     * Faults include over temerature, over current, and bus under voltage. The
+     * default is 3.0 seconds, but can be reduced to as low as 0.5 seconds.
      *
      * @param faultTime The time to wait before resuming operation, in seconds.
      */
     public void configFaultTime(float faultTime) {
         byte[] data = new byte[8];
 
-        if(faultTime < 0.5f) faultTime = 0.5f;
-        else if(faultTime > 3.0f) faultTime = 3.0f;
+        if (faultTime < 0.5f)
+            faultTime = 0.5f;
+        else if (faultTime > 3.0f)
+            faultTime = 3.0f;
 
-        int dataSize = packINT16(data, (short)(faultTime * 1000.0));
+        int dataSize = packINT16(data, (short) (faultTime * 1000.0));
         sendMessage(CANJNI.LM_API_CFG_FAULT_TIME, data, dataSize);
 
         m_faultTime = faultTime;
         m_faultTimeVerified = false;
     }
 
-    
-
     static final int kReceiveStatusAttempts = 50;
 
     boolean m_controlEnabled = true;
 
-    static void sendMessageHelper(int messageID, byte[] data, int dataSize, int period) throws CANMessageNotFoundException {
-        final int[] kTrustedMessages = {
-                CANJNI.LM_API_VOLT_T_EN, CANJNI.LM_API_VOLT_T_SET, CANJNI.LM_API_SPD_T_EN, CANJNI.LM_API_SPD_T_SET,
-                CANJNI.LM_API_VCOMP_T_EN, CANJNI.LM_API_VCOMP_T_SET, CANJNI.LM_API_POS_T_EN, CANJNI.LM_API_POS_T_SET,
-                CANJNI.LM_API_ICTRL_T_EN, CANJNI.LM_API_ICTRL_T_SET
-        };
+    static void sendMessageHelper(int messageID, byte[] data, int dataSize, int period)
+            throws CANMessageNotFoundException {
+        final int[] kTrustedMessages = { CANJNI.LM_API_VOLT_T_EN, CANJNI.LM_API_VOLT_T_SET, CANJNI.LM_API_SPD_T_EN,
+                CANJNI.LM_API_SPD_T_SET, CANJNI.LM_API_VCOMP_T_EN, CANJNI.LM_API_VCOMP_T_SET, CANJNI.LM_API_POS_T_EN,
+                CANJNI.LM_API_POS_T_SET, CANJNI.LM_API_ICTRL_T_EN, CANJNI.LM_API_ICTRL_T_SET };
 
         IntBuffer status = allocateInt();
         status.put(0, 0);
 
-        for(byte i = 0; i < kTrustedMessages.length; i++) {
-            if((kFullMessageIDMask & messageID) == kTrustedMessages[i]){
+        for (byte i = 0; i < kTrustedMessages.length; i++) {
+            if ((kFullMessageIDMask & messageID) == kTrustedMessages[i]) {
                 // Make sure the data will still fit after adjusting for the token.
                 if (dataSize > kMaxMessageDataSize - 2) {
                     throw new RuntimeException("CAN message has too much data.");
                 }
 
-                ByteBuffer trustedBuffer = ByteBuffer.allocateDirect(dataSize+2);
-                trustedBuffer.put(0, (byte)0);
-                trustedBuffer.put(1, (byte)0);
+                ByteBuffer trustedBuffer = ByteBuffer.allocateDirect(dataSize + 2);
+                trustedBuffer.put(0, (byte) 0);
+                trustedBuffer.put(1, (byte) 0);
 
-                for(byte j = 0; j < dataSize; j++) {
-                    trustedBuffer.put(j+2, data[j]);
+                for (byte j = 0; j < dataSize; j++) {
+                    trustedBuffer.put(j + 2, data[j]);
                 }
 
                 CANJNI.CANSessionMuxSendMessage(messageID, trustedBuffer, period, status);
                 int statusCode = status.get(0);
-                if(statusCode < 0) {
+                if (statusCode < 0) {
                     CANUtil.checkStatus(statusCode, messageID);
                 }
 
@@ -1889,12 +1929,12 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
         // Use a null pointer for the data buffer if the given array is null
         ByteBuffer buffer;
-        if(data != null) {
+        if (data != null) {
             buffer = ByteBuffer.allocateDirect(dataSize);
-            if(data.length == dataSize){
+            if (data.length == dataSize) {
                 buffer.put(data);
-            }else{
-                for(byte i = 0; i < dataSize; i++) {
+            } else {
+                for (byte i = 0; i < dataSize; i++) {
                     buffer.put(i, data[i]);
                 }
             }
@@ -1905,7 +1945,7 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         CANJNI.CANSessionMuxSendMessage(messageID, buffer, period, status);
 
         int statusCode = status.get(0);
-        if(statusCode < 0) {
+        if (statusCode < 0) {
             CANUtil.checkStatus(statusCode, messageID);
         }
     }
@@ -1913,12 +1953,12 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Send a message to the Jaguar.
      *
-     * @param messageID The messageID to be used on the CAN bus (device number
-     *  is added internally)
-     * @param data The up to 8 bytes of data to be sent with the message
-     * @param dataSize Specify how much of the data in "data" to send
-     * @param period If positive, tell Network Communications to send the
-     *  message every "period" milliseconds.
+     * @param messageID The messageID to be used on the CAN bus (device number is
+     *                  added internally)
+     * @param data      The up to 8 bytes of data to be sent with the message
+     * @param dataSize  Specify how much of the data in "data" to send
+     * @param period    If positive, tell Network Communications to send the message
+     *                  every "period" milliseconds.
      */
     protected void sendMessage(int messageID, byte[] data, int dataSize, int period) {
         sendMessageHelper(messageID | m_deviceNumber, data, dataSize, period);
@@ -1927,10 +1967,10 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
     /**
      * Send a message to the Jaguar, non-periodically
      *
-     * @param messageID The messageID to be used on the CAN bus (device number
-     *  is added internally)
-     * @param data The up to 8 bytes of data to be sent with the message
-     * @param dataSize Specify how much of the data in "data" to send
+     * @param messageID The messageID to be used on the CAN bus (device number is
+     *                  added internally)
+     * @param data      The up to 8 bytes of data to be sent with the message
+     * @param dataSize  Specify how much of the data in "data" to send
      */
     protected void sendMessage(int messageID, byte[] data, int dataSize) {
         sendMessage(messageID, data, dataSize, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
@@ -1940,8 +1980,8 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      * Request a message from the Jaguar, but don't wait for it to arrive.
      *
      * @param messageID The message to request
-     * @param period If positive, tell Network Communications to request the
-     *  message every "period" milliseconds.
+     * @param period    If positive, tell Network Communications to request the
+     *                  message every "period" milliseconds.
      */
     protected void requestMessage(int messageID, int period) {
         sendMessageHelper(messageID | m_deviceNumber, null, 0, period);
@@ -1961,8 +2001,9 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      *
      * Jaguar always generates a message with the same message ID when replying.
      *
-     * @param messageID The messageID to read from the CAN bus (device number is added internally)
-     * @param data The up to 8 bytes of data that was received with the message
+     * @param messageID The messageID to read from the CAN bus (device number is
+     *                  added internally)
+     * @param data      The up to 8 bytes of data that was received with the message
      *
      * @throws CANMessageNotFoundException if there's not new message available
      */
@@ -1979,18 +2020,18 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         status.put(0, 0);
 
         // Get the data.
-        ByteBuffer dataBuffer = CANJNI.CANSessionMuxReceiveMessage(
-            targetedMessageID, messageMask, timeStamp, status);
+        ByteBuffer dataBuffer = CANJNI.CANSessionMuxReceiveMessage(targetedMessageID, messageMask, timeStamp, status);
 
-        if(data != null) {
-            for(int i = 0; i < dataBuffer.capacity(); i++) {
+        if (data != null) {
+            for (int i = 0; i < dataBuffer.capacity(); i++) {
                 data[i] = dataBuffer.get(i);
             }
         }
 
         int statusCode = status.get(0);
-        
-        if(statusCode < 0) CANUtil.checkStatus(statusCode, messageID);
+
+        if (statusCode < 0)
+            CANUtil.checkStatus(statusCode, messageID);
     }
 
     /**
@@ -2002,32 +2043,20 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
         // Message 0 returns bus voltage, output voltage, output current, and
         // temperature.
-        final byte[] kMessage0Data = new byte[] {
-            CANJNI.LM_PSTAT_VOLTBUS_B0, CANJNI.LM_PSTAT_VOLTBUS_B1,
-            CANJNI.LM_PSTAT_VOLTOUT_B0, CANJNI.LM_PSTAT_VOLTOUT_B1,
-            CANJNI.LM_PSTAT_CURRENT_B0, CANJNI.LM_PSTAT_CURRENT_B1,
-            CANJNI.LM_PSTAT_TEMP_B0, CANJNI.LM_PSTAT_TEMP_B1
-        };
+        final byte[] kMessage0Data = new byte[] { CANJNI.LM_PSTAT_VOLTBUS_B0, CANJNI.LM_PSTAT_VOLTBUS_B1,
+                CANJNI.LM_PSTAT_VOLTOUT_B0, CANJNI.LM_PSTAT_VOLTOUT_B1, CANJNI.LM_PSTAT_CURRENT_B0,
+                CANJNI.LM_PSTAT_CURRENT_B1, CANJNI.LM_PSTAT_TEMP_B0, CANJNI.LM_PSTAT_TEMP_B1 };
 
         // Message 1 returns position and speed
-        final byte[] kMessage1Data = new byte[] {
-            CANJNI.LM_PSTAT_POS_B0, CANJNI.LM_PSTAT_POS_B1, CANJNI.LM_PSTAT_POS_B2, CANJNI.LM_PSTAT_POS_B3,
-            CANJNI.LM_PSTAT_SPD_B0, CANJNI.LM_PSTAT_SPD_B1, CANJNI.LM_PSTAT_SPD_B2, CANJNI.LM_PSTAT_SPD_B3
-        };
+        final byte[] kMessage1Data = new byte[] { CANJNI.LM_PSTAT_POS_B0, CANJNI.LM_PSTAT_POS_B1,
+                CANJNI.LM_PSTAT_POS_B2, CANJNI.LM_PSTAT_POS_B3, CANJNI.LM_PSTAT_SPD_B0, CANJNI.LM_PSTAT_SPD_B1,
+                CANJNI.LM_PSTAT_SPD_B2, CANJNI.LM_PSTAT_SPD_B3 };
 
         // Message 2 returns limits and faults
-        final byte[] kMessage2Data = new byte[] {
-            CANJNI.LM_PSTAT_LIMIT_CLR,
-            CANJNI.LM_PSTAT_FAULT,
-            CANJNI.LM_PSTAT_END,
-            (byte)0,
-            (byte)0,
-            (byte)0,
-            (byte)0,
-            (byte)0,
-        };
+        final byte[] kMessage2Data = new byte[] { CANJNI.LM_PSTAT_LIMIT_CLR, CANJNI.LM_PSTAT_FAULT, CANJNI.LM_PSTAT_END,
+                (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, };
 
-        dataSize = packINT16(data, (short)(kSendMessagePeriod));
+        dataSize = packINT16(data, (short) (kSendMessagePeriod));
         sendMessage(CANJNI.LM_API_PSTAT_PER_EN_S0, data, dataSize);
         sendMessage(CANJNI.LM_API_PSTAT_PER_EN_S1, data, dataSize);
         sendMessage(CANJNI.LM_API_PSTAT_PER_EN_S2, data, dataSize);
@@ -2050,23 +2079,25 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         try {
             getMessage(CANJNI.LM_API_PSTAT_DATA_S0, CANJNI.CAN_MSGID_FULL_M, data);
 
-            m_busVoltage    = unpackFXP8_8(new byte[] { data[0], data[1] });
+            m_busVoltage = unpackFXP8_8(new byte[] { data[0], data[1] });
             m_outputVoltage = unpackPercentage(new byte[] { data[2], data[3] }) * m_busVoltage;
             m_outputCurrent = unpackFXP8_8(new byte[] { data[4], data[5] });
-            m_temperature   = unpackFXP8_8(new byte[] { data[6], data[7] });
+            m_temperature = unpackFXP8_8(new byte[] { data[6], data[7] });
 
             m_receivedStatusMessage0 = true;
-        } catch(CANMessageNotFoundException e) {}
+        } catch (CANMessageNotFoundException e) {
+        }
 
         // Check if a new position/speed message has arrived and do the same
         try {
             getMessage(CANJNI.LM_API_PSTAT_DATA_S1, CANJNI.CAN_MSGID_FULL_M, data);
 
             m_position = unpackFXP16_16(new byte[] { data[0], data[1], data[2], data[3] });
-            m_speed    = unpackFXP16_16(new byte[] { data[4], data[5], data[6], data[7] });
+            m_speed = unpackFXP16_16(new byte[] { data[4], data[5], data[6], data[7] });
 
             m_receivedStatusMessage1 = true;
-        } catch(CANMessageNotFoundException e) {}
+        } catch (CANMessageNotFoundException e) {
+        }
 
         // Check if a new limits/faults message has arrived and do the same
         try {
@@ -2075,7 +2106,8 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
             m_faults = data[1];
 
             m_receivedStatusMessage2 = true;
-        } catch(CANMessageNotFoundException e) {}
+        } catch (CANMessageNotFoundException e) {
+        }
     }
 
     /**
@@ -2093,20 +2125,22 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
     /** we are on ARM-LE now, not Freescale so no need to swap */
     private final static void swap16(int x, byte[] buffer) {
-        buffer[0] = (byte)(x & 0xff);
-        buffer[1] = (byte)((x>>8) & 0xff);
+        buffer[0] = (byte) (x & 0xff);
+        buffer[1] = (byte) ((x >> 8) & 0xff);
     }
 
     private final static void swap32(int x, byte[] buffer) {
-        buffer[0] = (byte)(x & 0xff);
-        buffer[1] = (byte)((x>>8) & 0xff);
-        buffer[2] = (byte)((x>>16) & 0xff);
-        buffer[3] = (byte)((x>>24) & 0xff);
+        buffer[0] = (byte) (x & 0xff);
+        buffer[1] = (byte) ((x >> 8) & 0xff);
+        buffer[2] = (byte) ((x >> 16) & 0xff);
+        buffer[3] = (byte) ((x >> 24) & 0xff);
     }
 
     private static final byte packPercentage(byte[] buffer, double value) {
-        if(value < -1.0) value = -1.0;
-        if(value > 1.0) value = 1.0;
+        if (value < -1.0)
+            value = -1.0;
+        if (value > 1.0)
+            value = 1.0;
         short intValue = (short) (value * 32767.0);
         swap16(intValue, buffer);
         return 2;
@@ -2129,13 +2163,14 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         return 2;
     }
 
-    /*private static final byte packINT32(byte[] buffer, int value) {
-        swap32(value, buffer);
-        return 4;
-    }*/
+    /*
+     * private static final byte packINT32(byte[] buffer, int value) { swap32(value,
+     * buffer); return 4; }
+     */
 
     /**
      * Unpack 16-bit data from a buffer in little-endian byte order
+     *
      * @param buffer The buffer to unpack from
      * @param offset The offset into he buffer to unpack
      * @return The data that was unpacked
@@ -2146,47 +2181,48 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
 
     /**
      * Unpack 32-bit data from a buffer in little-endian byte order
+     *
      * @param buffer The buffer to unpack from
      * @param offset The offset into he buffer to unpack
      * @return The data that was unpacked
      */
     private static final int unpack32(byte[] buffer, int offset) {
-        return (buffer[offset] & 0xFF) | ((buffer[offset + 1] << 8) & 0xFF00) |
-            ((buffer[offset + 2] << 16) & 0xFF0000) | ((buffer[offset + 3] << 24) & 0xFF000000);
+        return (buffer[offset] & 0xFF) | ((buffer[offset + 1] << 8) & 0xFF00) | ((buffer[offset + 2] << 16) & 0xFF0000)
+                | ((buffer[offset + 3] << 24) & 0xFF000000);
     }
 
     private static final double unpackPercentage(byte[] buffer) {
-        return unpack16(buffer,0) / 32767.0;
+        return unpack16(buffer, 0) / 32767.0;
     }
 
     private static final double unpackFXP8_8(byte[] buffer) {
-        return unpack16(buffer,0) / 256.0;
+        return unpack16(buffer, 0) / 256.0;
     }
 
     private static final double unpackFXP16_16(byte[] buffer) {
-        return unpack32(buffer,0) / 65536.0;
+        return unpack32(buffer, 0) / 65536.0;
     }
 
     private static final short unpackINT16(byte[] buffer) {
-        return unpack16(buffer,0);
+        return unpack16(buffer, 0);
     }
 
     private static final int unpackINT32(byte[] buffer) {
-        return unpack32(buffer,0);
+        return unpack32(buffer, 0);
     }
 
     /** Compare floats for equality as fixed point numbers */
     public boolean FXP8_EQ(double a, double b) {
-        return (int)(a * 256.0) == (int)(b * 256.0);
+        return (int) (a * 256.0) == (int) (b * 256.0);
     }
 
     /** Compare floats for equality as fixed point numbers */
     public boolean FXP16_EQ(double a, double b) {
-        return (int)(a * 65536.0) == (int)(b * 65536.0);
+        return (int) (a * 65536.0) == (int) (b * 65536.0);
     }
-    
+
     @Override
-    public MotorSafetyHelper getSafetyHelper(){
+    public MotorSafetyHelper getSafetyHelper() {
         return m_safetyHelper;
     }
 
@@ -2215,16 +2251,15 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
         return "PIDController";
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
     public void initTable(ITable subtable) {
-        if(m_table!=null)
+        if (m_table != null)
             m_table.removeTableListener(m_listener);
         m_table = subtable;
-        if(m_table!=null) {
+        if (m_table != null) {
             subtable.putNumber("p", getP());
             subtable.putNumber("i", getI());
             subtable.putNumber("d", getD());
@@ -2254,11 +2289,11 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      */
     @Override
     public void startLiveWindowMode() {
-//        set(0); // Stop for safety
-//        m_table_listener = (ITable itable, String key,
-//                            Object value, boolean bln) -> set(((Double) value).doubleValue());
-//                            
-//        m_table.addTableListener("Value", m_table_listener, true);
+        // set(0); // Stop for safety
+        // m_table_listener = (ITable itable, String key,
+        // Object value, boolean bln) -> set(((Double) value).doubleValue());
+        //
+        // m_table.addTableListener("Value", m_table_listener, true);
     }
 
     /**
@@ -2266,9 +2301,9 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      */
     @Override
     public void stopLiveWindowMode() {
-//        set(0); // Stop for safety
-//        // TODO: Broken, should only remove the listener from "Value" only.
-//        m_table.removeTableListener(m_table_listener);
+        // set(0); // Stop for safety
+        // // TODO: Broken, should only remove the listener from "Value" only.
+        // m_table.removeTableListener(m_table_listener);
     }
 
     /**
@@ -2300,6 +2335,6 @@ public final class CANJaguar implements ActuatorModule, ControllerModule,
      */
     @Override
     public void makeSafe() {
-        
+
     }
 }

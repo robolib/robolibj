@@ -57,6 +57,7 @@ public abstract class InterruptBase extends Interface {
 
     /**
      * Get whether this interrupt is an analog trigger or not
+     *
      * @return true if this interrupt is an AnalogTrigger
      * @see AnalogInput#initTrigger()
      * @see AnalogInput#createTriggerOutput(AnalogTriggerType)
@@ -79,24 +80,22 @@ public abstract class InterruptBase extends Interface {
      */
     abstract byte getModuleNumber();
 
-
     /**
      * Request one of the 8 interrupts asynchronously on this digital input.
      *
-     * @param handler
-     *            The {@link InterruptHandlerFunction} that contains the method
-     *            {@link InterruptHandlerFunction#interruptFired(int, Object)} that
-     *            will be called whenever there is an interrupt on this device.
-     *            Request interrupts in synchronous mode where the user program
-     *            interrupt handler will be called when an interrupt occurs. The
-     *            default is interrupt on rising edges only.
+     * @param handler The {@link InterruptHandlerFunction} that contains the method
+     *                {@link InterruptHandlerFunction#interruptFired(int, Object)}
+     *                that will be called whenever there is an interrupt on this
+     *                device. Request interrupts in synchronous mode where the user
+     *                program interrupt handler will be called when an interrupt
+     *                occurs. The default is interrupt on rising edges only.
      */
-    public final void requestInterrupt(InterruptHandlerFunction<?> handler){
-        if(m_interrupt != null)
+    public final void requestInterrupt(InterruptHandlerFunction<?> handler) {
+        if (m_interrupt != null)
             throw new ResourceAllocationException("Interrupt already allocated");
 
         allocateInterrupt(false);
-        assert(m_interrupt != null);
+        assert (m_interrupt != null);
 
         IntBuffer status = allocateInt();
         InterruptJNI.attachInterruptHandler(m_interrupt, handler, handler.getParameter(), status);
@@ -105,38 +104,39 @@ public abstract class InterruptBase extends Interface {
 
     /**
      * Request one of the 8 interrupts synchronously on this digital input. Request
-     * interrupts in synchronous mode where the user program will have to
-     * explicitly wait for the interrupt to occur using {@link #waitForInterrupt}.
-     * The default is interrupt on rising edges only.
+     * interrupts in synchronous mode where the user program will have to explicitly
+     * wait for the interrupt to occur using {@link #waitForInterrupt}. The default
+     * is interrupt on rising edges only.
      */
-    public final void requestInterrupt(){
-        if(m_interrupt != null)
+    public final void requestInterrupt() {
+        if (m_interrupt != null)
             throw new ResourceAllocationException("Interrupt already allocated");
 
         allocateInterrupt(true);
 
-        assert(m_interrupt != null);
+        assert (m_interrupt != null);
     }
 
     /**
      * Allocate the interrupt
      *
-     * @param watcher true if the interrupt should be in synchronous mode where the user
-     * program will have to explicitly wait for the interrupt to occur.
+     * @param watcher true if the interrupt should be in synchronous mode where the
+     *                user program will have to explicitly wait for the interrupt to
+     *                occur.
      */
-    protected final void allocateInterrupt(boolean watcher){
-        if(m_allocated >= 8)
+    protected final void allocateInterrupt(boolean watcher) {
+        if (m_allocated >= 8)
             throw new ResourceAllocationException("No more interrupts available");
 
         m_isSyncInterrupt = watcher;
         IntBuffer status = allocateInt();
-        m_interrupt = InterruptJNI.initializeInterrupts(m_allocated++, (byte)(watcher?1:0), status);
+        m_interrupt = InterruptJNI.initializeInterrupts(m_allocated++, (byte) (watcher ? 1 : 0), status);
         HALUtil.checkStatus(status);
 
         InterruptJNI.requestInterrupts(m_interrupt, getModuleNumber(), getChannelNumber(),
-                (byte)(isAnalogTrigger() ? 1 : 0), status);
+                (byte) (isAnalogTrigger() ? 1 : 0), status);
         HALUtil.checkStatus(status);
-        InterruptJNI.setInterruptUpSourceEdge(m_interrupt, (byte)1, (byte)0, status);
+        InterruptJNI.setInterruptUpSourceEdge(m_interrupt, (byte) 1, (byte) 0, status);
         HALUtil.checkStatus(status);
     }
 
@@ -144,7 +144,7 @@ public abstract class InterruptBase extends Interface {
      * Cancel interrupts on this device. This deallocates all the chipobject
      * structures and disables any interrupts.
      */
-    public final void cancelInterrupt(){
+    public final void cancelInterrupt() {
         validateInterrupt();
         IntBuffer status = allocateInt();
         InterruptJNI.cleanInterrupts(m_interrupt, status);
@@ -152,23 +152,24 @@ public abstract class InterruptBase extends Interface {
         m_interrupt = null;
         m_allocated--;
     }
+
     /**
      * In synchronous mode, wait for the defined interrupt to occur.
      *
      * @param timeout Timeout in seconds
      */
-    public final void waitForInterrupt(double timeout){
+    public final void waitForInterrupt(double timeout) {
         waitForInterrupt(timeout, true);
     }
 
     /**
      * In synchronous mode, wait for the defined interrupt to occur.
      *
-     * @param timeout Timeout in seconds
-     * @param ignorePrevious If true, ignore interrupts that happened
-     * before waitForInterrupt was called.
+     * @param timeout        Timeout in seconds
+     * @param ignorePrevious If true, ignore interrupts that happened before
+     *                       waitForInterrupt was called.
      */
-    public final void waitForInterrupt(double timeout, boolean ignorePrevious){
+    public final void waitForInterrupt(double timeout, boolean ignorePrevious) {
         validateInterrupt();
         IntBuffer status = allocateInt();
         InterruptJNI.waitForInterrupt(m_interrupt, timeout, ignorePrevious, status);
@@ -176,13 +177,14 @@ public abstract class InterruptBase extends Interface {
     }
 
     /**
-     * Enable interrupts to occur on this input. Interrupts are disabled when
-     * the RequestInterrupt call is made. This gives time to do the setup of the
-     * other options before starting to field interrupts.
+     * Enable interrupts to occur on this input. Interrupts are disabled when the
+     * RequestInterrupt call is made. This gives time to do the setup of the other
+     * options before starting to field interrupts.
      */
-    public final void enableInterrupts(){
+    public final void enableInterrupts() {
         validateInterrupt();
-        if(m_isSyncInterrupt) return;
+        if (m_isSyncInterrupt)
+            return;
 
         IntBuffer status = allocateInt();
         InterruptJNI.enableInterrupts(m_interrupt, status);
@@ -192,9 +194,9 @@ public abstract class InterruptBase extends Interface {
     /**
      * Disable Interrupts without without deallocating structures.
      */
-    public final void disableInterrupts(){
+    public final void disableInterrupts() {
         validateInterrupt();
-        if(m_isSyncInterrupt)
+        if (m_isSyncInterrupt)
             throw new IllegalStateException("You can not disable synchronous interrupts");
 
         IntBuffer status = allocateInt();
@@ -203,13 +205,13 @@ public abstract class InterruptBase extends Interface {
     }
 
     /**
-     * Return the timestamp for the rising interrupt that occurred most
-     * recently. This is in the same time domain as getClock().
-     * The rising-edge interrupt should be enabled with
-     * {@link #setUpSourceEdge}
+     * Return the timestamp for the rising interrupt that occurred most recently.
+     * This is in the same time domain as getClock(). The rising-edge interrupt
+     * should be enabled with {@link #setUpSourceEdge}
+     *
      * @return Timestamp in seconds since boot.
      */
-    public final double readRisingTimestamp(){
+    public final double readRisingTimestamp() {
         validateInterrupt();
         IntBuffer status = allocateInt();
         double timestamp = InterruptJNI.readRisingTimestamp(m_interrupt, status);
@@ -218,13 +220,13 @@ public abstract class InterruptBase extends Interface {
     }
 
     /**
-     * Return the timestamp for the falling interrupt that occurred most
-     * recently. This is in the same time domain as getClock().
-     * The falling-edge interrupt should be enabled with
-     * {@link #setUpSourceEdge}
+     * Return the timestamp for the falling interrupt that occurred most recently.
+     * This is in the same time domain as getClock(). The falling-edge interrupt
+     * should be enabled with {@link #setUpSourceEdge}
+     *
      * @return Timestamp in seconds since boot.
      */
-    public final double readFallingTimestamp(){
+    public final double readFallingTimestamp() {
         validateInterrupt();
         IntBuffer status = allocateInt();
         double timestamp = InterruptJNI.readFallingTimestamp(m_interrupt, status);
@@ -235,24 +237,23 @@ public abstract class InterruptBase extends Interface {
     /**
      * Set which edge to trigger interrupts on
      *
-     * @param risingEdge true to interrupt on rising edge
+     * @param risingEdge  true to interrupt on rising edge
      * @param fallingEdge true to interrupt on falling edge
      */
-    public final void setUpSourceEdge(boolean risingEdge, boolean fallingEdge){
+    public final void setUpSourceEdge(boolean risingEdge, boolean fallingEdge) {
         validateInterrupt();
         IntBuffer status = allocateInt();
-        InterruptJNI.setInterruptUpSourceEdge(m_interrupt, (byte)(risingEdge?1:0),
-                (byte)(fallingEdge?1:0), status);
+        InterruptJNI.setInterruptUpSourceEdge(m_interrupt, (byte) (risingEdge ? 1 : 0), (byte) (fallingEdge ? 1 : 0),
+                status);
         HALUtil.checkStatus(status);
     }
 
     /**
      * Make sure that the interrupt is not null.
      */
-    protected final void validateInterrupt(){
-        if(m_interrupt == null)
+    protected final void validateInterrupt() {
+        if (m_interrupt == null)
             throw new IllegalStateException("Interrupt not allocated.");
     }
-
 
 }

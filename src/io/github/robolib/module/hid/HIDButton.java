@@ -17,7 +17,6 @@ package io.github.robolib.module.hid;
 
 import io.github.robolib.identifier.ButtonTrigger;
 
-
 /**
  * A class representation of a Joystick Button.
  *
@@ -27,6 +26,7 @@ public interface HIDButton extends ButtonTrigger {
 
     /**
      * Get the Value of the Button.
+     *
      * @return the value of the Button.
      */
     @Override

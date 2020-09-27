@@ -11,6 +11,7 @@ public class BadMessageException extends IOException {
 
     /**
      * Create a new exception
+     * 
      * @param message a message
      */
     public BadMessageException(final String message) {

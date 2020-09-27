@@ -50,20 +50,16 @@ public class ADXL345_I2C extends I2C implements ADXL345, SensorModule {
         return m_range;
     }
 
-    public double getAcceleration(Axis axis){
+    public double getAcceleration(Axis axis) {
         short[] buffer = new short[1];
         readWord(DATA_FORMAT_REGISTER + axis.value, buffer);
         return buffer[0] * GS_PER_LSB;
     }
 
-    public double[] getAccelerations(){
+    public double[] getAccelerations() {
         short[] buffer = new short[3];
         readWords(DATA_FORMAT_REGISTER, buffer, 3);
-        return new double[]{
-                buffer[0] * GS_PER_LSB,
-                buffer[0] * GS_PER_LSB,
-                buffer[0] * GS_PER_LSB
-        };
+        return new double[] { buffer[0] * GS_PER_LSB, buffer[0] * GS_PER_LSB, buffer[0] * GS_PER_LSB };
     }
 
     /**

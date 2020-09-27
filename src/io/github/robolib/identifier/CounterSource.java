@@ -23,9 +23,10 @@ package io.github.robolib.identifier;
 public interface CounterSource {
 
     /**
-     * Read the current counter value. Read the value at this instant. It may
-     * still be running, so it reflects the current value. Next time it is read,
-     * it might have a different value.
+     * Read the current counter value. Read the value at this instant. It may still
+     * be running, so it reflects the current value. Next time it is read, it might
+     * have a different value.
+     * 
      * @return the count of this counter
      */
     int getCount();

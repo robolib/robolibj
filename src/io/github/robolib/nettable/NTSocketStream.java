@@ -6,7 +6,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 /**
- * An SimpleIOStream that wraps an {@link InputStream} and an {@link OutputStream}
+ * An SimpleIOStream that wraps an {@link InputStream} and an
+ * {@link OutputStream}
  */
 public class NTSocketStream {
 
@@ -16,12 +17,14 @@ public class NTSocketStream {
 
     /**
      * Create a new SimpleIOStream
+     * 
      * @param is
      * @param os
      */
     public NTSocketStream(String host, int port) throws IOException {
         this(new Socket(host, port));
     }
+
     public NTSocketStream(Socket socket) throws IOException {
         m_is = socket.getInputStream();
         m_os = socket.getOutputStream();
@@ -46,15 +49,18 @@ public class NTSocketStream {
      * completely close the stream
      */
     public void close() {
-        try{
+        try {
             m_is.close();
-        } catch(IOException e){}
-        try{
+        } catch (IOException e) {
+        }
+        try {
             m_os.close();
-        } catch(IOException e){}
-        try{
+        } catch (IOException e) {
+        }
+        try {
             m_socket.close();
-        } catch(IOException e){}
+        } catch (IOException e) {
+        }
     }
 
 }

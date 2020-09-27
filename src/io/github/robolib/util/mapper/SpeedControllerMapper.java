@@ -38,10 +38,9 @@ import org.json.JSONObject;
  */
 public final class SpeedControllerMapper implements ModuleMapper<SpeedController> {
 
-    private static final Map<String, Class<? extends SpeedController>> m_controllMap =
-            new HashMap<String, Class<? extends SpeedController>>();
+    private static final Map<String, Class<? extends SpeedController>> m_controllMap = new HashMap<String, Class<? extends SpeedController>>();
 
-    static{
+    static {
         registerController(Talon.class, "talon", "talonsr");
         registerController(TalonSRX.class, "talonsrx");
         registerController(Victor.class, "victor", "victorsp");
@@ -59,32 +58,25 @@ public final class SpeedControllerMapper implements ModuleMapper<SpeedController
             boolean invert = data.getBoolean("inverted");
 
             SpeedController s = m_controllMap.get(type)
-                    .getConstructor(
-                            PWMChannel.class,
-                            String.class,
-                            PowerChannel.class)
-                    .newInstance(
-                            PWMChannel.values()[data.getInt("device_channel")],
-                            data.getString("description"),
+                    .getConstructor(PWMChannel.class, String.class, PowerChannel.class)
+                    .newInstance(PWMChannel.values()[data.getInt("device_channel")], data.getString("description"),
                             PowerChannel.values()[data.getInt("power_channel")]);
             s.setInverted(invert);
             return s;
 
-        } catch (NoSuchMethodException | SecurityException
-                | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException
-                | JSONException e) {
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException | JSONException e) {
             Logger.get(RobotMap.class).fatal("Unable to create SpeedController for key '" + key + "'", e);
         }
         return null;
     }
 
-    public static final void registerController(Class<? extends SpeedController> con, String ... keys){
-        for(String key : keys){
-            if(m_controllMap.containsKey(key.toLowerCase())){
-                Logger.get(RobotMap.class).warn(
-                        "SpeedControllerBuilder already contains a an item for key '" + key + "'.");
-            }else{
+    public static final void registerController(Class<? extends SpeedController> con, String... keys) {
+        for (String key : keys) {
+            if (m_controllMap.containsKey(key.toLowerCase())) {
+                Logger.get(RobotMap.class)
+                        .warn("SpeedControllerBuilder already contains a an item for key '" + key + "'.");
+            } else {
                 m_controllMap.put(key.toLowerCase(), con);
             }
         }

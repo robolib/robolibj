@@ -12,17 +12,21 @@ public class CtreCanNode {
 
     private long swigCPtr;
     protected boolean swigCMemOwn;
+
     protected CtreCanNode(long cPtr, boolean cMemoryOwn) {
         swigCMemOwn = cMemoryOwn;
         swigCPtr = cPtr;
     }
+
     protected static long getCPtr(CtreCanNode obj) {
         return (obj == null) ? 0 : obj.swigCPtr;
-    }@
-    Override
+    }
+
+    @Override
     protected void finalize() {
         delete();
     }
+
     public synchronized void delete() {
         if (swigCPtr != 0) {
             if (swigCMemOwn) {
@@ -32,9 +36,11 @@ public class CtreCanNode {
             swigCPtr = 0;
         }
     }
+
     public CtreCanNode(SWIGTYPE_Adapter deviceNumber) {
         this(CanTalonJNI.new_CtreCanNode(SWIGTYPE_Adapter.getCPtr(deviceNumber)), true);
     }
+
     public SWIGTYPE_Adapter GetDeviceNumber() {
         return new SWIGTYPE_Adapter(CanTalonJNI.CtreCanNode_GetDeviceNumber(swigCPtr, this), true);
     }

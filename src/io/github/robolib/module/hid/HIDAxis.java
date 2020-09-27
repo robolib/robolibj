@@ -26,6 +26,7 @@ public interface HIDAxis extends NumberSource {
 
     /**
      * Get the Value of the Axis.
+     *
      * @return the value of the Axis.
      */
     public double get();
@@ -37,6 +38,7 @@ public interface HIDAxis extends NumberSource {
 
     /**
      * Set the Deadband of the Axis.
+     *
      * @param deadband the deadband value of the axis.
      */
     public void setDeadband(double deadband);

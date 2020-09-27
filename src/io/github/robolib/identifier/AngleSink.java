@@ -28,11 +28,11 @@ public interface AngleSink {
 
     void setAngle(double angle);
 
-    public default void bindAngle(AngleSource source){
+    public default void bindAngle(AngleSource source) {
         Scheduler.addBind(() -> setAngle(source.getAngle()));
     }
 
-    public default void bindAngle(DoubleSupplier source){
+    public default void bindAngle(DoubleSupplier source) {
         Scheduler.addBind(() -> setAngle(source.getAsDouble()));
     }
 

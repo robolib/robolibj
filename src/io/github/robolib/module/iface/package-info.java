@@ -15,6 +15,7 @@
 
 /**
  * Classes that are used to interface with Physics devices.
+ *
  * @author noriah reuland <code@noriah.dev>
  */
 package io.github.robolib.module.iface;

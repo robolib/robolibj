@@ -9,22 +9,18 @@ import java.nio.ByteBuffer;
 //
 // base class for all JNI wrappers
 //
-public class JNIWrapper
-{
+public class JNIWrapper {
 	static boolean libraryLoaded = false;
 	static File jniLibrary = null;
-	static
-	{
-		try
-		{
-			if( !libraryLoaded )
-			{
+	static {
+		try {
+			if (!libraryLoaded) {
 				// create temporary file
 				jniLibrary = File.createTempFile("librobolibJNI", ".so");
 				// flag for delete on exit
 				jniLibrary.deleteOnExit();
 
-				byte [] buffer = new byte[1024];
+				byte[] buffer = new byte[1024];
 
 				int readBytes;
 
@@ -32,32 +28,27 @@ public class JNIWrapper
 
 				OutputStream os = new FileOutputStream(jniLibrary);
 
-				try
-				{
-					while((readBytes = is.read(buffer)) != -1 )
-					{
+				try {
+					while ((readBytes = is.read(buffer)) != -1) {
 						os.write(buffer, 0, readBytes);
 					}
 
-				}
-				finally
-				{
+				} finally {
 					os.close();
 					is.close();
 				}
-
 
 				libraryLoaded = true;
 			}
 
 			System.load(jniLibrary.getAbsolutePath());
-		}
-		catch( Exception ex )
-		{
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);
 		}
 	}
+
 	public static native ByteBuffer getPortWithModule(byte module, byte pin);
+
 	public static native ByteBuffer getPort(byte pin);
 }

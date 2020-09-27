@@ -41,7 +41,7 @@ public interface MotorSafety {
     /**
      * Feed the safety helper
      */
-    public default void feed(){
+    public default void feed() {
         getSafetyHelper().feed();
     }
 
@@ -50,7 +50,7 @@ public interface MotorSafety {
      *
      * @return true, if is alive
      */
-    public default boolean isAlive(){
+    public default boolean isAlive() {
         return getSafetyHelper().isAlive();
     }
 
@@ -59,7 +59,7 @@ public interface MotorSafety {
      *
      * @param timeout the new safety expiration
      */
-    public default void setSafetyExpiration(double timeout){
+    public default void setSafetyExpiration(double timeout) {
         getSafetyHelper().setExpiration(timeout);
     }
 
@@ -68,7 +68,7 @@ public interface MotorSafety {
      *
      * @return the safety expiration
      */
-    public default double getSafetyExpiration(){
+    public default double getSafetyExpiration() {
         return getSafetyHelper().getExpiration();
     }
 
@@ -82,7 +82,7 @@ public interface MotorSafety {
      *
      * @param enabled the enabled
      */
-    public default void setSafetyEnabled(boolean enabled){
+    public default void setSafetyEnabled(boolean enabled) {
         getSafetyHelper().setSafetyEnabled(enabled);
     }
 
@@ -91,7 +91,7 @@ public interface MotorSafety {
      *
      * @return true, if is safety enabled
      */
-    public default boolean isSafetyEnabled(){
+    public default boolean isSafetyEnabled() {
         return getSafetyHelper().isSafetyEnabled();
     }
 

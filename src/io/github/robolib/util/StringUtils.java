@@ -21,7 +21,7 @@ package io.github.robolib.util;
  */
 public class StringUtils {
 
-    public static final String getNumber2DWithUnits(double value, String units){
+    public static final String getNumber2DWithUnits(double value, String units) {
         return String.format("%.2f%s", value, units);
     }
 

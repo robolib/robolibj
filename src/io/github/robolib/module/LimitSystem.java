@@ -17,7 +17,6 @@ package io.github.robolib.module;
 
 import io.github.robolib.identifier.BooleanSource;
 
-
 /**
  * The Limit Switch System Interface.
  *
@@ -32,11 +31,9 @@ public class LimitSystem {
      */
     public static enum SystemType {
         /** System limited at a front limit. */
-        SINGLE_FORWARD,
-        FORWARD,
+        SINGLE_FORWARD, FORWARD,
         /** System limited at a back limit. */
-        SINGLE_REVERSE,
-        REVERSE,
+        SINGLE_REVERSE, REVERSE,
         /** System limited by back and front limits. */
         DUAL;
     }
@@ -47,21 +44,21 @@ public class LimitSystem {
 
     private BooleanSource m_backLimit;
 
-    public LimitSystem(BooleanSource limit, SystemType type){
-        switch(type){
-        case FORWARD:
-        case SINGLE_FORWARD:
-            m_frontLimit = limit;
-        case REVERSE:
-        case SINGLE_REVERSE:
-            m_backLimit = limit;
-        case DUAL:
-            throw new IllegalArgumentException("Wrong constructor for a Dual Limit System.");
+    public LimitSystem(BooleanSource limit, SystemType type) {
+        switch (type) {
+            case FORWARD:
+            case SINGLE_FORWARD:
+                m_frontLimit = limit;
+            case REVERSE:
+            case SINGLE_REVERSE:
+                m_backLimit = limit;
+            case DUAL:
+                throw new IllegalArgumentException("Wrong constructor for a Dual Limit System.");
         }
         m_systemType = type;
     }
 
-    public LimitSystem(BooleanSource frontLimit, BooleanSource backLimit){
+    public LimitSystem(BooleanSource frontLimit, BooleanSource backLimit) {
         m_frontLimit = frontLimit;
         m_backLimit = backLimit;
         m_systemType = SystemType.DUAL;
@@ -72,8 +69,9 @@ public class LimitSystem {
      *
      * @return Can we go Up
      */
-    public boolean canForward(){
-        if(m_systemType == SystemType.SINGLE_REVERSE) return true;
+    public boolean canForward() {
+        if (m_systemType == SystemType.SINGLE_REVERSE)
+            return true;
         return !m_frontLimit.getState();
     }
 
@@ -82,8 +80,9 @@ public class LimitSystem {
      *
      * @return Can we go Down
      */
-    public boolean canReverse(){
-        if(m_systemType == SystemType.SINGLE_FORWARD) return true;
+    public boolean canReverse() {
+        if (m_systemType == SystemType.SINGLE_FORWARD)
+            return true;
         return !m_backLimit.getState();
     }
 

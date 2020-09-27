@@ -35,8 +35,7 @@ public class LimitSwitchMapper implements ModuleMapper<LimitSwitch> {
     @Override
     public LimitSwitch createModule(String key, JSONObject data) {
         try {
-            return new LimitSwitch(
-                    DigitalChannel.values()[data.getInt("channel")],
+            return new LimitSwitch(DigitalChannel.values()[data.getInt("channel")],
                     LimitSwitch.SwitchType.valueOf(data.getString("circuit_type").toUpperCase()));
         } catch (IllegalArgumentException | SecurityException | JSONException e) {
             Logger.get(RobotMap.class).fatal("Unable to create LimitSwitch for key '" + key + "'", e);
@@ -49,12 +48,7 @@ public class LimitSwitchMapper implements ModuleMapper<LimitSwitch> {
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "limit_switch",
-                "limitswitch",
-                "lswitch",
-                "switch"
-        };
+        return new String[] { "limit_switch", "limitswitch", "lswitch", "switch" };
     }
 
 }

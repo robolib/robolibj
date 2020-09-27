@@ -28,11 +28,11 @@ public interface SpeedSink {
 
     void setSpeed(double speed);
 
-    public default void bindSpeed(SpeedSource source){
+    public default void bindSpeed(SpeedSource source) {
         Scheduler.addBind(() -> setSpeed(source.getSpeed()));
     }
 
-    public default void bindSpeed(DoubleSupplier source){
+    public default void bindSpeed(DoubleSupplier source) {
         Scheduler.addBind(() -> setSpeed(source.getAsDouble()));
     }
 

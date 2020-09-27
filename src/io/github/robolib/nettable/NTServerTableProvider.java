@@ -12,19 +12,21 @@ public class NTServerTableProvider {
 
     /**
      * Create a new NetworkTableProvider for a given NetworkTableNode
-     * @param node the node that handles the actual network table 
-     * @throws IOException 
+     * 
+     * @param node the node that handles the actual network table
+     * @throws IOException
      */
-    public NTServerTableProvider() throws IOException{
+    public NTServerTableProvider() throws IOException {
         m_node = new NTServer();
     }
-    
-    public ITable getRootTable(){
+
+    public ITable getRootTable() {
         return getTable("");
     }
 
     /**
      * Get a table by name
+     * 
      * @param name the name of the table
      * @return a Table with the given name
      */
@@ -39,7 +41,8 @@ public class NTServerTableProvider {
     }
 
     /**
-     * @return the Network Table node that backs the Tables returned by this provider
+     * @return the Network Table node that backs the Tables returned by this
+     *         provider
      */
     public NTServer getServer() {
         return m_node;

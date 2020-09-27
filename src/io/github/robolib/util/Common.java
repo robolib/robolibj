@@ -30,17 +30,16 @@ import io.github.robolib.nettable.ITable;
  */
 public class Common {
 
-
-    public static String getTeamNumber(){
+    public static String getTeamNumber() {
         Runtime run = Runtime.getRuntime();
         Process proc;
         try {
             proc = run.exec("hostname");
             BufferedInputStream in = new BufferedInputStream(proc.getInputStream());
-            byte [] b = new byte[256];
+            byte[] b = new byte[256];
             in.read(b, 0, 256);
             return new String(b).trim().replace("roboRIO-", "");
-        } catch(IOException e1) {
+        } catch (IOException e1) {
             e1.printStackTrace();
         }
         return null;
@@ -49,35 +48,36 @@ public class Common {
     /**
      * Get an integer representation of the direction towards an angle.
      *
-     * @param to angle to go to
+     * @param to   angle to go to
      * @param from angle to come from
      * @return integer representation (-1/0/1) of left/none/right
      */
-    public static int directionTo(double to, double from){
-        if (to == from){
+    public static int directionTo(double to, double from) {
+        if (to == from) {
             return 0;
-        }else if ((to >= 0 & from >= 0) | (to < 0 & from < 0)){
+        } else if ((to >= 0 & from >= 0) | (to < 0 & from < 0)) {
             return (to - from) < 0 ? -1 : 1;
-        }else if (to < 0 & from >= 0){
+        } else if (to < 0 & from >= 0) {
             return ((from < 90 ? -1 : 1) * (to > -90 ? -1 : 1));
-        }else{
+        } else {
             return ((from < -90 ? -1 : 1) * (to > 90 ? -1 : 1));
         }
     }
 
     /**
      * Get an IntBuffer of size 4 with Little Endian Byte Order
+     *
      * @return an IntBuffer of size 4 with Little Endian byte order
      */
-    public static IntBuffer allocateInt(){
+    public static IntBuffer allocateInt() {
         ByteBuffer status = ByteBuffer.allocateDirect(4);
         status.order(ByteOrder.LITTLE_ENDIAN);
         return status.asIntBuffer();
     }
 
-    public static ITable getTable(ITable table, String path){
+    public static ITable getTable(ITable table, String path) {
         String[] a = path.split("/");
-        for(String s : a){
+        for (String s : a) {
             table = table.getSubTable(s);
         }
         return table;

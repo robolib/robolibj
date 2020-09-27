@@ -27,13 +27,13 @@ public interface ActuatorModule extends Module {
     /**
      * Make this actuator safe.
      *
-     * This should disable the module and keep it disabled.
-     * There should be no way to recover from a "safe" state.
+     * This should disable the module and keep it disabled. There should be no way
+     * to recover from a "safe" state.
      *
-     * This is here to allow for exceptions in function, to keep
-     * the code resetting (switching game mode) from affecting
-     * the state, in case an external sensor detects that the module
-     * will cause damage to itself or others (or even people)
+     * This is here to allow for exceptions in function, to keep the code resetting
+     * (switching game mode) from affecting the state, in case an external sensor
+     * detects that the module will cause damage to itself or others (or even
+     * people)
      *
      * To recover from this state, the code should need to be restarted.
      */

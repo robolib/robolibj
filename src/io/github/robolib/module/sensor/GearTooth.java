@@ -28,32 +28,32 @@ public class GearTooth extends Counter {
 
     private static final double GEAR_TOOTH_THRESHOLD = 55e-6;
 
-    public GearTooth(DigitalIO source){
+    public GearTooth(DigitalIO source) {
         this(source, false);
     }
 
-    public GearTooth(DigitalChannel channel){
+    public GearTooth(DigitalChannel channel) {
         this(channel, false);
     }
 
-    public GearTooth(DigitalIO source, boolean dirSensitive){
+    public GearTooth(DigitalIO source, boolean dirSensitive) {
         super(source);
         enableDirectionSensing(dirSensitive);
     }
 
-    public GearTooth(DigitalChannel channel, boolean dirSensitive){
+    public GearTooth(DigitalChannel channel, boolean dirSensitive) {
         super(channel);
         enableDirectionSensing(dirSensitive);
 
-        if(dirSensitive) {
+        if (dirSensitive) {
             UsageReporting.report(UsageReporting.ResourceType_GearTooth, channel.ordinal(), 0, "D");
         } else {
             UsageReporting.report(UsageReporting.ResourceType_GearTooth, channel.ordinal(), 0);
         }
     }
 
-    public void enableDirectionSensing(boolean dirSensitive){
-        if(dirSensitive)
+    public void enableDirectionSensing(boolean dirSensitive) {
+        if (dirSensitive)
             setPulseLengthMode(GEAR_TOOTH_THRESHOLD);
     }
 

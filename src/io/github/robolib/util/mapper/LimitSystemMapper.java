@@ -35,47 +35,46 @@ public class LimitSystemMapper implements ModuleMapper<LimitSystem> {
     @Override
     public LimitSystem createModule(String key, JSONObject data) {
         String type = data.getString("type");
-        switch(type){
-        case "singlelimitsystem":
-        case "single_limit_system": {
-            BooleanSource limit;
+        switch (type) {
+            case "singlelimitsystem":
+            case "single_limit_system": {
+                BooleanSource limit;
 
-            Object o = data.get("limit");
+                Object o = data.get("limit");
 
-            if(o instanceof JSONObject){
-                limit = RobotMap.getModule(key, (JSONObject) o);
-            }else{
-                limit = RobotMap.getModule((String)o);
+                if (o instanceof JSONObject) {
+                    limit = RobotMap.getModule(key, (JSONObject) o);
+                } else {
+                    limit = RobotMap.getModule((String) o);
+                }
+
+                return new LimitSystem(limit, LimitSystem.SystemType.valueOf(data.getString("system_type")));
             }
+            case "doublelimitsystem":
+            case "double_limit_system": {
+                BooleanSource topLimit;
+                BooleanSource bottomLimit;
 
-            return new LimitSystem(limit,
-                    LimitSystem.SystemType.valueOf(data.getString("system_type")));
-        }
-        case "doublelimitsystem":
-        case "double_limit_system": {
-            BooleanSource topLimit;
-            BooleanSource bottomLimit;
+                Object o = data.get("forward_limit");
+                Object p = data.get("reverse_limit");
 
-            Object o = data.get("forward_limit");
-            Object p = data.get("reverse_limit");
+                if (o instanceof JSONArray) {
+                    topLimit = RobotMap.getModule(key, (JSONObject) o);
+                } else {
+                    topLimit = RobotMap.getModule((String) o);
+                }
 
-            if(o instanceof JSONArray){
-                topLimit = RobotMap.getModule(key, (JSONObject) o);
-            }else{
-                topLimit = RobotMap.getModule((String)o);
+                if (p instanceof JSONArray) {
+                    bottomLimit = RobotMap.getModule(key, (JSONObject) p);
+                } else {
+                    bottomLimit = RobotMap.getModule((String) p);
+                }
+
+                return new LimitSystem(topLimit, bottomLimit);
             }
-
-            if(p instanceof JSONArray){
-                bottomLimit = RobotMap.getModule(key, (JSONObject)p);
-            }else{
-                bottomLimit = RobotMap.getModule((String)p);
-            }
-
-            return new LimitSystem(topLimit, bottomLimit);
-        }
-        default:
-            Logger.get(RobotMap.class).fatal("No such type '" + type + "' for limit systems. Key: " + key);
-            break;
+            default:
+                Logger.get(RobotMap.class).fatal("No such type '" + type + "' for limit systems. Key: " + key);
+                break;
         }
 
         return null;
@@ -86,14 +85,8 @@ public class LimitSystemMapper implements ModuleMapper<LimitSystem> {
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "limitsystem",
-                "limit_system",
-                "singlelimitsystem",
-                "single_limit_system",
-                "doublelimitsystem",
-                "double_limit_system"
-        };
+        return new String[] { "limitsystem", "limit_system", "singlelimitsystem", "single_limit_system",
+                "doublelimitsystem", "double_limit_system" };
     }
 
 }

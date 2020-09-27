@@ -44,10 +44,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
         setClockActiveLow();
         setChipSelectActiveHigh();
 
-        write(new byte[]{
-                POWER_CONTROL_REGISTER,
-                POWER_CONTROL_MEASURE
-        }, 2);
+        write(new byte[] { POWER_CONTROL_REGISTER, POWER_CONTROL_MEASURE }, 2);
 
         setAccelRange(range);
 
@@ -59,10 +56,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
      * {@inheritDoc}
      */
     public void setAccelRange(AccelRange range) {
-        write(new byte[]{
-                DATA_FORMAT_REGISTER,
-                (byte)(DATA_FORMAT_FULL_RES | range.ordinal())
-        }, 2);
+        write(new byte[] { DATA_FORMAT_REGISTER, (byte) (DATA_FORMAT_FULL_RES | range.ordinal()) }, 2);
         m_range = range;
     }
 
@@ -77,7 +71,7 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
      * {@inheritDoc}
      */
     @Override
-    public double getAcceleration(Axis axis){
+    public double getAcceleration(Axis axis) {
         byte[] buffer = new byte[3];
         buffer[0] = (byte) (ADDRESS_READ_MULTI_REG + axis.value);
         transaction(buffer, buffer, 3);
@@ -90,17 +84,13 @@ public class ADXL345_SPI extends SPI implements ADXL345, SensorModule {
      * {@inheritDoc}
      */
     @Override
-    public double[] getAccelerations(){
+    public double[] getAccelerations() {
         byte[] buffer = new byte[7];
         buffer[0] = ADDRESS_READ_MULTI_REG;
         transaction(buffer, buffer, 7);
         ByteBuffer raw = ByteBuffer.wrap(buffer, 1, 6);
         raw.order(ByteOrder.LITTLE_ENDIAN);
-        return new double[]{
-                raw.getShort() * GS_PER_LSB,
-                raw.getShort() * GS_PER_LSB,
-                raw.getShort() * GS_PER_LSB
-        };
+        return new double[] { raw.getShort() * GS_PER_LSB, raw.getShort() * GS_PER_LSB, raw.getShort() * GS_PER_LSB };
     }
 
     /**

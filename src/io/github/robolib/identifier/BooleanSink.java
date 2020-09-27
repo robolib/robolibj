@@ -28,15 +28,16 @@ public interface BooleanSink {
 
     /**
      * Set the value of this BooleanSink
+     *
      * @param value boolean
      */
     void setState(boolean value);
 
-    public default void bindBoolean(BooleanSource source){
+    public default void bindBoolean(BooleanSource source) {
         Scheduler.addBind(() -> setState(source.getState()));
     }
 
-    public default void bindBoolean(BooleanSupplier source){
+    public default void bindBoolean(BooleanSupplier source) {
         Scheduler.addBind(() -> setState(source.getAsBoolean()));
     }
 

@@ -40,10 +40,7 @@ public class CANTalonMapper implements ModuleMapper<CANTalon> {
      */
     @Override
     public String[] getModuleIdentifiers() {
-        return new String[]{
-                "cantalon",
-                "cantalonsrx"
-        };
+        return new String[] { "cantalon", "cantalonsrx" };
     }
 
 }

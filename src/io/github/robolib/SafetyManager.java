@@ -20,6 +20,7 @@ import java.util.List;
 
 import io.github.robolib.module.MotorSafety;
 import io.github.robolib.module.MotorSafetyHelper;
+
 /**
  * The Class SafetyManager.
  *
@@ -36,7 +37,7 @@ public final class SafetyManager {
      * @param object the object
      * @return the motor safety helper
      */
-    public static MotorSafetyHelper addMotor(MotorSafety object){
+    public static MotorSafetyHelper addMotor(MotorSafety object) {
         MotorSafetyHelper msh = new MotorSafetyHelper(object);
         SAFETY_OBJECTS.add(msh);
         return msh;
@@ -45,7 +46,7 @@ public final class SafetyManager {
     /**
      * Check.
      */
-    public static void check(){
+    public static void check() {
         SAFETY_OBJECTS.forEach(MotorSafetyHelper::check);
     }
 

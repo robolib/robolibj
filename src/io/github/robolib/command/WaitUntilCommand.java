@@ -26,21 +26,29 @@ public final class WaitUntilCommand extends Command {
 
     private final double m_time;
 
-    public WaitUntilCommand(double time){
+    public WaitUntilCommand(double time) {
         this("WaitUntil " + time, time);
     }
 
-    public WaitUntilCommand(String name, double time){
+    public WaitUntilCommand(String name, double time) {
         super(name);
         m_time = time;
     }
 
-    public void initialize() {}
-    public void execute() {}
+    public void initialize() {
+    }
+
+    public void execute() {
+    }
+
     public boolean isFinished() {
         return RoboLib.getMatchTime() >= m_time;
     }
-    public void end() {}
-    public void interrupted() {}
+
+    public void end() {
+    }
+
+    public void interrupted() {
+    }
 
 }

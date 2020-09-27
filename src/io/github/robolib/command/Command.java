@@ -76,15 +76,14 @@ public abstract class Command implements NamedSendable {
 
     protected byte m_state;
 
-
     /**
      * Instantiates a new command.
      */
-    public Command(){
+    public Command() {
         m_name = getClass().getCanonicalName();
     }
 
-    public Command(Subsystem system){
+    public Command(Subsystem system) {
         this();
         requires(system);
     }
@@ -94,8 +93,9 @@ public abstract class Command implements NamedSendable {
      *
      * @param name the name
      */
-    public Command(String name){
-        if(name == null) throw new IllegalArgumentException("Name must not be null.");
+    public Command(String name) {
+        if (name == null)
+            throw new IllegalArgumentException("Name must not be null.");
         m_name = name;
     }
 
@@ -104,7 +104,7 @@ public abstract class Command implements NamedSendable {
      *
      * @param timeout the timeout
      */
-    public Command(double timeout){
+    public Command(double timeout) {
         this();
         setTimeout(timeout);
     }
@@ -112,10 +112,10 @@ public abstract class Command implements NamedSendable {
     /**
      * Instantiates a new command.
      *
-     * @param name the name
+     * @param name    the name
      * @param timeout the timeout
      */
-    public Command(String name, double timeout){
+    public Command(String name, double timeout) {
         this(name);
         setTimeout(timeout);
     }
@@ -126,7 +126,7 @@ public abstract class Command implements NamedSendable {
      * @return the name
      */
     @Override
-    public String getName(){
+    public String getName() {
         return m_name;
     }
 
@@ -135,8 +135,8 @@ public abstract class Command implements NamedSendable {
      *
      * @param timeout the new timeout
      */
-    protected final void setTimeout(double timeout){
-        if(timeout < -1)
+    protected final void setTimeout(double timeout) {
+        if (timeout < -1)
             throw new IllegalArgumentException("Timeout can not be less than -1.");
         synchronized (this) {
             m_timeout = timeout;
@@ -148,8 +148,8 @@ public abstract class Command implements NamedSendable {
      *
      * @return the double
      */
-    public final double timeSinceInitialized(){
-        synchronized(this){
+    public final double timeSinceInitialized() {
+        synchronized (this) {
             return m_startTime < 0 ? 0 : RoboRIO.getFPGATimestamp() - m_startTime;
         }
     }
@@ -159,12 +159,14 @@ public abstract class Command implements NamedSendable {
      *
      * @param subsys the subsys
      */
-    protected void requires(Subsystem subsys){
-        if(m_locked)
-            throw new IllegalStateException("Cannot add new requirement to command after being started or added to a command group.");
-        if(subsys == null) return;
-        if(m_requirements == null){
-            synchronized(this){
+    protected void requires(Subsystem subsys) {
+        if (m_locked)
+            throw new IllegalStateException(
+                    "Cannot add new requirement to command after being started or added to a command group.");
+        if (subsys == null)
+            return;
+        if (m_requirements == null) {
+            synchronized (this) {
                 m_requirements = new ArrayList<Subsystem>(1);
             }
         }
@@ -176,13 +178,13 @@ public abstract class Command implements NamedSendable {
     /**
      * Removed.
      */
-    void removed(){
-        synchronized(this){
-            if(m_initialized){
-                if(isCanceled()){
+    void removed() {
+        synchronized (this) {
+            if (m_initialized) {
+                if (isCanceled()) {
                     interrupted();
                     _interrupted();
-                }else{
+                } else {
                     end();
                     _end();
                 }
@@ -191,7 +193,7 @@ public abstract class Command implements NamedSendable {
             m_canceled = false;
             m_running = false;
 
-            if(m_table != null){
+            if (m_table != null) {
                 m_table.putBoolean("running", false);
             }
         }
@@ -202,13 +204,15 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if successful
      */
-    boolean run(){
-        synchronized(this){
-            if(!m_runWhenDisabled && m_parent == null && DriverStation.isDisabled()) cancel();
+    boolean run() {
+        synchronized (this) {
+            if (!m_runWhenDisabled && m_parent == null && DriverStation.isDisabled())
+                cancel();
 
-            if(isCanceled()) return false;
+            if (isCanceled())
+                return false;
 
-            if(!m_initialized){
+            if (!m_initialized) {
                 m_initialized = true;
                 startTiming();
                 _initialize();
@@ -231,66 +235,74 @@ public abstract class Command implements NamedSendable {
     /**
      * Initialize_impl.
      */
-    void _initialize(){}
+    void _initialize() {
+    }
 
     /**
-     * The execute method is called repeatedly until this Command either finishes
-     * or is canceled.
+     * The execute method is called repeatedly until this Command either finishes or
+     * is canceled.
      */
     protected abstract void execute();
 
     /**
      * Execute_impl.
      */
-    void _execute(){}
+    void _execute() {
+    }
 
     /**
-     * Returns whether this command is finished.
-     * If it is, then the command will be removed
-     * and {@link Command#end() end()} will be called.
+     * Returns whether this command is finished. If it is, then the command will be
+     * removed and {@link Command#end() end()} will be called.
      *
-     * <p>It may be useful for a team to reference the {@link Command#isTimedOut() isTimedOut()} method
-     * for time-sensitive commands.</p>
+     * <p>
+     * It may be useful for a team to reference the {@link Command#isTimedOut()
+     * isTimedOut()} method for time-sensitive commands.
+     * </p>
+     *
      * @return whether this command is finished.
      * @see Command#isTimedOut() isTimedOut()
      */
     protected abstract boolean isFinished();
 
     /**
-     * Called when the command ended peacefully.  This is where you may want
-     * to wrap up loose ends, like shutting off a motor that was being used
-     * in the command.
+     * Called when the command ended peacefully. This is where you may want to wrap
+     * up loose ends, like shutting off a motor that was being used in the command.
      */
     protected abstract void end();
 
     /**
      * End_impl.
      */
-    void _end(){}
+    void _end() {
+    }
 
     /**
-     * Called when the command ends because somebody called {@link Command#cancel() cancel()}
-     * or another command shared the same requirements as this one, and booted
-     * it out.
+     * Called when the command ends because somebody called {@link Command#cancel()
+     * cancel()} or another command shared the same requirements as this one, and
+     * booted it out.
      *
-     * <p>This is where you may want
-     * to wrap up loose ends, like shutting off a motor that was being used
-     * in the command.</p>
+     * <p>
+     * This is where you may want to wrap up loose ends, like shutting off a motor
+     * that was being used in the command.
+     * </p>
      *
-     * <p>Generally, it is useful to simply call the {@link Command#end() end()} method
-     * within this method</p>
+     * <p>
+     * Generally, it is useful to simply call the {@link Command#end() end()} method
+     * within this method
+     * </p>
      */
     protected abstract void interrupted();
 
     /**
      * Interrupted_impl.
      */
-    void _interrupted(){}
+    void _interrupted() {
+    }
 
     /**
      * Start timing.
      */
-    private void startTiming(){
+    private void startTiming() {
         m_startTime = RoboRIO.getFPGATimestamp();
     }
 
@@ -299,8 +311,8 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if is timed out
      */
-    protected boolean isTimedOut(){
-        synchronized(this){
+    protected boolean isTimedOut() {
+        synchronized (this) {
             return m_timeout != -1 && (m_startTime < 0 ? 0 : RoboRIO.getFPGATimestamp() - m_startTime) >= m_timeout;
         }
     }
@@ -310,10 +322,9 @@ public abstract class Command implements NamedSendable {
      *
      * @return the requirements
      */
-    List<Subsystem> getRequirements(){
-        synchronized(this){
-            return m_requirements == null ?
-                    m_requirements = new ArrayList<Subsystem>(1) : m_requirements;
+    List<Subsystem> getRequirements() {
+        synchronized (this) {
+            return m_requirements == null ? m_requirements = new ArrayList<Subsystem>(1) : m_requirements;
         }
     }
 
@@ -322,26 +333,25 @@ public abstract class Command implements NamedSendable {
      *
      * @param parent the new parent
      */
-    void setParent(CommandGroup parent){
-        synchronized(this){
-            if(m_parent != null)
+    void setParent(CommandGroup parent) {
+        synchronized (this) {
+            if (m_parent != null)
                 throw new IllegalStateException("Cannot change CommandGroup of command that is in a command group.");
 
             m_locked = true;
             m_parent = parent;
-            if(m_table != null)
+            if (m_table != null)
                 m_table.putBoolean("isParented", true);
         }
     }
 
-
     /**
      * Start.
      */
-    public void start(){
-        synchronized(this){
+    public void start() {
+        synchronized (this) {
             m_locked = true;
-            if(m_parent != null)
+            if (m_parent != null)
                 throw new IllegalStateException("Cannot start command that is in a command group.");
 
             Scheduler.add(this);
@@ -351,11 +361,12 @@ public abstract class Command implements NamedSendable {
     /**
      * Start running.
      */
-    void startRunning(){
-        synchronized(this){
+    void startRunning() {
+        synchronized (this) {
             m_running = true;
             m_startTime = -1;
-            if(m_table != null) m_table.putBoolean("running", true);
+            if (m_table != null)
+                m_table.putBoolean("running", true);
         }
     }
 
@@ -364,8 +375,8 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if is running
      */
-    public boolean isRunning(){
-        synchronized(this){
+    public boolean isRunning() {
+        synchronized (this) {
             return m_running;
         }
     }
@@ -373,9 +384,9 @@ public abstract class Command implements NamedSendable {
     /**
      * Cancel.
      */
-    public void cancel(){
-        synchronized(this){
-            if(m_parent != null)
+    public void cancel() {
+        synchronized (this) {
+            if (m_parent != null)
                 throw new IllegalStateException("Cannot stop command that is in a command group.");
         }
         _cancel();
@@ -384,9 +395,9 @@ public abstract class Command implements NamedSendable {
     /**
      * Cancel_impl.
      */
-    void _cancel(){
-        synchronized(this){
-            if(m_running)
+    void _cancel() {
+        synchronized (this) {
+            if (m_running)
                 m_canceled = true;
         }
     }
@@ -396,8 +407,8 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if is canceled
      */
-    public boolean isCanceled(){
-        synchronized(this){
+    public boolean isCanceled() {
+        synchronized (this) {
             return m_canceled;
         }
     }
@@ -407,8 +418,8 @@ public abstract class Command implements NamedSendable {
      *
      * @return true, if is interruptible
      */
-    public boolean isInterruptible(){
-        synchronized(this){
+    public boolean isInterruptible() {
+        synchronized (this) {
             return m_interruptible;
         }
     }
@@ -418,8 +429,8 @@ public abstract class Command implements NamedSendable {
      *
      * @param interruptible the new interruptible
      */
-    public void setInterruptible(boolean interruptible){
-        synchronized(this){
+    public void setInterruptible(boolean interruptible) {
+        synchronized (this) {
             m_interruptible = interruptible;
         }
     }
@@ -430,30 +441,30 @@ public abstract class Command implements NamedSendable {
      * @param system the system
      * @return true, if successful
      */
-    public boolean doesRequire(Subsystem system){
-        if(m_requirements == null)
+    public boolean doesRequire(Subsystem system) {
+        if (m_requirements == null)
             return false;
-        synchronized(m_requirements){
+        synchronized (m_requirements) {
             return m_requirements.contains(system);
         }
     }
 
-    public boolean requiresAny(Command command){
+    public boolean requiresAny(Command command) {
         return requiresAny(command.getRequirements());
     }
 
-    public boolean requiresAny(List<Subsystem> systems){
-        if(systems.isEmpty()){
+    public boolean requiresAny(List<Subsystem> systems) {
+        if (systems.isEmpty()) {
             return false;
         }
 
-        if(m_requirements == null){
+        if (m_requirements == null) {
             return false;
         }
 
-        synchronized(m_requirements){
-            for(Subsystem s : systems){
-                if(m_requirements.contains(s)){
+        synchronized (m_requirements) {
+            for (Subsystem s : systems) {
+                if (m_requirements.contains(s)) {
                     return true;
                 }
             }
@@ -461,24 +472,30 @@ public abstract class Command implements NamedSendable {
 
         return false;
 
-
     }
 
     /**
-     * Returns the {@link CommandGroup} that this command is a part of.
-     * Will return null if this {@link Command} is not in a group.
-     * @return the {@link CommandGroup} that this command is a part of (or null if not in group)
+     * Returns the {@link CommandGroup} that this command is a part of. Will return
+     * null if this {@link Command} is not in a group.
+     *
+     * @return the {@link CommandGroup} that this command is a part of (or null if
+     *         not in group)
      */
-    public CommandGroup getGroup(){
-        synchronized(m_parent){
+    public CommandGroup getGroup() {
+        synchronized (m_parent) {
             return m_parent;
         }
     }
 
     /**
-     * Sets whether or not this {@link Command} should run when the robot is disabled.
+     * Sets whether or not this {@link Command} should run when the robot is
+     * disabled.
      *
-     * <p>By default a command will not run when the robot is disabled, and will in fact be canceled.</p>
+     * <p>
+     * By default a command will not run when the robot is disabled, and will in
+     * fact be canceled.
+     * </p>
+     *
      * @param run whether or not this command should run when the robot is disabled
      */
     public void setRunWhenDisabled(boolean run) {
@@ -486,37 +503,49 @@ public abstract class Command implements NamedSendable {
     }
 
     /**
-     * Returns whether or not this {@link Command} will run when the robot is disabled, or if it will cancel itself.
-     * @return whether or not this {@link Command} will run when the robot is disabled, or if it will cancel itself
+     * Returns whether or not this {@link Command} will run when the robot is
+     * disabled, or if it will cancel itself.
+     *
+     * @return whether or not this {@link Command} will run when the robot is
+     *         disabled, or if it will cancel itself
      */
-    public boolean willRunWhenDisabled(){
+    public boolean willRunWhenDisabled() {
         return m_runWhenDisabled;
     }
 
     /**
-     * Sets whether or not this {@link Command} should continue running when the robot switches mode.
+     * Sets whether or not this {@link Command} should continue running when the
+     * robot switches mode.
      *
-     * <p>By default a command will cancel when the mode is switched</p>
-     * @param cancel whether or not this command should cancel when the robot switches mode.
+     * <p>
+     * By default a command will cancel when the mode is switched
+     * </p>
+     *
+     * @param cancel whether or not this command should cancel when the robot
+     *               switches mode.
      */
-    public void setCancelOnModeSwitch(boolean cancel){
+    public void setCancelOnModeSwitch(boolean cancel) {
         m_cancelOnModeSwitched = cancel;
     }
 
     /**
-     * Returns whether or not this {@link Command} will cancel when the robot switches modes.
-     * @return whether or not this {@link Command} will cancel when the robot switches modes.
+     * Returns whether or not this {@link Command} will cancel when the robot
+     * switches modes.
+     *
+     * @return whether or not this {@link Command} will cancel when the robot
+     *         switches modes.
      */
-    public boolean willCancelOnModeSwitch(){
+    public boolean willCancelOnModeSwitch() {
         return m_cancelOnModeSwitched;
     }
 
     /**
      * The string representation for a {@link Command} is by default its name.
+     *
      * @return the string representation of this object
      */
     @Override
-    public String toString(){
+    public String toString() {
         return m_name;
     }
 
@@ -535,10 +564,10 @@ public abstract class Command implements NamedSendable {
     };
 
     public void initTable(ITable table) {
-        if(m_table!=null)
+        if (m_table != null)
             m_table.removeTableListener(listener);
         m_table = table;
-        if(table!=null) {
+        if (table != null) {
             table.putString("name", getName());
             table.putBoolean("running", isRunning());
             table.putBoolean("isParented", m_parent != null);
@@ -553,7 +582,5 @@ public abstract class Command implements NamedSendable {
     public ITable getTable() {
         return m_table;
     }
-
-
 
 }

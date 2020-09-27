@@ -16,8 +16,8 @@
 package io.github.robolib.command;
 
 /**
- * A {@link StartCommand} will call the {@link Command#start() start()}
- * method of another command when it is initialized and will finish immediately.
+ * A {@link StartCommand} will call the {@link Command#start() start()} method
+ * of another command when it is initialized and will finish immediately.
  *
  * This is analogous to forking
  *
@@ -28,18 +28,30 @@ public final class StartCommand extends Command {
     private final Command m_command;
 
     /**
-     * Instantiates a {@link StartCommand} which will start the
-     * given command whenever its {@link Command#initialize() initialize()} is called.
+     * Instantiates a {@link StartCommand} which will start the given command
+     * whenever its {@link Command#initialize() initialize()} is called.
+     *
      * @param commandToStart the {@link Command} to start
      */
-    public StartCommand(Command command){
+    public StartCommand(Command command) {
         m_command = command;
     }
 
-    protected void initialize() {m_command.start();}
-    protected void execute() {}
-    protected boolean isFinished() { return true; }
-    protected void end() {}
-    protected void interrupted() {}
+    protected void initialize() {
+        m_command.start();
+    }
+
+    protected void execute() {
+    }
+
+    protected boolean isFinished() {
+        return true;
+    }
+
+    protected void end() {
+    }
+
+    protected void interrupted() {
+    }
 
 }
